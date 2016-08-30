@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="icon" type="image/x-icon" href="{{ Config::get('cms.favicon') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{!! Config::get('cms.name') !!}</title>
+
+        <meta name="description" content="">
+        <meta name="author" content="{{ Config::get('woburn.designer') }}">
+        <!-- Base Styling  -->
+        <link href="{{ asset('css/app.v1.css') }}" rel="stylesheet">
+        <!-- Bootstrap core CSS -->
+        <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+
+        <!-- Custom Font -->
+        <link rel="stylesheet" href="{{ asset('css/font.css') }}">
+
+        <!-- Custom Styling -->
+        <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+
+        <!-- Bootstrap Datatables -->
+        <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('cssbuttons.bootstrap4.min.css') }}">
+        <!-- Awesome Bootstrap checkbox -->
+        <link rel="stylesheet" href="{{ asset('css/awesome-bootstrap-checkbox.css') }}">
+        <style type="text/css">
+        /* CSS used here will be applied after bootstrap.css */
+            .picha {
+                background-color: white;
+            }
+        </style>
+        <!-- Datepicker -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/datepicker.css') }}" />
+    </head>
+    <body>
+        <!-- Preloader -->
+        <div class="loading-container">
+            <div class="loading">
+                <div class="l1">
+                    <div></div>
+                </div>
+                <div class="l2">
+                    <div></div>
+                </div>
+                <div class="l3">
+                    <div></div>
+                </div>
+                <div class="l4">
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <!-- Preloader -->
+
+        <aside class="left-panel">
+
+            <div class="user text-xs-center">
+                <img src="{{ Config::get('cms.logo') }}" class="img-circle picha" alt="...">
+                <h4 class="user-name text-warning">{!! Config::get('cms.name') !!}<p><small>{!! Config::get('cms.motto') !!}</small></p></h4>
+            </div>
+            <nav class="navigation">
+                <ul class="list-unstyled">
+                    <li class="{!! Request::segment(1)==strtolower(trans('menu.home'))?strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-dashboard"></i> {!! trans('menu.dashboard') !!}</a>
+                    </li>
+                    <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.page', 1))?strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-book"></i> {!! trans_choice('menu.page', 2) !!}</a>
+                    </li>
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower(trans_choice('menu.class', 1)), strtolower('classgroup')])?' '.strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-graduation-cap"></i> {!! trans_choice('menu.class-group', 2) !!}</a>
+                        <ul class="list-unstyled">
+                            <li class="{!! Request::segment(1)==strtolower('classgroup')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.class-group', 2) !!}</a>
+                            </li>
+                            <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.class', 1))?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.class', 2) !!}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower(trans_choice('menu.content', 1)), strtolower('contentgroup')])?' '.strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-google-wallet"></i> {!! trans_choice('menu.content-group', 2) !!}</a>
+                        <ul class="list-unstyled">
+                            <li class="{!! Request::segment(1)==strtolower('contentgroup')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.content-group', 2) !!}</a>
+                            </li>
+                            <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.content', 1))?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.content', 2) !!}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower(trans_choice('menu.photo', 1)), strtolower('photogroup')])?' '.strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-file-image-o"></i> {!! trans_choice('menu.photo-group', 2) !!}</a>
+                        <ul class="list-unstyled">
+                            <li class="{!! Request::segment(1)==strtolower('contentgroup')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.photo-group', 2) !!}</a>
+                            </li>
+                            <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.photo', 1))?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.photo', 2) !!}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.term', 1))?strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-calendar-check-o"></i> {!! trans_choice('menu.term', 2) !!}</a>
+                    </li>
+                    <li class="{!! Request::segment(1)==strtolower('contactus')?strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-table"></i> {!! trans_choice('menu.contact', 1) !!}</a>
+                    </li>
+                    <li class="{!! Request::segment(1)==strtolower('social')?strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-edit"></i> {!! trans('menu.social') !!}</a>
+                    </li>
+                    <li style="display:none;">
+                        <a href="charts.html"><i class="fa fa-pie-chart"></i> {!! trans('menu.apply') !!}</a>
+                    </li>
+                    <li style="display:none;">
+                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.about') !!}</a>
+                    </li>
+                    <li class="open" style="display:none;">
+                        <a href="#"><i class="fa fa-files-o"></i> {!! trans('menu.learning') !!}</a>
+                    </li>
+                    <li style="display:none;">
+                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.parents') !!}</a>
+                    </li>
+                    <li class="{!! in_array(Request::segment(1), [strtolower('images'), strtolower('galleries')])?strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.gallery') !!}</a>
+                    </li>
+                    <li style="display:none;">
+                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.why') !!}</a>
+                    </li>
+                    <li style="display:none;">
+                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.file-manager') !!}</a>
+                    </li>
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower(trans_choice('menu.user', 1)), strtolower(trans_choice('menu.permission', 1)), strtolower(trans_choice('menu.role', 1)), strtolower(trans('menu.authorize'))])?' '.strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-files-o"></i> {!! trans('menu.access-control') !!}</a>
+                        <ul class="list-unstyled">
+                            <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.user', 1))?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans('menu.user-accounts') !!}</a>
+                            </li>
+                            <li><a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.permission', 2) !!}</a></li>
+                            <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.role', 1))?strtolower(trans('menu.active')):'' !!}"><a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.role', 2) !!}</a></li>
+                            <li><a href="#"><i class="fa fa-bookmark"></i> {!! trans('menu.assign-roles') !!}</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.data-backup') !!}</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <section class="content">
+            <header class="top-head container">
+                <nav class=" navbar-default hidden-xs navbar" role="navigation">
+                    <div class="collapse navbar-toggleable-xs" id="collapsingNavbar">
+                        <ul class="nav navbar-nav pull-right">
+                            <li class="nav-item active">
+                                <a class="nav-link text-primary" href="#">Home <span class="sr-only">Home</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#features">Features</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#myAlert" data-toggle="collapse">Wow</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="" data-target="#myModal" data-toggle="modal">About</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            <!-- Header Ends -->
+            </header>
+
+            <div class="warper container-fluid">
+                @yield('content')
+            </div>
+            <!-- Warper Ends Here (working area) --><hr>
+            <div id="footer" class="">
+                <div class="container-fluid">
+                    <p class="text-muted gem-h7">
+                        <strong>
+                            &copy; {!! date('Y').' '.Config::get('woburn.name') !!}
+                            <span style="float:right">
+                                Designed by {!! Config::get('woburn.designer') !!}&nbsp;&nbsp;&nbsp;
+                                <a href="#" class="pull-right scrollToTop"><i class="fa fa-chevron-up"></i></a>
+                            </span>
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        </section>
+        <!-- JQuery v1.9.1 -->
+        <script src="{{ asset('js/jquery-1.12.3.min.js') }}"></script>
+        <script src="{{ asset('js/underscore-min.js') }}"></script>
+        <!-- Bootstrap -->
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <!-- Datatables -->
+        <script type="text/javascript" src="{{ asset('js/datatables/jquery.dataTables.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+        <script type="text/javascript" src="{{ asset('js/datatables/dataTables.buttons.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/buttons.bootstrap4.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/jszip.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/pdfmake.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/vfs_fonts.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/buttons.html5.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/buttons.print.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/buttons.colVis.min.js') }}"></script>
+        <!-- Datepicker -->
+        <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+
+        <!-- Globalize -->
+        <script src="{{ asset('js/globalize.min.js') }}"></script>
+
+        <!-- NanoScroll -->
+        <script src="{{ asset('js/jquery.nicescroll.min.js') }}"></script>
+        <!-- Custom JQuery -->
+        <script src="{{ asset('js/app/custom.js') }}"></script>
+        <!-- search table for datatables -->
+        <script src="{{ asset('js/harmony/custom.js') }}"></script>
+        <!-- Datepicker -->
+        <script src="{{ asset('js/harmony/bootstrap-datepicker.js') }}"></script>
+    </body>
+</html>
