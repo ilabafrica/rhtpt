@@ -24,7 +24,7 @@
 
         <!-- Bootstrap Datatables -->
         <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('cssbuttons.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/buttons.bootstrap4.min.css') }}">
         <!-- Awesome Bootstrap checkbox -->
         <link rel="stylesheet" href="{{ asset('css/awesome-bootstrap-checkbox.css') }}">
         <style type="text/css">
@@ -60,92 +60,63 @@
 
             <div class="user text-xs-center">
                 <img src="{{ Config::get('cms.logo') }}" class="img-circle picha" alt="...">
-                <h4 class="user-name text-warning">{!! Config::get('cms.name') !!}<p><small>{!! Config::get('cms.motto') !!}</small></p></h4>
+                <h4 class="user-name text-warning">{!! Config::get('cms.name') !!}</h4>
             </div>
             <nav class="navigation">
                 <ul class="list-unstyled">
                     <li class="{!! Request::segment(1)==strtolower(trans('menu.home'))?strtolower(trans('menu.active')):'' !!}">
-                        <a href="#"><i class="fa fa-dashboard"></i> {!! trans('menu.dashboard') !!}</a>
+                        <a href="#"><i class="fa fa-dashboard"></i> {!! trans('messages.dashboard') !!}</a>
                     </li>
-                    <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.page', 1))?strtolower(trans('menu.active')):'' !!}">
-                        <a href="#"><i class="fa fa-book"></i> {!! trans_choice('menu.page', 2) !!}</a>
-                    </li>
-                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower(trans_choice('menu.class', 1)), strtolower('classgroup')])?' '.strtolower(trans('menu.active')):'' !!}">
-                        <a href="#"><i class="fa fa-graduation-cap"></i> {!! trans_choice('menu.class-group', 2) !!}</a>
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('pt'), strtolower('sample'), strtolower('round'), strtolower('expected'), strtolower('shipment'), strtolower('result')])?' '.strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-graduation-cap"></i> {!! trans('messages.pt') !!}</a>
                         <ul class="list-unstyled">
-                            <li class="{!! Request::segment(1)==strtolower('classgroup')?strtolower(trans('menu.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.class-group', 2) !!}</a>
+                            <li class="{!! Request::segment(1)==strtolower('sample')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans('messages.sample-preparation') !!}</a>
                             </li>
-                            <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.class', 1))?strtolower(trans('menu.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.class', 2) !!}</a>
+                            <li class="{!! Request::segment(1)==strtolower('round')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.pt-round', 2) !!}</a>
+                            </li>
+                            <li class="{!! Request::segment(1)==strtolower('expected')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.expected-result', 2) !!}</a>
+                            </li>
+                            <li class="{!! Request::segment(1)==strtolower('shipment')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.shipment', 2) !!}</a>
+                            </li>
+                            <li class="{!! Request::segment(1)==strtolower('result')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.result', 2) !!}</a>
                             </li>
                         </ul>
                     </li>
-                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower(trans_choice('menu.content', 1)), strtolower('contentgroup')])?' '.strtolower(trans('menu.active')):'' !!}">
-                        <a href="#"><i class="fa fa-google-wallet"></i> {!! trans_choice('menu.content-group', 2) !!}</a>
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('program'), strtolower('question'), strtolower('response'), strtolower('field')])?' '.strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-google-wallet"></i> {!! trans('messages.program-management') !!}</a>
                         <ul class="list-unstyled">
-                            <li class="{!! Request::segment(1)==strtolower('contentgroup')?strtolower(trans('menu.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.content-group', 2) !!}</a>
+                            <li class="{!! Request::segment(1)==strtolower('question')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.question', 2) !!}</a>
                             </li>
-                            <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.content', 1))?strtolower(trans('menu.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.content', 2) !!}</a>
+                            <li class="{!! Request::segment(1)==strtolower('response')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.response', 2) !!}</a>
+                            </li>
+                            <li class="{!! Request::segment(1)==strtolower('field')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.field', 2) !!}</a>
                             </li>
                         </ul>
                     </li>
-                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower(trans_choice('menu.photo', 1)), strtolower('photogroup')])?' '.strtolower(trans('menu.active')):'' !!}">
-                        <a href="#"><i class="fa fa-file-image-o"></i> {!! trans_choice('menu.photo-group', 2) !!}</a>
+                    <li class="{!! Request::segment(1)==strtolower('catalog')?strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-building"></i> {!! trans('messages.facility-catalog') !!}</a>
+                    </li>
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('user'), strtolower('role'), strtolower('permission')])?' '.strtolower(trans('menu.active')):'' !!}">
+                        <a href="#"><i class="fa fa-users"></i> {!! trans_choice('messages.user', 2) !!}</a>
                         <ul class="list-unstyled">
-                            <li class="{!! Request::segment(1)==strtolower('contentgroup')?strtolower(trans('menu.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.photo-group', 2) !!}</a>
+                            <li class="{!! Request::segment(1)==strtolower('user')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.user', 2) !!}</a>
                             </li>
-                            <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.photo', 1))?strtolower(trans('menu.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.photo', 2) !!}</a>
+                            <li class="{!! Request::segment(1)==strtolower('role')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.role', 2) !!}</a>
+                            </li>
+                            <li class="{!! Request::segment(1)==strtolower('permission')?strtolower(trans('menu.active')):'' !!}">
+                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.permission', 2) !!}</a>
                             </li>
                         </ul>
-                    </li>
-                    <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.term', 1))?strtolower(trans('menu.active')):'' !!}">
-                        <a href="#"><i class="fa fa-calendar-check-o"></i> {!! trans_choice('menu.term', 2) !!}</a>
-                    </li>
-                    <li class="{!! Request::segment(1)==strtolower('contactus')?strtolower(trans('menu.active')):'' !!}">
-                        <a href="#"><i class="fa fa-table"></i> {!! trans_choice('menu.contact', 1) !!}</a>
-                    </li>
-                    <li class="{!! Request::segment(1)==strtolower('social')?strtolower(trans('menu.active')):'' !!}">
-                        <a href="#"><i class="fa fa-edit"></i> {!! trans('menu.social') !!}</a>
-                    </li>
-                    <li style="display:none;">
-                        <a href="charts.html"><i class="fa fa-pie-chart"></i> {!! trans('menu.apply') !!}</a>
-                    </li>
-                    <li style="display:none;">
-                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.about') !!}</a>
-                    </li>
-                    <li class="open" style="display:none;">
-                        <a href="#"><i class="fa fa-files-o"></i> {!! trans('menu.learning') !!}</a>
-                    </li>
-                    <li style="display:none;">
-                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.parents') !!}</a>
-                    </li>
-                    <li class="{!! in_array(Request::segment(1), [strtolower('images'), strtolower('galleries')])?strtolower(trans('menu.active')):'' !!}">
-                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.gallery') !!}</a>
-                    </li>
-                    <li style="display:none;">
-                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.why') !!}</a>
-                    </li>
-                    <li style="display:none;">
-                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.file-manager') !!}</a>
-                    </li>
-                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower(trans_choice('menu.user', 1)), strtolower(trans_choice('menu.permission', 1)), strtolower(trans_choice('menu.role', 1)), strtolower(trans('menu.authorize'))])?' '.strtolower(trans('menu.active')):'' !!}">
-                        <a href="#"><i class="fa fa-files-o"></i> {!! trans('menu.access-control') !!}</a>
-                        <ul class="list-unstyled">
-                            <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.user', 1))?strtolower(trans('menu.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans('menu.user-accounts') !!}</a>
-                            </li>
-                            <li><a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.permission', 2) !!}</a></li>
-                            <li class="{!! Request::segment(1)==strtolower(trans_choice('menu.role', 1))?strtolower(trans('menu.active')):'' !!}"><a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('menu.role', 2) !!}</a></li>
-                            <li><a href="#"><i class="fa fa-bookmark"></i> {!! trans('menu.assign-roles') !!}</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-sitemap"></i> {!! trans('menu.data-backup') !!}</a>
                     </li>
                 </ul>
             </nav>
@@ -182,9 +153,9 @@
                 <div class="container-fluid">
                     <p class="text-muted gem-h7">
                         <strong>
-                            &copy; {!! date('Y').' '.Config::get('woburn.name') !!}
+                            &copy; {!! date('Y').' '.Config::get('cms.name') !!}
                             <span style="float:right">
-                                Designed by {!! Config::get('woburn.designer') !!}&nbsp;&nbsp;&nbsp;
+                                Designed by {!! Config::get('cms.designer') !!}&nbsp;&nbsp;&nbsp;
                                 <a href="#" class="pull-right scrollToTop"><i class="fa fa-chevron-up"></i></a>
                             </span>
                         </strong>
@@ -218,7 +189,7 @@
         <!-- NanoScroll -->
         <script src="{{ asset('js/jquery.nicescroll.min.js') }}"></script>
         <!-- Custom JQuery -->
-        <script src="{{ asset('js/app/custom.js') }}"></script>
+        <script src="{{ asset('js/custom.js') }}"></script>
         <!-- search table for datatables -->
         <script src="{{ asset('js/harmony/custom.js') }}"></script>
         <!-- Datepicker -->
