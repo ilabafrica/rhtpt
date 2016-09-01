@@ -106,6 +106,12 @@ class PtSetupTables extends Migration
      */
     public function down()
     {
-        //
+      //  Reverse migrations
+      Schema::dropIfExists('results');
+      Schema::dropIfExists('pt');
+      Schema::dropIfExists('reception');
+      Schema::dropIfExists('shipments');
+      Schema::dropIfExists('rounds');
+      Schema::dropIfExists('sample_preparation');
     }
 }
