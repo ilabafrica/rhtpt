@@ -6,6 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Models\\Permission' => $baseDir . '/app/Models/Permission.php',
+    'App\\Models\\Role' => $baseDir . '/app/Models/Role.php',
+    'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
@@ -478,6 +481,7 @@ return array(
     'PHP_Token_XOR_EQUAL' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_YIELD' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_YIELD_FROM' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
+    'PTSeeder' => $baseDir . '/database/seeds/PTSeeder.php',
     'ProgramManagementTables' => $baseDir . '/database/migrations/2016_09_01_124731_program_management_tables.php',
     'PtSetupTables' => $baseDir . '/database/migrations/2016_09_01_130828_pt_setup_tables.php',
     'SebastianBergmann\\Comparator\\ArrayComparator' => $vendorDir . '/sebastian/comparator/src/ArrayComparator.php',

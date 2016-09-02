@@ -318,6 +318,9 @@ class ComposerStaticInitec3d6d5bbd465dc022ed3335d6cdb6c0
     );
 
     public static $classMap = array (
+        'App\\Models\\Permission' => __DIR__ . '/../..' . '/app/Models/Permission.php',
+        'App\\Models\\Role' => __DIR__ . '/../..' . '/app/Models/Role.php',
+        'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_000000_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
@@ -790,6 +793,7 @@ class ComposerStaticInitec3d6d5bbd465dc022ed3335d6cdb6c0
         'PHP_Token_XOR_EQUAL' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD_FROM' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
+        'PTSeeder' => __DIR__ . '/../..' . '/database/seeds/PTSeeder.php',
         'ProgramManagementTables' => __DIR__ . '/../..' . '/database/migrations/2016_09_01_124731_program_management_tables.php',
         'PtSetupTables' => __DIR__ . '/../..' . '/database/migrations/2016_09_01_130828_pt_setup_tables.php',
         'SebastianBergmann\\Comparator\\ArrayComparator' => __DIR__ . '/..' . '/sebastian/comparator/src/ArrayComparator.php',

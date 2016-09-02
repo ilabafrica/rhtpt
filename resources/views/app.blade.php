@@ -108,10 +108,10 @@
                         <a href="#"><i class="fa fa-users"></i> {!! trans_choice('messages.user', 2) !!}</a>
                         <ul class="list-unstyled">
                             <li class="{!! Request::segment(1)==strtolower('user')?strtolower(trans('menu.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.user', 2) !!}</a>
+                                <a href="{!! url('user') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.user', 2) !!}</a>
                             </li>
                             <li class="{!! Request::segment(1)==strtolower('role')?strtolower(trans('menu.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.role', 2) !!}</a>
+                                <a href="{!! url('role') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.role', 2) !!}</a>
                             </li>
                             <li class="{!! Request::segment(1)==strtolower('permission')?strtolower(trans('menu.active')):'' !!}">
                                 <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.permission', 2) !!}</a>
