@@ -56,7 +56,7 @@ class UserController extends Controller {
             $user->image = $this->imageModifier($request, $request->all()['photo']);
         $user->save();
 
-        return redirect('user')->with('message', 'User created successfully.');
+        return redirect('user')->with('message', trans('messages.record-successfully-saved'));
     }
 
     /**
@@ -109,7 +109,7 @@ class UserController extends Controller {
             $user->image = $this->imageModifier($request, $request->all()['photo']);
         $user->save();
 
-        return redirect('user')->with('message', 'User updated successfully.');
+        return redirect('user')->with('message', trans('messages.record-successfully-updated'));
     }
 
     /**
@@ -123,7 +123,7 @@ class UserController extends Controller {
     {
         $user= User::find($id);
         $user->delete();
-        return redirect('user')->with('message', 'User deleted successfully.');
+        return redirect('user')->with('message', trans('messages.record-successfully-deleted'));
     }
     public function destroy($id)
     {

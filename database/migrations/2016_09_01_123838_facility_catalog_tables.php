@@ -39,6 +39,8 @@ class FacilityCatalogTables extends Migration
     			$table->integer('sub_county_id')->unsigned();
     			$table->string('mailing_address', 50);
     			$table->string('in_charge', 50);
+          $table->string('in_charge_phone', 50);
+          $table->string('in_charge_email', 50);
     			$table->decimal('longitude', 5, 2)->nullable();
     			$table->decimal('latitude', 5, 2)->nullable();
           $table->foreign('sub_county_id')->references('id')->on('sub_counties');

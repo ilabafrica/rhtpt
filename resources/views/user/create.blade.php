@@ -4,16 +4,16 @@
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
-            <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('menu.home') !!}</a></li>
-            <li class="active"><i class="fa fa-users"></i> {!! trans('menu.access-control') !!}</li>
-            <li><a href="{!! route('user.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('menu.user', 2) !!}</a></li>
-            <li class="active">{!! trans('messages.add').' '.trans_choice('menu.user', 1) !!}</li>
+            <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
+            <li class="active"><i class="fa fa-users"></i> {!! trans('messages.user-management') !!}</li>
+            <li><a href="{!! route('user.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.user', 2) !!}</a></li>
+            <li class="active">{!! trans('messages.add') !!}</li>
         </ol>
     </div>
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-pencil"></i> {!! trans('messages.add').' '.trans_choice('menu.user', 1) !!}
+	    <i class="fa fa-pencil"></i> {!! trans('messages.add') !!}
 	    <span>
 			<a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
 				<i class="fa fa-step-backward"></i>

@@ -23,7 +23,7 @@ class PermissionController extends Controller {
         $permissions = Permission::all();
         $roles = Role::all();
         $permissionsRolesData = array('permissions' => $permissions,'roles' => $roles,);
-        return view('brio.permission.index', $permissionsRolesData);
+        return view('permission.index', $permissionsRolesData);
     }
 
 
@@ -64,7 +64,7 @@ class PermissionController extends Controller {
         }
         $url = session('SOURCE_URL');
 
-        return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-saved', 1))->with('active_permission', $permission ->id);
+        return redirect()->to($url)->with('message', trans('messages.record-successfully-saved'))->with('active_permission', $permission ->id);
     }
 
 

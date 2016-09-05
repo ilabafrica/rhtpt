@@ -4,15 +4,15 @@
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
-            <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('menu.home') !!}</a></li>
-            <li class="active"><i class="fa fa-group"></i> {!! trans('menu.access-control') !!}</li>
-            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('menu.role', 2) !!}</li>
+            <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
+            <li class="active"><i class="fa fa-group"></i> {!! trans('messages.user-management') !!}</li>
+            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.role', 2) !!}</li>
         </ol>
     </div>
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-book"></i> {!! trans_choice('menu.role', 2) !!}
+	    <i class="fa fa-book"></i> {!! trans_choice('messages.role', 2) !!}
 	    <span>
 		    <a class="btn btn-sm btn-belize-hole" href="{!! url("role/create") !!}" >
 				<i class="fa fa-plus-circle"></i>

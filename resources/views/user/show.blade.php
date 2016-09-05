@@ -4,10 +4,10 @@
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
-            <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('menu.home') !!}</a></li>
-            <li class="active"><i class="fa fa-users"></i> {!! trans('menu.access-control') !!}</li>
-            <li><a href="{!! route('user.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('menu.user', 2) !!}</a></li>
-            <li class="active">{!! trans('messages.view').' '.trans_choice('menu.user', 1) !!}</li>
+            <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
+            <li class="active"><i class="fa fa-users"></i> {!! trans('messages.user-management') !!}</li>
+            <li><a href="{!! route('user.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.user', 2) !!}</a></li>
+            <li class="active">{!! trans('messages.view') !!}</li>
         </ol>
     </div>
 </div>
@@ -44,7 +44,7 @@
 				<p>{!! trans('messages.phone').': ' !!}<span class="text-muted">{!! $user->phone !!}</span></p>
 				<p>{!! trans('messages.email').': ' !!}<span class="text-muted">{!! $user->email !!}</span></p>
 				<p>{!! trans('messages.address').': ' !!}<span class="text-muted">{!! $user->address !!}</span></p>
-				<p>{!! trans_choice('menu.role', 1).': ' !!}<span class="text-muted">{!! $user->username !!}</span></p>
+				<p>{!! trans_choice('messages.role', 1).': ' !!}<span class="text-muted">{!! $user->username !!}</span></p>
 			</strong>
 		</div>
 	</div>

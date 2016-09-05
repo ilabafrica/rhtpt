@@ -4,18 +4,18 @@
 <div class="row">
     <div class="col-sm-12">
         <ul class="breadcrumb">
-            <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('menu.home') !!}</a></li>
-            <li class="active"><i class="fa fa-users"></i> {!! trans('menu.access-control') !!}</li>
-            <li class="active"><i class="fa fa-cube"></i> {!! trans('menu.authorized-users') !!}</li>
+            <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
+            <li class="active"><i class="fa fa-users"></i> {!! trans('messages.user-management') !!}</li>
+            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.privilege', 2) !!}</li>
         </ul>
     </div>
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-book"></i> {!! trans('menu.authorized-users') !!}
+	    <i class="fa fa-book"></i> {!! trans_choice('messages.privilege', 2) !!}
 	    <span>
 		    <a class="btn btn-sm btn-belize-hole" href="{!! url("role/create") !!}">
-				<i class="fa fa-plus-circle"></i> {!! trans_choice('menu.role', 1) !!}
+				<i class="fa fa-plus-circle"></i> {!! trans_choice('messages.role', 1) !!}
 			</a>
 			<a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
 				<i class="fa fa-step-backward"></i>
@@ -37,8 +37,8 @@
 	 	<table class="table table-bordered table-sm">
 			<thead>
                 <tr>
-                    <th>{!! trans_choice('menu.user', 2) !!}</th>
-                    <th colspan="{!! count($roles)!!}">{!! trans_choice('menu.role', 2) !!}</th>
+                    <th>{!! trans_choice('messages.user', 2) !!}</th>
+                    <th colspan="{!! count($roles)!!}">{!! trans_choice('messages.role', 2) !!}</th>
                 </tr>
             </thead>
             <tbody>

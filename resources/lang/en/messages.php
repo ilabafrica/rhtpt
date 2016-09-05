@@ -25,21 +25,28 @@ return [
     */
     //  PT
     'sample-preparation'    =>    'Sample Preparation',
-    'pt-round'             =>    'PT Round|PT Rounds',
-    'expected-result'      =>    'Expected Result|Expected Results',
-    'shipment'             =>    'Shipment|Shipments',
-    'result'               =>    'Result|Results',
+    'pt-round'              =>    'PT Round|PT Rounds',
+    'expected-result'       =>    'Expected Result|Expected Results',
+    'shipment'              =>    'Shipment|Shipments',
+    'result'                =>    'Result|Results',
     //  Reports
 
     //  User Management
-    'user'                 =>    'User|Users',
-    'role'                 =>    'Role|Roles',
-    'permission'           =>    'Permission|Permissions',
+    'user'                  =>    'User|Users',
+    'role'                  =>    'Role|Roles',
+    'permission'            =>    'Permission|Permissions',
+    'privilege'             =>    'Privilege|Privileges',
     //  Facility Catalog - Administrative and are not bound to change in the near future
     //  Program Management
-    'question'             =>     'Question|Questions',
-    'response'             =>     'Response|Responses',
-    'field'                =>     'Field|Fields',
+    'question'              =>     'Question|Questions',
+    'response'              =>     'Response|Responses',
+    'field'                 =>     'Field|Fields',
+
+    //  Breadcrumb
+    'home'                  =>      'Home',
+    'add'                   =>      'Add New',
+    'edit'                  =>      'Edit Record',
+    'view'                  =>      'View Record',
 
     'name'  =>  'Name',
     'label' =>  'Label',
@@ -57,8 +64,6 @@ return [
     'status'    =>  'Status',
     'add'       =>  'Add New',
     'back'      =>  'Back',
-    'view'      =>  'View',
-    'edit'      =>  'Edit',
     'delete'    =>  'Delete',
     'close'     =>  'Close',
     'save'      =>  'Save',
@@ -68,14 +73,7 @@ return [
     'action'    =>  'Action(s)',
     'hierarchy' =>  'Hierarchy',
     'image'     =>  'Image',
-    /**
-    *   Social media messages
-    */
-    'facebook'  =>  'Facebook',
-    'twitter'   =>  'Twitter',
-    'google'    =>  'Google Plus',
-    'youtube'   =>  'Youtube',
-    'linkedin'  =>  'Linkedin',
+    'active'    =>  'Active',
     /**
     *   Status messages
     */
@@ -99,8 +97,4 @@ return [
     'no-photo'          =>  'No Photo',
     'password'          =>  'Password',
     'email-address'     =>  'Email Address',
-    'term-start'        =>  'Begins',
-    'half-term-start'   =>  'Half Term Begins',
-    'half-term-end'     =>  'Half Term Ends',
-    'term-end'          =>  'Ends',
 ];

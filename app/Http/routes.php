@@ -35,6 +35,18 @@ Route::group(['middleware' => 'auth'], function(){
         "as"   => "role.assign",
         "uses" => "RoleController@saveUserRoleAssignment"
     ));
+    //	County controller
+    Route::resource('county', 'CountyController');
+    Route::get("/county/{id}/delete", array(
+        "as"   => "county.delete",
+        "uses" => "CountyController@delete"
+    ));
+    //	SubCounty controller
+    Route::resource('subCounty', 'SubCountyController');
+    Route::get("/subCounty/{id}/delete", array(
+        "as"   => "subCounty.delete",
+        "uses" => "SubCountyController@delete"
+    ));
 });
 
 Route::get('/', function () {

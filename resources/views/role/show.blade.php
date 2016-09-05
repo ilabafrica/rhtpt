@@ -4,10 +4,10 @@
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
-            <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('menu.home') !!}</a></li>
-            <li class="active"><i class="fa fa-roles"></i> {!! trans('menu.access-control') !!}</li>
-            <li><a href="{!! route('role.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('menu.role', 2) !!}</a></li>
-            <li class="active">{!! trans('messages.view').' '.trans_choice('menu.role', 1) !!}</li>
+            <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
+            <li class="active"><i class="fa fa-roles"></i> {!! trans('messages.user-management') !!}</li>
+            <li><a href="{!! route('role.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.role', 2) !!}</a></li>
+            <li class="active">{!! trans('messages.view') !!}</li>
         </ol>
     </div>
 </div>
@@ -17,7 +17,7 @@
 	    <span>
 	    	<a class="btn btn-sm btn-belize-hole" href="{!! url("role/create") !!}" >
 				<i class="fa fa-plus-circle"></i>
-				{!! trans('messages.new').' '.trans_choice('menu.role', 1) !!}
+				{!! trans('messages.new').' '.trans_choice('messages.role', 1) !!}
 			</a>
 			<a class="btn btn-sm btn-info" href="{!! url("role/" . $role->id . "/edit") !!}" >
 				<i class="fa fa-edit"></i>

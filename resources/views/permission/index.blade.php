@@ -4,14 +4,15 @@
 <div class="row">
     <div class="col-lg-12">
         <ol class="breadcrumb">
-            <li><a href="{!! url('home') !!}"><i class="fa fa-dashboard"></i> {!! trans_choice('menu.dashboard', 1) !!}</a></li>
-            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('menu.permission', 1) !!}</li>
+            <li><a href="{!! url('home') !!}"><i class="fa fa-dashboard"></i> {!! trans_choice('messages.home', 1) !!}</a></li>
+            <li class="active"><i class="fa fa-group"></i> {!! trans('messages.user-management') !!}</li>
+            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.permission', 1) !!}</li>
         </ol>
     </div>
 </div>
 <div class="card">
     <div class="card-header">
-        <i class="fa fa-book"></i> {!! trans_choice('menu.permission', 2) !!}
+        <i class="fa fa-book"></i> {!! trans_choice('messages.permission', 2) !!}
         <span>
             <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
                 <i class="fa fa-step-backward"></i> {!! trans('messages.back') !!}
