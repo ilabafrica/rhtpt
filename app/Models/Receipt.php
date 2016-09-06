@@ -22,6 +22,6 @@ class Reception extends Model
   	 */
      public function shipment()
      {
-          return $this->belongsTo('Shipment');
+          return $this->belongsTo('App\Models\Shipment');
      }
 }

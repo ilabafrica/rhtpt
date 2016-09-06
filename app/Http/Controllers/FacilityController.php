@@ -56,6 +56,8 @@ class FacilityController extends Controller
         $facility->sub_county_id = $request->sub_county;
         $facility->mailing_address = $request->mailing_address;
         $facility->in_charge = $request->in_charge;
+        $facility->in_charge_phone = $request->in_charge_phone;
+        $facility->in_charge_email = $request->in_charge_email;
         $facility->longitude = $request->longitude;
         $facility->latitude = $request->latitude;
         $facility->save();
@@ -89,7 +91,7 @@ class FacilityController extends Controller
         $facility = Facility::findOrFail($id);
         $sub_county = $facility->subCounty->id;
         $sub_counties = SubCounty::lists('name', 'id');
-        return view('facility.show', compact('facility', 'sub_county', 'sub_counties'));
+        return view('facility.edit', compact('facility', 'sub_county', 'sub_counties'));
     }
 
     /**
@@ -108,6 +110,8 @@ class FacilityController extends Controller
         $facility->sub_county_id = $request->sub_county;
         $facility->mailing_address = $request->mailing_address;
         $facility->in_charge = $request->in_charge;
+        $facility->in_charge_phone = $request->in_charge_phone;
+        $facility->in_charge_email = $request->in_charge_email;
         $facility->longitude = $request->longitude;
         $facility->latitude = $request->latitude;
         $facility->save();
@@ -123,6 +127,16 @@ class FacilityController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
+    {
+        //
+    }
+    /**
+     * Deactivate facility - same as soft delete
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
     {
         //
     }

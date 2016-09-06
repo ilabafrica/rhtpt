@@ -22,6 +22,6 @@ class Facility extends Model
   	 */
      public function subCounty()
      {
-       return $this->belongsTo('SubCounty');
+       return $this->belongsTo('App\Models\SubCounty');
      }
 }

@@ -5,8 +5,8 @@
     <div class="col-sm-12">
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
-            <li class="active"><i class="fa fa-roles"></i> {!! trans('messages.user-management') !!}</li>
-            <li><a href="{!! route('role.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.role', 2) !!}</a></li>
+            <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.program-management') !!}</li>
+            <li><a href="{!! route('option.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.option', 2) !!}</a></li>
             <li class="active">{!! trans('messages.add') !!}</li>
         </ol>
     </div>
@@ -30,7 +30,7 @@
         </div>
         @endif
 		<div class="row">
-			{!! Form::open(array('route' => 'role.store', 'id' => 'form-add-role', 'class' => 'form-horizontal')) !!}
+			{!! Form::open(array('route' => 'option.store', 'id' => 'form-add-option', 'class' => 'form-horizontal')) !!}
 			<!-- CSRF Token -->
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
             <!-- ./ csrf token -->
@@ -42,17 +42,17 @@
 					</div>
 				</div>
 				<div class="form-group row">
-					{!! Form::label('display-name', trans_choice('messages.display-name',1), array('class' => 'col-sm-4 form-control-label')) !!}
+					{!! Form::label('label', trans_choice('messages.label',1), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
-						{!! Form::text('display_name', old('display_name'), array('class' => 'form-control')) !!}
+						{!! Form::text('label', old('label'), array('class' => 'form-control')) !!}
 					</div>
 				</div>
-                <div class="form-group row">
-                    {!! Form::label('description', trans('messages.description'), array('class' => 'col-sm-4 form-control-label')) !!}
-                    <div class="col-sm-6">
-                        {!! Form::textarea('description', old('description'), array('class' => 'form-control', 'rows' => '3')) !!}
-                    </div>
-                </div>
+        <div class="form-group row">
+            {!! Form::label('description', trans('messages.description'), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+                {!! Form::textarea('description', old('description'), array('class' => 'form-control', 'rows' => '3')) !!}
+            </div>
+        </div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">
 					{!! Form::button("<i class='fa fa-plus-circle'></i> ".trans('messages.save'),
 						array('class' => 'btn btn-primary btn-sm', 'onclick' => 'submit()')) !!}

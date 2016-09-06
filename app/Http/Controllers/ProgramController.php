@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Http\Requests\OptionRequest;
+use App\Http\Requests\ProgramRequest;
 
-use App\Models\Option;
+use App\Models\Program;
 
 use Session;
 
-class OptionController extends Controller
+class ProgramController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,9 +22,9 @@ class OptionController extends Controller
      */
     public function index()
     {
-        //  Get all options
-        $options = Option::all();
-        return view('option.index', compact('options'));
+        //  Get all programs
+        $programs = Program::all();
+        return view('program.index', compact('programs'));
     }
 
     /**
@@ -35,7 +35,7 @@ class OptionController extends Controller
     public function create()
     {
         //  Prepare view
-        return view('option.create');
+        return view('program.create');
     }
 
     /**
@@ -44,17 +44,17 @@ class OptionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(OptionRequest $request)
+    public function store(ProgramRequest $request)
     {
         //  prepare create-statement
-        $option = new Option;
-        $option->name = $request->name;
-        $option->label = $request->label;
-        $option->description = $request->description;
-        $option->save();
+        $program = new Program;
+        $program->name = $request->name;
+        $program->label = $request->label;
+        $program->description = $request->description;
+        $program->save();
         $url = session('SOURCE_URL');
 
-        return redirect()->to($url)->with('message', trans('messages.record-successfully-saved'))->with('active_option', $option ->id);
+        return redirect()->to($url)->with('message', trans('messages.record-successfully-saved'))->with('active_program', $program ->id);
     }
 
     /**
@@ -65,9 +65,9 @@ class OptionController extends Controller
      */
     public function show($id)
     {
-        //  Get specific option
-        $option = Option::findOrFail($id);
-        return view('option.show', compact('option'));
+        //  Get specific program
+        $program = Program::findOrFail($id);
+        return view('program.show', compact('program'));
     }
 
     /**
@@ -79,8 +79,8 @@ class OptionController extends Controller
     public function edit($id)
     {
         //  Prepare view
-        $option = Option::findOrFail($id);
-        return view('option.create', compact('option'));
+        $program = Program::findOrFail($id);
+        return view('program.create', compact('program'));
     }
 
     /**
@@ -90,17 +90,17 @@ class OptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(OptionRequest $request, $id)
+    public function update(ProgramRequest $request, $id)
     {
         //  prepare update-statement
-        $option = Option::findOrFail($id);
-        $option->name = $request->name;
-        $option->label = $request->label;
-        $option->description = $request->description;
-        $option->save();
+        $program = Program::findOrFail($id);
+        $program->name = $request->name;
+        $program->label = $request->label;
+        $program->description = $request->description;
+        $program->save();
         $url = session('SOURCE_URL');
 
-        return redirect()->to($url)->with('message', trans('messages.record-successfully-updated'))->with('active_option', $option ->id);
+        return redirect()->to($url)->with('message', trans('messages.record-successfully-updated'))->with('active_program', $program ->id);
     }
 
     /**

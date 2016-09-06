@@ -22,7 +22,7 @@ class Pt extends Model
   	 */
      public function receipt()
      {
-          return $this->belongsTo('Receipt');
+          return $this->belongsTo('App\Models\Receipt');
      }
     /**
   	 * Result relationship
@@ -30,6 +30,6 @@ class Pt extends Model
   	 */
      public function results()
      {
-          return $this->hasMany('Result');
+          return $this->hasMany('App\Models\Result');
      }
 }

@@ -24,11 +24,22 @@ return [
     *   Sub-menus
     */
     //  PT
+    'program'               =>    'Program|Programs',
     'sample-preparation'    =>    'Sample Preparation',
     'pt-round'              =>    'PT Round|PT Rounds',
+    'pt-item'               =>    'PT Item|PT Items',
     'expected-result'       =>    'Expected Result|Expected Results',
     'shipment'              =>    'Shipment|Shipments',
+    'receipt'               =>    'Receipt|Receipts',
     'result'                =>    'Result|Results',
+    /* Views */
+    'batch'                 =>    'Batch No.',
+    'date-prepared'         =>    'Date Prepared',
+    'expiry-date'           =>    'Expiry Date',
+    'material-type'         =>    'Material Type',
+    'original-source'       =>    'Original Source',
+    'date-collected'        =>    'Date Colelcted',
+    'prepared-by'           =>    'Prepared By',
     //  Reports
 
     //  User Management
@@ -37,10 +48,25 @@ return [
     'permission'            =>    'Permission|Permissions',
     'privilege'             =>    'Privilege|Privileges',
     //  Facility Catalog - Administrative and are not bound to change in the near future
+    'sub-county'            =>    'Sub County|Sub Counties',
+    'county'                =>    'County|Counties',
+    'facility'              =>    'Facility|Facilities',
+    /* Views */
+    'code'                  =>    'MFL Code',
+    'mailing-address'       =>    'Mailing Address',
+    'in-charge'             =>    'In Charge',
+    'in-charge-phone'       =>    'In Charge Phone',
+    'in-charge-email'       =>    'In Charge Email',
+    'longitude'             =>    'Longitude',
+    'latitude'              =>    'Latitude',
+
     //  Program Management
     'question'              =>     'Question|Questions',
-    'response'              =>     'Response|Responses',
+    'option'                =>     'Option|Options',
     'field'                 =>     'Field|Fields',
+    /* Views */
+    'order'                 =>    'Order',
+    'tag'                   =>    'Tag',
 
     //  Breadcrumb
     'home'                  =>      'Home',
@@ -74,6 +100,9 @@ return [
     'hierarchy' =>  'Hierarchy',
     'image'     =>  'Image',
     'active'    =>  'Active',
+    'inactive'  =>  'Inactive',
+    'disable'   =>  'Disable',
+    'enable'    =>  'Enable',
     /**
     *   Status messages
     */

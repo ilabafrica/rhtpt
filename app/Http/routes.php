@@ -35,17 +35,35 @@ Route::group(['middleware' => 'auth'], function(){
         "as"   => "role.assign",
         "uses" => "RoleController@saveUserRoleAssignment"
     ));
-    //	County controller
-    Route::resource('county', 'CountyController');
-    Route::get("/county/{id}/delete", array(
-        "as"   => "county.delete",
-        "uses" => "CountyController@delete"
+    //	Facility controller
+    Route::resource('facility', 'FacilityController');
+    Route::get("/facility/{id}/delete", array(
+        "as"   => "facility.delete",
+        "uses" => "FacilityController@delete"
     ));
-    //	SubCounty controller
-    Route::resource('subCounty', 'SubCountyController');
-    Route::get("/subCounty/{id}/delete", array(
-        "as"   => "subCounty.delete",
-        "uses" => "SubCountyController@delete"
+    //	Field controller
+    Route::resource('field', 'FieldController');
+    Route::get("/field/{id}/delete", array(
+        "as"   => "field.delete",
+        "uses" => "FieldController@delete"
+    ));
+    //	Options controller
+    Route::resource('option', 'OptionController');
+    Route::get("/option/{id}/delete", array(
+        "as"   => "option.delete",
+        "uses" => "OptionController@delete"
+    ));
+    //	Programs controller
+    Route::resource('program', 'ProgramController');
+    Route::get("/program/{id}/delete", array(
+        "as"   => "program.delete",
+        "uses" => "ProgramController@delete"
+    ));
+    //	Sample-preparation controller
+    Route::resource('material', 'MaterialController');
+    Route::get("/material/{id}/delete", array(
+        "as"   => "material.delete",
+        "uses" => "MaterialController@delete"
     ));
 });
 

@@ -22,7 +22,7 @@ class SubCounty extends Model
   	 */
      public function county()
      {
-       return $this->belongsTo('County');
+       return $this->belongsTo('App\Models\County');
      }
      /**
    	 * Relationship with facilities.
@@ -30,6 +30,6 @@ class SubCounty extends Model
    	 */
     public function facilities()
     {
-      return $this->hasMany('Facility');
+      return $this->hasMany('App\Models\Facility');
     }
 }

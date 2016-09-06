@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\County;
+use App\Models\SubCounty;
 
 //	Carbon - for use with dates
 use Jenssegers\Date\Date as Carbon;
@@ -94,7 +96,7 @@ class PTSeeder extends Seeder
         $lamu = County::create(array("name" => "Lamu"));
         $machakos = County::create(array("name" => "Machakos"));
         $makueni = County::create(array("name" => "Makueni"));
-        $mandara = County::create(array("name" => "Mandera"));
+        $mandera = County::create(array("name" => "Mandera"));
         $marsabit = County::create(array("name" => "Marsabit"));
         $meru = County::create(array("name" => "Meru"));
         $migori = County::create(array("name" => "Migori"));
@@ -488,14 +490,14 @@ class PTSeeder extends Seeder
             array("name" => "Hamisi", "county_id" => $vihiga->id),
 
             //  Wajir
-            array("name" => "Wajir East", "county_id" => $wajr->id),
-            array("name" => "Tarbaj", "county_id" => $wajr->id),
-            array("name" => "Eldas", "county_id" => $wajr->id),
-            array("name" => "Wajir West", "county_id" => $wajr->id),
-            array("name" => "Habaswein", "county_id" => $wajr->id),
-            array("name" => "Wajir South", "county_id" => $wajr->id),
-            array("name" => "Wajir North", "county_id" => $wajr->id),
-            array("name" => "Buna", "county_id" => $wajr->id),
+            array("name" => "Wajir East", "county_id" => $wajir->id),
+            array("name" => "Tarbaj", "county_id" => $wajir->id),
+            array("name" => "Eldas", "county_id" => $wajir->id),
+            array("name" => "Wajir West", "county_id" => $wajir->id),
+            array("name" => "Habaswein", "county_id" => $wajir->id),
+            array("name" => "Wajir South", "county_id" => $wajir->id),
+            array("name" => "Wajir North", "county_id" => $wajir->id),
+            array("name" => "Buna", "county_id" => $wajir->id),
 
             //  West Pokot
             array("name" => "West Pokot", "county_id" => $pokot->id),
@@ -503,5 +505,10 @@ class PTSeeder extends Seeder
             array("name" => "Pokot Central", "county_id" => $pokot->id),
             array("name" => "North Pokot", "county_id" => $pokot->id),
           );
+          foreach ($subs as $sb)
+          {
+              SubCounty::create($sb);
+          }
+          $this->command->info('Sub-Counties table seeded');
     }
 }
