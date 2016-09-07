@@ -6,7 +6,7 @@
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
             <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.pt-testing') !!}</li>
-            <li><a href="{!! route('program.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.program', 2) !!}</a></li>
+            <li><a href="{!! route('option.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.option', 2) !!}</a></li>
             <li class="active">{!! trans('messages.add') !!}</li>
         </ol>
     </div>
@@ -30,7 +30,7 @@
         </div>
         @endif
 		<div class="row">
-			{!! Form::open(array('route' => 'program.store', 'id' => 'form-add-program', 'class' => 'form-horizontal')) !!}
+			{!! Form::open(array('route' => 'option.store', 'id' => 'form-add-option', 'class' => 'form-horizontal')) !!}
 			<!-- CSRF Token -->
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
             <!-- ./ csrf token -->

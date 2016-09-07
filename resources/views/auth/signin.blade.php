@@ -31,7 +31,7 @@
 </head>
 
 <body>
-	<div class="login-page bk-img" style="background-image: url(img/IMG_5997.JPG);">
+	<div class="login-page bk-img" style="">
 		<div class="form-content">
 			<div class="container">
 				<div class="row">
@@ -42,7 +42,7 @@
 
 								<div class="row" style="padding-bottom:20px">
 			                        <div class="col-md-5">
-			                            <img src="{{ Config::get('cms.logo') }}" height="75px">
+			                            <img src="{{ '../'.Config::get('cms.logo') }}" height="75px">
 			                        </div>
 			                        <div class="col-md-7">
 			                            <h4 class="text-primary">{!! Config::get('cms.name') !!}</h4>

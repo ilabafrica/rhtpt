@@ -5,16 +5,16 @@
     <div class="col-sm-12">
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
-            <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.pt-testing') !!}</li>
-            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.program', 2) !!}</li>
+            <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.program-management') !!}</li>
+            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.option', 2) !!}</li>
         </ol>
     </div>
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-book"></i> {!! trans_choice('messages.program', 2) !!}
+	    <i class="fa fa-book"></i> {!! trans_choice('messages.option', 2) !!}
 	    <span>
-		    <a class="btn btn-sm btn-belize-hole" href="{!! url("program/create") !!}" >
+		    <a class="btn btn-sm btn-belize-hole" href="{!! url("option/create") !!}" >
 				<i class="fa fa-plus-circle"></i>
 				{!! trans('messages.add') !!}
 			</a>
@@ -44,9 +44,9 @@
 				</tr>
 			</thead>
 			<tbody>
-			@foreach($programs as $key => $value)
-				<tr @if(session()->has('active_program'))
-	                    {!! (session('active_program') == $value->id)?"class='warning'":"" !!}
+			@foreach($options as $key => $value)
+				<tr @if(session()->has('active_option'))
+	                    {!! (session('active_option') == $value->id)?"class='warning'":"" !!}
 	                @endif
 	                >
 					<td>{!! $value->name !!}</td>
@@ -55,22 +55,22 @@
 
 					<td>
 
-					<!-- show the test category (uses the show method found at GET /program/{id} -->
-						<a class="btn btn-sm btn-success" href="{!! url("program/" . $value->id) !!}" >
+					<!-- show the test category (uses the show method found at GET /option/{id} -->
+						<a class="btn btn-sm btn-success" href="{!! url("option/" . $value->id) !!}" >
 							<i class="fa fa-folder-open-o"></i>
 							{!! trans('messages.view') !!}
 						</a>
 
-					<!-- edit this test category (uses edit method found at GET /program/{id}/edit -->
-						<a class="btn btn-sm btn-info" href="{!! url("program/" . $value->id . "/edit") !!}" >
+					<!-- edit this test category (uses edit method found at GET /option/{id}/edit -->
+						<a class="btn btn-sm btn-info" href="{!! url("option/" . $value->id . "/edit") !!}" >
 							<i class="fa fa-edit"></i>
 							{!! trans('messages.edit') !!}
 						</a>
 
-					<!-- delete this test category (uses delete method found at GET /program/{id}/delete -->
+					<!-- delete this test category (uses delete method found at GET /option/{id}/delete -->
 						<button class="btn btn-sm btn-danger delete-item-link"
 							data-toggle="modal" data-target=".confirm-delete-modal"
-							data-id='{!! url("program/" . $value->id . "/delete") !!}'>
+							data-id='{!! url("option/" . $value->id . "/delete") !!}'>
 							<i class="fa fa-trash-o"></i>
 							{!! trans('messages.delete') !!}
 						</button>

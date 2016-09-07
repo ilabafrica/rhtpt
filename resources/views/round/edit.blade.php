@@ -6,14 +6,14 @@
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
             <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.pt-testing') !!}</li>
-            <li><a href="{!! route('program.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.program', 2) !!}</a></li>
-            <li class="active">{!! trans('messages.add') !!}</li>
+            <li><a href="{!! route('option.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.option', 2) !!}</a></li>
+            <li class="active">{!! trans('messages.edit') !!}</li>
         </ol>
     </div>
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-pencil"></i> {!! trans('messages.add') !!}
+	    <i class="fa fa-edit"></i> {!! trans('messages.edit') !!}
 	    <span>
 			<a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
 				<i class="fa fa-step-backward"></i>
@@ -30,7 +30,7 @@
         </div>
         @endif
 		<div class="row">
-			{!! Form::open(array('route' => 'program.store', 'id' => 'form-add-program', 'class' => 'form-horizontal')) !!}
+			{!! Form::model($option, array('route' => array('option.update', $option->id), 'method' => 'PUT', 'id' => 'form-edit-option', 'class' => 'form-horizontal')) !!}
 			<!-- CSRF Token -->
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
             <!-- ./ csrf token -->
@@ -54,8 +54,8 @@
             </div>
         </div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">
-					{!! Form::button("<i class='fa fa-plus-circle'></i> ".trans('messages.save'),
-						array('class' => 'btn btn-primary btn-sm', 'onclick' => 'submit()')) !!}
+					{!! Form::button("<i class='fa fa-check-circle'></i> ".trans('messages.update'),
+					array('class' => 'btn btn-primary btn-sm', 'onclick' => 'submit()')) !!}
 					<a href="#" class="btn btn-sm btn-silver"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</a>
 				</div>
 			</div>

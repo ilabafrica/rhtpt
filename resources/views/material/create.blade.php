@@ -5,7 +5,7 @@
     <div class="col-sm-12">
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
-            <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.program-management') !!}</li>
+            <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.pt-testing') !!}</li>
             <li><a href="{!! route('material.index') !!}"><i class="fa fa-cube"></i> {!! trans('messages.sample-preparation') !!}</a></li>
             <li class="active">{!! trans('messages.add') !!}</li>
         </ol>
