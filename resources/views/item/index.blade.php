@@ -6,15 +6,15 @@
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
             <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.pt') !!}</li>
-            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.pt-round', 2) !!}</li>
+            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.pt-item', 2) !!}</li>
         </ol>
     </div>
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-book"></i> {!! trans_choice('messages.pt-round', 2) !!}
+	    <i class="fa fa-book"></i> {!! trans_choice('messages.pt-item', 2) !!}
 	    <span>
-		    <a class="btn btn-sm btn-belize-hole" href="{!! url("round/create") !!}" >
+		    <a class="btn btn-sm btn-belize-hole" href="{!! url("item/create") !!}" >
 				<i class="fa fa-plus-circle"></i>
 				{!! trans('messages.add') !!}
 			</a>
@@ -37,42 +37,42 @@
 	 	<table class="table table-bordered table-sm search-table" id="example">
 			<thead>
 				<tr>
-					<th>{!! trans('messages.name') !!}</th>
-					<th>{!! trans('messages.description') !!}</th>
-          <th>{!! trans('messages.start-date') !!}</th>
-          <th>{!! trans('messages.end-date') !!}</th>
-					<th>{!! trans('messages.action') !!}</th>
+					<th>{!! trans('messages.pt-id') !!}</th>
+					<th>{!! trans_choice('messages.pt-program', 1) !!}</th>
+          <th>{!! trans('messages.material') !!}</th>
+          <th>{!! trans_choice('messages.pt-round', 1) !!}</th>
+					<th>{!! trans('messages.prepared-by') !!}</th>
 				</tr>
 			</thead>
 			<tbody>
-			@foreach($rounds as $key => $value)
-				<tr @if(session()->has('active_round'))
-	                    {!! (session('active_round') == $value->id)?"class='warning'":"" !!}
+			@foreach($items as $key => $value)
+				<tr @if(session()->has('active_item'))
+	                    {!! (session('active_item') == $value->id)?"class='warning'":"" !!}
 	                @endif
 	                >
-					<td>{!! $value->name !!}</td>
-          <td>{!! $value->description !!}</td>
-          <td>{!! $value->start_date !!}</td>
-					<td>{!! $value->end_date !!}</td>
-
+					<td>{!! $value->pt_id !!}</td>
+          <td>{!! $value->program_id !!}</td>
+          <td>{!! $value->material_id !!}</td>
+					<td>{!! $value->round_id !!}</td>
+          <td>{!! $value->prepared_by !!}</td>
 					<td>
 
-					<!-- show the test category (uses the show method found at GET /round/{id} -->
-						<a class="btn btn-sm btn-success" href="{!! url("round/" . $value->id) !!}" >
+					<!-- show the test category (uses the show method found at GET /item/{id} -->
+						<a class="btn btn-sm btn-success" href="{!! url("item/" . $value->id) !!}" >
 							<i class="fa fa-folder-open-o"></i>
 							{!! trans('messages.view') !!}
 						</a>
 
-					<!-- edit this test category (uses edit method found at GET /round/{id}/edit -->
-						<a class="btn btn-sm btn-info" href="{!! url("round/" . $value->id . "/edit") !!}" >
+					<!-- edit this test category (uses edit method found at GET /item/{id}/edit -->
+						<a class="btn btn-sm btn-info" href="{!! url("item/" . $value->id . "/edit") !!}" >
 							<i class="fa fa-edit"></i>
 							{!! trans('messages.edit') !!}
 						</a>
 
-					<!-- delete this test category (uses delete method found at GET /round/{id}/delete -->
+					<!-- delete this test category (uses delete method found at GET /item/{id}/delete -->
 						<button class="btn btn-sm btn-danger delete-item-link"
 							data-toggle="modal" data-target=".confirm-delete-modal"
-							data-id='{!! url("round/" . $value->id . "/delete") !!}'>
+							data-id='{!! url("item/" . $value->id . "/delete") !!}'>
 							<i class="fa fa-trash-o"></i>
 							{!! trans('messages.delete') !!}
 						</button>

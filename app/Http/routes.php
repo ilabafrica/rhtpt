@@ -65,6 +65,24 @@ Route::group(['middleware' => 'auth'], function(){
         "as"   => "material.delete",
         "uses" => "MaterialController@delete"
     ));
+    //	PT-rounds controller
+    Route::resource('round', 'RoundController');
+    Route::get("/round/{id}/delete", array(
+        "as"   => "round.delete",
+        "uses" => "RoundController@delete"
+    ));
+    //	PT-items controller
+    Route::resource('item', 'ItemController');
+    Route::get("/item/{id}/delete", array(
+        "as"   => "item.delete",
+        "uses" => "ItemController@delete"
+    ));
+    //	Expected-results controller
+    Route::resource('expected', 'ExpectedController');
+    Route::get("/expected/{id}/delete", array(
+        "as"   => "expected.delete",
+        "uses" => "ExpectedController@delete"
+    ));
 });
 
 Route::get('/', function () {

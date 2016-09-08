@@ -25,6 +25,7 @@ class RoundRequest extends Request {
   		$id = $this->ingnoreId();
   		return [
               'program'   => 'required:items,program_id,'.$id,
+              'pt_identifier'   => 'required:items,pt_id,'.$id,
               'round'   => 'required:items,round_id,'.$id,
               'material'   => 'required:items,material_id,'.$id,
               'prepared_by'   => 'required:items,prepared_by,'.$id,

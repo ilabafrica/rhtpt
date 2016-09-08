@@ -40,6 +40,8 @@ return [
     'original-source'       =>    'Original Source',
     'date-collected'        =>    'Date Colelcted',
     'prepared-by'           =>    'Prepared By',
+    'start-date'            =>    'Begins',
+    'end-date'              =>    'Ends',
     //  Reports
 
     //  User Management

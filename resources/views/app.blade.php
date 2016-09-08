@@ -77,13 +77,13 @@
                                 <a href="{!! url('material') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.sample-preparation') !!}</a>
                             </li>
                             <li class="{!! Request::segment(1)==strtolower('round')?strtolower(trans('messages.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.pt-round', 2) !!}</a>
+                                <a href="{!! url('round') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.pt-round', 2) !!}</a>
                             </li>
                             <li class="{!! Request::segment(1)==strtolower('item')?strtolower(trans('messages.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.pt-item', 2) !!}</a>
+                                <a href="{!! url('item') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.pt-item', 2) !!}</a>
                             </li>
                             <li class="{!! Request::segment(1)==strtolower('expected')?strtolower(trans('messages.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.expected-result', 2) !!}</a>
+                                <a href="{!! url('expected') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.expected-result', 2) !!}</a>
                             </li>
                             <li class="{!! Request::segment(1)==strtolower('shipment')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.shipment', 2) !!}</a>

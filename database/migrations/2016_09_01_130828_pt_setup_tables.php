@@ -43,7 +43,7 @@ class PtSetupTables extends Migration
         Schema::create('rounds', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
-      			$table->string('round_name');
+      			$table->string('name');
       			$table->string('description', 100)->nullable();
             $table->date('start_date');
             $table->date('end_date');
