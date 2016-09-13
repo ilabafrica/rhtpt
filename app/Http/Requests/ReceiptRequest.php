@@ -24,13 +24,10 @@ class ReceiptRequest extends Request {
   	{
   		$id = $this->ingnoreId();
   		return [
-              'round'   => 'required:shipments,round_id,'.$id,
-              'date_prepared'   => 'required:shipments,date_prepared,'.$id,
-              'date_shipped'   => 'required:shipments,date_shipped,'.$id,
-              'shipping_method'   => 'required:shipments,shipping_method,'.$id,
-              'courier'   => 'required:shipments,courier,'.$id,
-              'participant'   => 'required:shipments,participant,'.$id,
-              'panels_shipped'   => 'required:shipments,panels_shipped,'.$id,
+              'shipment'   => 'required:shipments,shipment_id,'.$id,
+              'date_received'   => 'required:shipments,date_received,'.$id,
+              'panels_received'   => 'required:shipments,panels_received,'.$id,
+              'recipient'   => 'required:shipments,recipient,'.$id,
           ];
   	}
   	/**
@@ -38,13 +35,10 @@ class ReceiptRequest extends Request {
   	*/
   	public function ingnoreId(){
     		$id = $this->route('receipt');
-    		$round_id = $this->input('round');
-        $date_prepared = $this->input('date_prepared');
-        $date_shipped = $this->input('date_shipped');
-        $shipping_method = $this->input('shipping_method');
-        $courier = $this->input('courier');
-        $participant = $this->input('participant');
-        $panels_shipped = $this->input('panels_shipped');
-    		return Receipt::where(compact('id', 'round_id', 'date_prepared', 'date_shipped', 'shipping_method', 'courier', 'participant', 'panels_shipped'))->exists() ? $id : '';
+    		$shipment_id = $this->input('shipment');
+        $date_received = $this->input('date_received');
+        $panels_received = $this->input('panels_received');
+        $recipient = $this->input('recipient');
+    		return Receipt::where(compact('id', 'shipment_id', 'date_received', 'panels_received', 'recipient'))->exists() ? $id : '';
   	}
 }

@@ -107,7 +107,7 @@ class PtSetupTables extends Migration
     		{
       			$table->increments('id')->unsigned();
             $table->integer('shipment_id')->unsigned();
-            $table->dateTime('date_received');
+            $table->date('date_received');
             $table->string('panels_received');
       			$table->string('condition', 500);
             $table->string('storage', 500);

@@ -12,6 +12,7 @@ use App\Http\Requests\RoundRequest;
 use App\Models\Round;
 
 use Session;
+use Auth;
 
 class RoundController extends Controller
 {
@@ -49,8 +50,10 @@ class RoundController extends Controller
         //  prepare create-statement
         $round = new Round;
         $round->name = $request->name;
-        $round->label = $request->label;
         $round->description = $request->description;
+        $round->start_date = $request->start_date;
+        $round->end_date = $request->end_date;
+        $round->user_id = Auth::user()->id;
         $round->save();
         $url = session('SOURCE_URL');
 
@@ -80,7 +83,7 @@ class RoundController extends Controller
     {
         //  Prepare view
         $round = Round::findOrFail($id);
-        return view('round.create', compact('round'));
+        return view('round.edit', compact('round'));
     }
 
     /**
@@ -95,8 +98,10 @@ class RoundController extends Controller
         //  prepare update-statement
         $round = Round::findOrFail($id);
         $round->name = $request->name;
-        $round->label = $request->label;
         $round->description = $request->description;
+        $round->start_date = $request->start_date;
+        $round->end_date = $request->end_date;
+        $round->user_id = Auth::user()->id;
         $round->save();
         $url = session('SOURCE_URL');
 

@@ -16,4 +16,36 @@ class Item extends Model
   	 * @var string
   	 */
   	protected $table = 'items';
+    /**
+  	 * User relationship
+  	 *
+  	 */
+     public function user()
+     {
+          return $this->belongsTo('App\Models\User', 'prepared_by');
+     }
+    /**
+  	 * Program relationship
+  	 *
+  	 */
+     public function program()
+     {
+          return $this->belongsTo('App\Models\Program');
+     }
+    /**
+  	 * Round relationship
+  	 *
+  	 */
+     public function round()
+     {
+          return $this->belongsTo('App\Models\Round');
+     }
+    /**
+  	 * Material relationship
+  	 *
+  	 */
+     public function material()
+     {
+          return $this->belongsTo('App\Models\Material');
+     }
 }

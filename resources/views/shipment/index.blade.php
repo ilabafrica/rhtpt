@@ -6,15 +6,15 @@
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
             <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.pt') !!}</li>
-            <li class="active"><i class="fa fa-cube"></i> {!! trans('messages.sample-preparation') !!}</li>
+            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.shipment', 2) !!}</li>
         </ol>
     </div>
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-book"></i> {!! trans('messages.sample-preparation') !!}
+	    <i class="fa fa-book"></i> {!! trans_choice('messages.shipment', 2) !!}
 	    <span>
-		    <a class="btn btn-sm btn-belize-hole" href="{!! url("material/create") !!}" >
+		    <a class="btn btn-sm btn-belize-hole" href="{!! url("shipment/create") !!}" >
 				<i class="fa fa-plus-circle"></i>
 				{!! trans('messages.add') !!}
 			</a>
@@ -37,47 +37,47 @@
 	 	<table class="table table-bordered table-sm search-table" id="example">
 			<thead>
 				<tr>
-					<th>{!! trans('messages.batch') !!}</th>
-					<th>{!! trans('messages.date-prepared') !!}</th>
-					<th>{!! trans('messages.expiry-date') !!}</th>
-          <th>{!! trans('messages.material-type') !!}</th>
-          <th>{!! trans('messages.original-source') !!}</th>
-          <th>{!! trans('messages.date-collected') !!}</th>
-          <th>{!! trans('messages.prepared-by') !!}</th>
+					<th>{!! trans_choice('messages.pt-round', 1) !!}</th>
+          <th>{!! trans('messages.date-prepared') !!}</th>
+          <th>{!! trans('messages.date-shipped') !!}</th>
+					<th>{!! trans_choice('messages.shipping-method', 1) !!}</th>
+          <th>{!! trans_choice('messages.courier', 1) !!}</th>
+          <th>{!! trans_choice('messages.participant', 1) !!}</th>
+          <th>{!! trans('messages.panels-shipped') !!}</th>
 					<th>{!! trans('messages.action') !!}</th>
 				</tr>
 			</thead>
 			<tbody>
-			@foreach($materials as $key => $value)
-				<tr @if(session()->has('active_material'))
-	                    {!! (session('active_material') == $value->id)?"class='warning'":"" !!}
+			@foreach($shipments as $key => $value)
+				<tr @if(session()->has('active_shipment'))
+	                    {!! (session('active_shipment') == $value->id)?"class='warning'":"" !!}
 	                @endif
 	                >
-					<td>{!! $value->batch !!}</td>
-					<td>{!! $value->date_prepared !!}</td>
-					<td>{!! $value->expiry_date !!}</td>
-          <td>{!! $value->material($value->material_type) !!}</td>
-					<td>{!! $value->original_source !!}</td>
-					<td>{!! $value->date_collected !!}</td>
-          <td>{!! $value->user->name !!}</td>
+					<td>{!! $value->round->name !!}</td>
+          <td>{!! $value->date_prepared !!}</td>
+          <td>{!! $value->date_shipped !!}</td>
+          <td>{!! $value->shipping($value->shipping_method) !!}</td>
+          <td>{!! $value->courier !!}</td>
+          <td>{!! $value->part->name !!}</td>
+          <td>{!! $value->panels_shipped !!}</td>
 					<td>
 
-					<!-- show the test category (uses the show method found at GET /material/{id} -->
-						<a class="btn btn-sm btn-success" href="{!! url("material/" . $value->id) !!}" >
+					<!-- show the test category (uses the show method found at GET /shipment/{id} -->
+						<a class="btn btn-sm btn-success" href="{!! url("shipment/" . $value->id) !!}" >
 							<i class="fa fa-folder-open-o"></i>
 							{!! trans('messages.view') !!}
 						</a>
 
-					<!-- edit this test category (uses edit method found at GET /material/{id}/edit -->
-						<a class="btn btn-sm btn-info" href="{!! url("material/" . $value->id . "/edit") !!}" >
+					<!-- edit this test category (uses edit method found at GET /shipment/{id}/edit -->
+						<a class="btn btn-sm btn-info" href="{!! url("shipment/" . $value->id . "/edit") !!}" >
 							<i class="fa fa-edit"></i>
 							{!! trans('messages.edit') !!}
 						</a>
 
-					<!-- delete this test category (uses delete method found at GET /material/{id}/delete -->
+					<!-- delete this test category (uses delete method found at GET /shipment/{id}/delete -->
 						<button class="btn btn-sm btn-danger delete-item-link"
 							data-toggle="modal" data-target=".confirm-delete-modal"
-							data-id='{!! url("material/" . $value->id . "/delete") !!}'>
+							data-id='{!! url("shipment/" . $value->id . "/delete") !!}'>
 							<i class="fa fa-trash-o"></i>
 							{!! trans('messages.delete') !!}
 						</button>

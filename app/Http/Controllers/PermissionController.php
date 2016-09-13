@@ -10,6 +10,7 @@ use Response;
 use Auth;
 use Session;
 use Lang;
+use Input;
 
 class PermissionController extends Controller {
 

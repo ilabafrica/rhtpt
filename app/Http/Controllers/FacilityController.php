@@ -37,7 +37,7 @@ class FacilityController extends Controller
     public function create()
     {
         //  Return form for new Facility
-        $sub_counties = SubCounty::lists('name', 'id');
+        $sub_counties = SubCounty::lists('name', 'id')->toArray();
         return view('facility.create', compact('sub_counties'));
     }
 
@@ -90,7 +90,7 @@ class FacilityController extends Controller
         //  Get record
         $facility = Facility::findOrFail($id);
         $sub_county = $facility->subCounty->id;
-        $sub_counties = SubCounty::lists('name', 'id');
+        $sub_counties = SubCounty::lists('name', 'id')->toArray();
         return view('facility.edit', compact('facility', 'sub_county', 'sub_counties'));
     }
 

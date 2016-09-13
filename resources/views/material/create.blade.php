@@ -56,11 +56,11 @@
 					</div>
 				</div>
         <div class="form-group row">
-					{!! Form::label('material-type', trans('messages.material-type'), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-6">
-						{!! Form::text('material_type', old('material_type'), array('class' => 'form-control')) !!}
-					</div>
-				</div>
+            {!! Form::label('material-type', trans('messages.material-type'), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('material_type', array(''=>trans('messages.select'))+$material_types, '', array('class' => 'form-control c-select', 'id' => 'item')) !!}
+            </div>
+        </div>
         <div class="form-group row">
 					{!! Form::label('original-source', trans('messages.original-source'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
@@ -77,7 +77,7 @@
         <div class="form-group row">
 					{!! Form::label('prepared-by', trans('messages.prepared-by'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
-						{!! Form::text('prepared_by', old('prepared_by'), array('class' => 'form-control')) !!}
+            {!! Form::select('prepared_by', array(''=>trans('messages.select'))+$users, '', array('class' => 'form-control c-select', 'id' => 'prepared_by')) !!}
 					</div>
 				</div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">

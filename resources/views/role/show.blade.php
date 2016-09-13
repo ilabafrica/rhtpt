@@ -17,7 +17,7 @@
 	    <span>
 	    	<a class="btn btn-sm btn-belize-hole" href="{!! url("role/create") !!}" >
 				<i class="fa fa-plus-circle"></i>
-				{!! trans('messages.new').' '.trans_choice('messages.role', 1) !!}
+				{!! trans('messages.add') !!}
 			</a>
 			<a class="btn btn-sm btn-info" href="{!! url("role/" . $role->id . "/edit") !!}" >
 				<i class="fa fa-edit"></i>

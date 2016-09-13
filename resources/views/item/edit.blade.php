@@ -35,34 +35,34 @@
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
             <!-- ./ csrf token -->
 			<div class="col-md-8">
-        <div class="form-group row">
+				<div class="form-group row">
 					{!! Form::label('pt-id', trans('messages.pt-id'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
-						{!! Form::text('pt_id', old('pt_id'), array('class' => 'form-control')) !!}
+						{!! Form::text('pt_identifier', $item->pt_id, array('class' => 'form-control')) !!}
 					</div>
 				</div>
         <div class="form-group row">
-            {!! Form::label('program', trans_choice('messages.pt-program', 1), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6 custom-c-select">
-              {!! Form::select('program', array(''=>trans('messages.select'))+$programs, '', array('class' => 'form-control', 'id' => 'program')) !!}
+            {!! Form::label('program', trans_choice('messages.program', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('program', array(''=>trans('messages.select'))+$programs, $program, array('class' => 'form-control c-select', 'id' => 'program')) !!}
             </div>
         </div>
         <div class="form-group row">
-            {!! Form::label('material', trans('messages.material'), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6 custom-c-select">
-              {!! Form::select('material', array(''=>trans('messages.select'))+$materials, '', array('class' => 'form-control', 'id' => 'material')) !!}
+            {!! Form::label('material', trans_choice('messages.material', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('material', array(''=>trans('messages.select'))+$materials, $material, array('class' => 'form-control c-select', 'id' => 'material')) !!}
             </div>
         </div>
         <div class="form-group row">
             {!! Form::label('round', trans_choice('messages.pt-round', 1), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6 custom-c-select">
-              {!! Form::select('round', array(''=>trans('messages.select'))+$rounds, '', array('class' => 'form-control', 'id' => 'round')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('round', array(''=>trans('messages.select'))+$rounds, $round, array('class' => 'form-control c-select', 'id' => 'round')) !!}
             </div>
         </div>
         <div class="form-group row">
             {!! Form::label('prepared-by', trans('messages.prepared-by'), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6 custom-c-select">
-              {!! Form::select('prepared_by', array(''=>trans('messages.select'))+$users, '', array('class' => 'form-control', 'id' => 'prepared_by')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('prepared_by', array(''=>trans('messages.select'))+$users, $user, array('class' => 'form-control c-select', 'id' => 'prepared_by')) !!}
             </div>
         </div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">

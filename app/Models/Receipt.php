@@ -1,7 +1,7 @@
 <?php namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class Reception extends Model
+class Receipt extends Model
 {
   	/**
   	 * Enabling soft deletes for sample reception.
@@ -16,6 +16,14 @@ class Reception extends Model
   	 * @var string
   	 */
   	protected $table = 'receipts';
+    /**
+  	 * user relationship
+  	 *
+  	 */
+     public function receiver()
+     {
+          return $this->belongsTo('App\Models\User', 'recipient');
+     }
     /**
   	 * Shipment relationship
   	 *

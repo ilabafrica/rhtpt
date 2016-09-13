@@ -23,19 +23,30 @@ class Expected extends Model
   	const NEGATIVE = 0;
   	const POSITIVE = 1;
     /**
-  	 * Pt relationship
+  	 * User relationship
   	 *
   	 */
-     public function pt()
+     public function user()
      {
-          return $this->belongsTo('App\Models\Pt');
+          return $this->belongsTo('App\Models\User', 'tested_by');
      }
     /**
-  	 * Field relationship
+  	 * Item relationship
   	 *
   	 */
-     public function field()
+     public function item()
      {
-          return $this->belongsTo('App\Models\Field');
+          return $this->belongsTo('App\Models\Item');
+     }
+    /**
+  	 * Return readable result
+  	 *
+  	 */
+     public function result($result)
+     {
+          if($result == Expected::NEGATIVE)
+              return 'Negative';
+          else
+              return 'Positive';
      }
 }

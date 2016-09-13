@@ -1675,7 +1675,6 @@ pre code {
     margin-left: 100%;
   }
 }
-
 .table {
   width: 100%;
   max-width: 100%;
@@ -1701,11 +1700,6 @@ pre code {
 
 .table .table {
   background-color: #fff;
-}
-
-.table-sm th,
-.table-sm td {
-  padding: .3rem;
 }
 
 .table-bordered {
@@ -1875,7 +1869,6 @@ pre code {
   display: block !important;
   border: 1px solid #eceeef;
 }
-
 .form-control {
   display: block;
   width: 100%;

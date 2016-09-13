@@ -25,6 +25,7 @@ return [
     */
     //  PT
     'program'               =>    'Program|Programs',
+    'material'              =>    'Material|Materials',
     'sample-preparation'    =>    'Sample Preparation',
     'pt-round'              =>    'PT Round|PT Rounds',
     'pt-item'               =>    'PT Item|PT Items',
@@ -42,13 +43,27 @@ return [
     'prepared-by'           =>    'Prepared By',
     'start-date'            =>    'Begins',
     'end-date'              =>    'Ends',
+    'pt-id'                 =>    'PT Identifier',
+    'tested-by'             =>    'Tested By',
+    'select'                =>    '--- Select ---',
+    'date-shipped'          =>    'Date Shipped',
+    'shipping-method'       =>    'Shipping Method|Shipping Methods',
+    'courier'               =>    'Courier|Couriers',
+    'participant'           =>    'Participant|Participants',
+    'panels-shipped'        =>    'Panels Shipped',
+    'date-received'         =>    'Date Received',
+    'panels-received'       =>    'Panels Received',
+    'condition'             =>    'Condition',
+    'storage'               =>    'Storage',
+    'transit-temperature'   =>    'Transit Temperature',
+    'recipient'             =>    'Recipient|Recipients',
     //  Reports
 
     //  User Management
     'user'                  =>    'User|Users',
     'role'                  =>    'Role|Roles',
     'permission'            =>    'Permission|Permissions',
-    'privilege'             =>    'Privilege|Privileges',
+    'assign-roles'          =>    'Assign Roles',
     //  Facility Catalog - Administrative and are not bound to change in the near future
     'sub-county'            =>    'Sub County|Sub Counties',
     'county'                =>    'County|Counties',

@@ -36,13 +36,13 @@
             <!-- ./ csrf token -->
 			<div class="col-md-8">
         <div class="form-group row">
-            {!! Form::label('item', trans_choice('messages.item', 1), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6 custom-c-select">
-              {!! Form::select('item', array(''=>trans('messages.select'))+$items, '', array('class' => 'form-control', 'id' => 'item')) !!}
+            {!! Form::label('item', trans_choice('messages.pt-item', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('item', array(''=>trans('messages.select'))+$items, $item, array('class' => 'form-control c-select', 'id' => 'item')) !!}
             </div>
         </div>
 				<div class="form-group row">
-					{!! Form::label('expected-result', trans('messages.expected-result'), array('class' => 'col-sm-4 form-control-label')) !!}
+					{!! Form::label('expected-result', trans_choice('messages.expected-result', 1), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-8">
             @foreach($results as $key => $value)
 						      <label class="radio-inline">{!! Form::radio('result', $key, false) !!}{{ $value }}</label>
@@ -51,8 +51,8 @@
 				</div>
         <div class="form-group row">
             {!! Form::label('tested-by', trans('messages.tested-by'), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6 custom-c-select">
-              {!! Form::select('tested_by', array(''=>trans('messages.select'))+$users, '', array('class' => 'form-control', 'id' => 'tested_by')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('tested_by', array(''=>trans('messages.select'))+$users, $user, array('class' => 'form-control c-select', 'id' => 'tested_by')) !!}
             </div>
         </div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">

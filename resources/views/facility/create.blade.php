@@ -48,11 +48,11 @@
 					</div>
 				</div>
         <div class="form-group row">
-					{!! Form::label('sub-county', trans_choice('messages.sub-county',1), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-6">
-						{!! Form::text('sub_county', old('sub_county'), array('class' => 'form-control')) !!}
-					</div>
-				</div>
+            {!! Form::label('sub-county', trans_choice('messages.sub-county', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('sub_county', array(''=>trans('messages.select'))+$sub_counties, '', array('class' => 'form-control c-select', 'id' => 'sub_county')) !!}
+            </div>
+        </div>
         <div class="form-group row">
 					{!! Form::label('mailing-address', trans('messages.mailing-address'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
@@ -84,9 +84,9 @@
 					</div>
 				</div>
 				<div class="form-group row">
-					{!! Form::label('latitude', trans('messages.latitudelatitude'), array('class' => 'col-sm-4 form-control-label')) !!}
+					{!! Form::label('latitude', trans('messages.latitude'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
-						{!! Form::text('latitudelatitude', old('latitudelatitude'), array('class' => 'form-control')) !!}
+						{!! Form::text('latitude', old('latitude'), array('class' => 'form-control')) !!}
 					</div>
 				</div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">

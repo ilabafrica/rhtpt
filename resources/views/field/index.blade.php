@@ -52,8 +52,8 @@
 	                >
 					<td>{!! $value->name !!}</td>
 					<td>{!! $value->label !!}</td>
-					<td>{!! $value->order !!}</td>
-          <td>{!! $value->tag !!}</td>
+					<td>{!! $value->order($value->order) !!}</td>
+          <td>{!! $value->tag($value->tag) !!}</td>
 					<td>
 
 					<!-- show the test category (uses the show method found at GET /field/{id} -->

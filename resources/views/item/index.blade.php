@@ -38,10 +38,11 @@
 			<thead>
 				<tr>
 					<th>{!! trans('messages.pt-id') !!}</th>
-					<th>{!! trans_choice('messages.pt-program', 1) !!}</th>
-          <th>{!! trans('messages.material') !!}</th>
+					<th>{!! trans_choice('messages.program', 1) !!}</th>
+          <th>{!! trans_choice('messages.material', 1) !!}</th>
           <th>{!! trans_choice('messages.pt-round', 1) !!}</th>
 					<th>{!! trans('messages.prepared-by') !!}</th>
+          <th>{!! trans('messages.action') !!}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -51,10 +52,10 @@
 	                @endif
 	                >
 					<td>{!! $value->pt_id !!}</td>
-          <td>{!! $value->program_id !!}</td>
-          <td>{!! $value->material_id !!}</td>
-					<td>{!! $value->round_id !!}</td>
-          <td>{!! $value->prepared_by !!}</td>
+          <td>{!! $value->program->name !!}</td>
+          <td>{!! $value->material->material($value->material->material_type) !!}</td>
+					<td>{!! $value->round->name !!}</td>
+          <td>{!! $value->user->name !!}</td>
 					<td>
 
 					<!-- show the test category (uses the show method found at GET /item/{id} -->

@@ -6,7 +6,7 @@
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
             <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.program-management') !!}</li>
-            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.field', 2) !!}</li>
+            <li><a href="{!! route('field.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.field', 2) !!}</a></li>
             <li class="active">{!! trans('messages.edit') !!}</li>
         </ol>
     </div>
@@ -47,12 +47,12 @@
 						{!! Form::text('label', old('label'), array('class' => 'form-control')) !!}
 					</div>
 				</div>
-				<div class="form-group row">
-					{!! Form::label('order', trans('messages.order'), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-8">
-						{!! Form::text('order', old('order'), array('class' => 'form-control')) !!}
-					</div>
-				</div>
+        <div class="form-group row">
+            {!! Form::label('order', trans('messages.order'), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('order', array(''=>trans('messages.select'))+$fields, $fld, array('class' => 'form-control c-select', 'id' => 'item')) !!}
+            </div>
+        </div>
 				<div class="form-group row">
 					{!! Form::label('tag', trans('messages.tag'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-8">

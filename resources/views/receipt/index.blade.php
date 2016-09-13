@@ -6,15 +6,15 @@
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
             <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.pt') !!}</li>
-            <li class="active"><i class="fa fa-cube"></i> {!! trans('messages.sample-preparation') !!}</li>
+            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.receipt', 2) !!}</li>
         </ol>
     </div>
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-book"></i> {!! trans('messages.sample-preparation') !!}
+	    <i class="fa fa-book"></i> {!! trans_choice('messages.receipt', 2) !!}
 	    <span>
-		    <a class="btn btn-sm btn-belize-hole" href="{!! url("material/create") !!}" >
+		    <a class="btn btn-sm btn-belize-hole" href="{!! url("receipt/create") !!}" >
 				<i class="fa fa-plus-circle"></i>
 				{!! trans('messages.add') !!}
 			</a>
@@ -37,47 +37,47 @@
 	 	<table class="table table-bordered table-sm search-table" id="example">
 			<thead>
 				<tr>
-					<th>{!! trans('messages.batch') !!}</th>
-					<th>{!! trans('messages.date-prepared') !!}</th>
-					<th>{!! trans('messages.expiry-date') !!}</th>
-          <th>{!! trans('messages.material-type') !!}</th>
-          <th>{!! trans('messages.original-source') !!}</th>
-          <th>{!! trans('messages.date-collected') !!}</th>
-          <th>{!! trans('messages.prepared-by') !!}</th>
+					<th>{!! trans_choice('messages.pt-round', 1) !!}</th>
+          <th>{!! trans('messages.date-received') !!}</th>
+          <th>{!! trans('messages.panels-received') !!}</th>
+					<th>{!! trans('messages.condition') !!}</th>
+          <th>{!! trans('messages.storage') !!}</th>
+          <th>{!! trans('messages.transit-temperature') !!}</th>
+          <th>{!! trans_choice('messages.recipient', 1) !!}</th>
 					<th>{!! trans('messages.action') !!}</th>
 				</tr>
 			</thead>
 			<tbody>
-			@foreach($materials as $key => $value)
-				<tr @if(session()->has('active_material'))
-	                    {!! (session('active_material') == $value->id)?"class='warning'":"" !!}
+			@foreach($receipts as $key => $value)
+				<tr @if(session()->has('active_receipt'))
+	                    {!! (session('active_receipt') == $value->id)?"class='warning'":"" !!}
 	                @endif
 	                >
-					<td>{!! $value->batch !!}</td>
-					<td>{!! $value->date_prepared !!}</td>
-					<td>{!! $value->expiry_date !!}</td>
-          <td>{!! $value->material($value->material_type) !!}</td>
-					<td>{!! $value->original_source !!}</td>
-					<td>{!! $value->date_collected !!}</td>
-          <td>{!! $value->user->name !!}</td>
+					<td>{!! $value->id !!}</td>
+          <td>{!! $value->date_received !!}</td>
+          <td>{!! $value->panels_received !!}</td>
+          <td>{!! $value->condition!!}</td>
+          <td>{!! $value->storage !!}</td>
+          <td>{!! $value->transit_temperature !!}</td>
+          <td>{!! $value->receiver->name !!}</td>
 					<td>
 
-					<!-- show the test category (uses the show method found at GET /material/{id} -->
-						<a class="btn btn-sm btn-success" href="{!! url("material/" . $value->id) !!}" >
+					<!-- show the test category (uses the show method found at GET /receipt/{id} -->
+						<a class="btn btn-sm btn-success" href="{!! url("receipt/" . $value->id) !!}" >
 							<i class="fa fa-folder-open-o"></i>
 							{!! trans('messages.view') !!}
 						</a>
 
-					<!-- edit this test category (uses edit method found at GET /material/{id}/edit -->
-						<a class="btn btn-sm btn-info" href="{!! url("material/" . $value->id . "/edit") !!}" >
+					<!-- edit this test category (uses edit method found at GET /receipt/{id}/edit -->
+						<a class="btn btn-sm btn-info" href="{!! url("receipt/" . $value->id . "/edit") !!}" >
 							<i class="fa fa-edit"></i>
 							{!! trans('messages.edit') !!}
 						</a>
 
-					<!-- delete this test category (uses delete method found at GET /material/{id}/delete -->
+					<!-- delete this test category (uses delete method found at GET /receipt/{id}/delete -->
 						<button class="btn btn-sm btn-danger delete-item-link"
 							data-toggle="modal" data-target=".confirm-delete-modal"
-							data-id='{!! url("material/" . $value->id . "/delete") !!}'>
+							data-id='{!! url("receipt/" . $value->id . "/delete") !!}'>
 							<i class="fa fa-trash-o"></i>
 							{!! trans('messages.delete') !!}
 						</button>

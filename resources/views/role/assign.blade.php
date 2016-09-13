@@ -6,13 +6,13 @@
         <ul class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
             <li class="active"><i class="fa fa-users"></i> {!! trans('messages.user-management') !!}</li>
-            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.privilege', 2) !!}</li>
+            <li class="active"><i class="fa fa-cube"></i> {!! trans('messages.assign-roles') !!}</li>
         </ul>
     </div>
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-book"></i> {!! trans_choice('messages.privilege', 2) !!}
+	    <i class="fa fa-book"></i> {!! trans('messages.assign-roles') !!}
 	    <span>
 		    <a class="btn btn-sm btn-belize-hole" href="{!! url("role/create") !!}">
 				<i class="fa fa-plus-circle"></i> {!! trans_choice('messages.role', 1) !!}

@@ -9,6 +9,12 @@ class Shipment extends Model
   	 */
   	use SoftDeletes;
   	protected $dates = ['deleted_at'];
+    /**
+  	 * Constants for shipping methods
+  	 *
+  	 */
+     const POST = 0;
+     const COURIER = 1;
 
   	/**
   	 * The database table used by the model.
@@ -17,11 +23,30 @@ class Shipment extends Model
   	 */
   	protected $table = 'shipments';
     /**
-  	 * Shipment relationship
+  	 * Round relationship
   	 *
   	 */
-     public function shipment()
+     public function round()
      {
-          return $this->belongsTo('Shipment');
+          return $this->belongsTo('App\Models\Round');
+     }
+    /**
+  	 * Participant relationship
+  	 *
+  	 */
+     public function part()
+     {
+          return $this->belongsTo('App\Models\User', 'participant');
+     }
+    /**
+  	 * Readable shipping method
+  	 *
+  	 */
+     public function shipping($method)
+     {
+          if($method == Shipment::POST)
+              return 'Post';
+          else if($method == Shipment::COURIER)
+              return 'Courier';
      }
 }

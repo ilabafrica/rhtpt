@@ -83,6 +83,24 @@ Route::group(['middleware' => 'auth'], function(){
         "as"   => "expected.delete",
         "uses" => "ExpectedController@delete"
     ));
+    //	Shipment controller
+    Route::resource('shipment', 'ShipmentController');
+    Route::get("/shipment/{id}/delete", array(
+        "as"   => "shipment.delete",
+        "uses" => "ShipmentController@delete"
+    ));
+    //	Receipt controller
+    Route::resource('receipt', 'ReceiptController');
+    Route::get("/receipt/{id}/delete", array(
+        "as"   => "receipt.delete",
+        "uses" => "ReceiptController@delete"
+    ));
+    //	Result controller
+    Route::resource('result', 'ResultController');
+    Route::get("/result/{id}/delete", array(
+        "as"   => "result.delete",
+        "uses" => "ResultController@delete"
+    ));
 });
 
 Route::get('/', function () {

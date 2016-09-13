@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MaterialRequest;
 
 use App\Models\Material;
+use App\Models\User;
 
 use Session;
 use Auth;
@@ -35,9 +36,10 @@ class MaterialController extends Controller
      */
     public function create()
     {
+        $users = User::lists('name', 'id')->toArray();
         //  Prepare view
         $material_types = array(Material::WHOLE_BLOOD=>'Whole Blood', Material::PLASMA=>'Plasma', Material::SLIDE=>'Slide', Material::SERUM=>'Serum');
-        return view('material.create', compact('material_types'));
+        return view('material.create', compact('material_types', 'users'));
     }
 
     /**
@@ -85,10 +87,13 @@ class MaterialController extends Controller
      */
     public function edit($id)
     {
-        //  Prepare view
         $material = Material::findOrFail($id);
+        $users = User::lists('name', 'id')->toArray();
+        $user = $material->prepared_by;
+        $material_type = $material->material_type;
+        //  Prepare view
         $material_types = array(Material::WHOLE_BLOOD=>'Whole Blood', Material::PLASMA=>'Plasma', Material::SLIDE=>'Slide', Material::SERUM=>'Serum');
-        return view('material.create', compact('material', 'material_types'));
+        return view('material.edit', compact('material', 'material_types', 'material_type', 'users', 'user'));
     }
 
     /**

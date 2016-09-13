@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Http\Requests\RoundRequest;
+use App\Http\Requests\ItemRequest;
 
 use App\Models\Item;
 use App\Models\Program;
@@ -40,10 +40,10 @@ class ItemController extends Controller
     public function create()
     {
         //  prepare data for select lists
-        $programs = Program::lists('name', 'id');
-        $materials = Material::lists('batch', 'id');
-        $rounds = Round::lists('name', 'id');
-        $users = User::lists('name', 'id');
+        $programs = Program::lists('name', 'id')->toArray();
+        $materials = Material::lists('batch', 'id')->toArray();
+        $rounds = Round::lists('name', 'id')->toArray();
+        $users = User::lists('name', 'id')->toArray();
         //  Prepare view
         return view('item.create', compact('programs', 'materials', 'rounds', 'users'));
     }
@@ -94,16 +94,16 @@ class ItemController extends Controller
         //  Find item
         $item = Item::findOrFail($id);
         //  prepare data for select lists
-        $programs = Program::lists('name', 'id');
+        $programs = Program::lists('name', 'id')->toArray();
         $program = $item->program_id;
-        $materials = Material::lists('batch', 'id');
+        $materials = Material::lists('batch', 'id')->toArray();
         $material = $item->material_id;
-        $rounds = Round::lists('name', 'id');
+        $rounds = Round::lists('name', 'id')->toArray();
         $round = $item->round_id;
-        $users = User::lists('name', 'id');
+        $users = User::lists('name', 'id')->toArray();
         $user = $item->prepared_by;
         //  Prepare view
-        return view('item.create', compact('item', 'programs', 'program', 'materials', 'material', 'rounds', 'round', 'users', 'user'));
+        return view('item.edit', compact('item', 'programs', 'program', 'materials', 'material', 'rounds', 'round', 'users', 'user'));
     }
 
     /**

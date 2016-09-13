@@ -3,7 +3,7 @@
 use App\Http\Requests\Request;
 use App\Models\Item;
 
-class RoundRequest extends Request {
+class ItemRequest extends Request {
 
   	/**
   	 * Determine if the user is authorized to make this request.

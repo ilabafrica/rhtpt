@@ -34,9 +34,10 @@ class FieldController extends Controller
      */
     public function create()
     {
+        $fields = Field::lists('label', 'id')->toArray();
         //  Prepare view
         $field_types = array(Field::CHECKBOX=>'Checkbox', Field::DATE=>'Date', Field::EMAIL=>'E-mail', Field::FIELD=>'Field', Field::RADIO=>'Radio', Field::SELECT=>'Select List', Field::TEXT=>'Free Text');
-        return view('field.create', compact('field_types'));
+        return view('field.create', compact('field_types', 'fields'));
     }
 
     /**
@@ -81,10 +82,12 @@ class FieldController extends Controller
      */
     public function edit($id)
     {
-        //  Prepare view
         $field = Field::findOrFail($id);
+        $fields = Field::lists('label', 'id')->toArray();
+        $fld = $field->order;
+        //  Prepare view
         $field_types = array(Field::CHECKBOX=>'Checkbox', Field::DATE=>'Date', Field::EMAIL=>'E-mail', Field::FIELD=>'Field', Field::RADIO=>'Radio', Field::SELECT=>'Select List', Field::TEXT=>'Free Text');
-        return view('field.create', compact('field', 'field_types'));
+        return view('field.create', compact('field', 'field_types', 'fields', 'field'));
     }
 
     /**

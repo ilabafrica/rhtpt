@@ -40,8 +40,8 @@ class ExpectedController extends Controller
     {
         //  Prepare selects
         $results = array(Result::POSITIVE=>'Positive', Result::NEGATIVE=>'Negative');
-        $items = Item::lists('pt_id', 'id');
-        $users = User::lists('name', 'id');
+        $items = Item::lists('pt_id', 'id')->toArray();
+        $users = User::lists('name', 'id')->toArray();
         //  Prepare view
         return view('expected.create', compact('results', 'items', 'users'));
     }
@@ -59,6 +59,7 @@ class ExpectedController extends Controller
         $expected->item_id = $request->item;
         $expected->result = $request->result;
         $expected->tested_by = $request->tested_by;
+        $expected->user_id = Auth::user()->id;
         $expected->save();
         $url = session('SOURCE_URL');
 
@@ -90,12 +91,12 @@ class ExpectedController extends Controller
         //  Prepare selects
         $results = array(Result::POSITIVE=>'Positive', Result::NEGATIVE=>'Negative');
         $result = $expected->result;
-        $items = Item::lists('pt_id', 'id');
+        $items = Item::lists('pt_id', 'id')->toArray();
         $item = $expected->item_id;
-        $users = User::lists('name', 'id');
+        $users = User::lists('name', 'id')->toArray();
         $user = $expected->tested_by;
         //  Prepare view
-        return view('expected.create', compact('expected', 'results', 'result', 'items', 'item', 'users', 'user'));
+        return view('expected.edit', compact('expected', 'results', 'result', 'items', 'item', 'users', 'user'));
     }
 
     /**
@@ -112,6 +113,7 @@ class ExpectedController extends Controller
         $expected->item_id = $request->item;
         $expected->result = $request->result;
         $expected->tested_by = $request->tested_by;
+        $expected->user_id = Auth::user()->id;
         $expected->save();
         $url = session('SOURCE_URL');
 

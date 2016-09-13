@@ -47,12 +47,12 @@
 						{!! Form::text('display_name', old('display_name'), array('class' => 'form-control')) !!}
 					</div>
 				</div>
-                <div class="form-group row">
-                    {!! Form::label('description', trans('messages.description'), array('class' => 'col-sm-4 form-control-label')) !!}
-                    <div class="col-sm-6">
-                        {!! Form::textarea('description', old('description'), array('class' => 'form-control', 'rows' => '3')) !!}
-                    </div>
-                </div>
+        <div class="form-group row">
+            {!! Form::label('description', trans('messages.description'), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+                {!! Form::textarea('description', old('description'), array('class' => 'form-control', 'rows' => '3')) !!}
+            </div>
+        </div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">
 					{!! Form::button("<i class='fa fa-plus-circle'></i> ".trans('messages.save'),
 						array('class' => 'btn btn-primary btn-sm', 'onclick' => 'submit()')) !!}

@@ -24,4 +24,27 @@ class Material extends Model
   	const PLASMA = 1;
     const SLIDE = 2;
     const SERUM = 3;
+    /**
+  	 * User relationship
+  	 *
+  	 */
+     public function user()
+     {
+          return $this->belongsTo('App\Models\User', 'prepared_by');
+     }
+     /**
+   	 * Return readable material-type
+   	 *
+   	 */
+     public function material($material)
+     {
+        if($material == Material::WHOLE_BLOOD)
+            return 'Whole Blood';
+        else if($material == Material::PLASMA)
+            return 'Plasma';
+        else if($material == Material::SLIDE)
+            return 'Slide';
+        else if($material == Material::SERUM)
+            return 'Serum';
+     }
 }

@@ -49,9 +49,9 @@
 	                    {!! (session('active_expected') == $value->id)?"class='warning'":"" !!}
 	                @endif
 	                >
-					<td>{!! $value->item_id !!}</td>
-          <td>{!! $value->result !!}</td>
-          <td>{!! $value->tested_by !!}</td>
+					<td>{!! $value->item->pt_id !!}</td>
+          <td>{!! $value->result($value->result) !!}</td>
+          <td>{!! $value->user->name !!}</td>
 					<td>
 
 					<!-- show the test category (uses the show method found at GET /expected/{id} -->

@@ -24,7 +24,7 @@ class RoundRequest extends Request {
 		{
 			$id = $this->ingnoreId();
 			return [
-	            'round_name'   => 'required|unique:rounds,round_name,'.$id,
+	            'name'   => 'required|unique:rounds,name,'.$id,
 	            'start_date'   => 'required:rounds,start_date,'.$id,
 	            'end_date'   => 'required:rounds,end_date,'.$id,
 	        ];
@@ -34,7 +34,7 @@ class RoundRequest extends Request {
 		*/
 		public function ingnoreId(){
 			$id = $this->route('round');
-			$name = $this->input('round_name');
+			$name = $this->input('name');
 	    $start_date = $this->input('start_date');
 	    $end_date = $this->input('end_date');
 			return Round::where(compact('id', 'name', 'start_date', 'end_date'))->exists() ? $id : '';

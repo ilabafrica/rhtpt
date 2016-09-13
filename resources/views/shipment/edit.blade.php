@@ -6,7 +6,7 @@
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
             <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.pt') !!}</li>
-            <li><a href="{!! route('material.index') !!}"><i class="fa fa-cube"></i> {!! trans('messages.sample-preparation') !!}</a></li>
+            <li><a href="{!! route('shipment.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.shipment', 2) !!}</a></li>
             <li class="active">{!! trans('messages.edit') !!}</li>
         </ol>
     </div>
@@ -30,17 +30,17 @@
         </div>
         @endif
 		<div class="row">
-			{!! Form::model($material, array('route' => array('material.update', $material->id), 'method' => 'PUT', 'id' => 'form-edit-material', 'class' => 'form-horizontal')) !!}
+			{!! Form::model($shipment, array('route' => array('shipment.update', $shipment->id), 'method' => 'PUT', 'id' => 'form-edit-shipment', 'class' => 'form-horizontal')) !!}
 			<!-- CSRF Token -->
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
             <!-- ./ csrf token -->
 			<div class="col-md-8">
-				<div class="form-group row">
-					{!! Form::label('batch', trans('messages.batch'), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-6">
-						{!! Form::text('batch', old('batch'), array('class' => 'form-control')) !!}
-					</div>
-				</div>
+        <div class="form-group row">
+            {!! Form::label('round', trans_choice('messages.pt-round', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('round', array(''=>trans('messages.select'))+$rounds, $round, array('class' => 'form-control c-select', 'id' => 'item')) !!}
+            </div>
+        </div>
         <div class="form-group row">
 					{!! Form::label('date-prepared', trans('messages.date-prepared'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6 input-group date datepicker"   style="padding-left:15px;padding-right:15px;">
@@ -49,35 +49,36 @@
 					</div>
 				</div>
         <div class="form-group row">
-					{!! Form::label('expiry-date', trans('messages.expiry-date'), array('class' => 'col-sm-4 form-control-label')) !!}
+					{!! Form::label('date-shipped', trans('messages.date-shipped'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6 input-group date datepicker"   style="padding-left:15px;padding-right:15px;">
-						{!! Form::text('expiry_date', old('expiry_date'), array('class' => 'form-control')) !!}
+						{!! Form::text('date_shipped', old('date_shipped'), array('class' => 'form-control')) !!}
 						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 					</div>
 				</div>
+				<div class="form-group row">
+					{!! Form::label('shipping-method', trans_choice('messages.shipping-method', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+					<div class="col-sm-8">
+            @foreach($shipping_methods as $key => $value)
+						      <label class="radio-inline">{!! Form::radio('shipping_method', $key, false) !!}{{ $value }}</label>
+            @endforeach
+					</div>
+				</div>
         <div class="form-group row">
-            {!! Form::label('material-type', trans('messages.material-type'), array('class' => 'col-sm-4 form-control-label')) !!}
+					{!! Form::label('courier', trans_choice('messages.courier', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+					<div class="col-sm-6">
+						{!! Form::text('courier', old('courier'), array('class' => 'form-control')) !!}
+					</div>
+				</div>
+        <div class="form-group row">
+            {!! Form::label('participant', trans_choice('messages.participant', 1), array('class' => 'col-sm-4 form-control-label')) !!}
             <div class="col-sm-6">
-              {!! Form::select('material_type', array(''=>trans('messages.select'))+$material_types, $material_type, array('class' => 'form-control c-select', 'id' => 'item')) !!}
+              {!! Form::select('participant', array(''=>trans('messages.select'))+$users, $user, array('class' => 'form-control c-select', 'id' => 'tested_by')) !!}
             </div>
         </div>
         <div class="form-group row">
-					{!! Form::label('original-source', trans('messages.original-source'), array('class' => 'col-sm-4 form-control-label')) !!}
+					{!! Form::label('panels-shipped', trans('messages.panels-shipped'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
-						{!! Form::text('original_source', old('original_source'), array('class' => 'form-control')) !!}
-					</div>
-				</div>
-        <div class="form-group row">
-					{!! Form::label('date-collected', trans('messages.date-collected'), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-6 input-group date datepicker"   style="padding-left:15px;padding-right:15px;">
-						{!! Form::text('date_collected', old('date_collected'), array('class' => 'form-control')) !!}
-						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-					</div>
-				</div>
-        <div class="form-group row">
-					{!! Form::label('prepared-by', trans('messages.prepared-by'), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-6">
-            {!! Form::select('prepared_by', array(''=>trans('messages.select'))+$users, $user, array('class' => 'form-control c-select', 'id' => 'prepared_by')) !!}
+						{!! Form::text('panels_shipped', old('panels_shipped'), array('class' => 'form-control')) !!}
 					</div>
 				</div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">
