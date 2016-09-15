@@ -19,6 +19,9 @@ class User extends Model implements AuthenticatableContract,
     const MALE = 0;
     const FEMALE = 1;
 
+    //	Default password
+	  const DEFAULT_PASSWORD = '123456';
+
     /**
      * The database table used by the model.
      *

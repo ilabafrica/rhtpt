@@ -11,6 +11,7 @@ use Response;
 use Auth;
 use Session;
 use Lang;
+use Input;
 
 class RoleController extends Controller {
 
@@ -61,22 +62,53 @@ class RoleController extends Controller {
         $users = User::all();
         $roles = Role::all();
 
-        foreach ($users as $userkey => $user) {
-            foreach ($roles as $roleKey => $role) {
-                //If checkbox is clicked attach the role
-                if(!empty($arrayUserRoleMapping[$userkey][$roleKey]))
-                {
-                    $user->attachRole($role);
-                }
-                //If checkbox is NOT clicked detatch the role
-                elseif (empty($arrayUserRoleMapping[$userkey][$roleKey])) {
-                    $user->detachRole($role);
-                }
-            }
-        }
+        foreach ($users as $userkey => $user)
+        {
+    			foreach ($roles as $roleKey => $role) {
+
+    				$county = Input::get('county'.$user->id);
+    				$sub_county = Input::get('sub_county'.$user->id);
+    				//If checkbox is clicked attach the role
+    				if(!empty($arrayUserRoleMapping[$userkey][$roleKey]))
+    				{
+    					$user->detachRole($role);
+    					$user->attachRole($role);
+    					/*if(($county || $sub_county) && $role != Role::getAdminRole()){
+    						$county?$tier_id=$county:$tier_id=$sub_county;
+    						$tier = RoleUserTier::where('user_id', $user->id)
+    											->where('role_id', $role->id)
+    											->first();
+    						if($tier){
+    							$userTier = RoleUserTier::find($tier->id);
+    							$userTier->user_id = $user->id;
+    							$userTier->role_id = $role->id;
+    							$userTier->tier = $tier_id;
+    							$userTier->save();
+    						}
+    						else{
+    							$userTier = new RoleUserTier;
+    							$userTier->user_id = $user->id;
+    							$userTier->role_id = $role->id;
+    							$userTier->tier = $tier_id;
+    							$userTier->save();
+    						}
+    					}*/
+    				}
+    				//If checkbox is NOT clicked detatch the role
+    				else if(empty($arrayUserRoleMapping[$userkey][$roleKey]))
+            {
+    					/*$tier = RoleUserTier::where('user_id', $user->id)
+    											->where('role_id', $role->id)
+    											->first();
+    					if($tier)
+    							$tier->delete();*/
+    					$user->detachRole($role);
+    				}
+    			}
+    		}
 
         $url = session('SOURCE_URL');
-        return reditect()->to($url)->with('message', trans('messages.record-successfully-updated'));
+        return redirect()->to($url)->with('message', trans('messages.record-successfully-updated'));
     }
 
     /**

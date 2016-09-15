@@ -23,7 +23,11 @@ Route::post('password/email', 'Auth\PasswordController@postEmail');
 Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
 Route::post('password/reset', 'Auth\PasswordController@postReset');
 
-Route::group(['middleware' => 'auth'], function(){
+Route::group(['middleware' => 'auth'], function()
+{
+    Route::get('/', function () {
+        return view('app');
+    });
     Route::resource('role', 'RoleController');
     Route::resource('user', 'UserController');
     Route::resource("permission", "PermissionController");
@@ -101,8 +105,4 @@ Route::group(['middleware' => 'auth'], function(){
         "as"   => "result.delete",
         "uses" => "ResultController@delete"
     ));
-});
-
-Route::get('/', function () {
-    return view('app');
 });

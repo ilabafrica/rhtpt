@@ -17,10 +17,25 @@ class PtSetupTables extends Migration
     		{
       			$table->increments('id')->unsigned();
       			$table->string('name');
-      			$table->string('label')->nullable();
       			$table->string('description', 100)->nullable();
             $table->softDeletes();
       			$table->timestamps();
+    		});
+        //	User tiers - county/sub-county/facility
+    		Schema::create('user_tiers', function(Blueprint $table)
+    		{
+      			$table->increments('id')->unsigned();
+      			$table->integer('user_id')->unsigned();
+      			$table->integer('role_id')->unsigned();
+            $table->integer('tester_id_no')->nullable();
+      			$table->integer('program_id')->nullable();
+            $table->integer('tier');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('role_id')->references('id')->on('roles');
+            $table->unique(array('user_id','role_id'));
+            $table->unique('tester_id_no');
+            $table->softDeletes();
+    			  $table->timestamps();
     		});
         //  Sample Preparation
         Schema::create('materials', function(Blueprint $table)
@@ -56,13 +71,12 @@ class PtSetupTables extends Migration
         Schema::create('items', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
-            $table->integer('program_id')->unsigned();
+            $table->string('tester_id_range', 25);
       			$table->string('pt_id');
       			$table->integer('material_id')->unsigned();
       			$table->integer('round_id')->unsigned();
             $table->integer('prepared_by')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->foreign('program_id')->references('id')->on('programs');
             $table->foreign('material_id')->references('id')->on('materials');
             $table->foreign('round_id')->references('id')->on('rounds');
             $table->foreign('prepared_by')->references('id')->on('users');
@@ -84,6 +98,27 @@ class PtSetupTables extends Migration
             $table->softDeletes();
       			$table->timestamps();
     		});
+        //  Shippers
+        Schema::create('shippers', function(Blueprint $table)
+    		{
+      			$table->increments('id')->unsigned();
+            $table->smallInteger('shipper_type');
+      			$table->string('name');
+      			$table->string('contact', 100);
+            $table->softDeletes();
+      			$table->timestamps();
+    		});
+        //  Shipper-facilties
+        Schema::create('shipper_facilities', function(Blueprint $table)
+    		{
+      			$table->increments('id')->unsigned();
+            $table->integer('shipper_id')->unsigned();
+            $table->integer('facility_id')->unsigned();
+            $table->softDeletes();
+      			$table->timestamps();
+            $table->foreign('shipper_id')->references('id')->on('shippers');
+            $table->foreign('facility_id')->references('id')->on('facilities');
+    		});
         //  Shipments
         Schema::create('shipments', function(Blueprint $table)
     		{
@@ -92,12 +127,13 @@ class PtSetupTables extends Migration
             $table->date('date_prepared');
             $table->date('date_shipped');
             $table->smallInteger('shipping_method');
-      			$table->string('courier');
-            $table->integer('participant')->unsigned();
+            $table->integer('shipper_id')->unsigned();
+            $table->integer('facility_id')->unsigned();
       			$table->string('panels_shipped');
             $table->integer('user_id')->unsigned();
             $table->foreign('round_id')->references('id')->on('rounds');
-            $table->foreign('participant')->references('id')->on('users');
+            $table->foreign('shipper_id')->references('id')->on('shippers');
+            $table->foreign('facility_id')->references('id')->on('facilities');
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
       			$table->timestamps();
@@ -158,9 +194,12 @@ class PtSetupTables extends Migration
       Schema::dropIfExists('pt');
       Schema::dropIfExists('receipts');
       Schema::dropIfExists('shipments');
+      Schema::dropIfExists('shippers');
+      Schema::dropIfExists('shipper_facilities');
       Schema::dropIfExists('expected_results');
       Schema::dropIfExists('items');
       Schema::dropIfExists('rounds');
+      Schema::dropIfExists('user_tiers');
       Schema::dropIfExists('materials');
       Schema::dropIfExists('programs');
     }

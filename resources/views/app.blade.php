@@ -64,7 +64,7 @@
             </div>
             <nav class="navigation">
                 <ul class="list-unstyled">
-                    <li class="{!! Request::segment(1)==strtolower(trans('messages.home'))?strtolower(trans('messages.active')):'' !!}">
+                    <li class="{!! count(Request::segments())==0?strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-dashboard"></i> {!! trans('messages.dashboard') !!}</a>
                     </li>
                     <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('pt'), strtolower('program'), strtolower('material'), strtolower('round'), strtolower('item'), strtolower('expected'), strtolower('shipment'), strtolower('receipt'), strtolower('result')])?' '.strtolower(trans('messages.active')):'' !!}">

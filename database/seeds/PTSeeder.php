@@ -21,6 +21,10 @@ class PTSeeder extends Seeder
             array(
                 "username" => "admin", "password" => Hash::make("password"), "email" => "admin@rhtpt.or.ke",
                 "name" => "PT Administrator", "gender" => "1", "phone"=>"0722000000", "address" => "P.O. Box 59857-00200, Nairobi", "created_at" => $now, "updated_at" => $now
+            ),
+            array(
+                "username" => "kitsao", "password" => Hash::make("password"), "email" => "kitsao@gmail.com",
+                "name" => "Kitsao", "gender" => "1", "phone"=>"0764999662", "address" => "Nairobi", "created_at" => $now, "updated_at" => $now
             )
         );
         foreach ($usersData as $user)
@@ -53,7 +57,8 @@ class PTSeeder extends Seeder
         $this->command->info('Permissions table seeded');
         /* Roles table */
         $roles = array(
-            array("name" => "Superadmin", "display_name" => "Overall Administrator")
+            array("name" => "Superadmin", "display_name" => "Overall Administrator"),
+            array("name" => "Participant", "display_name" => "Participant")
         );
         foreach ($roles as $role)
         {

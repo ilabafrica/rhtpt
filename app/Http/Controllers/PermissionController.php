@@ -23,8 +23,8 @@ class PermissionController extends Controller {
     {
         $permissions = Permission::all();
         $roles = Role::all();
-        $permissionsRolesData = array('permissions' => $permissions,'roles' => $roles,);
-        return view('permission.index', $permissionsRolesData);
+        $permissionsRolesData = array('permissions' => $permissions, 'roles' => $roles,);
+        return view('permission.index', compact('permissions', 'roles'));
     }
 
 
@@ -49,19 +49,19 @@ class PermissionController extends Controller {
         $arrayPermissionRoleMapping = Input::get('permissionRoles');
         $permissions = Permission::all();
         $roles = Role::all();
-
         foreach ($permissions as $permissionkey => $permission) {
-            foreach ($roles as $roleKey => $role) {
-                //If checkbox is clicked attach the permission
-                if(!empty($arrayPermissionRoleMapping[$permissionkey][$roleKey]))
-                {
-                    $role->attachPermission($permission);
-                }
-                //If checkbox is NOT clicked detatch the permission
-                elseif (empty($arrayPermissionRoleMapping[$permissionkey][$roleKey])) {
-                    $role->detachPermission($permission);
-                }
+          foreach ($roles as $roleKey => $role) {
+            //If checkbox is clicked attach the permission
+            if(!empty($arrayPermissionRoleMapping[$permissionkey][$roleKey]))
+            {   $role->detachPermission($permission);
+                $role->attachPermission($permission);
             }
+            //If checkbox is NOT clicked detatch the permission
+            elseif (empty($arrayPermissionRoleMapping[$permissionkey][$roleKey]))
+            {
+                $role->detachPermission($permission);
+            }
+          }
         }
         $url = session('SOURCE_URL');
 
