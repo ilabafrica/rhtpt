@@ -87,7 +87,7 @@ class FieldController extends Controller
         $fld = $field->order;
         //  Prepare view
         $field_types = array(Field::CHECKBOX=>'Checkbox', Field::DATE=>'Date', Field::EMAIL=>'E-mail', Field::FIELD=>'Field', Field::RADIO=>'Radio', Field::SELECT=>'Select List', Field::TEXT=>'Free Text');
-        return view('field.create', compact('field', 'field_types', 'fields', 'field'));
+        return view('field.edit', compact('field', 'field_types', 'fields', 'field'));
     }
 
     /**

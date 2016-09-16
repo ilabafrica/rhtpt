@@ -25,6 +25,7 @@ return [
     */
     //  PT
     'program'               =>    'Program|Programs',
+    'shipper'               =>    'Shipper|Shippers',
     'material'              =>    'Material|Materials',
     'sample-preparation'    =>    'Sample Preparation',
     'pt-round'              =>    'PT Round|PT Rounds',
@@ -57,6 +58,8 @@ return [
     'storage'               =>    'Storage',
     'transit-temperature'   =>    'Transit Temperature',
     'recipient'             =>    'Recipient|Recipients',
+    'shipper-type'          =>    'Shipper Type|Shipper Types',
+    'contact'               =>    'Contact|Contacts',
     //  Reports
 
     //  User Management

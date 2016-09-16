@@ -80,7 +80,7 @@ class ProgramController extends Controller
     {
         //  Prepare view
         $program = Program::findOrFail($id);
-        return view('program.create', compact('program'));
+        return view('program.edit', compact('program'));
     }
 
     /**

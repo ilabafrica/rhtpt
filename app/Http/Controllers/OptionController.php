@@ -80,7 +80,7 @@ class OptionController extends Controller
     {
         //  Prepare view
         $option = Option::findOrFail($id);
-        return view('option.create', compact('option'));
+        return view('option.edit', compact('option'));
     }
 
     /**

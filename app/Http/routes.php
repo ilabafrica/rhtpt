@@ -63,6 +63,12 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "program.delete",
         "uses" => "ProgramController@delete"
     ));
+    //	Shippers controller
+    Route::resource('shipper', 'ShipperController');
+    Route::get("/shipper/{id}/delete", array(
+        "as"   => "shipper.delete",
+        "uses" => "ShipperController@delete"
+    ));
     //	Sample-preparation controller
     Route::resource('material', 'MaterialController');
     Route::get("/material/{id}/delete", array(
