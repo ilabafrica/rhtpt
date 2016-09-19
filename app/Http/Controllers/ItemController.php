@@ -40,12 +40,12 @@ class ItemController extends Controller
     public function create()
     {
         //  prepare data for select lists
-        $programs = Program::lists('name', 'id')->toArray();
+        $ranges = array(User::ZERO_TO_TWO=>'0 - 2', User::THREE_TO_FIVE=>'3 - 5', User::SIX_TO_EIGHT=>'6 - 8', User::NINE=>'9');
         $materials = Material::lists('batch', 'id')->toArray();
         $rounds = Round::lists('name', 'id')->toArray();
         $users = User::lists('name', 'id')->toArray();
         //  Prepare view
-        return view('item.create', compact('programs', 'materials', 'rounds', 'users'));
+        return view('item.create', compact('ranges', 'materials', 'rounds', 'users'));
     }
 
     /**
@@ -58,7 +58,7 @@ class ItemController extends Controller
     {
         //  prepare create-statement
         $item = new Item;
-        $item->program_id = $request->program;
+        $item->tester_id_range = $request->tester_id_range;
         $item->pt_id = $request->pt_identifier;
         $item->material_id = $request->material;
         $item->round_id = $request->round;
@@ -94,8 +94,8 @@ class ItemController extends Controller
         //  Find item
         $item = Item::findOrFail($id);
         //  prepare data for select lists
-        $programs = Program::lists('name', 'id')->toArray();
-        $program = $item->program_id;
+        $ranges = array(User::ZERO_TO_TWO=>'0 - 2', User::THREE_TO_FIVE=>'3 - 5', User::SIX_TO_EIGHT=>'6 - 8', User::NINE=>'9');
+        $range = $item->tester_id_range;
         $materials = Material::lists('batch', 'id')->toArray();
         $material = $item->material_id;
         $rounds = Round::lists('name', 'id')->toArray();
@@ -103,7 +103,7 @@ class ItemController extends Controller
         $users = User::lists('name', 'id')->toArray();
         $user = $item->prepared_by;
         //  Prepare view
-        return view('item.edit', compact('item', 'programs', 'program', 'materials', 'material', 'rounds', 'round', 'users', 'user'));
+        return view('item.edit', compact('item', 'ranges', 'range', 'materials', 'material', 'rounds', 'round', 'users', 'user'));
     }
 
     /**
@@ -117,7 +117,7 @@ class ItemController extends Controller
     {
         //  prepare update-statement
         $item = Item::findOrFail($id);
-        $item->program_id = $request->program;
+        $item->tester_id_range = $request->tester_id_range;
         $item->pt_id = $request->pt_identifier;
         $item->material_id = $request->material;
         $item->round_id = $request->round;

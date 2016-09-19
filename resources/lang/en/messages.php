@@ -60,6 +60,7 @@ return [
     'recipient'             =>    'Recipient|Recipients',
     'shipper-type'          =>    'Shipper Type|Shipper Types',
     'contact'               =>    'Contact|Contacts',
+    'tester-id-range'       =>    'Tester ID Range',
     //  Reports
 
     //  User Management

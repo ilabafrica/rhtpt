@@ -38,7 +38,6 @@
 			<thead>
 				<tr>
 					<th>{!! trans('messages.name') !!}</th>
-					<th>{!! trans('messages.label') !!}</th>
 					<th>{!! trans('messages.description') !!}</th>
 					<th>{!! trans('messages.action') !!}</th>
 				</tr>
@@ -50,7 +49,6 @@
 	                @endif
 	                >
 					<td>{!! $value->name !!}</td>
-					<td>{!! $value->label !!}</td>
 					<td>{!! $value->description !!}</td>
 
 					<td>

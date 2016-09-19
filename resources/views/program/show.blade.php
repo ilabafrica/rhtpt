@@ -39,7 +39,6 @@
 		<div class="custom-callout custom-callout-midnight-blue gem-h5">
 			<strong>
 				<p>{!! trans('messages.name').': ' !!}<span class="text-primary">{!! $program->name !!}</span></p>
-				<p>{!! trans('messages.label').': ' !!}<span class="text-primary">{!! $program->label !!}</span></p>
 				<p>{!! trans('messages.description').': ' !!}<span class="text-default">{!! $program->description !!}</span></p>
 			</strong>
 		</div>

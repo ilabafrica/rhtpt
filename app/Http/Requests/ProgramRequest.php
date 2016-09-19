@@ -25,7 +25,6 @@ class ProgramRequest extends Request {
 		$id = $this->ingnoreId();
 		return [
             'name'   => 'required|unique:programs,name,'.$id,
-            'label'   => 'required:programs,label,'.$id,
         ];
 	}
 	/**
@@ -33,8 +32,7 @@ class ProgramRequest extends Request {
 	*/
 	public function ingnoreId(){
 		$id = $this->route('program');
-		$name = $this->input('name');
     $label = $this->input('label');
-		return Program::where(compact('id', 'name', 'label'))->exists() ? $id : '';
+		return Program::where(compact('id', 'name'))->exists() ? $id : '';
 	}
 }

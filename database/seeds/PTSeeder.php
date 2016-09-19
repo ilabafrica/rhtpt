@@ -7,6 +7,8 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\County;
 use App\Models\SubCounty;
+use App\Models\Program;
+use App\Models\Option;
 
 //	Carbon - for use with dates
 use Jenssegers\Date\Date as Carbon;
@@ -515,5 +517,48 @@ class PTSeeder extends Seeder
               SubCounty::create($sb);
           }
           $this->command->info('Sub-Counties table seeded');
+
+          /*  Programs */
+          $programs = array(
+              array("name" => "Laboratory", "description" => "Laboratory"),
+              array("name" => "PMTCT", "description" => "Prevention of Mother To Child Transmission of HIV/AIDS"),
+              array("name" => "PSC/CCC", "description" => "Patient Support Center"),
+              array("name" => "VCT", "description" => "Voluntary Counselling and Testing"),
+              array("name" => "VMMC", "description" => "Voluntary Male Medical Circumcision")
+          );
+          foreach ($programs as $program) {
+              Program::create($program);
+          }
+          $this->command->info('Programs table seeded');
+
+          /*  Fields */
+          $fields = array(
+              array("name" => "Date PT Panel Received", "label" => "Date PT Panel Received", "description" => ""),
+              array("name" => "Date PT Panel Constituted", "label" => "Date PT Panel Constituted", "description" => ""),
+              array("name" => "Date PT Panel Tested", "label" => "Date PT Panel Tested", "description" => ""),
+              array("name" => "Date PT Panel Received", "label" => "Date PT Panel Received", "description" => ""),
+          foreach ($fields as $field) {
+              Field::create($field);
+          }
+          $this->command->info('Fields table seeded');
+
+          /*  Options */
+          $options = array(
+              array("name" => "KHB", "label" => "KHB", "description" => ""),
+              array("name" => "First Response", "label" => "First Response", "description" => ""),
+              array("name" => "Unigold", "label" => "Unigold", "description" => ""),
+              array("name" => "Other", "label" => "Other", "description" => ""),
+              array("name" => "Reactive", "label" => "Reactive", "description" => ""),
+              array("name" => "Non-Reactive", "label" => "Non-Reactive", "description" => ""),
+              array("name" => "Invalid", "label" => "Invalid", "description" => ""),
+              array("name" => "Not Done", "label" => "Not Done", "description" => ""),
+              array("name" => "Positive", "label" => "Positive", "description" => ""),
+              array("name" => "Negative", "label" => "Negative", "description" => ""),
+              array("name" => "Indeterminate", "label" => "Indeterminate", "description" => "")
+          );
+          foreach ($options as $option) {
+              Option::create($option);
+          }
+          $this->command->info('Options table seeded');
     }
 }

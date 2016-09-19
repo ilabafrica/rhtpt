@@ -42,9 +42,11 @@
 					</div>
 				</div>
         <div class="form-group row">
-            {!! Form::label('program', trans_choice('messages.program', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+            {!! Form::label('tester-id-range', trans('messages.tester-id-range'), array('class' => 'col-sm-4 form-control-label')) !!}
             <div class="col-sm-6">
-              {!! Form::select('program', array(''=>trans('messages.select'))+$programs, $program, array('class' => 'form-control c-select', 'id' => 'program')) !!}
+              @foreach($ranges as $key => $value)
+  						      <label class="radio-inline">{!! Form::radio('tester_id_range', $key, false) !!}{{ $value }}</label>
+              @endforeach
             </div>
         </div>
         <div class="form-group row">

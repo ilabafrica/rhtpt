@@ -71,7 +71,7 @@ class PtSetupTables extends Migration
         Schema::create('items', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
-            $table->string('tester_id_range', 25);
+            $table->smallInteger('tester_id_range');
       			$table->string('pt_id');
       			$table->integer('material_id')->unsigned();
       			$table->integer('round_id')->unsigned();

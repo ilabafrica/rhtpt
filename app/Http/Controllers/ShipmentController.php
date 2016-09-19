@@ -12,6 +12,7 @@ use App\Http\Requests\ShipmentRequest;
 use App\Models\Shipment;
 use App\Models\Round;
 use App\Models\User;
+use App\Models\Shipper;
 
 use Session;
 use Auth;
@@ -37,7 +38,7 @@ class ShipmentController extends Controller
      */
     public function create()
     {
-        $shipping_methods = array(Shipment::POST=>'Post', Shipment::COURIER=>'Courier');
+        $shipping_methods = array(Shipper::COURIER=>'Courier', Shipper::PARTNER=>'Partner', Shipper::COUNTY_LAB_COORDINATOR=>'County Lab Coordinator', Shipper::OTHER=>'Other');
         $users = User::lists('name', 'id')->toArray();
         $rounds = Round::lists('name', 'id')->toArray();
         //  Prepare view
@@ -90,7 +91,7 @@ class ShipmentController extends Controller
     public function edit($id)
     {
         $shipment = Shipment::findOrFail($id);
-        $shipping_methods = array(Shipment::POST=>'Post', Shipment::COURIER=>'Courier');
+        $shipping_methods = array(Shipper::COURIER=>'Courier', Shipper::PARTNER=>'Partner', Shipper::COUNTY_LAB_COORDINATOR=>'County Lab Coordinator', Shipper::OTHER=>'Other');
         $shipping_method = $shipment->shipping_method;
         $users = User::lists('name', 'id')->toArray();
         $user = $shipment->participant;

@@ -38,7 +38,7 @@
 			<thead>
 				<tr>
 					<th>{!! trans('messages.pt-id') !!}</th>
-					<th>{!! trans_choice('messages.program', 1) !!}</th>
+					<th>{!! trans('messages.tester-id-range') !!}</th>
           <th>{!! trans_choice('messages.material', 1) !!}</th>
           <th>{!! trans_choice('messages.pt-round', 1) !!}</th>
 					<th>{!! trans('messages.prepared-by') !!}</th>

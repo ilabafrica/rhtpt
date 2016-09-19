@@ -49,7 +49,6 @@ class ProgramController extends Controller
         //  prepare create-statement
         $program = new Program;
         $program->name = $request->name;
-        $program->label = $request->label;
         $program->description = $request->description;
         $program->save();
         $url = session('SOURCE_URL');
@@ -95,7 +94,6 @@ class ProgramController extends Controller
         //  prepare update-statement
         $program = Program::findOrFail($id);
         $program->name = $request->name;
-        $program->label = $request->label;
         $program->description = $request->description;
         $program->save();
         $url = session('SOURCE_URL');

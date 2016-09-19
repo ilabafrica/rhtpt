@@ -19,6 +19,11 @@ class User extends Model implements AuthenticatableContract,
     const MALE = 0;
     const FEMALE = 1;
 
+    //  Tester ID ranges
+    const ZERO_TO_TWO = 0;
+    const THREE_TO_FIVE = 1;
+    const SIX_TO_EIGHT = 2;
+    const NINE = 3;
     //	Default password
 	  const DEFAULT_PASSWORD = '123456';
 

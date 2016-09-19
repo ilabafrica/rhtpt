@@ -39,7 +39,7 @@
 		<div class="custom-callout custom-callout-midnight-blue gem-h5">
 			<strong>
 				<p>{!! trans('messages.pt-id').': ' !!}<span class="text-primary">{!! $item->pt_id !!}</span></p>
-				<p>{!! trans_choice('messages.program', 1).': ' !!}<span class="text-default">{!! $item->program->name !!}</span></p>
+				<p>{!! trans('messages.tester-id-range').': ' !!}<span class="text-default">{!! $item->program->name !!}</span></p>
 				<p>{!! trans('messages.material').': ' !!}<span class="text-primary">{!! $item->material->material($item->material->material_type) !!}</span></p>
 				<p>{!! trans_choice('messages.pt-round', 1).': ' !!}<span class="text-primary">{!! $item->round->name !!}</span></p>
         <p>{!! trans('messages.prepared-by').': ' !!}<span class="text-primary">{!! $item->user->name !!}</span></p>

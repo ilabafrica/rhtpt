@@ -41,12 +41,6 @@
 						{!! Form::text('name', old('name'), array('class' => 'form-control')) !!}
 					</div>
 				</div>
-				<div class="form-group row">
-					{!! Form::label('label', trans_choice('messages.label',1), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-6">
-						{!! Form::text('label', old('label'), array('class' => 'form-control')) !!}
-					</div>
-				</div>
         <div class="form-group row">
             {!! Form::label('description', trans('messages.description'), array('class' => 'col-sm-4 form-control-label')) !!}
             <div class="col-sm-6">
