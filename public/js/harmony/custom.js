@@ -6,6 +6,22 @@ function toggle(className, obj){
     else
         $(className).show();
 }
+/*Function to toggle matrix fields*/
+function untoggle(className, obj){
+    var $input = $(obj);
+    if($input.prop('checked'))
+        $(className).show();
+    else
+        $(className).hide();
+}
+/*Function to toggle options applicable to fields*/
+function options(className, obj){
+    var $input = $(obj);
+    if($input.val() == 4)
+        $(className).show();
+    else
+        $(className).hide();
+}
 /*End toggle function*/
 /* Bootstrap 3 datepicker */
 $(function () {

@@ -37,13 +37,13 @@
 			<div class="col-md-8">
 				<div class="form-group row">
 					{!! Form::label('name', trans_choice('messages.name',1), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-8">
+					<div class="col-sm-6">
 						{!! Form::text('name', old('name'), array('class' => 'form-control')) !!}
 					</div>
 				</div>
 				<div class="form-group row">
 					{!! Form::label('label', trans('messages.label'), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-8">
+					<div class="col-sm-6">
 						{!! Form::text('label', old('label'), array('class' => 'form-control')) !!}
 					</div>
 				</div>
@@ -53,14 +53,60 @@
               {!! Form::select('order', array(''=>trans('messages.select'))+$fields, '', array('class' => 'form-control c-select', 'id' => 'item')) !!}
             </div>
         </div>
+        <hr>
 				<div class="form-group row">
 					{!! Form::label('tag', trans('messages.tag'), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-8">
-            @foreach($field_types as $key => $value)
-						      <label class="radio-inline">{!! Form::radio('tag', $key, false) !!}{{ $value }}</label>
-            @endforeach
+					<div class="col-sm-6">
+            <div class="card card-block">
+              {{--*/ $counter = 0 /*--}}
+              @foreach($field_types as $key => $value)
+                    {!! ($counter%4==0)?"<div class='row'>":"" !!}
+                    {{--*/ $counter++ /*--}}
+                    <div class="col-md-3">
+                      <label class="radio-inline">{!! Form::radio('tag', $key, false, array('id' => 'tag', 'onclick' => 'options(".options", this)')) !!}{{ $value }}</label>
+                    </div>
+                    {!! ($counter%4==0)?"</div>":"" !!}
+              @endforeach
+            </div></div>
 					</div>
 				</div>
+        <div class="options" style="display:none;">
+          <div class="form-group row">
+              {!! Form::label('options', trans_choice('messages.option', 2), array('class' => 'col-sm-4 form-control-label')) !!}
+              <div class="col-sm-6">
+                <div class="card card-block">
+                  {{--*/ $cnt = 0 /*--}}
+                  @foreach($options as $k => $val)
+                        {!! ($cnt%4==0)?"<div class='row'>":"" !!}
+                        {{--*/ $cnt++ /*--}}
+                        <div class="col-md-3">
+                          <label class="checkbox-inline">{!! Form::checkbox('opt[]', $k, '') !!}{{ $val }}</label>
+                        </div>
+                        {!! ($cnt%4==0)?"</div>":"" !!}
+                  @endforeach
+                </div>
+              </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+            <div class="col-sm-offset-4 col-sm-6">
+                <label class="checkbox-inline">
+                    {!! Form::checkbox("is_matrix", '1', '', array('onclick' => 'untoggle(".matrix", this)')) !!}{{ trans('messages.matrix') }}
+                </label>
+            </div>
+        </div>
+        <div class="matrix" style="display:none;">
+          <div class="form-group row">
+              {!! Form::label('test-resuts', trans('messages.matrix'), array('class' => 'col-sm-4 form-control-label')) !!}
+              <div class="col-sm-6">
+                @foreach($matrix_types as $x => $y)
+                      <label class="radio-inline">{!! Form::radio('matrix', $x, false) !!}{{ $y }}</label>
+                @endforeach
+              </div>
+          </div>
+        </div>
+        <hr>
 				<div class="form-group row col-sm-offset-4 col-sm-8">
 					{!! Form::button("<i class='fa fa-plus-circle'></i> ".trans('messages.save'),
 						array('class' => 'btn btn-primary btn-sm', 'onclick' => 'submit()')) !!}

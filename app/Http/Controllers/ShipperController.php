@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ShipperRequest;
 
 use App\Models\Shipper;
+use App\Models\Facility;
 
 use Session;
 
@@ -35,8 +36,9 @@ class ShipperController extends Controller
     public function create()
     {
         $shipper_types = array(Shipper::COURIER=>'Courier', Shipper::PARTNER=>'Partner', Shipper::COUNTY_LAB_COORDINATOR=>'County Lab Coordinator', Shipper::OTHER=>'Other');
+        $facilities = Facility::lists('name', 'id')->toArray();
         //  Prepare view
-        return view('shipper.create', compact('shipper_types'));
+        return view('shipper.create', compact('shipper_types', 'facilities'));
     }
 
     /**
@@ -82,8 +84,9 @@ class ShipperController extends Controller
         $shipper = Shipper::findOrFail($id);
         $shipper_types = array(Shipper::COURIER=>'Courier', Shipper::PARTNER=>'Partner', Shipper::COUNTY_LAB_COORDINATOR=>'County Lab Coordinator', Shipper::OTHER=>'Other');
         $shipper_type = $shipper->shipper_type;
+        $facilities = Facility::lists('name', 'id')->toArray();
         //  Prepare view
-        return view('shipper.edit', compact('shipper', 'shipper_types', 'shipper_type'));
+        return view('shipper.edit', compact('shipper', 'shipper_types', 'shipper_type', 'facilities'));
     }
 
     /**

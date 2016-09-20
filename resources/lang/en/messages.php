@@ -88,6 +88,9 @@ return [
     /* Views */
     'order'                 =>    'Order',
     'tag'                   =>    'Tag',
+    'matrix'                =>    'Matrix',
+    'test'                  =>    'Test|Tests',
+    'result'                =>    'Result|Results',
 
     //  Breadcrumb
     'home'                  =>      'Home',

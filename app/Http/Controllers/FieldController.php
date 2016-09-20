@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FieldRequest;
 
 use App\Models\Field;
+use App\Models\Option;
 
 use Session;
 
@@ -37,7 +38,9 @@ class FieldController extends Controller
         $fields = Field::lists('label', 'id')->toArray();
         //  Prepare view
         $field_types = array(Field::CHECKBOX=>'Checkbox', Field::DATE=>'Date', Field::EMAIL=>'E-mail', Field::FIELD=>'Field', Field::RADIO=>'Radio', Field::SELECT=>'Select List', Field::TEXT=>'Free Text');
-        return view('field.create', compact('field_types', 'fields'));
+        $matrix_types = array(Field::TESTS=>trans_choice('messages.test', 2), Field::RESULTS=>trans_choice('messages.result', 2));
+        $options = Option::orderBy('name', 'ASC')->lists('name', 'id')->toArray();
+        return view('field.create', compact('field_types', 'fields', 'matrix_types', 'options'));
     }
 
     /**
@@ -55,10 +58,23 @@ class FieldController extends Controller
         $field->description = $request->description;
         $field->order = $request->order;
         $field->tag = $request->tag;
-        $field->save();
-        $url = session('SOURCE_URL');
-
-        return redirect()->to($url)->with('message', trans('messages.record-successfully-saved'))->with('active_field', $field ->id);
+        $field->is_matrix = $request->is_matrix;
+        if(!empty($request->is_matrix))
+            $field->matrix = $request->matrix;
+        try
+        {
+      			$field->save();
+      			if($request->opt)
+            {
+      				$field->setOptions($request->opt);
+      			}
+      			$url = session('SOURCE_URL');
+            return redirect()->to($url)->with('message', trans('messages.record-successfully-saved'))->with('active_field', $field ->id);
+    		}
+    		catch(QueryException $e)
+        {
+    			   Log::error($e);
+    		}
     }
 
     /**
@@ -87,7 +103,9 @@ class FieldController extends Controller
         $fld = $field->order;
         //  Prepare view
         $field_types = array(Field::CHECKBOX=>'Checkbox', Field::DATE=>'Date', Field::EMAIL=>'E-mail', Field::FIELD=>'Field', Field::RADIO=>'Radio', Field::SELECT=>'Select List', Field::TEXT=>'Free Text');
-        return view('field.edit', compact('field', 'field_types', 'fields', 'field'));
+        $matrix_types = array(Field::TESTS=>trans_choice('messages.test', 2), Field::RESULTS=>trans_choice('messages.result', 2));
+        $options = Option::orderBy('name', 'ASC')->lists('name', 'id')->toArray();
+        return view('field.edit', compact('field', 'field_types', 'fields', 'field', 'matrix_types', 'options'));
     }
 
     /**

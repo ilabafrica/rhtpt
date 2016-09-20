@@ -21,11 +21,13 @@ class ProgramManagementTables extends Migration
       			$table->string('description', 100)->nullable();
       			$table->smallInteger('order')->nullable();
             $table->smallInteger('tag');
+            $table->smallInteger('is_matrix')->nullable();
+            $table->smallInteger('matrix')->nullable();
             $table->softDeletes();
       			$table->timestamps();
     		});
         //	Fields - Questions
-    		Schema::create('field_questions', function(Blueprint $table)
+    		/*Schema::create('field_questions', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
       			$table->integer('field_id')->unsigned();
@@ -36,7 +38,7 @@ class ProgramManagementTables extends Migration
             $table->unique(array('field_id','question_id'));
             $table->softDeletes();
       			$table->timestamps();
-    		});
+    		});*/
         //  Options
     		Schema::create('options', function(Blueprint $table)
     		{
@@ -57,8 +59,6 @@ class ProgramManagementTables extends Migration
             $table->foreign('field_id')->references('id')->on('fields');
             $table->foreign('option_id')->references('id')->on('options');
             $table->unique(array('field_id','option_id'));
-            $table->softDeletes();
-  			    $table->timestamps();
     		});
     }
 

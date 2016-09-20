@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 class Field extends Model
 {
   	/**
@@ -28,12 +29,33 @@ class Field extends Model
   	const SELECT = 5;
   	const TEXT = 6;
     /**
+  	 * Matrices
+  	 *
+  	 */
+    const TESTS = 0;
+   	const RESULTS = 1;
+    /**
+  	 * HIV TESTS
+  	 *
+  	 */
+    const SCREENING = 0;
+   	const CONFIRMATORY = 1;
+    const TIE_BREAKER = 2;
+    /**
+  	 * HIV TEST RESULTS
+  	 *
+  	 */
+    const SCREENING_RESULT = 0;
+   	const CONFIRMATORY_RESULT = 1;
+    const TIE_BREAKER_RESULT = 2;
+    const FINAL_RESULT = 3;
+    /**
   	 * Parent-child relationship
   	 */
-  	public function children()
+  	/*public function children()
   	{
   		return $this->belongsToMany('App\Models\Field', 'field_questions', 'field_id', 'question_id');
-  	}
+  	}*/
     /**
   	 * Options relationship
   	 */
@@ -70,5 +92,26 @@ class Field extends Model
             return 'Select List';
         else if($tag == Field::TEXT)
             return 'Free Text';
+  	}
+    /**
+  	 * Set possible responses where applicable
+  	 */
+  	public function setOptions($field)
+    {
+      $fieldAdded = array();
+  		$fieldId = 0;
+  		if(is_array($field)){
+  			foreach ($field as $key => $value) {
+  				$fieldAdded[] = array(
+  					'field_id' => (int)$this->id,
+  					'option_id' => (int)$value
+  					);
+  				$fieldId = (int)$this->id;
+  			}
+  		}
+  		// Delete existing field-option mappings
+  		DB::table('field_options')->where('field_id', '=', $fieldId)->delete();
+  		// Add the new mapping
+  		DB::table('field_options')->insert($fieldAdded);
   	}
 }

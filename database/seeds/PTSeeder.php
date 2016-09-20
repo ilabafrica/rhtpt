@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\County;
 use App\Models\SubCounty;
 use App\Models\Program;
+use App\Models\Field;
 use App\Models\Option;
 
 //	Carbon - for use with dates
@@ -50,8 +51,7 @@ class PTSeeder extends Seeder
             array("name" => "delete-role", "display_name" => "Can delete role"),
 
             array("name" => "read-permission", "display_name" => "Can read permission"),
-
-            array("name" => "assign-role", "display_name" => "Can assign role"),
+            array("name" => "assign-role", "display_name" => "Can assign role")
         );
         foreach ($permissions as $permission) {
             Permission::create($permission);
@@ -535,8 +535,8 @@ class PTSeeder extends Seeder
           $fields = array(
               array("name" => "Date PT Panel Received", "label" => "Date PT Panel Received", "description" => ""),
               array("name" => "Date PT Panel Constituted", "label" => "Date PT Panel Constituted", "description" => ""),
-              array("name" => "Date PT Panel Tested", "label" => "Date PT Panel Tested", "description" => ""),
-              array("name" => "Date PT Panel Received", "label" => "Date PT Panel Received", "description" => ""),
+              array("name" => "Date PT Panel Tested", "label" => "Date PT Panel Tested", "description" => "")
+          );
           foreach ($fields as $field) {
               Field::create($field);
           }

@@ -54,45 +54,45 @@
 						{!! Form::text('email', old('email'), array('class' => 'form-control')) !!}
 					</div>
 				</div>
-                <div class="form-group row">
-                    {!! Form::label('phone', trans('messages.phone'), array('class' => 'col-sm-4 form-control-label')) !!}
-                    <div class="col-sm-6">
-                        {!! Form::text('phone', old('phone'), array('class' => 'form-control')) !!}
-                    </div>
-                </div>
-                <div class="form-group row">
-                    {!! Form::label('address', trans('messages.address'), array('class' => 'col-sm-4 form-control-label')) !!}
-                    <div class="col-sm-6">
-                        {!! Form::textarea('address', old('address'), array('class' => 'form-control', 'rows' => '3')) !!}
-                    </div>
-                </div>
-                <div class="form-group row">
-                    {!! Form::label('username', trans('messages.username'), array('class' => 'col-sm-4 form-control-label')) !!}
-                    <div class="col-sm-6">
-                        {!! Form::text('username', old('username'), array('class' => 'form-control')) !!}
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-offset-4 col-sm-6">
-                        <label class="checkbox-inline">
-                            {!! Form::checkbox("default_password", '1', '', array('onclick' => 'toggle(".pword", this)')) !!}{{ trans('messages.use-default') }}
-                        </label>
-                    </div>
-                </div>
-                <div class="pword">
-	                <div class="form-group row">
-	                    {!! Form::label('password', trans_choice('messages.password', 1), array('class' => 'col-sm-4 form-control-label')) !!}
-	                    <div class="col-sm-6">
-	                        {!! Form::password('password', array('class' => 'form-control')) !!}
-	                    </div>
-	                </div>
-	                <div class="form-group row">
-	                    {!! Form::label('password_confirmation', trans_choice('messages.password', 2), array('class' => 'col-sm-4 form-control-label')) !!}
-	                    <div class="col-sm-6">
-	                        {!! Form::password('password_confirmation', array('class' => 'form-control')) !!}
-	                    </div>
-	                </div>
-                </div>
+        <div class="form-group row">
+            {!! Form::label('phone', trans('messages.phone'), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+                {!! Form::text('phone', old('phone'), array('class' => 'form-control')) !!}
+            </div>
+        </div>
+        <div class="form-group row">
+            {!! Form::label('address', trans('messages.address'), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+                {!! Form::textarea('address', old('address'), array('class' => 'form-control', 'rows' => '3')) !!}
+            </div>
+        </div>
+        <div class="form-group row">
+            {!! Form::label('username', trans('messages.username'), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+                {!! Form::text('username', old('username'), array('class' => 'form-control')) !!}
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-offset-4 col-sm-6">
+                <label class="checkbox-inline">
+                    {!! Form::checkbox("default_password", '1', '', array('onclick' => 'toggle(".pword", this)')) !!}{{ trans('messages.use-default') }}
+                </label>
+            </div>
+        </div>
+        <div class="pword">
+          <div class="form-group row">
+              {!! Form::label('password', trans_choice('messages.password', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+              <div class="col-sm-6">
+                  {!! Form::password('password', array('class' => 'form-control')) !!}
+              </div>
+          </div>
+          <div class="form-group row">
+              {!! Form::label('password_confirmation', trans_choice('messages.password', 2), array('class' => 'col-sm-4 form-control-label')) !!}
+              <div class="col-sm-6">
+                  {!! Form::password('password_confirmation', array('class' => 'form-control')) !!}
+              </div>
+          </div>
+        </div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">
 					{!! Form::button("<i class='fa fa-plus-circle'></i> ".trans('messages.save'),
 						array('class' => 'btn btn-primary btn-sm', 'onclick' => 'submit()')) !!}
