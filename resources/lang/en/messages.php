@@ -80,6 +80,7 @@ return [
     'in-charge-email'       =>    'In Charge Email',
     'longitude'             =>    'Longitude',
     'latitude'              =>    'Latitude',
+    'mfl-code'              =>    'MFL Code',
 
     //  Program Management
     'question'              =>     'Question|Questions',

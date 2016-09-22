@@ -45,7 +45,7 @@
             {!! Form::label('shipper-type', trans_choice('messages.shipper-type', 1), array('class' => 'col-sm-4 form-control-label')) !!}
             <div class="col-sm-6">
               @foreach($shipper_types as $key => $value)
-  						      <label class="radio-inline">{!! Form::radio('shipper_type', $key, false) !!}{{ $value }}</label>
+  						      <label class="radio-inline">{!! Form::radio('shipper_type', $key, false, array('id' => 'shipper_type', 'onclick' => 'health(".tbl", this)')) !!}{{ $value }}</label>
               @endforeach
             </div>
         </div>
@@ -55,6 +55,34 @@
 						{!! Form::textarea('contact', old('contact'), array('class' => 'form-control', 'rows' => '3')) !!}
 					</div>
 				</div>
+        <div class="tbl" style="display:none;">
+            <hr>
+          	 	<table class="table table-bordered table-sm search-table" id="example" style="width:100%">
+          			<thead>
+          				<tr>
+                    <th>{!! trans('messages.mfl-code') !!}</th>
+                    <th>{!! trans_choice('messages.name', 1) !!}</th>
+          					<th>{!! trans_choice('messages.sub-county', 1) !!}</th>
+          					<th>{!! trans_choice('messages.county', 1) !!}</th>
+          				</tr>
+          			</thead>
+          			<tbody>
+          			@foreach($facilities as $key => $value)
+          				<tr>
+          					<td>
+                      <label class="checkbox-inline">
+                          {!! Form::checkbox("care[]", $value->id, '') !!}{!! $value->code !!}
+                      </label>
+                    </td>
+                    <td>{!! $value->name !!}</td>
+          					<td>{!! $value->subCounty->name !!}</td>
+          					<td>{!! $value->subCounty->county->name !!}</td>
+          				</tr>
+          			@endforeach
+          			</tbody>
+          		</table>
+            <hr>
+        </div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">
 					{!! Form::button("<i class='fa fa-check-circle'></i> ".trans('messages.update'),
 					array('class' => 'btn btn-primary btn-sm', 'onclick' => 'submit()')) !!}

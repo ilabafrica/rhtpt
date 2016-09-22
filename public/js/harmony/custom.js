@@ -22,6 +22,14 @@ function options(className, obj){
     else
         $(className).hide();
 }
+/*Function to toggle facilities for partners and county-lab-coordinators*/
+function health(className, obj){
+    var $input = $(obj);
+    if(($input.val() == 1)||($input.val() == 2))
+        $(className).show();
+    else
+        $(className).hide();
+}
 /*End toggle function*/
 /* Bootstrap 3 datepicker */
 $(function () {

@@ -88,6 +88,7 @@
               </div>
           </div>
         </div>
+        </div>
         <hr>
         <div class="form-group row">
             <div class="col-sm-offset-4 col-sm-6">

@@ -114,10 +114,9 @@ class PtSetupTables extends Migration
       			$table->increments('id')->unsigned();
             $table->integer('shipper_id')->unsigned();
             $table->integer('facility_id')->unsigned();
-            $table->softDeletes();
-      			$table->timestamps();
             $table->foreign('shipper_id')->references('id')->on('shippers');
             $table->foreign('facility_id')->references('id')->on('facilities');
+            $table->unique(array('shipper_id','facility_id'));
     		});
         //  Shipments
         Schema::create('shipments', function(Blueprint $table)

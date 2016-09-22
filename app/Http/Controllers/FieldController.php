@@ -123,11 +123,23 @@ class FieldController extends Controller
         $field->label = $request->label;
         $field->description = $request->description;
         $field->order = $request->order;
-        $field->tag = $request->tag;
-        $field->save();
-        $url = session('SOURCE_URL');
-
-        return redirect()->to($url)->with('message', trans('messages.record-successfully-updated'))->with('active_field', $field ->id);
+        $field->is_matrix = $request->is_matrix;
+        if(!empty($request->is_matrix))
+            $field->matrix = $request->matrix;
+        try
+        {
+      			$field->save();
+      			if($request->opt)
+            {
+      				$field->setOptions($request->opt);
+      			}
+      			$url = session('SOURCE_URL');
+            return redirect()->to($url)->with('message', trans('messages.record-successfully-updated'))->with('active_field', $field ->id);
+    		}
+    		catch(QueryException $e)
+        {
+    			   Log::error($e);
+    		}
     }
 
     /**

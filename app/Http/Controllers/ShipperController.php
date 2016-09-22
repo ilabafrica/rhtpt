@@ -36,7 +36,7 @@ class ShipperController extends Controller
     public function create()
     {
         $shipper_types = array(Shipper::COURIER=>'Courier', Shipper::PARTNER=>'Partner', Shipper::COUNTY_LAB_COORDINATOR=>'County Lab Coordinator', Shipper::OTHER=>'Other');
-        $facilities = Facility::lists('name', 'id')->toArray();
+        $facilities = Facility::all();
         //  Prepare view
         return view('shipper.create', compact('shipper_types', 'facilities'));
     }
@@ -54,10 +54,20 @@ class ShipperController extends Controller
         $shipper->name = $request->name;
         $shipper->shipper_type = $request->shipper_type;
         $shipper->contact = $request->contact;
-        $shipper->save();
-        $url = session('SOURCE_URL');
-
-        return redirect()->to($url)->with('message', trans('messages.record-successfully-saved'))->with('active_shipper', $shipper ->id);
+        try
+        {
+      			$shipper->save();
+      			if($request->care)
+            {
+      				$shipper->setFacilities($request->care);
+      			}
+      			$url = session('SOURCE_URL');
+            return redirect()->to($url)->with('message', trans('messages.record-successfully-saved'))->with('active_field', $shipper ->id);
+    		}
+    		catch(QueryException $e)
+        {
+    			   Log::error($e);
+    		}
     }
 
     /**
@@ -103,10 +113,20 @@ class ShipperController extends Controller
         $shipper->name = $request->name;
         $shipper->shipper_type = $request->shipper_type;
         $shipper->contact = $request->contact;
-        $shipper->save();
-        $url = session('SOURCE_URL');
-
-        return redirect()->to($url)->with('message', trans('messages.record-successfully-updated'))->with('active_shipper', $shipper ->id);
+        try
+        {
+      			$shipper->save();
+      			if($request->care)
+            {
+      				$shipper->setFacilities($request->care);
+      			}
+      			$url = session('SOURCE_URL');
+            return redirect()->to($url)->with('message', trans('messages.record-successfully-updated'))->with('active_field', $shipper ->id);
+    		}
+    		catch(QueryException $e)
+        {
+    			   Log::error($e);
+    		}
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 class Shipper extends Model
 {
   	/**
@@ -39,4 +40,25 @@ class Shipper extends Model
        else if($shipper == Shipper::OTHER)
            return 'Other';
     }
+    /**
+  	 * Set possible facilities where applicable
+  	 */
+  	public function setFacilities($field)
+    {
+      $fieldAdded = array();
+  		$shipperId = 0;
+  		if(is_array($field)){
+  			foreach ($field as $key => $value) {
+  				$fieldAdded[] = array(
+  					'shipper_id' => (int)$this->id,
+  					'facility_id' => (int)$value
+  					);
+  				$shipperId = (int)$this->id;
+  			}
+  		}
+  		// Delete existing shipper-facility mappings
+  		DB::table('shipper_facilities')->where('shipper_id', '=', $shipperId)->delete();
+  		// Add the new mapping
+  		DB::table('shipper_facilities')->insert($fieldAdded);
+  	}
 }
