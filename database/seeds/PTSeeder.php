@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\County;
 use App\Models\SubCounty;
 use App\Models\Program;
+use App\Models\FieldSet;
 use App\Models\Field;
 use App\Models\Option;
 
@@ -60,7 +61,8 @@ class PTSeeder extends Seeder
         /* Roles table */
         $roles = array(
             array("name" => "Superadmin", "display_name" => "Overall Administrator"),
-            array("name" => "Participant", "display_name" => "Participant")
+            array("name" => "Participant", "display_name" => "Participant"),
+            array("name" => "County Lab Admin", "display_name" => "County Lab Administrator")
         );
         foreach ($roles as $role)
         {
@@ -531,11 +533,41 @@ class PTSeeder extends Seeder
           }
           $this->command->info('Programs table seeded');
 
+          /*  Field-sets */
+          $sets = array(
+              array("name" => "PT Panel Dates", "label" => "PT Panel Dates", "order" => "0"),
+              array("name" => "Test Kits", "label" => "Test Kits", "order" => "1"),
+              array("name" => "Test Results", "label" => "Test Results", "order" => "2"),
+              array("name" => "New Tester Details", "label" => "New Tester Details", "order" => "3")
+          );
+          foreach ($sets as $set) {
+              FieldSet::create($set);
+          }
+          $this->command->info('Field sets table seeded');
+
           /*  Fields */
           $fields = array(
-              array("name" => "Date PT Panel Received", "label" => "Date PT Panel Received", "description" => ""),
-              array("name" => "Date PT Panel Constituted", "label" => "Date PT Panel Constituted", "description" => ""),
-              array("name" => "Date PT Panel Tested", "label" => "Date PT Panel Tested", "description" => "")
+              array("name" => "Date PT Panel Received", "label" => "Date PT Panel Received", "order" => "", "field_set_id" => "1"),
+              array("name" => "Date PT Panel Constituted", "label" => "Date PT Panel Constituted", "order" => "", "field_set_id" => "1"),
+              array("name" => "Date PT Panel Tested", "label" => "Date PT Panel Tested", "order" => "", "field_set_id" => "1"),
+
+              array("name" => "Test 1 Kit", "label" => "Test 1 Kit Name", "description" => ""),
+              array("name" => "Test 2 Kit", "label" => "Test 2 Kit Name", "description" => ""),
+              array("name" => "Test 3 Kit", "label" => "Test 3 Kit Name", "description" => ""),
+              array("name" => "Test 1 Lot", "label" => "Test 1 Kit Lot No.", "description" => ""),
+              array("name" => "Test 2 Lot", "label" => "Test 2 Kit Lot No.", "description" => ""),
+              array("name" => "Test 3 Lot", "label" => "Test 3 Kit Lot No.", "description" => ""),
+              array("name" => "Test 1 Expiry", "label" => "Test 1 Kit Expiry Date", "description" => ""),
+              array("name" => "Test 2 Expiry", "label" => "Test 2 Kit Expiry Date", "description" => ""),
+              array("name" => "Test 3 Expiry", "label" => "Test 3 Kit Expiry Date", "description" => ""),
+
+              array("name" => "PT Panel 1 Test 1 Results", "label" => "Test 1 Results", "description" => ""),
+              array("name" => "Test 3", "label" => "Test 2 Results", "description" => ""),
+              array("name" => "Test 3", "label" => "Test 3 Results", "description" => ""),
+              array("name" => "Test 3", "label" => "Kit Name", "description" => ""),
+              array("name" => "Test 3", "label" => "Kit Name", "description" => ""),
+              array("name" => "Test 3", "label" => "Kit Name", "description" => ""),
+              array("name" => "Test 3", "label" => "Kit Name", "description" => ""),
           );
           foreach ($fields as $field) {
               Field::create($field);

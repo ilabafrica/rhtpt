@@ -53,3 +53,17 @@ $(document).ready( function () {
 	});
     table.buttons().container().appendTo( '#example_wrapper .col-md-6:eq(0)' );
 });
+
+/*Dynamic loading of select list options for counties-sub-counties*/
+$('#county').on('change', function(e){
+  var cnty = e.target.value;
+     //ajax
+     $.get('/api/dropdown/' + cnty, function(data){
+         //success data
+         $('#sub_county').empty();
+         $('#sub_county').append(' ---Select--- ');
+         $.each(data, function(index, element){
+             $('#sub_county').append("<option value='"+ element.id +"'>" + element.name + "</option>");
+         });
+     });
+ });

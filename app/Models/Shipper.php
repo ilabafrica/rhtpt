@@ -61,4 +61,11 @@ class Shipper extends Model
   		// Add the new mapping
   		DB::table('shipper_facilities')->insert($fieldAdded);
   	}
+    /**
+  	 * Facilities relationship
+  	 */
+  	public function facilities()
+  	{
+  	  return $this->belongsToMany('App\Models\Facility', 'shipper_facilities', 'shipper_id', 'facility_id');
+  	}
 }

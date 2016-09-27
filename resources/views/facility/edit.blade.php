@@ -48,9 +48,15 @@
 					</div>
 				</div>
         <div class="form-group row">
+            {!! Form::label('county', trans_choice('messages.county', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('county', array(''=>trans('messages.select'))+$counties, $county_id, array('class' => 'form-control c-select', 'id' => 'county')) !!}
+            </div>
+        </div>
+        <div class="form-group row">
             {!! Form::label('sub-county', trans_choice('messages.sub-county', 1), array('class' => 'col-sm-4 form-control-label')) !!}
             <div class="col-sm-6">
-              {!! Form::select('sub_county', array(''=>trans('messages.select'))+$sub_counties, $sub_county, array('class' => 'form-control c-select', 'id' => 'sub_county')) !!}
+              {!! Form::select('sub_county', array(''=>trans('messages.select'))+$sub_counties, $sub_county_id, array('class' => 'form-control c-select', 'id' => 'sub_county')) !!}
             </div>
         </div>
         <div class="form-group row">

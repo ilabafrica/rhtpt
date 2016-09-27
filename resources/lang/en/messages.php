@@ -83,7 +83,7 @@ return [
     'mfl-code'              =>    'MFL Code',
 
     //  Program Management
-    'question'              =>     'Question|Questions',
+    'field-set'             =>     'Field Set|Field Sets',
     'option'                =>     'Option|Options',
     'field'                 =>     'Field|Fields',
     /* Views */

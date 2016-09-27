@@ -94,7 +94,7 @@ class ShipperController extends Controller
         $shipper = Shipper::findOrFail($id);
         $shipper_types = array(Shipper::COURIER=>'Courier', Shipper::PARTNER=>'Partner', Shipper::COUNTY_LAB_COORDINATOR=>'County Lab Coordinator', Shipper::OTHER=>'Other');
         $shipper_type = $shipper->shipper_type;
-        $facilities = Facility::lists('name', 'id')->toArray();
+        $facilities = Facility::all();
         //  Prepare view
         return view('shipper.edit', compact('shipper', 'shipper_types', 'shipper_type', 'facilities'));
     }

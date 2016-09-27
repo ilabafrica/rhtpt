@@ -3363,7 +3363,6 @@ input[type="button"].btn-block {
   display: inline-block;
   max-width: 100%;
   -webkit-appearance: none;
-  padding: .375rem 1.75rem .375rem .75rem;
   padding-right: .75rem \9;
   color: #55595c;
   vertical-align: middle;

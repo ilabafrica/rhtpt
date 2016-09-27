@@ -55,7 +55,7 @@
 						{!! Form::textarea('contact', old('contact'), array('class' => 'form-control', 'rows' => '3')) !!}
 					</div>
 				</div>
-        <div class="tbl" style="display:none;">
+        <div class="tbl"{!! count($shipper->facilities)==0?'style="display:none;"':'' !!}>
             <hr>
           	 	<table class="table table-bordered table-sm search-table" id="example" style="width:100%">
           			<thead>
@@ -71,7 +71,7 @@
           				<tr>
           					<td>
                       <label class="checkbox-inline">
-                          {!! Form::checkbox("care[]", $value->id, '') !!}{!! $value->code !!}
+                          {!! Form::checkbox("care[]", $value->id, in_array($value->id, $shipper->facilities->lists('id')->toArray())?'checked':'') !!}{!! $value->code !!}
                       </label>
                     </td>
                     <td>{!! $value->name !!}</td>

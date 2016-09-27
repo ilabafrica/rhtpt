@@ -111,4 +111,6 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "result.delete",
         "uses" => "ResultController@delete"
     ));
+    //  Ajax loading of sub-counties from county selection
+    Route::get('api/dropdown/{id?}', 'ApiController@dropdown');
 });

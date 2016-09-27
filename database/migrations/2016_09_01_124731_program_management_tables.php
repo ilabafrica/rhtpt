@@ -13,6 +13,17 @@ class ProgramManagementTables extends Migration
     public function up()
     {
         //  Fields
+        Schema::create('field_sets', function(Blueprint $table)
+        {
+            $table->increments('id')->unsigned();
+            $table->string('name');
+            $table->string('label')->nullable();
+            $table->string('description', 100)->nullable();
+            $table->smallInteger('order')->nullable();
+            $table->softDeletes();
+            $table->timestamps();
+        });
+        //  Fields
     		Schema::create('fields', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
@@ -21,10 +32,13 @@ class ProgramManagementTables extends Migration
       			$table->string('description', 100)->nullable();
       			$table->smallInteger('order')->nullable();
             $table->smallInteger('tag');
+          	$table->integer('field_set_id')->unsigned();
             $table->smallInteger('is_matrix')->nullable();
             $table->smallInteger('matrix')->nullable();
             $table->softDeletes();
       			$table->timestamps();
+
+            $table->foreign('field_set_id')->references('id')->on('field_sets');
     		});
         //	Fields - Questions
     		/*Schema::create('field_questions', function(Blueprint $table)
