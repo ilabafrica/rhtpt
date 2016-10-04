@@ -536,9 +536,17 @@ class PTSeeder extends Seeder
           /*  Field-sets */
           $sets = array(
               array("name" => "PT Panel Dates", "label" => "PT Panel Dates", "order" => "0"),
-              array("name" => "Test Kits", "label" => "Test Kits", "order" => "1"),
-              array("name" => "Test Results", "label" => "Test Results", "order" => "2"),
-              array("name" => "New Tester Details", "label" => "New Tester Details", "order" => "3")
+              array("name" => "Test 1", "label" => "Test 1", "order" => "1"),
+              array("name" => "Test 2", "label" => "Test 2", "order" => "2"),
+              array("name" => "Test 3", "label" => "Test 3", "order" => "3"),
+              array("name" => "PT Panel 1", "label" => "Test Results", "order" => "4"),
+              array("name" => "PT Panel 2", "label" => "Test Results", "order" => "5"),
+              array("name" => "PT Panel 3", "label" => "Test Results", "order" => "6"),
+              array("name" => "PT Panel 4", "label" => "Test Results", "order" => "7"),
+              array("name" => "PT Panel 5", "label" => "Test Results", "order" => "8"),
+              array("name" => "PT Panel 6", "label" => "Test Results", "order" => "9"),
+              array("name" => "Remarks", "label" => "Remarks", "order" => "10"),
+              array("name" => "New Tester Details", "label" => "New Tester Details", "order" => "11")
           );
           foreach ($sets as $set) {
               FieldSet::create($set);
@@ -547,27 +555,53 @@ class PTSeeder extends Seeder
 
           /*  Fields */
           $fields = array(
-              array("name" => "Date PT Panel Received", "label" => "Date PT Panel Received", "order" => "", "field_set_id" => "1"),
-              array("name" => "Date PT Panel Constituted", "label" => "Date PT Panel Constituted", "order" => "", "field_set_id" => "1"),
-              array("name" => "Date PT Panel Tested", "label" => "Date PT Panel Tested", "order" => "", "field_set_id" => "1"),
+              array("name" => "Date PT Panel Received", "label" => "Date PT Panel Received", "order" => "0", "tag" => "1", "field_set_id" => "1"),
+              array("name" => "Date PT Panel Constituted", "label" => "Date PT Panel Constituted", "order" => "1", "tag" => "1", "field_set_id" => "1"),
+              array("name" => "Date PT Panel Tested", "label" => "Date PT Panel Tested", "order" => "2", "tag" => "1", "field_set_id" => "1"),
 
-              array("name" => "Test 1 Kit", "label" => "Test 1 Kit Name", "description" => ""),
-              array("name" => "Test 2 Kit", "label" => "Test 2 Kit Name", "description" => ""),
-              array("name" => "Test 3 Kit", "label" => "Test 3 Kit Name", "description" => ""),
-              array("name" => "Test 1 Lot", "label" => "Test 1 Kit Lot No.", "description" => ""),
-              array("name" => "Test 2 Lot", "label" => "Test 2 Kit Lot No.", "description" => ""),
-              array("name" => "Test 3 Lot", "label" => "Test 3 Kit Lot No.", "description" => ""),
-              array("name" => "Test 1 Expiry", "label" => "Test 1 Kit Expiry Date", "description" => ""),
-              array("name" => "Test 2 Expiry", "label" => "Test 2 Kit Expiry Date", "description" => ""),
-              array("name" => "Test 3 Expiry", "label" => "Test 3 Kit Expiry Date", "description" => ""),
+              array("name" => "Test 1 Kit", "label" => "Kit Name", "order" => "0", "tag" => "4", "field_set_id" => "2"),
+              array("name" => "Test 1 Lot", "label" => "Kit Lot No.", "order" => "1", "tag" => "3", "field_set_id" => "2"),
+              array("name" => "Test 1 Expiry", "label" => "Kit Expiry Date", "order" => "2", "tag" => "1", "field_set_id" => "2"),
 
-              array("name" => "PT Panel 1 Test 1 Results", "label" => "Test 1 Results", "description" => ""),
-              array("name" => "Test 3", "label" => "Test 2 Results", "description" => ""),
-              array("name" => "Test 3", "label" => "Test 3 Results", "description" => ""),
-              array("name" => "Test 3", "label" => "Kit Name", "description" => ""),
-              array("name" => "Test 3", "label" => "Kit Name", "description" => ""),
-              array("name" => "Test 3", "label" => "Kit Name", "description" => ""),
-              array("name" => "Test 3", "label" => "Kit Name", "description" => ""),
+              array("name" => "Test 2 Kit", "label" => "Kit Name", "order" => "0", "tag" => "4", "field_set_id" => "3"),
+              array("name" => "Test 2 Lot", "label" => "Kit Lot No.", "order" => "1", "tag" => "3", "field_set_id" => "3"),
+              array("name" => "Test 2 Expiry", "label" => "Kit Expiry Date", "order" => "2", "tag" => "1", "field_set_id" => "3"),
+
+              array("name" => "Test 3 Kit", "label" => "Kit Name", "order" => "0", "tag" => "4", "field_set_id" => "4"),
+              array("name" => "Test 3 Lot", "label" => "Kit Lot No.", "order" => "1", "tag" => "3", "field_set_id" => "4"),
+              array("name" => "Test 3 Expiry", "label" => "Kit Expiry Date", "order" => "2", "tag" => "1", "field_set_id" => "4"),
+
+              array("name" => "PT Panel 1 Test 1 Results", "label" => "Test 1 Results", "order" => "0", "tag" => "4", "field_set_id" => "5"),
+              array("name" => "PT Panel 1 Test 2 Results", "label" => "Test 2 Results", "order" => "1", "tag" => "4", "field_set_id" => "5"),
+              array("name" => "PT Panel 1 Test 3 Results", "label" => "Test 3 Results", "order" => "2", "tag" => "4", "field_set_id" => "5"),
+              array("name" => "PT Panel 1 Final Results", "label" => "Final Results", "order" => "3", "tag" => "4", "field_set_id" => "5"),
+
+              array("name" => "PT Panel 2 Test 1 Results", "label" => "Test 1 Results", "order" => "0", "tag" => "4", "field_set_id" => "6"),
+              array("name" => "PT Panel 2 Test 2 Results", "label" => "Test 2 Results", "order" => "1", "tag" => "4", "field_set_id" => "6"),
+              array("name" => "PT Panel 2 Test 3 Results", "label" => "Test 3 Results", "order" => "2", "tag" => "4", "field_set_id" => "6"),
+              array("name" => "PT Panel 2 Final Results", "label" => "Final Results", "order" => "3", "tag" => "4", "field_set_id" => "6"),
+
+              array("name" => "PT Panel 3 Test 1 Results", "label" => "Test 1 Results", "order" => "0", "tag" => "4", "field_set_id" => "7"),
+              array("name" => "PT Panel 3 Test 2 Results", "label" => "Test 2 Results", "order" => "1", "tag" => "4", "field_set_id" => "7"),
+              array("name" => "PT Panel 3 Test 3 Results", "label" => "Test 3 Results", "order" => "2", "tag" => "4", "field_set_id" => "7"),
+              array("name" => "PT Panel 3 Final Results", "label" => "Final Results", "order" => "3", "tag" => "", "field_set_id" => "7"),
+
+              array("name" => "PT Panel 4 Test 1 Results", "label" => "Test 1 Results", "order" => "0", "tag" => "4", "field_set_id" => "8"),
+              array("name" => "PT Panel 4 Test 2 Results", "label" => "Test 2 Results", "order" => "1", "tag" => "4", "field_set_id" => "8"),
+              array("name" => "PT Panel 4 Test 3 Results", "label" => "Test 3 Results", "order" => "2", "tag" => "4", "field_set_id" => "8"),
+              array("name" => "PT Panel 4 Final Results", "label" => "Final Results", "order" => "3", "tag" => "", "field_set_id" => "8"),
+
+              array("name" => "PT Panel 5 Test 1 Results", "label" => "Test 1 Results", "order" => "0", "tag" => "4", "field_set_id" => "9"),
+              array("name" => "PT Panel 5 Test 2 Results", "label" => "Test 2 Results", "order" => "1", "tag" => "4", "field_set_id" => "9"),
+              array("name" => "PT Panel 5 Test 3 Results", "label" => "Test 3 Results", "order" => "2", "tag" => "4", "field_set_id" => "9"),
+              array("name" => "PT Panel 5 Final Results", "label" => "Final Results", "order" => "3", "tag" => "4", "field_set_id" => "9"),
+
+              array("name" => "PT Panel 6 Test 1 Results", "label" => "Test 1 Results", "order" => "0", "tag" => "4", "field_set_id" => "10"),
+              array("name" => "PT Panel 6 Test 2 Results", "label" => "Test 2 Results", "order" => "1", "tag" => "4", "field_set_id" => "10"),
+              array("name" => "PT Panel 6 Test 3 Results", "label" => "Test 3 Results", "order" => "2", "tag" => "4", "field_set_id" => "10"),
+              array("name" => "PT Panel 6 Final Results", "label" => "Final Results", "order" => "3", "tag" => "4", "field_set_id" => "10"),
+
+              array("name" => "Comments", "label" => "Comments", "order" => "0", "tag" => "6", "field_set_id" => "11")
           );
           foreach ($fields as $field) {
               Field::create($field);
@@ -592,5 +626,135 @@ class PTSeeder extends Seeder
               Option::create($option);
           }
           $this->command->info('Options table seeded');
+
+          /*  Field Options */
+          $foptions = array(
+              array("field_id" => "4", "option_id" => "1"),
+              array("field_id" => "4", "option_id" => "2"),
+              array("field_id" => "4", "option_id" => "3"),
+              array("field_id" => "4", "option_id" => "4"),
+
+              array("field_id" => "7", "option_id" => "1"),
+              array("field_id" => "7", "option_id" => "2"),
+              array("field_id" => "7", "option_id" => "3"),
+              array("field_id" => "7", "option_id" => "4"),
+
+              array("field_id" => "10", "option_id" => "1"),
+              array("field_id" => "10", "option_id" => "2"),
+              array("field_id" => "10", "option_id" => "3"),
+              array("field_id" => "10", "option_id" => "4"),
+
+              array("field_id" => "13", "option_id" => "5"),
+              array("field_id" => "13", "option_id" => "6"),
+              array("field_id" => "13", "option_id" => "7"),
+              array("field_id" => "13", "option_id" => "8"),
+              array("field_id" => "14", "option_id" => "5"),
+              array("field_id" => "14", "option_id" => "6"),
+              array("field_id" => "14", "option_id" => "7"),
+              array("field_id" => "14", "option_id" => "8"),
+              array("field_id" => "15", "option_id" => "5"),
+              array("field_id" => "15", "option_id" => "6"),
+              array("field_id" => "15", "option_id" => "7"),
+              array("field_id" => "15", "option_id" => "8"),
+              array("field_id" => "16", "option_id" => "9"),
+              array("field_id" => "16", "option_id" => "10"),
+              array("field_id" => "16", "option_id" => "11"),
+              array("field_id" => "16", "option_id" => "7"),
+              array("field_id" => "16", "option_id" => "8"),
+
+              array("field_id" => "17", "option_id" => "5"),
+              array("field_id" => "17", "option_id" => "6"),
+              array("field_id" => "17", "option_id" => "7"),
+              array("field_id" => "17", "option_id" => "8"),
+              array("field_id" => "18", "option_id" => "5"),
+              array("field_id" => "18", "option_id" => "6"),
+              array("field_id" => "18", "option_id" => "7"),
+              array("field_id" => "18", "option_id" => "8"),
+              array("field_id" => "19", "option_id" => "5"),
+              array("field_id" => "19", "option_id" => "6"),
+              array("field_id" => "19", "option_id" => "7"),
+              array("field_id" => "19", "option_id" => "8"),
+              array("field_id" => "20", "option_id" => "9"),
+              array("field_id" => "20", "option_id" => "10"),
+              array("field_id" => "20", "option_id" => "11"),
+              array("field_id" => "20", "option_id" => "7"),
+              array("field_id" => "20", "option_id" => "8"),
+
+              array("field_id" => "21", "option_id" => "5"),
+              array("field_id" => "21", "option_id" => "6"),
+              array("field_id" => "21", "option_id" => "7"),
+              array("field_id" => "21", "option_id" => "8"),
+              array("field_id" => "22", "option_id" => "5"),
+              array("field_id" => "22", "option_id" => "6"),
+              array("field_id" => "22", "option_id" => "7"),
+              array("field_id" => "22", "option_id" => "8"),
+              array("field_id" => "23", "option_id" => "5"),
+              array("field_id" => "23", "option_id" => "6"),
+              array("field_id" => "23", "option_id" => "7"),
+              array("field_id" => "23", "option_id" => "8"),
+              array("field_id" => "24", "option_id" => "9"),
+              array("field_id" => "24", "option_id" => "10"),
+              array("field_id" => "24", "option_id" => "11"),
+              array("field_id" => "24", "option_id" => "7"),
+              array("field_id" => "24", "option_id" => "8"),
+
+              array("field_id" => "25", "option_id" => "5"),
+              array("field_id" => "25", "option_id" => "6"),
+              array("field_id" => "25", "option_id" => "7"),
+              array("field_id" => "25", "option_id" => "8"),
+              array("field_id" => "26", "option_id" => "5"),
+              array("field_id" => "26", "option_id" => "6"),
+              array("field_id" => "26", "option_id" => "7"),
+              array("field_id" => "26", "option_id" => "8"),
+              array("field_id" => "27", "option_id" => "5"),
+              array("field_id" => "27", "option_id" => "6"),
+              array("field_id" => "27", "option_id" => "7"),
+              array("field_id" => "27", "option_id" => "8"),
+              array("field_id" => "28", "option_id" => "9"),
+              array("field_id" => "28", "option_id" => "10"),
+              array("field_id" => "28", "option_id" => "11"),
+              array("field_id" => "28", "option_id" => "7"),
+              array("field_id" => "28", "option_id" => "8"),
+
+              array("field_id" => "29", "option_id" => "5"),
+              array("field_id" => "29", "option_id" => "6"),
+              array("field_id" => "29", "option_id" => "7"),
+              array("field_id" => "29", "option_id" => "8"),
+              array("field_id" => "30", "option_id" => "5"),
+              array("field_id" => "30", "option_id" => "6"),
+              array("field_id" => "30", "option_id" => "7"),
+              array("field_id" => "30", "option_id" => "8"),
+              array("field_id" => "31", "option_id" => "5"),
+              array("field_id" => "31", "option_id" => "6"),
+              array("field_id" => "31", "option_id" => "7"),
+              array("field_id" => "31", "option_id" => "8"),
+              array("field_id" => "32", "option_id" => "9"),
+              array("field_id" => "32", "option_id" => "10"),
+              array("field_id" => "32", "option_id" => "11"),
+              array("field_id" => "32", "option_id" => "7"),
+              array("field_id" => "32", "option_id" => "8"),
+
+              array("field_id" => "33", "option_id" => "5"),
+              array("field_id" => "33", "option_id" => "6"),
+              array("field_id" => "33", "option_id" => "7"),
+              array("field_id" => "33", "option_id" => "8"),
+              array("field_id" => "34", "option_id" => "5"),
+              array("field_id" => "34", "option_id" => "6"),
+              array("field_id" => "34", "option_id" => "7"),
+              array("field_id" => "34", "option_id" => "8"),
+              array("field_id" => "35", "option_id" => "5"),
+              array("field_id" => "35", "option_id" => "6"),
+              array("field_id" => "35", "option_id" => "7"),
+              array("field_id" => "35", "option_id" => "8"),
+              array("field_id" => "36", "option_id" => "9"),
+              array("field_id" => "36", "option_id" => "10"),
+              array("field_id" => "36", "option_id" => "11"),
+              array("field_id" => "36", "option_id" => "7"),
+              array("field_id" => "36", "option_id" => "8"),
+          );
+          foreach ($foptions as $foption) {
+              DB::table('field_options')->insert($foption);
+          }
+          $this->command->info('Field Options table seeded');
     }
 }

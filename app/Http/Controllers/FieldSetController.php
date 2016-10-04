@@ -14,7 +14,7 @@ use App\Models\Option;
 
 use Session;
 
-class FieldController extends Controller
+class FieldSetController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -24,7 +24,7 @@ class FieldController extends Controller
     public function index()
     {
         //  Get all fields
-        $sets = FieldSet:all();
+        $sets = FieldSet::all();
         return view('set.index', compact('sets'));
     }
 
@@ -35,7 +35,7 @@ class FieldController extends Controller
      */
     public function create()
     {
-        $sets = FieldSet:lists('label', 'id')->toArray();
+        $sets = FieldSet::lists('label', 'id')->toArray();
         //  Prepare view
         return view('set.create', compact('$sets'));
     }
@@ -68,7 +68,7 @@ class FieldController extends Controller
     public function show($id)
     {
         //  Get specific field
-        $set = FieldSet:findOrFail($id);
+        $set = FieldSet::findOrFail($id);
         return view('set.show', compact('set'));
     }
 
@@ -80,8 +80,8 @@ class FieldController extends Controller
      */
     public function edit($id)
     {
-        $set = FieldSet:findOrFail($id);
-        $sets = FieldSet:lists('label', 'id')->toArray();
+        $set = FieldSet::findOrFail($id);
+        $sets = FieldSet::lists('label', 'id')->toArray();
         $fld = $set->order;
         //  Prepare view
         return view('set.edit', compact('sets', 'set', 'fld'));
@@ -97,7 +97,7 @@ class FieldController extends Controller
     public function update(FieldRequest $request, $id)
     {
         //  prepare update-statement
-        $set = FieldSet:findOrFail($id);
+        $set = FieldSet::findOrFail($id);
         $set->name = $request->name;
         $set->label = $request->label;
         $set->description = $request->description;

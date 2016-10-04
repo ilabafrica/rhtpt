@@ -99,9 +99,12 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('field'), strtolower('option')])?' '.strtolower(trans('messages.active')):'' !!}">
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('set'), strtolower('field'), strtolower('option')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-google-wallet"></i> {!! trans('messages.program-management') !!}</a>
                         <ul class="list-unstyled">
+                            <li class="{!! Request::segment(1)==strtolower('set')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('set') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.field-set', 2) !!}</a>
+                            </li>
                             <li class="{!! Request::segment(1)==strtolower('field')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('field') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.field', 2) !!}</a>
                             </li>

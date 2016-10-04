@@ -45,6 +45,12 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "facility.delete",
         "uses" => "FacilityController@delete"
     ));
+    //	Field-set controller
+    Route::resource('set', 'FieldSetController');
+    Route::get("/set/{id}/delete", array(
+        "as"   => "set.delete",
+        "uses" => "FieldSetController@delete"
+    ));
     //	Field controller
     Route::resource('field', 'FieldController');
     Route::get("/field/{id}/delete", array(

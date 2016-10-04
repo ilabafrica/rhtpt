@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ResultRequest;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+
+use App\Models\FieldSet;
+use App\Models\Field;
+use App\Models\Option;
 
 class ResultController extends Controller
 {
@@ -26,7 +31,8 @@ class ResultController extends Controller
      */
     public function create()
     {
-        //
+        $sets = FieldSet::orderBy('order')->get();
+        return view('result.create', compact('sets'));
     }
 
     /**
