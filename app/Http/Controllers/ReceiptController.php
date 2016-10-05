@@ -11,7 +11,7 @@ use App\Http\Requests\ReceiptRequest;
 
 use App\Models\Receipt;
 use App\Models\Shipment;
-use App\Models\User;
+use App\Models\Facility;
 
 use Session;
 use Auth;
@@ -37,10 +37,10 @@ class ReceiptController extends Controller
      */
     public function create()
     {
-        $shipments = Shipment::lists('participant', 'id')->toArray();
-        $users = User::lists('name', 'id')->toArray();
+        $shipments = Shipment::lists('facility_id', 'id')->toArray();
+        $facilities = Facility::lists('name', 'id')->toArray();
         //  Prepare view
-        return view('receipt.create', compact('shipments', 'users'));
+        return view('receipt.create', compact('shipments', 'facilities'));
     }
 
     /**
@@ -88,12 +88,12 @@ class ReceiptController extends Controller
     public function edit($id)
     {
         $receipt = Receipt::findOrFail($id);
-        $shipments = Shipment::lists('participant', 'id')->toArray();
+        $shipments = Shipment::lists('facility_id', 'id')->toArray();
         $shipment = $receipt->shipment_id;
-        $users = User::lists('name', 'id')->toArray();
-        $user = $receipt->recipient;
+        $facilities = Facility::lists('name', 'id')->toArray();
+        $facility = $receipt->recipient;
         //  Prepare view
-        return view('receipt.edit', compact('receipt', 'shipments', 'shipment', 'users', 'user'));
+        return view('receipt.edit', compact('receipt', 'shipments', 'shipment', 'facilities', 'facility'));
     }
 
     /**

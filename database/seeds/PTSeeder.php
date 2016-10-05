@@ -82,53 +82,53 @@ class PTSeeder extends Seeder
         User::find(1)->attachRole($role1);
 
         /* Counties table */
-        $baringo = County::create(array("name" => "Baringo"));
-        $bomet = County::create(array("name" => "Bomet"));
-        $bungoma = County::create(array("name" => "Bungoma"));
-        $busia = County::create(array("name" => "Busia"));
-        $elgeyo = County::create(array("name" => "Elgeyo Marakwet"));
-        $embu = County::create(array("name" => "Embu"));
-        $garissa = County::create(array("name" => "Garissa"));
-        $homabay = County::create(array("name" => "Homa Bay"));
-        $isiolo = County::create(array("name" => "Isiolo"));
-        $kajiado = County::create(array("name" => "Kajiado"));
-        $kakamega = County::create(array("name" => "Kakamega"));
-        $kericho = County::create(array("name" => "Kericho"));
-        $kiambu = County::create(array("name" => "Kiambu"));
-        $kilifi = County::create(array("name" => "Kilifi"));
-        $kirinyaga = County::create(array("name" => "Kirinyaga"));
-        $kisii = County::create(array("name" => "Kisii"));
-        $kisumu = County::create(array("name" => "Kisumu"));
-        $kitui = County::create(array("name" => "Kitui"));
+        $mombasa = County::create(array("name" => "Mombasa"));
         $kwale = County::create(array("name" => "Kwale"));
-        $laikipia = County::create(array("name" => "Laikipia"));
+        $kilifi = County::create(array("name" => "Kilifi"));
+        $tanariver = County::create(array("name" => "Tana River"));
         $lamu = County::create(array("name" => "Lamu"));
-        $machakos = County::create(array("name" => "Machakos"));
-        $makueni = County::create(array("name" => "Makueni"));
+        $taita = County::create(array("name" => "Taita Taveta"));
+        $garissa = County::create(array("name" => "Garissa"));
+        $wajir = County::create(array("name" => "Wajir"));
         $mandera = County::create(array("name" => "Mandera"));
         $marsabit = County::create(array("name" => "Marsabit"));
+        $isiolo = County::create(array("name" => "Isiolo"));
         $meru = County::create(array("name" => "Meru"));
-        $migori = County::create(array("name" => "Migori"));
-        $mombasa = County::create(array("name" => "Mombasa"));
-        $muranga = County::create(array("name" => "Murang'a"));
-        $nairobi = County::create(array("name" => "Nairobi"));
-        $nakuru = County::create(array("name" => "Nakuru"));
-        $nandi = County::create(array("name" => "Nandi"));
-        $narok = County::create(array("name" => "Narok"));
-        $nyamira = County::create(array("name" => "Nyamira"));
+        $tharakanithi = County::create(array("name" => "Tharaka Nithi"));
+        $embu = County::create(array("name" => "Embu"));
+        $kitui = County::create(array("name" => "Kitui"));
+        $machakos = County::create(array("name" => "Machakos"));
+        $makueni = County::create(array("name" => "Makueni"));
         $nyandarua = County::create(array("name" => "Nyandarua"));
         $nyeri = County::create(array("name" => "Nyeri"));
-        $samburu = County::create(array("name" => "Samburu"));
-        $siaya = County::create(array("name" => "Siaya"));
-        $taita = County::create(array("name" => "Taita Taveta"));
-        $tanariver = County::create(array("name" => "Tana River"));
-        $tharakanithi = County::create(array("name" => "Tharaka Nithi"));
-        $transnzoia = County::create(array("name" => "Trans Nzoia"));
+        $kirinyaga = County::create(array("name" => "Kirinyaga"));
+        $muranga = County::create(array("name" => "Murang'a"));
+        $kiambu = County::create(array("name" => "Kiambu"));
         $turkana = County::create(array("name" => "Turkana"));
-        $uasingishu = County::create(array("name" => "Uasin Gishu"));
-        $vihiga = County::create(array("name" => "Vihiga"));
-        $wajir = County::create(array("name" => "Wajir"));
         $pokot = County::create(array("name" => "West Pokot"));
+        $samburu = County::create(array("name" => "Samburu"));
+        $transnzoia = County::create(array("name" => "Trans Nzoia"));
+        $uasingishu = County::create(array("name" => "Uasin Gishu"));
+        $elgeyo = County::create(array("name" => "Elgeyo Marakwet"));
+        $nandi = County::create(array("name" => "Nandi"));
+        $baringo = County::create(array("name" => "Baringo"));
+        $laikipia = County::create(array("name" => "Laikipia"));
+        $nakuru = County::create(array("name" => "Nakuru"));
+        $narok = County::create(array("name" => "Narok"));
+        $kajiado = County::create(array("name" => "Kajiado"));
+        $kericho = County::create(array("name" => "Kericho"));
+        $bomet = County::create(array("name" => "Bomet"));
+        $kakamega = County::create(array("name" => "Kakamega"));
+        $vihiga = County::create(array("name" => "Vihiga"));
+        $bungoma = County::create(array("name" => "Bungoma"));
+        $busia = County::create(array("name" => "Busia"));
+        $siaya = County::create(array("name" => "Siaya"));
+        $kisumu = County::create(array("name" => "Kisumu"));
+        $homabay = County::create(array("name" => "Homa Bay"));
+        $migori = County::create(array("name" => "Migori"));
+        $kisii = County::create(array("name" => "Kisii"));
+        $nyamira = County::create(array("name" => "Nyamira"));
+        $nairobi = County::create(array("name" => "Nairobi"));
 
         $this->command->info('Counties table seeded');
         /* Sub-Counties table */
@@ -559,17 +559,17 @@ class PTSeeder extends Seeder
               array("name" => "Date PT Panel Constituted", "label" => "Date PT Panel Constituted", "order" => "1", "tag" => "1", "field_set_id" => "1"),
               array("name" => "Date PT Panel Tested", "label" => "Date PT Panel Tested", "order" => "2", "tag" => "1", "field_set_id" => "1"),
 
-              array("name" => "Test 1 Kit", "label" => "Kit Name", "order" => "0", "tag" => "4", "field_set_id" => "2"),
-              array("name" => "Test 1 Lot", "label" => "Kit Lot No.", "order" => "1", "tag" => "3", "field_set_id" => "2"),
-              array("name" => "Test 1 Expiry", "label" => "Kit Expiry Date", "order" => "2", "tag" => "1", "field_set_id" => "2"),
+              array("name" => "Test 1 Kit Name", "label" => "Kit Name", "order" => "0", "tag" => "4", "field_set_id" => "2"),
+              array("name" => "Test 1 Lot No.", "label" => "Kit Lot No.", "order" => "1", "tag" => "3", "field_set_id" => "2"),
+              array("name" => "Test 1 Expiry Date", "label" => "Kit Expiry Date", "order" => "2", "tag" => "1", "field_set_id" => "2"),
 
-              array("name" => "Test 2 Kit", "label" => "Kit Name", "order" => "0", "tag" => "4", "field_set_id" => "3"),
-              array("name" => "Test 2 Lot", "label" => "Kit Lot No.", "order" => "1", "tag" => "3", "field_set_id" => "3"),
-              array("name" => "Test 2 Expiry", "label" => "Kit Expiry Date", "order" => "2", "tag" => "1", "field_set_id" => "3"),
+              array("name" => "Test 2 Kit Name", "label" => "Kit Name", "order" => "0", "tag" => "4", "field_set_id" => "3"),
+              array("name" => "Test 2 Lot No.", "label" => "Kit Lot No.", "order" => "1", "tag" => "3", "field_set_id" => "3"),
+              array("name" => "Test 2 Expiry Date", "label" => "Kit Expiry Date", "order" => "2", "tag" => "1", "field_set_id" => "3"),
 
-              array("name" => "Test 3 Kit", "label" => "Kit Name", "order" => "0", "tag" => "4", "field_set_id" => "4"),
-              array("name" => "Test 3 Lot", "label" => "Kit Lot No.", "order" => "1", "tag" => "3", "field_set_id" => "4"),
-              array("name" => "Test 3 Expiry", "label" => "Kit Expiry Date", "order" => "2", "tag" => "1", "field_set_id" => "4"),
+              array("name" => "Test 3 Kit Name", "label" => "Kit Name", "order" => "0", "tag" => "4", "field_set_id" => "4"),
+              array("name" => "Test 3 Lot No.", "label" => "Kit Lot No.", "order" => "1", "tag" => "3", "field_set_id" => "4"),
+              array("name" => "Test 3 Expiry Date", "label" => "Kit Expiry Date", "order" => "2", "tag" => "1", "field_set_id" => "4"),
 
               array("name" => "PT Panel 1 Test 1 Results", "label" => "Test 1 Results", "order" => "0", "tag" => "4", "field_set_id" => "5"),
               array("name" => "PT Panel 1 Test 2 Results", "label" => "Test 2 Results", "order" => "1", "tag" => "4", "field_set_id" => "5"),
@@ -584,12 +584,12 @@ class PTSeeder extends Seeder
               array("name" => "PT Panel 3 Test 1 Results", "label" => "Test 1 Results", "order" => "0", "tag" => "4", "field_set_id" => "7"),
               array("name" => "PT Panel 3 Test 2 Results", "label" => "Test 2 Results", "order" => "1", "tag" => "4", "field_set_id" => "7"),
               array("name" => "PT Panel 3 Test 3 Results", "label" => "Test 3 Results", "order" => "2", "tag" => "4", "field_set_id" => "7"),
-              array("name" => "PT Panel 3 Final Results", "label" => "Final Results", "order" => "3", "tag" => "", "field_set_id" => "7"),
+              array("name" => "PT Panel 3 Final Results", "label" => "Final Results", "order" => "3", "tag" => "4", "field_set_id" => "7"),
 
               array("name" => "PT Panel 4 Test 1 Results", "label" => "Test 1 Results", "order" => "0", "tag" => "4", "field_set_id" => "8"),
               array("name" => "PT Panel 4 Test 2 Results", "label" => "Test 2 Results", "order" => "1", "tag" => "4", "field_set_id" => "8"),
               array("name" => "PT Panel 4 Test 3 Results", "label" => "Test 3 Results", "order" => "2", "tag" => "4", "field_set_id" => "8"),
-              array("name" => "PT Panel 4 Final Results", "label" => "Final Results", "order" => "3", "tag" => "", "field_set_id" => "8"),
+              array("name" => "PT Panel 4 Final Results", "label" => "Final Results", "order" => "3", "tag" => "4", "field_set_id" => "8"),
 
               array("name" => "PT Panel 5 Test 1 Results", "label" => "Test 1 Results", "order" => "0", "tag" => "4", "field_set_id" => "9"),
               array("name" => "PT Panel 5 Test 2 Results", "label" => "Test 2 Results", "order" => "1", "tag" => "4", "field_set_id" => "9"),
@@ -601,7 +601,15 @@ class PTSeeder extends Seeder
               array("name" => "PT Panel 6 Test 3 Results", "label" => "Test 3 Results", "order" => "2", "tag" => "4", "field_set_id" => "10"),
               array("name" => "PT Panel 6 Final Results", "label" => "Final Results", "order" => "3", "tag" => "4", "field_set_id" => "10"),
 
-              array("name" => "Comments", "label" => "Comments", "order" => "0", "tag" => "6", "field_set_id" => "11")
+              array("name" => "Comments", "label" => "Comments", "order" => "0", "tag" => "6", "field_set_id" => "11"),
+
+              array("name" => "Surname", "label" => "Surname", "order" => "0", "tag" => "3", "field_set_id" => "12"),
+              array("name" => "First Name", "label" => "First Name", "order" => "1", "tag" => "3", "field_set_id" => "12"),
+              array("name" => "Other Names", "label" => "Other Names", "order" => "2", "tag" => "3", "field_set_id" => "12"),
+              array("name" => "Mobile Number", "label" => "Mobile Number", "order" => "3", "tag" => "3", "field_set_id" => "12"),
+              array("name" => "Program", "label" => "Program", "order" => "4", "tag" => "5", "field_set_id" => "12"),
+              array("name" => "Email", "label" => "Email", "order" => "5", "tag" => "2", "field_set_id" => "12"),
+              array("name" => "Reason for Addressee's failure to perform Tests",  "label" => "Reason for Addressee's failure to perform Tests", "order" => "6", "tag" => "4", "field_set_id" => "12")
           );
           foreach ($fields as $field) {
               Field::create($field);
@@ -620,7 +628,12 @@ class PTSeeder extends Seeder
               array("name" => "Not Done", "label" => "Not Done", "description" => ""),
               array("name" => "Positive", "label" => "Positive", "description" => ""),
               array("name" => "Negative", "label" => "Negative", "description" => ""),
-              array("name" => "Indeterminate", "label" => "Indeterminate", "description" => "")
+              array("name" => "Indeterminate", "label" => "Indeterminate", "description" => ""),
+              array("name" => "Transferred", "label" => "Transferred", "description" => ""),
+              array("name" => "Resigned", "label" => "Resigned", "description" => ""),
+              array("name" => "On Leave", "label" => "On Leave", "description" => ""),
+              array("name" => "Off Duty", "label" => "Off Duty", "description" => ""),
+              array("name" => "Deceased", "label" => "Deceased", "description" => "")
           );
           foreach ($options as $option) {
               Option::create($option);
@@ -751,6 +764,13 @@ class PTSeeder extends Seeder
               array("field_id" => "36", "option_id" => "11"),
               array("field_id" => "36", "option_id" => "7"),
               array("field_id" => "36", "option_id" => "8"),
+
+              array("field_id" => "44", "option_id" => "12"),
+              array("field_id" => "44", "option_id" => "13"),
+              array("field_id" => "44", "option_id" => "14"),
+              array("field_id" => "44", "option_id" => "15"),
+              array("field_id" => "44", "option_id" => "16"),
+              array("field_id" => "44", "option_id" => "4"),
           );
           foreach ($foptions as $foption) {
               DB::table('field_options')->insert($foption);

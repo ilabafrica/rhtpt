@@ -21,6 +21,12 @@ class ApiController extends Controller
        $subCounties = County::find($id)->subCounties();
        return Response::make($subCounties->get(['id','name']));
     }
+    public function dropdown2($id)
+    {
+       //$county_id = Input::get('county');
+       $facilities = SubCounty::find($id)->facilities();
+       return Response::make($facilities->get(['id','name']));
+    }
     /**
      * Display a listing of the resource.
      *

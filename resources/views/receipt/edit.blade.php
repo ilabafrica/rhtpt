@@ -75,7 +75,7 @@
         <div class="form-group row">
             {!! Form::label('recipient', trans_choice('messages.recipient', 1), array('class' => 'col-sm-4 form-control-label')) !!}
             <div class="col-sm-6">
-              {!! Form::select('recipient', array(''=>trans('messages.select'))+$users, $user, array('class' => 'form-control c-select', 'id' => 'tested_by')) !!}
+              {!! Form::select('recipient', array(''=>trans('messages.select'))+$facilities, $user, array('class' => 'form-control c-select', 'id' => 'facility')) !!}
             </div>
         </div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">

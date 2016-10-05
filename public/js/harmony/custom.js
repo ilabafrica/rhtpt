@@ -67,3 +67,16 @@ $('#county').on('change', function(e){
          });
      });
  });
+ /*Dynamic loading of select list options for sub-counties - facilities*/
+ $('#sub_county').on('change', function(e){
+   var cnty = e.target.value;
+      //ajax
+      $.get('/api/dropdown2/' + cnty, function(data){
+          //success data
+          $('#facility').empty();
+          $('#facility').append(' ---Select--- ');
+          $.each(data, function(index, element){
+              $('#facility').append("<option value='"+ element.id +"'>" + element.name + "</option>");
+          });
+      });
+  });

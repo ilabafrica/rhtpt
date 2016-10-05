@@ -114,4 +114,29 @@ class Field extends Model
   		// Add the new mapping
   		DB::table('field_options')->insert($fieldAdded);
   	}
+    /**
+  	* Return Field ID given the name
+  	* @param $name the name of the field
+  	*/
+  	public static function idByName($name=NULL)
+  	{
+    		if($name!=NULL)
+        {
+      			try
+      			{
+                $field = Field::where('name', $name)->orderBy('name', 'asc')->firstOrFail();
+                return $field->id;
+      			}
+            catch (ModelNotFoundException $e)
+      			{
+        				Log::error("The field ` $name ` does not exist:  ". $e->getMessage());
+        				// TODO: send email?
+        				return null;
+      			}
+      	}
+        else
+        {
+      			return null;
+    		}
+  	}
 }

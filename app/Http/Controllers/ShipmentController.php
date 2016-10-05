@@ -13,6 +13,9 @@ use App\Models\Shipment;
 use App\Models\Round;
 use App\Models\User;
 use App\Models\Shipper;
+use App\Models\County;
+use App\Models\SubCounty;
+use App\Models\Facility;
 
 use Session;
 use Auth;
@@ -41,8 +44,9 @@ class ShipmentController extends Controller
         $shipping_methods = array(Shipper::COURIER=>'Courier', Shipper::PARTNER=>'Partner', Shipper::COUNTY_LAB_COORDINATOR=>'County Lab Coordinator', Shipper::OTHER=>'Other');
         $users = User::lists('name', 'id')->toArray();
         $rounds = Round::lists('name', 'id')->toArray();
+        $counties = County::lists('name', 'id')->toArray();
         //  Prepare view
-        return view('shipment.create', compact('shipping_methods', 'users', 'rounds'));
+        return view('shipment.create', compact('shipping_methods', 'users', 'rounds', 'counties'));
     }
 
     /**
@@ -60,7 +64,7 @@ class ShipmentController extends Controller
         $shipment->date_shipped = $request->date_shipped;
         $shipment->shipping_method = $request->shipping_method;
         $shipment->courier = $request->courier;
-        $shipment->participant = $request->participant;
+        $shipment->facility_id = $request->facility;
         $shipment->panels_shipped = $request->panels_shipped;
         $shipment->user_id = Auth::user()->id;
         $shipment->save();
@@ -97,8 +101,12 @@ class ShipmentController extends Controller
         $user = $shipment->participant;
         $rounds = Round::lists('name', 'id')->toArray();
         $round = $shipment->round_id;
+        $counties = County::lists('name', 'id')->toArray();
+        $county_id = $facility->subCounty->county->id;
+        $sub_counties = $facility->subCounty->county->subCounties->lists('name', 'id')->toArray();
+        $sub_county_id = $facility->subCounty->id;
         //  Prepare view
-        return view('shipment.edit', compact('shipment', 'shipping_methods', 'shipping_method', 'rounds', 'round', 'users', 'user'));
+        return view('shipment.edit', compact('shipment', 'shipping_methods', 'shipping_method', 'rounds', 'round', 'users', 'user', 'counties', 'county', 'sub_counties', 'sub_county_id'));
     }
 
     /**
@@ -117,7 +125,7 @@ class ShipmentController extends Controller
         $shipment->date_shipped = $request->date_shipped;
         $shipment->shipping_method = $request->shipping_method;
         $shipment->courier = $request->courier;
-        $shipment->participant = $request->participant;
+        $shipment->facility_id = $request->facility;
         $shipment->panels_shipped = $request->panels_shipped;
         $shipment->user_id = Auth::user()->id;
         $shipment->save();

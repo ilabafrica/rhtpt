@@ -5,15 +5,15 @@
     <div class="col-sm-12">
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
-            <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.program-management') !!}</li>
-            <li><a href="{!! route('option.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.option', 2) !!}</a></li>
-            <li class="active">{!! trans('messages.edit') !!}</li>
+            <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.pt') !!}</li>
+            <li><a href="{!! route('result.index') !!}"><i class="fa fa-cube"></i> {!! trans_choice('messages.result', 2) !!}</a></li>
+            <li class="active">{!! trans('messages.add') !!}</li>
         </ol>
     </div>
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-edit"></i> {!! trans('messages.edit') !!}
+	    <i class="fa fa-pencil"></i> {!! trans('messages.add') !!}
 	    <span>
 			<a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
 				<i class="fa fa-step-backward"></i>
@@ -30,32 +30,79 @@
         </div>
         @endif
 		<div class="row">
-			{!! Form::model($option, array('route' => array('option.update', $option->id), 'method' => 'PUT', 'id' => 'form-edit-option', 'class' => 'form-horizontal')) !!}
+			{!! Form::open(array('route' => 'result.store', 'id' => 'form-add-result', 'class' => 'form-horizontal')) !!}
 			<!-- CSRF Token -->
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
             <!-- ./ csrf token -->
 			<div class="col-md-8">
-				<div class="form-group row">
-					{!! Form::label('name', trans_choice('messages.name',1), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-6">
-						{!! Form::text('name', old('name'), array('class' => 'form-control')) !!}
-					</div>
-				</div>
-				<div class="form-group row">
-					{!! Form::label('label', trans_choice('messages.label',1), array('class' => 'col-sm-4 form-control-label')) !!}
-					<div class="col-sm-6">
-						{!! Form::text('label', old('label'), array('class' => 'form-control')) !!}
-					</div>
-				</div>
-        <div class="form-group row">
-            {!! Form::label('description', trans('messages.description'), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6">
-                {!! Form::textarea('description', old('description'), array('class' => 'form-control', 'rows' => '3')) !!}
-            </div>
-        </div>
+        @foreach($sets as $set)
+            <h5><strong class="text-primary">{!! $set->name !!}</strong></h5>
+            <hr>
+            @if(count($set->fields)>0)
+                @foreach($set->fields as $field)
+                <div class="form-group row">
+                  {!! Form::label('name', $field->label, array('class' => 'col-sm-4 form-control-label')) !!}
+                    @if($field->tag == App\Models\Field::CHECKBOX)
+                      <div class="col-sm-6">
+                        <div class="card card-block">
+                          {{--*/ $cnt = 0 /*--}}
+                          @foreach($field->options as $k => $val)
+                                {!! ($cnt%4==0)?"<div class='row'>":"" !!}
+                                {{--*/ $cnt++ /*--}}
+                                <div class="col-md-3">
+                                  <label class="checkbox-inline">{!! Form::checkbox('field_'.$field->id.'[]', $val->id, '') !!}{{ $val->name }}</label>
+                                </div>
+                                {!! ($cnt%4==0)?"</div>":"" !!}
+                          @endforeach
+                          {!! ($cnt%4==0)?"":"</div>" !!}
+                        </div>
+                      </div>
+                    @elseif($field->tag == App\Models\Field::DATE)
+                      <div class="col-sm-6 input-group date datepicker"   style="padding-left:15px;padding-right:15px;">
+            						{!! Form::text('field_'.$field->id, old('start_date'), array('class' => 'form-control')) !!}
+            						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            					</div>
+                    @elseif($field->tag == App\Models\Field::EMAIL)
+                      <div class="col-sm-6">
+                        {!! Form::email('field_'.$field->id, old('name'), array('class' => 'form-control')) !!}
+                      </div>
+                    @elseif($field->tag == App\Models\Field::FIELD)
+                      <div class="col-sm-6">
+                        {!! Form::text('field_'.$field->id, old('name'), array('class' => 'form-control')) !!}
+                      </div>
+                    @elseif($field->tag == App\Models\Field::RADIO)
+                      <div class="col-sm-6">
+                        <div class="card card-block">
+                          {{--*/ $counter = 0 /*--}}
+                          @foreach($field->options as $key => $value)
+                              {!! ($counter%4==0)?"<div class='row'>":"" !!}
+                              {{--*/ $counter++ /*--}}
+                              <div class="col-md-3">
+                                <label class="radio-inline">{!! Form::radio('field_'.$field->id, $value->id, false, array('id' => 'tag')) !!}{{ $value->name }}</label>
+                              </div>
+                              {!! ($counter%4==0)?"</div>":"" !!}
+                          @endforeach
+                          {!! ($counter%4==0)?"":"</div>" !!}
+                        </div>
+            					</div>
+                    @elseif($field->tag == App\Models\Field::SELECT)
+                      <div class="col-sm-6">
+                        @if($field->id == App\Models\Field::idByName('Program'))
+                          {!! Form::select('field_'.$field->id, array(''=>trans('messages.select'))+$programs, '', array('class' => 'form-control c-select')) !!}
+                        @endif
+                      </div>
+                    @elseif($field->tag == App\Models\Field::TEXT)
+                      <div class="col-sm-6">
+                          {!! Form::textarea('field_'.$field->id, old('description'), array('class' => 'form-control', 'rows' => '3')) !!}
+                      </div>
+                    @endif
+                  </div>
+                @endforeach
+            @endif
+        @endforeach
 				<div class="form-group row col-sm-offset-4 col-sm-8">
-					{!! Form::button("<i class='fa fa-check-circle'></i> ".trans('messages.update'),
-					array('class' => 'btn btn-primary btn-sm', 'onclick' => 'submit()')) !!}
+					{!! Form::button("<i class='fa fa-plus-circle'></i> ".trans('messages.save'),
+						array('class' => 'btn btn-primary btn-sm', 'onclick' => 'submit()')) !!}
 					<a href="#" class="btn btn-sm btn-silver"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</a>
 				</div>
 			</div>

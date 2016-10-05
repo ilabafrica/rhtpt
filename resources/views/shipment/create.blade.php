@@ -42,6 +42,24 @@
             </div>
         </div>
         <div class="form-group row">
+            {!! Form::label('county', trans_choice('messages.county', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('county', array(''=>trans('messages.select'))+$counties, '', array('class' => 'form-control c-select', 'id' => 'county')) !!}
+            </div>
+        </div>
+        <div class="form-group row">
+            {!! Form::label('sub-county', trans_choice('messages.sub-county', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('sub_county', array(''=>trans('messages.select')), '', array('class' => 'form-control c-select', 'id' => 'sub_county')) !!}
+            </div>
+        </div>
+        <div class="form-group row">
+            {!! Form::label('facility', trans_choice('messages.facility', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+            <div class="col-sm-6">
+              {!! Form::select('facility', array(''=>trans('messages.select')), '', array('class' => 'form-control c-select', 'id' => 'facility')) !!}
+            </div>
+        </div>
+        <div class="form-group row">
 					{!! Form::label('date-prepared', trans('messages.date-prepared'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6 input-group date datepicker"   style="padding-left:15px;padding-right:15px;">
 						{!! Form::text('date_prepared', old('date_prepared'), array('class' => 'form-control')) !!}
@@ -69,12 +87,6 @@
 						{!! Form::text('courier', old('courier'), array('class' => 'form-control')) !!}
 					</div>
 				</div>
-        <div class="form-group row">
-            {!! Form::label('participant', trans_choice('messages.participant', 1), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6">
-              {!! Form::select('participant', array(''=>trans('messages.select'))+$users, '', array('class' => 'form-control c-select', 'id' => 'tested_by')) !!}
-            </div>
-        </div>
         <div class="form-group row">
 					{!! Form::label('panels-shipped', trans('messages.panels-shipped'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">

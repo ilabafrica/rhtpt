@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Models\FieldSet;
 use App\Models\Field;
 use App\Models\Option;
+use App\Models\Program;
 
 class ResultController extends Controller
 {
@@ -31,8 +32,9 @@ class ResultController extends Controller
      */
     public function create()
     {
+        $programs = Program::lists('name', 'id')->toArray();
         $sets = FieldSet::orderBy('order')->get();
-        return view('result.create', compact('sets'));
+        return view('result.create', compact('sets', 'programs'));
     }
 
     /**

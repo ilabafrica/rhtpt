@@ -50,7 +50,7 @@
                                 {!! ($cnt%4==0)?"<div class='row'>":"" !!}
                                 {{--*/ $cnt++ /*--}}
                                 <div class="col-md-3">
-                                  <label class="checkbox-inline">{!! Form::checkbox('opt[]', $val->id, '') !!}{{ $val->name }}</label>
+                                  <label class="checkbox-inline">{!! Form::checkbox('field_'.$field->id.'[]', $val->id, '') !!}{{ $val->name }}</label>
                                 </div>
                                 {!! ($cnt%4==0)?"</div>":"" !!}
                           @endforeach
@@ -59,16 +59,16 @@
                       </div>
                     @elseif($field->tag == App\Models\Field::DATE)
                       <div class="col-sm-6 input-group date datepicker"   style="padding-left:15px;padding-right:15px;">
-            						{!! Form::text('start_date', old('start_date'), array('class' => 'form-control')) !!}
+            						{!! Form::text('field_'.$field->id, old('start_date'), array('class' => 'form-control')) !!}
             						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             					</div>
                     @elseif($field->tag == App\Models\Field::EMAIL)
                       <div class="col-sm-6">
-                        {!! Form::email('name', old('name'), array('class' => 'form-control')) !!}
+                        {!! Form::email('field_'.$field->id, old('name'), array('class' => 'form-control')) !!}
                       </div>
                     @elseif($field->tag == App\Models\Field::FIELD)
                       <div class="col-sm-6">
-                        {!! Form::text('name', old('name'), array('class' => 'form-control')) !!}
+                        {!! Form::text('field_'.$field->id, old('name'), array('class' => 'form-control')) !!}
                       </div>
                     @elseif($field->tag == App\Models\Field::RADIO)
                       <div class="col-sm-6">
@@ -78,7 +78,7 @@
                               {!! ($counter%4==0)?"<div class='row'>":"" !!}
                               {{--*/ $counter++ /*--}}
                               <div class="col-md-3">
-                                <label class="radio-inline">{!! Form::radio('tag', $value->id, false, array('id' => 'tag')) !!}{{ $value->name }}</label>
+                                <label class="radio-inline">{!! Form::radio('field_'.$field->id, $value->id, false, array('id' => 'tag')) !!}{{ $value->name }}</label>
                               </div>
                               {!! ($counter%4==0)?"</div>":"" !!}
                           @endforeach
@@ -87,11 +87,13 @@
             					</div>
                     @elseif($field->tag == App\Models\Field::SELECT)
                       <div class="col-sm-6">
-                        {!! Form::select('county', array(''=>trans('messages.select')), '', array('class' => 'form-control c-select', 'id' => '')) !!}
+                        @if($field->id == App\Models\Field::idByName('Program'))
+                          {!! Form::select('field_'.$field->id, array(''=>trans('messages.select'))+$programs, '', array('class' => 'form-control c-select')) !!}
+                        @endif
                       </div>
                     @elseif($field->tag == App\Models\Field::TEXT)
                       <div class="col-sm-6">
-                          {!! Form::textarea('description', old('description'), array('class' => 'form-control', 'rows' => '3')) !!}
+                          {!! Form::textarea('field_'.$field->id, old('description'), array('class' => 'form-control', 'rows' => '3')) !!}
                       </div>
                     @endif
                   </div>
