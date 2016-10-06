@@ -88,16 +88,18 @@
                                 <div class="col-sm-12">
                                     {!! Form::select('county_'.$user->id, array(''=>trans('messages.select'))+$counties,
                                         ($user->tier && $user->hasRole('Sub-County Lab Coordinator'))?App\Models\SubCounty::find($user->tier->tier)->county->id:'',
-                                        array('class' => 'form-control c-select', 'id' => 'county_'.$user->id, 'onchange' => "load('$user->id')")) !!}
+                                        array('class' => 'form-control c-select', 'style' => 'margin-bottom:5px;', 'id' => 'county_'.$user->id, 'onchange' => "load('$user->id')")) !!}
                                 </div>
                             </div>
+                            <br />
                             <div class="form-group row faci{!! $user->id !!}" <?php if(!$user->hasRole('Participant')){ ?>style="display:none"<?php } ?>>
                                 <div class="col-sm-12">
                                     {!! Form::select('sub_county'.$user->id, array(''=>trans('messages.select'))+$subCounties,
                                         ($user->tier && $user->hasRole('Participant'))?$user->tier->tier:'',
-                                        array('class' => 'form-control c-select', 'id' => 'sub_county'.$user->id, 'onchange' => "drill('$user->id')")) !!}
+                                        array('class' => 'form-control c-select', 'style' => 'margin-bottom:5px;', 'id' => 'sub_county'.$user->id, 'onchange' => "drill('$user->id')")) !!}
                                 </div>
                             </div>
+                            <br />
                             <div class="form-group row faci{!! $user->id !!}" <?php if(!$user->hasRole('Participant')){ ?>style="display:none"<?php } ?>>
                                 <div class="col-sm-12">
                                     {!! Form::select('facility'.$user->id, array(''=>trans('messages.select'))+$facilities,
