@@ -34,95 +34,91 @@
         </div>
         @endif
 		{!! Form::open(array('route'=>'role.assign')) !!}
-	 	<table class="table table-bordered table-sm">
+	 	<table class="table table-bordered table-sm search-table" id="example">
 			<thead>
-                <tr>
-                    <th>{!! trans_choice('messages.user', 2) !!}</th>
-                    <th colspan="{!! count($roles)!!}">{!! trans_choice('messages.role', 2) !!}</th>
-                </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td></td>
-                @forelse($roles as $role)
-                    <td>{!!$role->name!!}</td>
-                @empty
-                    <td>{!!trans('messages.no-records-found')!!}</td>
-                @endforelse
-            </tr>
-            @forelse($users as $userKey=>$user)
-                <tr>
-                    <td>{!! $user->name !!}</td>
-                    @forelse($roles as $roleKey=>$role)
-                    <td>
-                        @if ($role == App\Models\Role::getAdminRole() && $user == App\Models\User::getAdminUser())
-                            <i class="fa fa-lock"></i>
-                            {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name),
-                            array('style'=>'display:none')) !!}
-                        @else
-                            @if($role->id == App\Models\Role::idByName('County Lab Coordinator'))
-                                {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "county('$user->id')")) !!}
-                                @if($user->id != App\Models\User::getAdminUser()->id)
-                                    <br />
-                                    <div class="kaunti{!! $user->id !!}" <?php if(!$user->hasRole('County Lab Coordinator')){ ?>style="display:none" <?php } ?>>
-                                        <div class="form-group row">
-                                            <div class="col-sm-12">
-                                                {!! Form::select('county'.$user->id, array(''=>trans('messages.select'))+$counties, '', array('class' => 'form-control c-select')) !!}
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            @elseif($role->id == App\Models\Role::idByName('Partner Admin'))
-                                {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "partner('$user->id')")) !!}
-                                @if($user->id != App\Models\User::getAdminUser()->id)
-                                    <br />
-                                    <div class="part{!! $user->id !!}" <?php if(!$user->hasRole('Partner Admin')){ ?>style="display:none" <?php } ?>>
-                                        <div class="form-group row">
-                                            <div class="col-sm-12">
-                                                {!! Form::select('partner'.$user->id, array(''=>trans('messages.select'))+$partners, '', array('class' => 'form-control c-select')) !!}
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            @elseif($role->id == App\Models\Role::idByName('Participant'))
-                              {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "site('$user->id')")) !!}
-                              @if($user->id != App\Models\User::getAdminUser()->id)
-                                <br />
-                                  <div class="form-group row faci{!! $user->id !!}" <?php if(!$user->hasRole('Participant')){ ?>style="display:none"<?php } ?>>
+          <tr>
+              <th>{!! trans_choice('messages.user', 2).' / '.trans_choice('messages.role', 2) !!}</th>
+              @forelse($roles as $role)
+                  <th>{!!$role->name!!}</th>
+              @empty
+                  <th>{!!trans('messages.no-records-found')!!}</th>
+              @endforelse
+          </tr>
+      </thead>
+      <tbody>
+      @forelse($users as $userKey=>$user)
+          <tr>
+              <td>{!! $user->name !!}</td>
+              @forelse($roles as $roleKey=>$role)
+              <td>
+                  @if ($role == App\Models\Role::getAdminRole() && $user == App\Models\User::getAdminUser())
+                      <i class="fa fa-lock"></i>
+                      {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name),
+                      array('style'=>'display:none')) !!}
+                  @else
+                      @if($role->id == App\Models\Role::idByName('County Lab Coordinator'))
+                          {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "county('$user->id')")) !!}
+                          @if($user->id != App\Models\User::getAdminUser()->id)
+                              <br />
+                              <div class="kaunti{!! $user->id !!}" <?php if(!$user->hasRole('County Lab Coordinator')){ ?>style="display:none" <?php } ?>>
+                                  <div class="form-group row">
                                       <div class="col-sm-12">
-                                          {!! Form::select('county_'.$user->id, array(''=>trans('messages.select'))+$counties,
-                                              ($user->tier && $user->hasRole('Sub-County Lab Coordinator'))?App\Models\SubCounty::find($user->tier->tier)->county->id:'',
-                                              array('class' => 'form-control c-select', 'id' => 'county_'.$user->id, 'onchange' => "load('$user->id')")) !!}
+                                          {!! Form::select('county'.$user->id, array(''=>trans('messages.select'))+$counties, '', array('class' => 'form-control c-select')) !!}
                                       </div>
                                   </div>
-                                  <div class="form-group row faci{!! $user->id !!}" <?php if(!$user->hasRole('Participant')){ ?>style="display:none"<?php } ?>>
+                              </div>
+                          @endif
+                      @elseif($role->id == App\Models\Role::idByName('Partner Admin'))
+                          {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "partner('$user->id')")) !!}
+                          @if($user->id != App\Models\User::getAdminUser()->id)
+                              <br />
+                              <div class="part{!! $user->id !!}" <?php if(!$user->hasRole('Partner Admin')){ ?>style="display:none" <?php } ?>>
+                                  <div class="form-group row">
                                       <div class="col-sm-12">
-                                          {!! Form::select('sub_county'.$user->id, array(''=>trans('messages.select'))+$subCounties,
-                                              ($user->tier && $user->hasRole('Participant'))?$user->tier->tier:'',
-                                              array('class' => 'form-control c-select', 'id' => 'sub_county'.$user->id, 'onchange' => "drill('$user->id')")) !!}
+                                          {!! Form::select('partner'.$user->id, array(''=>trans('messages.select'))+$partners, '', array('class' => 'form-control c-select')) !!}
                                       </div>
                                   </div>
-                                  <div class="form-group row faci{!! $user->id !!}" <?php if(!$user->hasRole('Participant')){ ?>style="display:none"<?php } ?>>
-                                      <div class="col-sm-12">
-                                          {!! Form::select('facility'.$user->id, array(''=>trans('messages.select'))+$facilities,
-                                              ($user->tier && $user->hasRole('Participant'))?$user->tier->tier:'',
-                                              array('class' => 'form-control c-select', 'id' => 'facility'.$user->id)) !!}
-                                      </div>
-                                  </div>
-                              @endif
-                            @else
-                                {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name)) !!}
-                            @endif
+                              </div>
+                          @endif
+                      @elseif($role->id == App\Models\Role::idByName('Participant'))
+                        {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "site('$user->id')")) !!}
+                        @if($user->id != App\Models\User::getAdminUser()->id)
+                          <br />
+                            <div class="form-group row faci{!! $user->id !!}" <?php if(!$user->hasRole('Participant')){ ?>style="display:none"<?php } ?>>
+                                <div class="col-sm-12">
+                                    {!! Form::select('county_'.$user->id, array(''=>trans('messages.select'))+$counties,
+                                        ($user->tier && $user->hasRole('Sub-County Lab Coordinator'))?App\Models\SubCounty::find($user->tier->tier)->county->id:'',
+                                        array('class' => 'form-control c-select', 'id' => 'county_'.$user->id, 'onchange' => "load('$user->id')")) !!}
+                                </div>
+                            </div>
+                            <div class="form-group row faci{!! $user->id !!}" <?php if(!$user->hasRole('Participant')){ ?>style="display:none"<?php } ?>>
+                                <div class="col-sm-12">
+                                    {!! Form::select('sub_county'.$user->id, array(''=>trans('messages.select'))+$subCounties,
+                                        ($user->tier && $user->hasRole('Participant'))?$user->tier->tier:'',
+                                        array('class' => 'form-control c-select', 'id' => 'sub_county'.$user->id, 'onchange' => "drill('$user->id')")) !!}
+                                </div>
+                            </div>
+                            <div class="form-group row faci{!! $user->id !!}" <?php if(!$user->hasRole('Participant')){ ?>style="display:none"<?php } ?>>
+                                <div class="col-sm-12">
+                                    {!! Form::select('facility'.$user->id, array(''=>trans('messages.select'))+$facilities,
+                                        ($user->tier && $user->hasRole('Participant'))?$user->tier->tier:'',
+                                        array('class' => 'form-control c-select', 'id' => 'facility'.$user->id)) !!}
+                                </div>
+                            </div>
                         @endif
-                    </td>
-                    @empty
-                        <td>[-]</td>
-                    @endforelse
-                </tr>
-            @empty
-            <tr><td colspan="2">{!!trans('messages.no-records-found')!!}</td></tr>
-            @endforelse
-            </tbody>
+                      @else
+                          {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name)) !!}
+                      @endif
+                  @endif
+              </td>
+              @empty
+                  <td>[-]</td>
+              @endforelse
+          </tr>
+          @empty
+          <tr><td colspan="2">{!!trans('messages.no-records-found')!!}</td></tr>
+          @endforelse
+      </tbody>
 		</table>
 		<div class="form-group messagess-row" align="right">
         {!! Form::button("<i class='fa fa-check-circle'></i> ".trans('messages.update'),
