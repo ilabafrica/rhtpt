@@ -24,7 +24,7 @@ class ItemRequest extends Request {
   	{
   		$id = $this->ingnoreId();
   		return [
-              'program'   => 'required:items,program_id,'.$id,
+              'tester_id_range'   => 'required:items,tester_id_range,'.$id,
               'pt_identifier'   => 'required:items,pt_id,'.$id,
               'round'   => 'required:items,round_id,'.$id,
               'material'   => 'required:items,material_id,'.$id,
@@ -36,10 +36,10 @@ class ItemRequest extends Request {
   	*/
   	public function ingnoreId(){
     		$id = $this->route('item');
-    		$program_id = $this->input('program');
+    		$tester_id_range = $this->input('tester_id_range');
         $round_id = $this->input('round');
         $material_id = $this->input('material');
         $prepared_by = $this->input('prepared_by');
-    		return Item::where(compact('id', 'program_id', 'round_id', 'material_id', 'prepared_by'))->exists() ? $id : '';
+    		return Item::where(compact('id', 'tester_id_range', 'round_id', 'material_id', 'prepared_by'))->exists() ? $id : '';
   	}
 }

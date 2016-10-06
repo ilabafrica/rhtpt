@@ -13,6 +13,10 @@ use App\Models\Field;
 use App\Models\Option;
 use App\Models\Program;
 
+use Auth;
+use Input;
+use Session;
+
 class ResultController extends Controller
 {
     /**
@@ -22,7 +26,7 @@ class ResultController extends Controller
      */
     public function index()
     {
-        //
+        return view('result.index');
     }
 
     /**
@@ -43,9 +47,40 @@ class ResultController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+      dd(Input::all());
+        //	Save pt first then proceed to save form fields
+        $pt = new Pt;
+        $pt->receipt_id = Input::get('receipt_id');
+        $pt->user_id = Auth::user()->id;
+        $pt->save();
+        //	Proceed to form-fields
+        foreach (Input::all() as $key => $value)
+        {
+            if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
+                continue;
+            else if(stripos($key, 'field') !==FALSE)
+            {
+                $fieldId = $this->strip($key);
+                if(is_array($value))
+                  $value = implode(', ', $value);
+                $result = new Result;
+                $result->pt_id = $pt->id;
+                $result->field_id = $fieldId;
+          			$result->response = $value;
+                $result->save();
+            }
+            else if(stripos($key, 'comment') !==FALSE)
+            {
+                $result = Result::where('field_id', $key)->first();
+                $result->comment = $value;
+                $result->save();
+            }
+        }
+        //	Redirect
+        $url = session('SOURCE_URL');
+        return redirect()->to($url)->with('message', trans('messages.record-successfully-saved'));
     }
 
     /**
@@ -54,42 +89,54 @@ class ResultController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+      public function show($id)
+      {
+          //
+      }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+      /**
+       * Show the form for editing the specified resource.
+       *
+       * @param  int  $id
+       * @return \Illuminate\Http\Response
+       */
+      public function edit($id)
+      {
+          //
+      }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+      /**
+       * Update the specified resource in storage.
+       *
+       * @param  \Illuminate\Http\Request  $request
+       * @param  int  $id
+       * @return \Illuminate\Http\Response
+       */
+      public function update(Request $request, $id)
+      {
+          //
+      }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+      /**
+       * Remove the specified resource from storage.
+       *
+       * @param  int  $id
+       * @return \Illuminate\Http\Response
+       */
+      public function destroy($id)
+      {
+          //
+      }
+
+  	/**
+  	 * Remove the specified begining of text to get Id alone.
+  	 *
+  	 * @param  int  $id
+  	 * @return Response
+  	 */
+  	public function strip($field)
+  	{
+    		if(($pos = strpos($field, '_')) !== FALSE)
+    		return substr($field, $pos+1);
+  	}
 }

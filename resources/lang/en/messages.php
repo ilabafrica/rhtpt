@@ -34,6 +34,7 @@ return [
     'shipment'              =>    'Shipment|Shipments',
     'receipt'               =>    'Receipt|Receipts',
     'result'                =>    'Result|Results',
+    'partner'               =>    'Partner|Partners',
     /* Views */
     'batch'                 =>    'Batch No.',
     'date-prepared'         =>    'Date Prepared',

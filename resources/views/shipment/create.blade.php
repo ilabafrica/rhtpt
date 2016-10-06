@@ -77,14 +77,26 @@
 					{!! Form::label('shipping-method', trans_choice('messages.shipping-method', 1), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-8">
             @foreach($shipping_methods as $key => $value)
-						      <label class="radio-inline">{!! Form::radio('shipping_method', $key, false) !!}{{ $value }}</label>
+						      <label class="radio-inline">{!! Form::radio('shipper', $key, false, array('id' => 'shipper', 'onclick' => 'toggling(".toggled", this)')) !!}{{ $value }}</label>
             @endforeach
 					</div>
 				</div>
-        <div class="form-group row">
-					{!! Form::label('courier', trans_choice('messages.courier', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+        <div class="form-group row toggled" id="specify" style="display:none;">
+					{!! Form::label('specify', 'If Other, specify', array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
-						{!! Form::text('courier', old('courier'), array('class' => 'form-control')) !!}
+						{!! Form::text('shipping_method', old('courier'), array('class' => 'form-control')) !!}
+					</div>
+				</div>
+        <div class="form-group row toggled" id="courier" style="display:none;">
+          {!! Form::label('courier', trans_choice('messages.courier', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+					<div class="col-sm-6">
+						{!! Form::select('shipping_method', array(''=>trans('messages.select'))+$courier, '', array('class' => 'form-control c-select')) !!}
+					</div>
+				</div>
+        <div class="form-group row toggled" id="partner" style="display:none;">
+					{!! Form::label('partner', trans_choice('messages.partner', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+					<div class="col-sm-6">
+						{!! Form::select('shipping_method', array(''=>trans('messages.select')), '', array('class' => 'form-control c-select')) !!}
 					</div>
 				</div>
         <div class="form-group row">

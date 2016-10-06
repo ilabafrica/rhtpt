@@ -125,8 +125,8 @@ class PtSetupTables extends Migration
             $table->integer('round_id')->unsigned();
             $table->date('date_prepared');
             $table->date('date_shipped');
-            $table->smallInteger('shipping_method');
             $table->integer('shipper_id')->unsigned();
+            $table->string('shipping_method')->nullable();
             $table->integer('facility_id')->unsigned();
       			$table->string('panels_shipped');
             $table->integer('user_id')->unsigned();

@@ -69,9 +69,9 @@ $('#county').on('change', function(e){
  });
  /*Dynamic loading of select list options for sub-counties - facilities*/
  $('#sub_county').on('change', function(e){
-   var cnty = e.target.value;
+   var sbc = e.target.value;
       //ajax
-      $.get('/api/dropdown2/' + cnty, function(data){
+      $.get('/api/dropdown2/' + sbc, function(data){
           //success data
           $('#facility').empty();
           $('#facility').append(' ---Select--- ');
@@ -80,3 +80,48 @@ $('#county').on('change', function(e){
           });
       });
   });
+  /*Dynamic loading of select list options for sub-counties - facilities*/
+  $('#facility').on('change', function(e){
+    var fclty = e.target.value;
+       //ajax
+       $.get('/api/dropdown3/' + fclty, function(data){
+           //success data
+           $('#partner').empty();
+           $('#partner').append(' ---Select--- ');
+           $.each(data, function(index, element){
+               $('#partner').append("<option value='"+ element.id +"'>" + element.name + "</option>");
+           });
+       });
+   });
+   /*Function to toggle shipment radios*/
+   function toggling(className, obj){
+       var $input = $(obj);
+       if($input.val() == 0)
+       {
+          $('#courier').show();
+          $('#partner').hide();
+          $('#specify').hide();
+       }
+       else if($input.val() == 1)
+       {
+          $('#partner').show();
+          $('#courier').hide();
+          $('#specify').hide();
+       }
+       else if($input.val() == 3)
+       {
+          $('#specify').show();
+          $('#partner').hide();
+          $('#courier').hide();
+       ß}
+       else
+           $(className).hide();
+   }
+   /*Function to toggle input fields to specify value if 'other' is selected*/
+   function remark(className, obj){
+       var $input = $(obj);
+       if($input.val() == 4)
+           $(className).show();
+       else
+           $(className).hide();
+   }

@@ -121,4 +121,6 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/dropdown/{id?}', 'ApiController@dropdown');
     //  Ajax loading of facilities from sub-county selection
     Route::get('api/dropdown2/{id?}', 'ApiController@dropdown2');
+    //  Ajax loading of facilities from sub-county selection
+    Route::get('api/dropdown3/{id?}', 'ApiController@dropdown3');
 });

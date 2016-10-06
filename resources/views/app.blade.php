@@ -95,7 +95,7 @@
                                 <a href="{!! url('receipt') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.receipt', 2) !!}</a>
                             </li>
                             <li class="{!! Request::segment(1)==strtolower('result')?strtolower(trans('messages.active')):'' !!}">
-                                <a href="#"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.result', 2) !!}</a>
+                                <a href="{!! url('result') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.result', 2) !!}</a>
                             </li>
                         </ul>
                     </li>

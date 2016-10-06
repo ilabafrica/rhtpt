@@ -9,9 +9,11 @@ use App\Http\Controllers\Controller;
 
 use App\Models\County;
 use App\Models\SubCounty;
+use App\Models\Shipper;
 
 use Input;
 use Response;
+use DB;
 
 class ApiController extends Controller
 {
@@ -23,9 +25,13 @@ class ApiController extends Controller
     }
     public function dropdown2($id)
     {
-       //$county_id = Input::get('county');
        $facilities = SubCounty::find($id)->facilities();
        return Response::make($facilities->get(['id','name']));
+    }
+    public function dropdown3($id)
+    {
+       $partners = Shipper::whereIn('id', DB::table('shipper_facilities')->where('facility_id', $id)->lists('shipper_id'));
+       return Response::make($partners->get(['id','name']));
     }
     /**
      * Display a listing of the resource.

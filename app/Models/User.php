@@ -60,4 +60,19 @@ class User extends Model implements AuthenticatableContract,
     {
         return User::find(1);
     }
+
+    /**
+  	 * Return readable tester-id-range
+  	 */
+  	public static function range($range)
+  	{
+  		  if($range == User::ZERO_TO_TWO)
+            return '0 - 2';
+        else if($range == User::THREE_TO_FIVE)
+            return '3 - 5';
+        else if($range == User::SIX_TO_EIGHT)
+            return '6 - 8';
+        else if($range == User::NINE)
+            return '9';
+  	}
 }

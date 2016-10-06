@@ -78,13 +78,19 @@
                               {!! ($counter%4==0)?"<div class='row'>":"" !!}
                               {{--*/ $counter++ /*--}}
                               <div class="col-md-3">
-                                <label class="radio-inline">{!! Form::radio('field_'.$field->id, $value->id, false, array('id' => 'tag')) !!}{{ $value->name }}</label>
+                                <label class="radio-inline">{!! Form::radio('field_'.$field->id, $value->id, false, array('id' => 'tag', 'onclick' => "remark('.toggle_$field->id', this)")) !!}{{ $value->name }}</label>
                               </div>
                               {!! ($counter%4==0)?"</div>":"" !!}
                           @endforeach
                           {!! ($counter%4==0)?"":"</div>" !!}
                         </div>
             					</div>
+                      <div class="toggle_{!!$field->id!!}" style="display:none;">
+                          {!! Form::label('name', 'Please Specify', array('class' => 'col-sm-4 form-control-label text-danger font-weight-bold')) !!}
+                          <div class="col-sm-6">
+                            {!! Form::text('comment_'.$field->id, old('name'), array('class' => 'form-control')) !!}
+                          </div>
+                      </div>
                     @elseif($field->tag == App\Models\Field::SELECT)
                       <div class="col-sm-6">
                         @if($field->id == App\Models\Field::idByName('Program'))

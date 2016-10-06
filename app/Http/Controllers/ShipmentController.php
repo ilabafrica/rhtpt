@@ -45,8 +45,9 @@ class ShipmentController extends Controller
         $users = User::lists('name', 'id')->toArray();
         $rounds = Round::lists('name', 'id')->toArray();
         $counties = County::lists('name', 'id')->toArray();
+        $courier = Shipper::where('shipper_type', Shipper::COURIER)->lists('name', 'id')->toArray();
         //  Prepare view
-        return view('shipment.create', compact('shipping_methods', 'users', 'rounds', 'counties'));
+        return view('shipment.create', compact('shipping_methods', 'users', 'rounds', 'counties', 'courier'));
     }
 
     /**
@@ -62,6 +63,7 @@ class ShipmentController extends Controller
         $shipment->round_id = $request->round;
         $shipment->date_prepared = $request->date_prepared;
         $shipment->date_shipped = $request->date_shipped;
+        $shipment->shipper_id = $request->shipper;
         $shipment->shipping_method = $request->shipping_method;
         $shipment->courier = $request->courier;
         $shipment->facility_id = $request->facility;
@@ -105,8 +107,9 @@ class ShipmentController extends Controller
         $county_id = $facility->subCounty->county->id;
         $sub_counties = $facility->subCounty->county->subCounties->lists('name', 'id')->toArray();
         $sub_county_id = $facility->subCounty->id;
+        $courier = Shipper::where('shipper_type', Shipper::COURIER)->lists('name', 'id')->toArray();
         //  Prepare view
-        return view('shipment.edit', compact('shipment', 'shipping_methods', 'shipping_method', 'rounds', 'round', 'users', 'user', 'counties', 'county', 'sub_counties', 'sub_county_id'));
+        return view('shipment.edit', compact('shipment', 'shipping_methods', 'shipping_method', 'rounds', 'round', 'users', 'user', 'counties', 'county', 'sub_counties', 'sub_county_id', 'courier'));
     }
 
     /**
@@ -123,6 +126,7 @@ class ShipmentController extends Controller
         $shipment->round_id = $request->round;
         $shipment->date_prepared = $request->date_prepared;
         $shipment->date_shipped = $request->date_shipped;
+        $shipment->shipper_id = $request->shipper;
         $shipment->shipping_method = $request->shipping_method;
         $shipment->courier = $request->courier;
         $shipment->facility_id = $request->facility;

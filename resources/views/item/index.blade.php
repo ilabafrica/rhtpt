@@ -52,7 +52,7 @@
 	                @endif
 	                >
 					<td>{!! $value->pt_id !!}</td>
-          <td>{!! $value->program->name !!}</td>
+          <td>{!! App\Models\User::range($value->tester_id_range) !!}</td>
           <td>{!! $value->material->material($value->material->material_type) !!}</td>
 					<td>{!! $value->round->name !!}</td>
           <td>{!! $value->user->name !!}</td>
