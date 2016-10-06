@@ -62,6 +62,7 @@ class PTSeeder extends Seeder
         $roles = array(
             array("name" => "Superadmin", "display_name" => "Overall Administrator"),
             array("name" => "Participant", "display_name" => "Participant"),
+            array("name" => "Partner Admin", "display_name" => "Partner Admin"),
             array("name" => "County Lab Admin", "display_name" => "County Lab Administrator")
         );
         foreach ($roles as $role)

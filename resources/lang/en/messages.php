@@ -61,7 +61,9 @@ return [
     'recipient'             =>    'Recipient|Recipients',
     'shipper-type'          =>    'Shipper Type|Shipper Types',
     'contact'               =>    'Contact|Contacts',
+    'tester-id'             =>    'Tester ID',
     'tester-id-range'       =>    'Tester ID Range',
+    'feedback'              =>    'Feedback',
     //  Reports
 
     //  User Management

@@ -5,16 +5,16 @@
     <div class="col-sm-12">
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
-            <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.program-management') !!}</li>
-            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.option', 2) !!}</li>
+            <li class="active"><i class="fa fa-cubes"></i> {!! trans('messages.pt') !!}</li>
+            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.result', 2) !!}</li>
         </ol>
     </div>
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-book"></i> {!! trans_choice('messages.option', 2) !!}
+	    <i class="fa fa-book"></i> {!! trans_choice('messages.result', 2) !!}
 	    <span>
-		    <a class="btn btn-sm btn-belize-hole" href="{!! url("option/create") !!}" >
+		    <a class="btn btn-sm btn-belize-hole" href="{!! url("result/create") !!}" >
 				<i class="fa fa-plus-circle"></i>
 				{!! trans('messages.add') !!}
 			</a>
@@ -37,40 +37,40 @@
 	 	<table class="table table-bordered table-sm search-table" id="example">
 			<thead>
 				<tr>
-					<th>{!! trans('messages.name') !!}</th>
-					<th>{!! trans('messages.label') !!}</th>
-					<th>{!! trans('messages.description') !!}</th>
+					<th>{!! trans_choice('messages.pt-round', 1) !!}</th>
+					<th>{!! trans_choice('messages.program', 1) !!}</th>
+					<th>{!! trans('messages.tester-id') !!}</th>
+					<th>{!! trans('messages.status') !!}</th>
+					<th>{!! trans('messages.feedback') !!}</th>
 					<th>{!! trans('messages.action') !!}</th>
 				</tr>
 			</thead>
 			<tbody>
-			@foreach($options as $key => $value)
-				<tr @if(session()->has('active_option'))
-	                    {!! (session('active_option') == $value->id)?"class='warning'":"" !!}
-	                @endif
-	                >
-					<td>{!! $value->name !!}</td>
-					<td>{!! $value->label !!}</td>
-					<td>{!! $value->description !!}</td>
-
+			@foreach($results as $key => $value)
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+          <td></td>
+					<td></td>
 					<td>
 
-					<!-- show the test category (uses the show method found at GET /option/{id} -->
-						<a class="btn btn-sm btn-success" href="{!! url("option/" . $value->id) !!}" >
+					<!-- show the test category (uses the show method found at GET /result/{id} -->
+						<a class="btn btn-sm btn-success" href="{!! url("result/" . $value->id) !!}" >
 							<i class="fa fa-folder-open-o"></i>
 							{!! trans('messages.view') !!}
 						</a>
 
-					<!-- edit this test category (uses edit method found at GET /option/{id}/edit -->
-						<a class="btn btn-sm btn-info" href="{!! url("option/" . $value->id . "/edit") !!}" >
+					<!-- edit this test category (uses edit method found at GET /result/{id}/edit -->
+						<a class="btn btn-sm btn-info" href="{!! url("result/" . $value->id . "/edit") !!}" >
 							<i class="fa fa-edit"></i>
 							{!! trans('messages.edit') !!}
 						</a>
 
-					<!-- delete this test category (uses delete method found at GET /option/{id}/delete -->
+					<!-- delete this test category (uses delete method found at GET /result/{id}/delete -->
 						<button class="btn btn-sm btn-danger delete-item-link"
 							data-toggle="modal" data-target=".confirm-delete-modal"
-							data-id='{!! url("option/" . $value->id . "/delete") !!}'>
+							data-id='{!! url("result/" . $value->id . "/delete") !!}'>
 							<i class="fa fa-trash-o"></i>
 							{!! trans('messages.delete') !!}
 						</button>

@@ -12,6 +12,7 @@ use App\Models\FieldSet;
 use App\Models\Field;
 use App\Models\Option;
 use App\Models\Program;
+use App\Models\Result;
 
 use Auth;
 use Input;
@@ -26,7 +27,8 @@ class ResultController extends Controller
      */
     public function index()
     {
-        return view('result.index');
+        $results = Result::all();
+        return view('result.index', compact('results'));
     }
 
     /**

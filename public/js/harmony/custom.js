@@ -125,3 +125,48 @@ $('#county').on('change', function(e){
        else
            $(className).hide();
    }
+   /* Function to show county selection */
+  function county(id)
+  {
+      $('.kaunti'+id).toggle(this.checked);
+  }
+  /* Toggle sub-counties */
+  function sub_county(id){
+      $('.sub_county'+id).toggle(this.checked);
+  }
+  /* Toggle facilities */
+  function site(id){
+      $('.faci'+id).toggle(this.checked);
+  }
+  /* Function to show partner selection */
+ function partner(id)
+ {
+     $('.part'+id).toggle(this.checked);
+ }
+ function load(id)
+ {
+      var cnty = $('#county_'+id).val();
+      //ajax
+      $.get('/api/dropdown/' + cnty, function(data){
+          //success data
+          $('#sub_county'+id).empty();
+          $('#sub_county'+id).append(' ---Select--- ');
+          $.each(data, function(index, element){
+              $('#sub_county'+id).append("<option value='"+ element.id +"'>" + element.name + "</option>");
+          });
+      });
+  }
+  /*Dynamic loading of select list options for sub-counties - facilities*/
+  function drill(id)
+  {
+     var sbc = $('#sub_county'+id).val();
+     //ajax
+     $.get('/api/dropdown2/' + sbc, function(data){
+         //success data
+         $('#facility'+id).empty();
+         $('#facility'+id).append(' ---Select--- ');
+         $.each(data, function(index, element){
+             $('#facility'+id).append("<option value='"+ element.id +"'>" + element.name + "</option>");
+         });
+     });
+ }

@@ -5,6 +5,10 @@ use App\Http\Requests\RoleRequest;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\County;
+use App\Models\SubCounty;
+use App\Models\Facility;
+use App\Models\Shipper;
 
 use Config;
 use Response;
@@ -47,8 +51,12 @@ class RoleController extends Controller {
         $users = User::all();
         $roles = Role::all();
         $userRoleData = array('users'=>$users, 'roles'=>$roles);
+        $counties = County::lists('name', 'id')->toArray();
+        $subCounties = SubCounty::lists('name', 'id')->toArray();
+        $facilities = Facility::lists('name', 'id')->toArray();
+        $partners = Shipper::where('shipper_type', Shipper::PARTNER)->lists('name', 'id')->toArray();
 
-        return view('role.assign', $userRoleData);
+        return view('role.assign', $userRoleData, compact('counties', 'subCounties', 'facilities', 'partners'));
     }
 
     /**
