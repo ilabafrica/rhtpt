@@ -43,6 +43,7 @@ class UserController extends Controller {
     {
         $user = new User;
         $user->name = $request->name;
+        $user->uid = $request->uid;
         $user->gender = $request->gender;
         $user->email = $request->email;
         $user->phone = $request->phone;
@@ -96,6 +97,7 @@ class UserController extends Controller {
         //  Get user
         $user = User::find($id);
         $user->name = $request->name;
+        $user->uid = $request->uid;
         $user->gender = $request->gender;
         $user->email = $request->email;
         $user->phone = $request->phone;

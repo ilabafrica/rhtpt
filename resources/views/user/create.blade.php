@@ -42,6 +42,12 @@
 					</div>
 				</div>
 				<div class="form-group row">
+					{!! Form::label('uid', trans('messages.uid'), array('class' => 'col-sm-4 form-control-label')) !!}
+					<div class="col-sm-6">
+						{!! Form::text('uid', old('uid'), array('class' => 'form-control')) !!}
+					</div>
+				</div>
+				<div class="form-group row">
 					{!! Form::label('gender', trans('messages.gender'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
 						<label class="radio-inline">{!! Form::radio('gender', App\Models\User::MALE, true) !!}{{ trans('messages.male') }}</label>

@@ -71,6 +71,8 @@ return [
     'role'                  =>    'Role|Roles',
     'permission'            =>    'Permission|Permissions',
     'assign-roles'          =>    'Assign Roles',
+    /* Views */
+    'uid'                   =>    'Unique ID',
     //  Facility Catalog - Administrative and are not bound to change in the near future
     'sub-county'            =>    'Sub County|Sub Counties',
     'county'                =>    'County|Counties',

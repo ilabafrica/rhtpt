@@ -39,6 +39,7 @@
 		<div class="custom-callout custom-callout-midnight-blue gem-h5">
 			<strong>
 				<p>{!! trans('messages.name').': ' !!}<span class="text-primary">{!! $user->name !!}</span></p>
+				<p>{!! trans('messages.uid').': ' !!}<span class="text-muted">{!! $user->uid !!}</span></p>
 				<p>{!! trans('messages.username').': ' !!}<span class="text-muted">{!! $user->username !!}</span></p>
 				<p>{!! trans('messages.gender').': ' !!}<span class="text-muted">{!! $user->gender==App\Models\User::MALE?trans('messages.male'):trans('messages.female') !!}</span></p>
 				<p>{!! trans('messages.phone').': ' !!}<span class="text-muted">{!! $user->phone !!}</span></p>
