@@ -27,13 +27,11 @@ class PtSetupTables extends Migration
       			$table->increments('id')->unsigned();
       			$table->integer('user_id')->unsigned();
       			$table->integer('role_id')->unsigned();
-            $table->integer('tester_id_no')->nullable();
-      			$table->integer('program_id')->nullable();
             $table->integer('tier');
+      			$table->integer('program_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('role_id')->references('id')->on('roles');
             $table->unique(array('user_id','role_id'));
-            $table->unique('tester_id_no');
             $table->softDeletes();
     			  $table->timestamps();
     		});

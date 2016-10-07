@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
           $table->string("username", 50)->unique();
           $table->string('password', 60);
           $table->string("image", 100)->nullable();
+          $table->integer('uid')->nullable();
           $table->rememberToken();
 
           $table->softDeletes();

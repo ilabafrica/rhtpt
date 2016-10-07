@@ -63,7 +63,7 @@
                               <div class="kaunti{!! $user->id !!}" <?php if(!$user->hasRole('County Lab Coordinator')){ ?>style="display:none" <?php } ?>>
                                   <div class="form-group row">
                                       <div class="col-sm-12">
-                                          {!! Form::select('county'.$user->id, array(''=>trans('messages.select'))+$counties, '', array('class' => 'form-control c-select')) !!}
+                                          {!! Form::select('county'.$user->id, array(''=>trans('messages.select'))+$counties, ($user->tier && $user->hasRole('County Lab Coordinator'))?$user->tier->tier:'', array('class' => 'form-control c-select')) !!}
                                       </div>
                                   </div>
                               </div>
@@ -75,7 +75,7 @@
                               <div class="part{!! $user->id !!}" <?php if(!$user->hasRole('Partner Admin')){ ?>style="display:none" <?php } ?>>
                                   <div class="form-group row">
                                       <div class="col-sm-12">
-                                          {!! Form::select('partner'.$user->id, array(''=>trans('messages.select'))+$partners, '', array('class' => 'form-control c-select')) !!}
+                                          {!! Form::select('partner'.$user->id, array(''=>trans('messages.select'))+$partners, ($user->tier && $user->hasRole('Partner Admin'))?$user->tier->tier:'', array('class' => 'form-control c-select')) !!}
                                       </div>
                                   </div>
                               </div>
@@ -87,7 +87,7 @@
                             <div class="form-group row faci{!! $user->id !!}" <?php if(!$user->hasRole('Participant')){ ?>style="display:none"<?php } ?>>
                                 <div class="col-sm-12">
                                     {!! Form::select('county_'.$user->id, array(''=>trans('messages.select'))+$counties,
-                                        ($user->tier && $user->hasRole('Sub-County Lab Coordinator'))?App\Models\SubCounty::find($user->tier->tier)->county->id:'',
+                                        ($user->tier && $user->hasRole('Participant'))?App\Models\Facility::find($user->tier->tier)->subCounty->county->id:'',
                                         array('class' => 'form-control c-select', 'style' => 'margin-bottom:5px;', 'id' => 'county_'.$user->id, 'onchange' => "load('$user->id')")) !!}
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
                             <div class="form-group row faci{!! $user->id !!}" <?php if(!$user->hasRole('Participant')){ ?>style="display:none"<?php } ?>>
                                 <div class="col-sm-12">
                                     {!! Form::select('sub_county'.$user->id, array(''=>trans('messages.select'))+$subCounties,
-                                        ($user->tier && $user->hasRole('Participant'))?$user->tier->tier:'',
+                                        ($user->tier && $user->hasRole('Participant'))?App\Models\Facility::find($user->tier->tier)->subCounty->id:'',
                                         array('class' => 'form-control c-select', 'style' => 'margin-bottom:5px;', 'id' => 'sub_county'.$user->id, 'onchange' => "drill('$user->id')")) !!}
                                 </div>
                             </div>
@@ -104,7 +104,15 @@
                                 <div class="col-sm-12">
                                     {!! Form::select('facility'.$user->id, array(''=>trans('messages.select'))+$facilities,
                                         ($user->tier && $user->hasRole('Participant'))?$user->tier->tier:'',
-                                        array('class' => 'form-control c-select', 'id' => 'facility'.$user->id)) !!}
+                                        array('class' => 'form-control c-select', 'style' => 'margin-bottom:5px;', 'id' => 'facility'.$user->id)) !!}
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group row faci{!! $user->id !!}" <?php if(!$user->hasRole('Participant')){ ?>style="display:none"<?php } ?>>
+                                <div class="col-sm-12">
+                                    {!! Form::select('program'.$user->id, array(''=>trans('messages.select'))+$programs,
+                                        ($user->tier && $user->hasRole('Participant'))?$user->tier->program_id:'',
+                                        array('class' => 'form-control c-select', 'id' => 'program'.$user->id)) !!}
                                 </div>
                             </div>
                         @endif

@@ -75,4 +75,13 @@ class User extends Model implements AuthenticatableContract,
         else if($range == User::NINE)
             return '9';
   	}
+    /**
+	  * Relationship with user-tier
+	  *
+	  * @return RoleUserTier object
+	  */
+  	public function tier()
+  	{
+  		return $this->hasOne('App\Models\Tier');
+  	}
 }
