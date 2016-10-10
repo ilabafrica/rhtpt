@@ -13,6 +13,7 @@ use App\Models\Field;
 use App\Models\Option;
 use App\Models\Program;
 use App\Models\Result;
+use App\Models\Pt;
 
 use Auth;
 use Input;
@@ -27,7 +28,7 @@ class ResultController extends Controller
      */
     public function index()
     {
-        $results = Result::all();
+        $results = Pt::all();
         return view('result.index', compact('results'));
     }
 
@@ -51,10 +52,10 @@ class ResultController extends Controller
      */
     public function store()
     {
-      dd(Input::all());
+      //dd(Input::all());
         //	Save pt first then proceed to save form fields
         $pt = new Pt;
-        $pt->receipt_id = Input::get('receipt_id');
+        $pt->receipt_id = 1;//Input::get('receipt_id');
         $pt->user_id = Auth::user()->id;
         $pt->save();
         //	Proceed to form-fields
@@ -75,9 +76,12 @@ class ResultController extends Controller
             }
             else if(stripos($key, 'comment') !==FALSE)
             {
-                $result = Result::where('field_id', $key)->first();
-                $result->comment = $value;
-                $result->save();
+                if($value)
+                {
+                    $result = Result::where('field_id', $key)->first();
+                    $result->comment = $value;
+                    $result->save();
+                }
             }
         }
         //	Redirect
@@ -93,7 +97,9 @@ class ResultController extends Controller
      */
       public function show($id)
       {
-          //
+          //  Get results for the selected pt submission
+          $results = Pt::find($id)->results()->orderBy('field_id', 'ASC')->get();
+          return view('result.show', compact('results'));
       }
 
       /**

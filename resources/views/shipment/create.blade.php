@@ -93,10 +93,10 @@
 						{!! Form::select('shipping_method', array(''=>trans('messages.select'))+$courier, '', array('class' => 'form-control c-select')) !!}
 					</div>
 				</div>
-        <div class="form-group row toggled" id="partner" style="display:none;">
+        <div class="form-group row toggled" id="partners" style="display:none;">
 					{!! Form::label('partner', trans_choice('messages.partner', 1), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
-						{!! Form::select('shipping_method', array(''=>trans('messages.select')), '', array('class' => 'form-control c-select')) !!}
+						{!! Form::select('shipping_method', array(''=>trans('messages.select')), '', array('class' => 'form-control c-select', 'id' => 'partner')) !!}
 					</div>
 				</div>
         <div class="form-group row">

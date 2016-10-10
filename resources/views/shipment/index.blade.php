@@ -41,8 +41,8 @@
           <th>{!! trans('messages.date-prepared') !!}</th>
           <th>{!! trans('messages.date-shipped') !!}</th>
 					<th>{!! trans_choice('messages.shipping-method', 1) !!}</th>
-          <th>{!! trans_choice('messages.courier', 1) !!}</th>
-          <th>{!! trans_choice('messages.participant', 1) !!}</th>
+          <th>{!! trans_choice('messages.shipper', 1) !!}</th>
+          <th>{!! trans_choice('messages.facility', 1) !!}</th>
           <th>{!! trans('messages.panels-shipped') !!}</th>
 					<th>{!! trans('messages.action') !!}</th>
 				</tr>
@@ -56,9 +56,9 @@
 					<td>{!! $value->round->name !!}</td>
           <td>{!! $value->date_prepared !!}</td>
           <td>{!! $value->date_shipped !!}</td>
-          <td>{!! $value->shipping($value->shipping_method) !!}</td>
-          <td>{!! $value->courier !!}</td>
-          <td>{!! $value->part->name !!}</td>
+          <td>{!! $value->shipping($value->shipper_id) !!}</td>
+          <td>{!! $value->shipping_method !!}</td>
+          <td>{!! $value->facility->name !!}</td>
           <td>{!! $value->panels_shipped !!}</td>
 					<td>
 

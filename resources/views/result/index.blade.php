@@ -38,7 +38,7 @@
 			<thead>
 				<tr>
 					<th>{!! trans_choice('messages.pt-round', 1) !!}</th>
-					<th>{!! trans_choice('messages.program', 1) !!}</th>
+					<th>{!! trans_choice('messages.facility', 1) !!}</th>
 					<th>{!! trans('messages.tester-id') !!}</th>
 					<th>{!! trans('messages.status') !!}</th>
 					<th>{!! trans('messages.feedback') !!}</th>
@@ -48,11 +48,11 @@
 			<tbody>
 			@foreach($results as $key => $value)
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-          <td></td>
-					<td></td>
+					<td>{!! $value->receipt->shipment->round->name !!}</td>
+					<td>{!! $value->receipt->receiver->name !!}</td>
+					<td>{!! $value->user->uid or '000000' !!}</td>
+          <td>{!! $value->status or 'Incomplete' !!}</td>
+					<td>{!! $value->feedback or 'Not Verified' !!}</td>
 					<td>
 
 					<!-- show the test category (uses the show method found at GET /result/{id} -->

@@ -13,13 +13,13 @@
 </div>
 <div class="card">
 	<div class="card-header">
-	    <i class="fa fa-file-text"></i> <strong>{!! $option->name !!}</strong>
+	    <i class="fa fa-file-text"></i> <strong></strong>
 	    <span>
 	    	<a class="btn btn-sm btn-belize-hole" href="{!! url("option/create") !!}" >
 				<i class="fa fa-plus-circle"></i>
 				{!! trans('messages.add') !!}
 			</a>
-			<a class="btn btn-sm btn-info" href="{!! url("option/" . $option->id . "/edit") !!}" >
+			<a class="btn btn-sm btn-info" href="{!! url("option/edit") !!}" >
 				<i class="fa fa-edit"></i>
 				{!! trans('messages.edit') !!}
 			</a>
@@ -36,13 +36,22 @@
 		</div>
 	@endif
 	<div class="card-block">
-		<div class="custom-callout custom-callout-midnight-blue gem-h5">
-			<strong>
-				<p>{!! trans('messages.name').': ' !!}<span class="text-primary">{!! $option->name !!}</span></p>
-				<p>{!! trans('messages.label').': ' !!}<span class="text-primary">{!! $option->label !!}</span></p>
-				<p>{!! trans('messages.description').': ' !!}<span class="text-default">{!! $option->description !!}</span></p>
-			</strong>
-		</div>
+    <table class="table table-bordered table-sm">
+      <thead>
+        <tr>
+          <th>{!! trans_choice('messages.field', 1) !!}</th>
+          <th>{!! trans_choice('messages.option', 1) !!}</th>
+        </tr>
+      </thead>
+      <tbody>
+      @foreach($results as $key => $value)
+        <tr>
+          <td>{!! $value->field->name !!}</td>
+          <td>{!! $value->response !!}</td>
+        </tr>
+      @endforeach
+      </tbody>
+    </table>
 	</div>
 </div>
 @endsection

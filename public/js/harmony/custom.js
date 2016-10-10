@@ -99,21 +99,21 @@ $('#county').on('change', function(e){
        if($input.val() == 0)
        {
           $('#courier').show();
-          $('#partner').hide();
+          $('#partners').hide();
           $('#specify').hide();
        }
        else if($input.val() == 1)
        {
-          $('#partner').show();
+          $('#partners').show();
           $('#courier').hide();
           $('#specify').hide();
        }
        else if($input.val() == 3)
        {
           $('#specify').show();
-          $('#partner').hide();
+          $('#partners').hide();
           $('#courier').hide();
-       ß}
+        }
        else
            $(className).hide();
    }

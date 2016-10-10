@@ -65,7 +65,6 @@ class ShipmentController extends Controller
         $shipment->date_shipped = $request->date_shipped;
         $shipment->shipper_id = $request->shipper;
         $shipment->shipping_method = $request->shipping_method;
-        $shipment->courier = $request->courier;
         $shipment->facility_id = $request->facility;
         $shipment->panels_shipped = $request->panels_shipped;
         $shipment->user_id = Auth::user()->id;
@@ -128,7 +127,6 @@ class ShipmentController extends Controller
         $shipment->date_shipped = $request->date_shipped;
         $shipment->shipper_id = $request->shipper;
         $shipment->shipping_method = $request->shipping_method;
-        $shipment->courier = $request->courier;
         $shipment->facility_id = $request->facility;
         $shipment->panels_shipped = $request->panels_shipped;
         $shipment->user_id = Auth::user()->id;

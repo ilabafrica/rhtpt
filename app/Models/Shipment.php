@@ -23,6 +23,14 @@ class Shipment extends Model
   	 */
   	protected $table = 'shipments';
     /**
+  	 * Facility relationship
+  	 *
+  	 */
+     public function facility()
+     {
+          return $this->belongsTo('App\Models\Facility');
+     }
+    /**
   	 * Round relationship
   	 *
   	 */
@@ -44,9 +52,7 @@ class Shipment extends Model
   	 */
      public function shipping($method)
      {
-          if($method == Shipment::POST)
-              return 'Post';
-          else if($method == Shipment::COURIER)
-              return 'Courier';
+        $sp = new Shipper;
+        return $sp->shipper($method);
      }
 }

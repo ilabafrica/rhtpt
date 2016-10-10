@@ -9,6 +9,12 @@ class Receipt extends Model
   	 */
   	use SoftDeletes;
   	protected $dates = ['deleted_at'];
+    /**
+  	 * Complete/Incomplete
+  	 *
+  	 */
+  	const COMPLETE = 0;
+  	const INCOMPLETE = 1;
 
   	/**
   	 * The database table used by the model.
@@ -22,7 +28,7 @@ class Receipt extends Model
   	 */
      public function receiver()
      {
-          return $this->belongsTo('App\Models\User', 'recipient');
+          return $this->belongsTo('App\Models\Facility', 'recipient');
      }
     /**
   	 * Shipment relationship

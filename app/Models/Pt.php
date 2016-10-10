@@ -32,4 +32,12 @@ class Pt extends Model
      {
           return $this->hasMany('App\Models\Result');
      }
+    /**
+  	 * Tester relationship
+  	 *
+  	 */
+     public function user()
+     {
+          return $this->belongsTo('App\Models\User');
+     }
 }
