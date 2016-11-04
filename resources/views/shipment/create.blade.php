@@ -35,38 +35,38 @@
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
             <!-- ./ csrf token -->
 			<div class="col-md-8">
-        <div class="form-group row">
-            {!! Form::label('round', trans_choice('messages.pt-round', 1), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6">
-              {!! Form::select('round', array(''=>trans('messages.select'))+$rounds, '', array('class' => 'form-control c-select', 'id' => 'item')) !!}
-            </div>
-        </div>
-        <div class="form-group row">
-            {!! Form::label('county', trans_choice('messages.county', 1), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6">
-              {!! Form::select('county', array(''=>trans('messages.select'))+$counties, '', array('class' => 'form-control c-select', 'id' => 'county')) !!}
-            </div>
-        </div>
-        <div class="form-group row">
-            {!! Form::label('sub-county', trans_choice('messages.sub-county', 1), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6">
-              {!! Form::select('sub_county', array(''=>trans('messages.select')), '', array('class' => 'form-control c-select', 'id' => 'sub_county')) !!}
-            </div>
-        </div>
-        <div class="form-group row">
-            {!! Form::label('facility', trans_choice('messages.facility', 1), array('class' => 'col-sm-4 form-control-label')) !!}
-            <div class="col-sm-6">
-              {!! Form::select('facility', array(''=>trans('messages.select')), '', array('class' => 'form-control c-select', 'id' => 'facility')) !!}
-            </div>
-        </div>
-        <div class="form-group row">
+				<div class="form-group row">
+					{!! Form::label('round', trans_choice('messages.pt-round', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+					<div class="col-sm-6">
+					{!! Form::select('round', array(''=>trans('messages.select'))+$rounds, '', array('class' => 'form-control c-select', 'id' => 'item')) !!}
+					</div>
+				</div>
+				<div class="form-group row">
+					{!! Form::label('county', trans_choice('messages.county', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+					<div class="col-sm-6">
+					{!! Form::select('county', array(''=>trans('messages.select'))+$counties, '', array('class' => 'form-control c-select', 'id' => 'county')) !!}
+					</div>
+				</div>
+				<div class="form-group row">
+					{!! Form::label('sub-county', trans_choice('messages.sub-county', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+					<div class="col-sm-6">
+					{!! Form::select('sub_county', array(''=>trans('messages.select')), '', array('class' => 'form-control c-select', 'id' => 'sub_county')) !!}
+					</div>
+				</div>
+				<div class="form-group row">
+					{!! Form::label('facility', trans_choice('messages.facility', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+					<div class="col-sm-6">
+					{!! Form::select('facility', array(''=>trans('messages.select')), '', array('class' => 'form-control c-select', 'id' => 'facility')) !!}
+					</div>
+				</div>
+				<div class="form-group row">
 					{!! Form::label('date-prepared', trans('messages.date-prepared'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6 input-group date datepicker"   style="padding-left:15px;padding-right:15px;">
 						{!! Form::text('date_prepared', old('date_prepared'), array('class' => 'form-control')) !!}
 						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 					</div>
 				</div>
-        <div class="form-group row">
+				<div class="form-group row">
 					{!! Form::label('date-shipped', trans('messages.date-shipped'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6 input-group date datepicker"   style="padding-left:15px;padding-right:15px;">
 						{!! Form::text('date_shipped', old('date_shipped'), array('class' => 'form-control')) !!}
@@ -76,30 +76,30 @@
 				<div class="form-group row">
 					{!! Form::label('shipping-method', trans_choice('messages.shipping-method', 1), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-8">
-            @foreach($shipping_methods as $key => $value)
-						      <label class="radio-inline">{!! Form::radio('shipper', $key, false, array('id' => 'shipper', 'onclick' => 'toggling(".toggled", this)')) !!}{{ $value }}</label>
-            @endforeach
+						@foreach($shipping_methods as $key => $value)
+							<label class="radio-inline">{!! Form::radio('shipper', $key, false, array('id' => 'shipper', 'onclick' => 'toggling(".toggled", this)')) !!}{{ $value }}</label>
+						@endforeach
 					</div>
 				</div>
-        <div class="form-group row toggled" id="specify" style="display:none;">
+				<div class="form-group row toggled" id="specify" style="display:none;">
 					{!! Form::label('specify', 'If Other, specify', array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
 						{!! Form::text('shipping_method', old('courier'), array('class' => 'form-control')) !!}
 					</div>
 				</div>
-        <div class="form-group row toggled" id="courier" style="display:none;">
-          {!! Form::label('courier', trans_choice('messages.courier', 1), array('class' => 'col-sm-4 form-control-label')) !!}
+				<div class="form-group row toggled" id="courier" style="display:none;">
+				{!! Form::label('courier', trans_choice('messages.courier', 1), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
 						{!! Form::select('shipping_method', array(''=>trans('messages.select'))+$courier, '', array('class' => 'form-control c-select')) !!}
 					</div>
 				</div>
-        <div class="form-group row toggled" id="partners" style="display:none;">
+				<div class="form-group row toggled" id="partners" style="display:none;">
 					{!! Form::label('partner', trans_choice('messages.partner', 1), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
 						{!! Form::select('shipping_method', array(''=>trans('messages.select')), '', array('class' => 'form-control c-select', 'id' => 'partner')) !!}
 					</div>
 				</div>
-        <div class="form-group row">
+				<div class="form-group row">
 					{!! Form::label('panels-shipped', trans('messages.panels-shipped'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
 						{!! Form::text('panels_shipped', old('panels_shipped'), array('class' => 'form-control')) !!}
@@ -111,7 +111,7 @@
 					<a href="#" class="btn btn-sm btn-silver"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</a>
 				</div>
 			</div>
-			{!! Form::close() !!}
+		{!! Form::close() !!}
 		</div>
   	</div>
 </div>

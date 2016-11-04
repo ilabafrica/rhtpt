@@ -42,8 +42,8 @@
 				<p>{!! trans('messages.name').': ' !!}<span class="text-primary">{!! $facility->name !!}</span></p>
 				<p>{!! trans_choice('messages.sub-county', 1).': ' !!}<span class="text-default">{!! $facility->subCounty->name !!}</span></p>
         <p>{!! trans('messages.mailing-address').': ' !!}<span class="text-primary">{!! $facility->mailing_address !!}</span></p>
-        <p>{!! trans('messages.in_charge').': ' !!}<span class="text-primary">{!! $facility->in_charge !!}</span></p>
-        <p>{!! trans('messages.telephone').': ' !!}<span class="text-primary">{!! $facility->in_charge_phone !!}</span></p>
+        <p>{!! trans('messages.in-charge').': ' !!}<span class="text-primary">{!! $facility->in_charge !!}</span></p>
+        <p>{!! trans('messages.phone').': ' !!}<span class="text-primary">{!! $facility->in_charge_phone !!}</span></p>
         <p>{!! trans('messages.email').': ' !!}<span class="text-primary">{!! $facility->in_charge_email !!}</span></p>
 			</strong>
 		</div>

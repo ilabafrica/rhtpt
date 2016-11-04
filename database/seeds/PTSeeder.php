@@ -41,6 +41,7 @@ class PTSeeder extends Seeder
         $permissions = array(
             array("name" => "back-up", "display_name" => "Can back up"),
 
+            array("name" => "user-management", "display_name" => "Can manage users"),
             array("name" => "create-user", "display_name" => "Can create user"),
             array("name" => "read-user", "display_name" => "Can read user"),
             array("name" => "update-user", "display_name" => "Can update user"),
@@ -52,7 +53,77 @@ class PTSeeder extends Seeder
             array("name" => "delete-role", "display_name" => "Can delete role"),
 
             array("name" => "read-permission", "display_name" => "Can read permission"),
-            array("name" => "assign-role", "display_name" => "Can assign role")
+            array("name" => "assign-role", "display_name" => "Can assign role"),
+
+            array("name" => "facility-catalog", "display_name" => "Can manage facility catalog"),
+            array("name" => "create-facility", "display_name" => "Can create facility"),
+            array("name" => "read-facility", "display_name" => "Can read facility"),
+            array("name" => "update-facility", "display_name" => "Can update facility"),
+            array("name" => "delete-facility", "display_name" => "Can delete facility"),
+
+            array("name" => "program-management", "display_name" => "Can manage program"),
+            array("name" => "create-field-set", "display_name" => "Can create field set"),
+            array("name" => "read-field-set", "display_name" => "Can read field set"),
+            array("name" => "view-field-set", "display_name" => "Can view field set"),
+            array("name" => "update-field-set", "display_name" => "Can update field set"),
+            array("name" => "delete-field-set", "display_name" => "Can delete field set"),
+            array("name" => "create-field", "display_name" => "Can create field"),
+            array("name" => "read-field", "display_name" => "Can read field"),
+            array("name" => "view-field", "display_name" => "Can view field"),
+            array("name" => "update-field", "display_name" => "Can update field"),
+            array("name" => "delete-field", "display_name" => "Can delete field"),
+            array("name" => "create-option", "display_name" => "Can create option"),
+            array("name" => "read-option", "display_name" => "Can read option"),
+            array("name" => "view-option", "display_name" => "Can view option"),
+            array("name" => "update-option", "display_name" => "Can update option"),
+            array("name" => "delete-option", "display_name" => "Can delete option"),
+
+            array("name" => "proficiency-testing", "display_name" => "Can manage proficiency testing"),
+            array("name" => "create-program", "display_name" => "Can create program"),
+            array("name" => "read-program", "display_name" => "Can read program"),
+            array("name" => "view-program", "display_name" => "Can view program"),
+            array("name" => "update-program", "display_name" => "Can update program"),
+            array("name" => "delete-program", "display_name" => "Can delete program"),
+            array("name" => "create-shipper", "display_name" => "Can create shipper"),
+            array("name" => "read-shipper", "display_name" => "Can read shipper"),
+            array("name" => "view-shipper", "display_name" => "Can view shipper"),
+            array("name" => "update-shipper", "display_name" => "Can update shipper"),
+            array("name" => "delete-shipper", "display_name" => "Can delete shipper"),
+            array("name" => "create-sample", "display_name" => "Can create sample"),
+            array("name" => "read-sample", "display_name" => "Can read sample"),
+            array("name" => "view-sample", "display_name" => "Can view sample"),
+            array("name" => "update-sample", "display_name" => "Can update sample"),
+            array("name" => "delete-sample", "display_name" => "Can delete sample"),
+            array("name" => "create-round", "display_name" => "Can create round"),
+            array("name" => "read-round", "display_name" => "Can read round"),
+            array("name" => "view-round", "display_name" => "Can view round"),
+            array("name" => "update-round", "display_name" => "Can update round"),
+            array("name" => "delete-round", "display_name" => "Can delete round"),
+            array("name" => "create-item", "display_name" => "Can create item"),
+            array("name" => "read-item", "display_name" => "Can read item"),
+            array("name" => "view-item", "display_name" => "Can view item"),
+            array("name" => "update-item", "display_name" => "Can update item"),
+            array("name" => "delete-item", "display_name" => "Can delete item"),
+            array("name" => "create-result", "display_name" => "Can create result"),
+            array("name" => "read-result", "display_name" => "Can read result"),
+            array("name" => "view-result", "display_name" => "Can view result"),
+            array("name" => "update-result", "display_name" => "Can update result"),
+            array("name" => "delete-result", "display_name" => "Can delete result"),
+            array("name" => "create-shipment", "display_name" => "Can create shipment"),
+            array("name" => "read-shipment", "display_name" => "Can read shipment"),
+            array("name" => "view-shipment", "display_name" => "Can view shipment"),
+            array("name" => "update-shipment", "display_name" => "Can update shipment"),
+            array("name" => "delete-shipment", "display_name" => "Can delete shipment"),
+            array("name" => "create-receipt", "display_name" => "Can create receipt"),
+            array("name" => "read-receipt", "display_name" => "Can read receipt"),
+            array("name" => "view-receipt", "display_name" => "Can view receipt"),
+            array("name" => "update-receipt", "display_name" => "Can update receipt"),
+            array("name" => "delete-receipt", "display_name" => "Can delete receipt"),
+            array("name" => "create-expected", "display_name" => "Can create expected"),
+            array("name" => "read-expected", "display_name" => "Can read expected"),
+            array("name" => "view-expected", "display_name" => "Can view expected"),
+            array("name" => "update-expected", "display_name" => "Can update expected"),
+            array("name" => "delete-expected", "display_name" => "Can delete expected"),
         );
         foreach ($permissions as $permission) {
             Permission::create($permission);
@@ -63,7 +134,7 @@ class PTSeeder extends Seeder
             array("name" => "Superadmin", "display_name" => "Overall Administrator"),
             array("name" => "Participant", "display_name" => "Participant"),
             array("name" => "Partner Admin", "display_name" => "Partner Admin"),
-            array("name" => "County Lab Admin", "display_name" => "County Lab Administrator")
+            array("name" => "County Lab Coordinator", "display_name" => "County Lab Coordinator")
         );
         foreach ($roles as $role)
         {
@@ -135,12 +206,12 @@ class PTSeeder extends Seeder
         /* Sub-Counties table */
         $subs = array(
             //  Baringo
+            array("name" => "Eldama Ravine", "county_id" => $baringo->id),
+            array("name" => "Baringo South", "county_id" => $baringo->id),
             array("name" => "Mogotio", "county_id" => $baringo->id),
-            array("name" => "Koibatek", "county_id" => $baringo->id),
-            array("name" => "Marigat", "county_id" => $baringo->id),
+            array("name" => "Tiaty", "county_id" => $baringo->id),
             array("name" => "Baringo Central", "county_id" => $baringo->id),
             array("name" => "Baringo North", "county_id" => $baringo->id),
-            array("name" => "East Pokot", "county_id" => $baringo->id),
 
             //  Bomet
             array("name" => "Bomet Central", "county_id" => $bomet->id),
@@ -159,6 +230,7 @@ class PTSeeder extends Seeder
             array("name" => "Mt. Elgon", "county_id" => $bungoma->id),
             array("name" => "Webuye East", "county_id" => $bungoma->id),
             array("name" => "Webuye West", "county_id" => $bungoma->id),
+            array("name" => "Kanduyi", "county_id" => $bungoma->id),
 
             //  Busia
             array("name" => "Teso North", "county_id" => $busia->id),
@@ -170,7 +242,7 @@ class PTSeeder extends Seeder
             array("name" => "Samia", "county_id" => $busia->id),
 
             //  Elgeyo Marakwet
-            array("name" => "Keiyo", "county_id" => $elgeyo->id),
+            array("name" => "Keiyo North", "county_id" => $elgeyo->id),
             array("name" => "Keiyo South", "county_id" => $elgeyo->id),
             array("name" => "Marakwet West", "county_id" => $elgeyo->id),
             array("name" => "Marakwet East", "county_id" => $elgeyo->id),
@@ -181,7 +253,6 @@ class PTSeeder extends Seeder
             array("name" => "Embu East", "county_id" => $embu->id),
             array("name" => "Mbeere South", "county_id" => $embu->id),
             array("name" => "Mbeere North", "county_id" => $embu->id),
-            array("name" => "Mt. Kenya Forest", "county_id" => $embu->id),
 
             //  Garissa
             array("name" => "Garissa Township", "county_id" => $garissa->id),
@@ -192,11 +263,13 @@ class PTSeeder extends Seeder
             array("name" => "Ijara", "county_id" => $garissa->id),
 
             //  Homa Bay
-            array("name" => "Rachuonyo South", "county_id" => $homabay->id),
-            array("name" => "Rachuonyo North", "county_id" => $homabay->id),
-            array("name" => "Homabay", "county_id" => $homabay->id),
+            array("name" => "Rangwe", "county_id" => $homabay->id),
+            array("name" => "Karachuonyo", "county_id" => $homabay->id),
+            array("name" => "Homabay Town", "county_id" => $homabay->id),
             array("name" => "Ndhiwa", "county_id" => $homabay->id),
             array("name" => "Mbita", "county_id" => $homabay->id),
+            array("name" => "Kabondo", "county_id" => $homabay->id),
+            array("name" => "Kasipul", "county_id" => $homabay->id),
             array("name" => "Suba", "county_id" => $homabay->id),
 
             //  Isiolo
@@ -211,26 +284,25 @@ class PTSeeder extends Seeder
             array("name" => "Loitokitok", "county_id" => $kajiado->id),
 
             //  Kakamega
-            array("name" => "Butere", "county_id" => $kakamega->id),
-            array("name" => "Khwisero", "county_id" => $kakamega->id),
-            array("name" => "Kakamega Central", "county_id" => $kakamega->id),
+            array("name" => "Shinyalu", "county_id" => $kakamega->id),
             array("name" => "Navakholo", "county_id" => $kakamega->id),
-            array("name" => "Kakamega East", "county_id" => $kakamega->id),
-            array("name" => "Kakamega North", "county_id" => $kakamega->id),
-            array("name" => "Matete", "county_id" => $kakamega->id),
-            array("name" => "Kakamega South", "county_id" => $kakamega->id),
-            array("name" => "Likuyani", "county_id" => $kakamega->id),
-            array("name" => "Lugari", "county_id" => $kakamega->id),
+            array("name" => "Mumias East", "county_id" => $kakamega->id),
+            array("name" => "Mumias West", "county_id" => $kakamega->id),
             array("name" => "Matungu", "county_id" => $kakamega->id),
-            array("name" => "Mumias", "county_id" => $kakamega->id),
+            array("name" => "Malava", "county_id" => $kakamega->id),
+            array("name" => "Lurambi", "county_id" => $kakamega->id),
+            array("name" => "Lugari", "county_id" => $kakamega->id),
+            array("name" => "Likuyani", "county_id" => $kakamega->id),
+            array("name" => "Khwisero", "county_id" => $kakamega->id),
+            array("name" => "Ikolomani", "county_id" => $kakamega->id),
+            array("name" => "Butere", "county_id" => $kakamega->id),
 
             //  Kericho
-            array("name" => "Kericho East", "county_id" => $kericho->id),
-            array("name" => "Kericho West", "county_id" => $kericho->id),
-            array("name" => "Sigowet", "county_id" => $kericho->id),
-            array("name" => "Kipkelion West", "county_id" => $kericho->id),
-            array("name" => "Kipkelion East", "county_id" => $kericho->id),
-            array("name" => "Bureti", "county_id" => $kericho->id),
+            array("name" => "Belgut", "county_id" => $kericho->id),
+            array("name" => "Buret", "county_id" => $kericho->id),
+            array("name" => "Kericho", "county_id" => $kericho->id),
+            array("name" => "Kipkelion", "county_id" => $kericho->id),
+            array("name" => "Londiani", "county_id" => $kericho->id),
 
             //  Kiambu
             array("name" => "Gatundu South", "county_id" => $kiambu->id),
@@ -280,22 +352,14 @@ class PTSeeder extends Seeder
             array("name" => "Nyakach", "county_id" => $kisumu->id),
 
             //  Kitui
-            array("name" => "Kitui Central", "county_id" => $kitui->id),
-            array("name" => "Kisasi", "county_id" => $kitui->id),
-            array("name" => "Katulani", "county_id" => $kitui->id),
-            array("name" => "Lower Yatta", "county_id" => $kitui->id),
-            array("name" => "Kitui West", "county_id" => $kitui->id),
-            array("name" => "Matinyani", "county_id" => $kitui->id),
-            array("name" => "Mutomo", "county_id" => $kitui->id),
-            array("name" => "Ikutha", "county_id" => $kitui->id),
-            array("name" => "Mutito", "county_id" => $kitui->id),
-            array("name" => "Nzambani", "county_id" => $kitui->id),
+            array("name" => "Mwingi North", "county_id" => $kitui->id),
+            array("name" => "Mwingi West ", "county_id" => $kitui->id),
             array("name" => "Mwingi Central", "county_id" => $kitui->id),
-            array("name" => "Migwani", "county_id" => $kitui->id),
-            array("name" => "Mwingi East", "county_id" => $kitui->id),
-            array("name" => "Kyuso", "county_id" => $kitui->id),
-            array("name" => "Tseikuru", "county_id" => $kitui->id),
-            array("name" => "Mumoni", "county_id" => $kitui->id),
+            array("name" => "Kitui West", "county_id" => $kitui->id),
+            array("name" => "Kitui Rural", "county_id" => $kitui->id),
+            array("name" => "Kitui Central", "county_id" => $kitui->id),
+            array("name" => "Kitui East", "county_id" => $kitui->id),
+            array("name" => "Kitui South", "county_id" => $kitui->id),
 
             //  Kwale
             array("name" => "Matuga", "county_id" => $kwale->id),
@@ -351,10 +415,11 @@ class PTSeeder extends Seeder
             array("name" => "Tigania West", "county_id" => $meru->id),
             array("name" => "Igembe North", "county_id" => $meru->id),
             array("name" => "Igembe South", "county_id" => $meru->id),
+            array("name" => "Igembe Central", "county_id" => $meru->id),
             array("name" => "Imenti North", "county_id" => $meru->id),
             array("name" => "Imenti South", "county_id" => $meru->id),
             array("name" => "Buuri", "county_id" => $meru->id),
-            array("name" => "Meru Central", "county_id" => $meru->id),
+            array("name" => "Central Imenti", "county_id" => $meru->id),
 
             //  Migori
             array("name" => "Migori", "county_id" => $migori->id),
@@ -370,6 +435,7 @@ class PTSeeder extends Seeder
             array("name" => "Kisauni", "county_id" => $mombasa->id),
             array("name" => "Likoni", "county_id" => $mombasa->id),
             array("name" => "Changamwe", "county_id" => $mombasa->id),
+            array("name" => "Nyali", "county_id" => $mombasa->id),
 
             //  Muranga
             array("name" => "Kiharu", "county_id" => $muranga->id),
@@ -380,6 +446,7 @@ class PTSeeder extends Seeder
             array("name" => "Kigumo", "county_id" => $muranga->id),
             array("name" => "Kandara", "county_id" => $muranga->id),
             array("name" => "Muranga South", "county_id" => $muranga->id),
+            array("name" => "Muranga North", "county_id" => $muranga->id),
 
             //  Nairobi
             array("name" => "Starehe", "county_id" => $nairobi->id),
@@ -393,15 +460,17 @@ class PTSeeder extends Seeder
             array("name" => "Westlands", "county_id" => $nairobi->id),
 
             //  Nakuru
-            array("name" => "Nakuru Town", "county_id" => $nakuru->id),
+            array("name" => "Nakuru Town East", "county_id" => $nakuru->id),
+            array("name" => "Nakuru Town West", "county_id" => $nakuru->id),
             array("name" => "Naivasha", "county_id" => $nakuru->id),
             array("name" => "Molo", "county_id" => $nakuru->id),
             array("name" => "Njoro", "county_id" => $nakuru->id),
-            array("name" => "Kuresoi", "county_id" => $nakuru->id),
+            array("name" => "Kuresoi South", "county_id" => $nakuru->id),
+            array("name" => "Kuresoi North", "county_id" => $nakuru->id),
             array("name" => "Rongai", "county_id" => $nakuru->id),
-            array("name" => "Nakuru North", "county_id" => $nakuru->id),
             array("name" => "Subukia", "county_id" => $nakuru->id),
             array("name" => "Gilgil", "county_id" => $nakuru->id),
+            array("name" => "Bahati", "county_id" => $nakuru->id),
 
             //  Nandi
             array("name" => "Nandi Central", "county_id" => $nandi->id),
@@ -411,10 +480,12 @@ class PTSeeder extends Seeder
             array("name" => "Tinderet", "county_id" => $nandi->id),
 
             //  Narok
-            array("name" => "Transmara West", "county_id" => $narok->id),
-            array("name" => "Transmara East", "county_id" => $narok->id),
-            array("name" => "Narok South", "county_id" => $narok->id),
+            array("name" => "Kilgoris", "county_id" => $narok->id),
             array("name" => "Narok North", "county_id" => $narok->id),
+            array("name" => "Narok South", "county_id" => $narok->id),
+            array("name" => "Narok East", "county_id" => $narok->id),
+            array("name" => "Narok West", "county_id" => $narok->id),
+            array("name" => "Emurua Dikirr", "county_id" => $narok->id),
 
             //  Nyamira
             array("name" => "Nyamira", "county_id" => $nyamira->id),
@@ -426,7 +497,7 @@ class PTSeeder extends Seeder
             //  Nyandarua
             array("name" => "Kinangop", "county_id" => $nyandarua->id),
             array("name" => "Kipipiri", "county_id" => $nyandarua->id),
-            array("name" => "Ol Kalou", "county_id" => $nyandarua->id),
+            array("name" => "Olkalou", "county_id" => $nyandarua->id),
             array("name" => "Nyandarua West", "county_id" => $nyandarua->id),
             array("name" => "Nyandarua North", "county_id" => $nyandarua->id),
             array("name" => "Aberdare Forest", "county_id" => $nyandarua->id),
@@ -461,9 +532,9 @@ class PTSeeder extends Seeder
             array("name" => "Voi", "county_id" => $taita->id),
 
             //  Tana River
-            array("name" => "Bura", "county_id" => $baringo->id),
-            array("name" => "Galole", "county_id" => $baringo->id),
-            array("name" => "Tana Delta", "county_id" => $baringo->id),
+            array("name" => "Bura", "county_id" => $tanariver->id),
+            array("name" => "Galole", "county_id" => $tanariver->id),
+            array("name" => "Tana Delta", "county_id" => $tanariver->id),
 
             //  Tharaka Nithi
             array("name" => "Tharaka North", "county_id" => $tharakanithi->id),
@@ -523,11 +594,13 @@ class PTSeeder extends Seeder
 
           /*  Programs */
           $programs = array(
-              array("name" => "Laboratory", "description" => "Laboratory"),
+              array("name" => "Lab", "description" => "Laboratory"),
               array("name" => "PMTCT", "description" => "Prevention of Mother To Child Transmission of HIV/AIDS"),
               array("name" => "PSC/CCC", "description" => "Patient Support Center"),
               array("name" => "VCT", "description" => "Voluntary Counselling and Testing"),
-              array("name" => "VMMC", "description" => "Voluntary Male Medical Circumcision")
+              array("name" => "VMMC", "description" => "Voluntary Male Medical Circumcision"),
+              array("name" => "PITC", "description" => "Patient Information and Testing Center"),
+              array("name" => "HBTC", "description" => "Home-Based Testing and Counseling")
           );
           foreach ($programs as $program) {
               Program::create($program);

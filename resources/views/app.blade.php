@@ -67,72 +67,112 @@
                     <li class="{!! count(Request::segments())==0?strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-dashboard"></i> {!! trans('messages.dashboard') !!}</a>
                     </li>
+                    @if(Entrust::can('proficiency-testing'))
                     <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('pt'), strtolower('program'), strtolower('shipper'), strtolower('material'), strtolower('round'), strtolower('item'), strtolower('expected'), strtolower('shipment'), strtolower('receipt'), strtolower('result')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-graduation-cap"></i> {!! trans('messages.pt') !!}</a>
                         <ul class="list-unstyled">
+                            @if(Entrust::can('read-program'))
                             <li class="{!! Request::segment(1)==strtolower('program')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('program') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.program', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-shipper'))
                             <li class="{!! Request::segment(1)==strtolower('shipper')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('shipper') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.shipper', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-sample'))
                             <li class="{!! Request::segment(1)==strtolower('material')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('material') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.sample-preparation') !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-round'))
                             <li class="{!! Request::segment(1)==strtolower('round')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('round') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.pt-round', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-item'))
                             <li class="{!! Request::segment(1)==strtolower('item')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('item') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.pt-item', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-expected'))
                             <li class="{!! Request::segment(1)==strtolower('expected')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('expected') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.expected-result', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-shipment'))
                             <li class="{!! Request::segment(1)==strtolower('shipment')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('shipment') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.shipment', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-receipt'))
                             <li class="{!! Request::segment(1)==strtolower('receipt')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('receipt') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.receipt', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-result'))
                             <li class="{!! Request::segment(1)==strtolower('result')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('result') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.result', 2) !!}</a>
                             </li>
+                            @endif
                         </ul>
                     </li>
+                    @endif
+                    @if(Entrust::can('program-management'))
                     <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('set'), strtolower('field'), strtolower('option')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-google-wallet"></i> {!! trans('messages.program-management') !!}</a>
                         <ul class="list-unstyled">
+                            @if(Entrust::can('read-field-set'))
                             <li class="{!! Request::segment(1)==strtolower('set')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('set') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.field-set', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-field'))
                             <li class="{!! Request::segment(1)==strtolower('field')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('field') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.field', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-option'))
                             <li class="{!! Request::segment(1)==strtolower('response')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('option') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.option', 2) !!}</a>
                             </li>
+                            @endif
                         </ul>
                     </li>
+                    endif
+                    @if(Entrust::can('facility-catalog'))
                     <li class="{!! Request::segment(1)==strtolower('facility')?strtolower(trans('messages.active')):'' !!}">
                         <a href="{!! url('facility') !!}"><i class="fa fa-building"></i> {!! trans('messages.facility-catalog') !!}</a>
                     </li>
+                    @endif
+                    @if(Entrust::can('user-management'))
                     <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('user'), strtolower('role'), strtolower('permission'), strtolower('assign')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-users"></i> {!! trans('messages.user-management') !!}</a>
                         <ul class="list-unstyled">
+                            @if(Entrust::can('read-user'))
                             <li class="{!! Request::segment(1)==strtolower('user')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('user') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.user', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-role'))
                             <li class="{!! Request::segment(1)==strtolower('role')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('role') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.role', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('read-permission'))
                             <li class="{!! Request::segment(1)==strtolower('permission')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('permission') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.permission', 2) !!}</a>
                             </li>
+                            @endif
+                            @if(Entrust::can('assign-role'))
                             <li class="{!! Request::segment(1)==strtolower('assign')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('assign') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.assign-roles') !!}</a>
                             </li>
+                            @endif
                         </ul>
                     </li>
+                    @endif
                 </ul>
             </nav>
         </aside>
@@ -143,16 +183,13 @@
                     <div class="collapse navbar-toggleable-xs" id="collapsingNavbar">
                         <ul class="nav navbar-nav pull-right">
                             <li class="nav-item active">
-                                <a class="nav-link text-primary" href="#">Home <span class="sr-only">Home</span></a>
+                                <a class="nav-link text-primary" href="#">{!! Carbon::now('Africa/Nairobi')->toDayDateTimeString() !!}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#features">Features</a>
+                                <a class="nav-link" href="#">{!! 'Welcome '.Auth::user()->name !!}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#myAlert" data-toggle="collapse">Wow</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="" data-target="#myModal" data-toggle="modal">About</a>
+                                <a class="nav-link" href="{!! url('auth/logout') !!}"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
                             </li>
                         </ul>
                     </div>

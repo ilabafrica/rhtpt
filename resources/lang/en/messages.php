@@ -41,7 +41,7 @@ return [
     'expiry-date'           =>    'Expiry Date',
     'material-type'         =>    'Material Type',
     'original-source'       =>    'Original Source',
-    'date-collected'        =>    'Date Colelcted',
+    'date-collected'        =>    'Date Collected',
     'prepared-by'           =>    'Prepared By',
     'start-date'            =>    'Begins',
     'end-date'              =>    'Ends',

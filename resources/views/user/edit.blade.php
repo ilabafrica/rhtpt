@@ -110,7 +110,7 @@
 	            <div class="row">
 	                <div class="col-md-12">
 	                    <div class="thumbnail">
-	                        {!! HTML::image('images/profile1.jpg', trans('messages.no-photo'), array('class'=>'img-responsive img-thumbnail user-image')) !!}
+	                        {!! HTML::image('images/profiles/'.$user->image, trans('messages.no-photo'), array('class'=>'img-responsive img-thumbnail user-image')) !!}
 	                    </div>
 	                </div>
 	                <div class="col-md-8 col-sm-offset-1">
