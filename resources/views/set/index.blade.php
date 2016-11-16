@@ -14,14 +14,16 @@
 	<div class="card-header">
 	    <i class="fa fa-book"></i> {!! trans_choice('messages.set', 2) !!}
 	    <span>
+        @permission('create-set')
 		    <a class="btn btn-sm btn-belize-hole" href="{!! url("set/create") !!}" >
-				<i class="fa fa-plus-circle"></i>
-				{!! trans('messages.add') !!}
-			</a>
-			<a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
-				<i class="fa fa-step-backward"></i>
-				{!! trans('messages.back') !!}
-			</a>
+  				<i class="fa fa-plus-circle"></i>
+  				{!! trans('messages.add') !!}
+  			</a>
+        @endpermission
+  			<a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
+  				<i class="fa fa-step-backward"></i>
+  				{!! trans('messages.back') !!}
+  			</a>
 		</span>
 	</div>
   	<div class="card-block">
@@ -55,24 +57,28 @@
 					<td>
 
 					<!-- show the test category (uses the show method found at GET /set/{id} -->
-						<a class="btn btn-sm btn-success" href="{!! url("set/" . $value->id) !!}" >
+            @permission('view-set')
+            <a class="btn btn-sm btn-success" href="{!! url("set/" . $value->id) !!}" >
 							<i class="fa fa-folder-open-o"></i>
 							{!! trans('messages.view') !!}
 						</a>
-
+            @endpermission
 					<!-- edit this test category (uses edit method found at GET /set/{id}/edit -->
-						<a class="btn btn-sm btn-info" href="{!! url("set/" . $value->id . "/edit") !!}" >
+            @permission('update-set')
+            <a class="btn btn-sm btn-info" href="{!! url("set/" . $value->id . "/edit") !!}" >
 							<i class="fa fa-edit"></i>
 							{!! trans('messages.edit') !!}
 						</a>
-
+            @endpermission
 					<!-- delete this test category (uses delete method found at GET /set/{id}/delete -->
-						<button class="btn btn-sm btn-danger delete-item-link"
+            @permission('delete-set')
+            <button class="btn btn-sm btn-danger delete-item-link"
 							data-toggle="modal" data-target=".confirm-delete-modal"
 							data-id='{!! url("set/" . $value->id . "/delete") !!}'>
 							<i class="fa fa-trash-o"></i>
 							{!! trans('messages.delete') !!}
 						</button>
+            @endpermission
 					</td>
 				</tr>
 			@endforeach

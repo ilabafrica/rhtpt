@@ -15,18 +15,22 @@
 	<div class="card-header">
 	    <i class="fa fa-file-text"></i> <strong>{!! $item->name !!}</strong>
 	    <span>
+        @permission('create-item')
 	    	<a class="btn btn-sm btn-belize-hole" href="{!! url("item/create") !!}" >
-				<i class="fa fa-plus-circle"></i>
-				{!! trans('messages.add') !!}
-			</a>
-			<a class="btn btn-sm btn-info" href="{!! url("item/" . $item->id . "/edit") !!}" >
-				<i class="fa fa-edit"></i>
-				{!! trans('messages.edit') !!}
-			</a>
-			<a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
-				<i class="fa fa-step-backward"></i>
-				{!! trans('messages.back') !!}
-			</a>
+  				<i class="fa fa-plus-circle"></i>
+  				{!! trans('messages.add') !!}
+  			</a>
+        @endpermission
+        @permission('update-item')
+  			<a class="btn btn-sm btn-info" href="{!! url("item/" . $item->id . "/edit") !!}" >
+  				<i class="fa fa-edit"></i>
+  				{!! trans('messages.edit') !!}
+  			</a>
+        @endpermission
+  			<a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
+  				<i class="fa fa-step-backward"></i>
+  				{!! trans('messages.back') !!}
+  			</a>
 		</span>
 	</div>
 	<!-- if there are creation errors, they will show here -->

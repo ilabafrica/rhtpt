@@ -14,12 +14,12 @@
 	<div class="card-header">
 	    <i class="fa fa-book"></i> {!! trans('messages.sample-preparation') !!}
 	    <span>
-        @if(Entrust::can('create-sample'))
+        @ifpermission('create-sample')
 		    <a class="btn btn-sm btn-belize-hole" href="{!! url("material/create") !!}" >
   				<i class="fa fa-plus-circle"></i>
   				{!! trans('messages.add') !!}
   			</a>
-        @endif
+        @endpermission
   			<a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
   				<i class="fa fa-step-backward"></i>
   				{!! trans('messages.back') !!}
@@ -65,28 +65,28 @@
 					<td>
 
 					<!-- show the test category (uses the show method found at GET /material/{id} -->
-            @if(Entrust::can('view-sample'))
+            @permission('view-sample')
 						<a class="btn btn-sm btn-success" href="{!! url("material/" . $value->id) !!}" >
 							<i class="fa fa-folder-open-o"></i>
 							{!! trans('messages.view') !!}
 						</a>
-            @endif
+            @endpermission
 					<!-- edit this test category (uses edit method found at GET /material/{id}/edit -->
-            @if(Entrust::can('update-sample'))
+            @ifpermission('update-sample')
 						<a class="btn btn-sm btn-info" href="{!! url("material/" . $value->id . "/edit") !!}" >
 							<i class="fa fa-edit"></i>
 							{!! trans('messages.edit') !!}
 						</a>
-            @endif
+            @endpermission
 					<!-- delete this test category (uses delete method found at GET /material/{id}/delete -->
-            @if(Entrust::can('delete-sample'))
+            @permission('delete-sample')
 						<button class="btn btn-sm btn-danger delete-item-link"
 							data-toggle="modal" data-target=".confirm-delete-modal"
 							data-id='{!! url("material/" . $value->id . "/delete") !!}'>
 							<i class="fa fa-trash-o"></i>
 							{!! trans('messages.delete') !!}
 						</button>
-            @endif
+            @endpermission
 					</td>
 				</tr>
 			@endforeach

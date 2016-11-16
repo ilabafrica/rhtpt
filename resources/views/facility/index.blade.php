@@ -14,12 +14,12 @@
 	<div class="card-header">
 	    <i class="fa fa-book"></i> {!! trans_choice('messages.facility', 2) !!}
 	    <span>
-        @if(Entrust::can('create-facility'))
+        @permission('create-facility')
 		    <a class="btn btn-sm btn-belize-hole" href="{!! url("facility/create") !!}" >
   				<i class="fa fa-plus-circle"></i>
   				{!! trans('messages.add') !!}
   			</a>
-        @endif
+        @endpermission
   			<a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
   				<i class="fa fa-step-backward"></i>
   				{!! trans('messages.back') !!}
@@ -68,28 +68,28 @@
         					<td>
 
         					<!-- show the test category (uses the show method found at GET /facility/{id} -->
-                    @if(Entrust::can('view-facility'))
+                    @permission('view-facility')
         						<a class="btn btn-sm btn-success" href="{!! url("facility/" . $value->id) !!}" >
         							<i class="fa fa-folder-open-o"></i>
         							{!! trans('messages.view') !!}
         						</a>
-                    @endif
+                    @endpermission
         					<!-- edit this test category (uses edit method found at GET /facility/{id}/edit -->
-                    @if(Entrust::can('update-facility'))
+                    @permission('update-facility')
         						<a class="btn btn-sm btn-info" href="{!! url("facility/" . $value->id . "/edit") !!}" >
         							<i class="fa fa-edit"></i>
         							{!! trans('messages.edit') !!}
         						</a>
-                    @endif
+                    @endpermission
         					<!-- delete this test category (uses delete method found at GET /facility/{id}/delete -->
-                    @if(Entrust::can('delete-facility'))
+                    @permission('delete-facility')
         						<button class="btn btn-sm btn-danger delete-item-link"
         							data-toggle="modal" data-target=".confirm-delete-modal"
         							data-id='{!! url("facility/" . $value->id . "/delete") !!}'>
         							<i class="fa fa-trash-o"></i>
         							{!! trans('messages.delete') !!}
         						</button>
-                    @endif
+                    @endpermission
         					</td>
         				</tr>
         			@endforeach
