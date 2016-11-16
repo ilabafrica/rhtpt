@@ -205,7 +205,7 @@ return [
         */
         'Form'      => 'Collective\Html\FormFacade',
         'HTML'      => 'Collective\Html\HtmlFacade',
-        'Entrust'   =>  Zizaco\Entrust\EntrustFacade::class,
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Carbon'    =>  Jenssegers\Date\Date::class,
         'Image'     =>  Intervention\Image\Facades\Image::class
     ],
