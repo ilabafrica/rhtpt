@@ -156,4 +156,10 @@ return [
     'no-photo'          =>  'No Photo',
     'password'          =>  'Password',
     'email-address'     =>  'Email Address',
+    /**
+    *   Bulk SMS
+    */
+    'bulk-sms'          =>  'Bulk SMS',
+    'api-key'           =>  'API Key',
+
 ];
