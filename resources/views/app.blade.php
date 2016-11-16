@@ -71,33 +71,51 @@
                     <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('pt'), strtolower('program'), strtolower('shipper'), strtolower('material'), strtolower('round'), strtolower('item'), strtolower('expected'), strtolower('shipment'), strtolower('receipt'), strtolower('result')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-graduation-cap"></i> {!! trans('messages.pt') !!}</a>
                         <ul class="list-unstyled">
+                            @permission('read-program')
                             <li class="{!! Request::segment(1)==strtolower('program')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('program') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.program', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-shipper')
                             <li class="{!! Request::segment(1)==strtolower('shipper')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('shipper') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.shipper', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-sample')
                             <li class="{!! Request::segment(1)==strtolower('material')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('material') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.sample-preparation') !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-round')
                             <li class="{!! Request::segment(1)==strtolower('round')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('round') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.pt-round', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-item')
                             <li class="{!! Request::segment(1)==strtolower('item')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('item') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.pt-item', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-expected')
                             <li class="{!! Request::segment(1)==strtolower('expected')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('expected') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.expected-result', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-shipment')
                             <li class="{!! Request::segment(1)==strtolower('shipment')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('shipment') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.shipment', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-receipt')
                             <li class="{!! Request::segment(1)==strtolower('receipt')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('receipt') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.receipt', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-result')
                             <li class="{!! Request::segment(1)==strtolower('result')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('result') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.result', 2) !!}</a>
                             </li>
+                            @endpermission
                         </ul>
                     </li>
                     @endpermission
@@ -105,15 +123,21 @@
                     <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('set'), strtolower('field'), strtolower('option')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-google-wallet"></i> {!! trans('messages.program-management') !!}</a>
                         <ul class="list-unstyled">
+                            @permission('read-set')
                             <li class="{!! Request::segment(1)==strtolower('set')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('set') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.field-set', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-field')
                             <li class="{!! Request::segment(1)==strtolower('field')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('field') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.field', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-option')
                             <li class="{!! Request::segment(1)==strtolower('response')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('option') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.option', 2) !!}</a>
                             </li>
+                            @endpermission
                         </ul>
                     </li>
                     @endpermission
@@ -126,18 +150,26 @@
                     <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('user'), strtolower('role'), strtolower('permission'), strtolower('assign')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-users"></i> {!! trans('messages.user-management') !!}</a>
                         <ul class="list-unstyled">
+                            @permission('read-user')
                             <li class="{!! Request::segment(1)==strtolower('user')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('user') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.user', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-role')
                             <li class="{!! Request::segment(1)==strtolower('role')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('role') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.role', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('read-permission')
                             <li class="{!! Request::segment(1)==strtolower('permission')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('permission') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.permission', 2) !!}</a>
                             </li>
+                            @endpermission
+                            @permission('assign-role')
                             <li class="{!! Request::segment(1)==strtolower('assign')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('assign') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.assign-roles') !!}</a>
                             </li>
+                            @endpermission
                         </ul>
                     </li>
                     @endpermission

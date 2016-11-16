@@ -36,63 +36,67 @@
             {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
         </div>
         @endif
-	 	<table class="table table-bordered table-sm search-table" id="example">
-			<thead>
-				<tr>
-					<th>{!! trans('messages.code') !!}</th>
-					<th>{!! trans('messages.name') !!}</th>
-					<th>{!! trans('messages.mailing-address') !!}</th>
-          <th>{!! trans('messages.in-charge') !!}</th>
-          <th>{!! trans_choice('messages.sub-county', 1) !!}</th>
-          <th>{!! trans_choice('messages.county', 1) !!}</th>
-          <th>{!! trans('messages.status') !!}</th>
-					<th>{!! trans('messages.action') !!}</th>
-				</tr>
-			</thead>
-			<tbody>
-			@foreach($facilities as $key => $value)
-				<tr @if(session()->has('active_facility'))
-	                    {!! (session('active_facility') == $value->id)?"class='warning'":"" !!}
-	                @endif
-	                >
-					<td>{!! $value->code !!}</td>
-					<td>{!! $value->name !!}</td>
-					<td>{!! $value->mailing_address !!}</td>
-          <td>{!! $value->in_charge !!}</td>
-          <td>{!! $value->subCounty->name !!}</td>
-          <td>{!! $value->subCounty->county->name !!}</td>
-          <td>{!! is_null($value->deleted_at)?trans('messages.active'):trans('messages.inactive') !!}</td>
+        <div class="row">
+            <div class="col-sm-12">
+        	 	<table class="table table-bordered table-sm search-table" id="example">
+        			<thead>
+        				<tr>
+        					<th>{!! trans('messages.code') !!}</th>
+        					<th>{!! trans('messages.name') !!}</th>
+        					<th>{!! trans('messages.mailing-address') !!}</th>
+                  <th>{!! trans('messages.in-charge') !!}</th>
+                  <th>{!! trans_choice('messages.sub-county', 1) !!}</th>
+                  <th>{!! trans_choice('messages.county', 1) !!}</th>
+                  <th>{!! trans('messages.status') !!}</th>
+        					<th>{!! trans('messages.action') !!}</th>
+        				</tr>
+        			</thead>
+        			<tbody>
+        			@foreach($facilities as $key => $value)
+        				<tr @if(session()->has('active_facility'))
+        	                    {!! (session('active_facility') == $value->id)?"class='warning'":"" !!}
+        	                @endif
+        	                >
+        					<td>{!! $value->code !!}</td>
+        					<td>{!! $value->name !!}</td>
+        					<td>{!! $value->mailing_address !!}</td>
+                  <td>{!! $value->in_charge !!}</td>
+                  <td>{!! $value->subCounty->name !!}</td>
+                  <td>{!! $value->subCounty->county->name !!}</td>
+                  <td>{!! is_null($value->deleted_at)?trans('messages.active'):trans('messages.inactive') !!}</td>
 
-					<td>
+        					<td>
 
-					<!-- show the test category (uses the show method found at GET /facility/{id} -->
-            @if(Entrust::can('view-facility'))
-						<a class="btn btn-sm btn-success" href="{!! url("facility/" . $value->id) !!}" >
-							<i class="fa fa-folder-open-o"></i>
-							{!! trans('messages.view') !!}
-						</a>
-            @endif
-					<!-- edit this test category (uses edit method found at GET /facility/{id}/edit -->
-            @if(Entrust::can('update-facility'))
-						<a class="btn btn-sm btn-info" href="{!! url("facility/" . $value->id . "/edit") !!}" >
-							<i class="fa fa-edit"></i>
-							{!! trans('messages.edit') !!}
-						</a>
-            @endif
-					<!-- delete this test category (uses delete method found at GET /facility/{id}/delete -->
-            @if(Entrust::can('delete-facility'))
-						<button class="btn btn-sm btn-danger delete-item-link"
-							data-toggle="modal" data-target=".confirm-delete-modal"
-							data-id='{!! url("facility/" . $value->id . "/delete") !!}'>
-							<i class="fa fa-trash-o"></i>
-							{!! trans('messages.delete') !!}
-						</button>
-            @endif
-					</td>
-				</tr>
-			@endforeach
-			</tbody>
-		</table>
+        					<!-- show the test category (uses the show method found at GET /facility/{id} -->
+                    @if(Entrust::can('view-facility'))
+        						<a class="btn btn-sm btn-success" href="{!! url("facility/" . $value->id) !!}" >
+        							<i class="fa fa-folder-open-o"></i>
+        							{!! trans('messages.view') !!}
+        						</a>
+                    @endif
+        					<!-- edit this test category (uses edit method found at GET /facility/{id}/edit -->
+                    @if(Entrust::can('update-facility'))
+        						<a class="btn btn-sm btn-info" href="{!! url("facility/" . $value->id . "/edit") !!}" >
+        							<i class="fa fa-edit"></i>
+        							{!! trans('messages.edit') !!}
+        						</a>
+                    @endif
+        					<!-- delete this test category (uses delete method found at GET /facility/{id}/delete -->
+                    @if(Entrust::can('delete-facility'))
+        						<button class="btn btn-sm btn-danger delete-item-link"
+        							data-toggle="modal" data-target=".confirm-delete-modal"
+        							data-id='{!! url("facility/" . $value->id . "/delete") !!}'>
+        							<i class="fa fa-trash-o"></i>
+        							{!! trans('messages.delete') !!}
+        						</button>
+                    @endif
+        					</td>
+        				</tr>
+        			@endforeach
+        			</tbody>
+        		</table>
+          </div>
+        </div>
   	</div>
 </div>
 {!! session(['SOURCE_URL' => URL::full()]) !!}
