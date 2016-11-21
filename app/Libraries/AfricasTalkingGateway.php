@@ -16,7 +16,7 @@ namespace App\Libraries;
 
 */
 
-class AfricasTalkingGatewayException extends Exception{}
+class AfricasTalkingGatewayException extends \Exception{}
 
 class AfricasTalkingGateway
 {

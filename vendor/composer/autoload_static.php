@@ -319,6 +319,8 @@ class ComposerStaticInit4030c5d42ac5fc180861d622aa70c224
     );
 
     public static $classMap = array (
+        'App\\Libraries\\AfricasTalkingGateway' => __DIR__ . '/../..' . '/app/Libraries/AfricasTalkingGateway.php',
+        'App\\Libraries\\AfricasTalkingGatewayException' => __DIR__ . '/../..' . '/app/Libraries/AfricasTalkingGateway.php',
         'App\\Models\\County' => __DIR__ . '/../..' . '/app/Models/County.php',
         'App\\Models\\Expected' => __DIR__ . '/../..' . '/app/Models/Expected.php',
         'App\\Models\\Facility' => __DIR__ . '/../..' . '/app/Models/Facility.php',
@@ -339,6 +341,7 @@ class ComposerStaticInit4030c5d42ac5fc180861d622aa70c224
         'App\\Models\\SubCounty' => __DIR__ . '/../..' . '/app/Models/SubCounty.php',
         'App\\Models\\Tier' => __DIR__ . '/../..' . '/app/Models/Tier.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'CreateBulkSmsTables' => __DIR__ . '/../..' . '/database/migrations/2016_11_21_114226_create_bulk_sms_tables.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_000000_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',

@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Libraries\\AfricasTalkingGateway' => $baseDir . '/app/Libraries/AfricasTalkingGateway.php',
+    'App\\Libraries\\AfricasTalkingGatewayException' => $baseDir . '/app/Libraries/AfricasTalkingGateway.php',
     'App\\Models\\County' => $baseDir . '/app/Models/County.php',
     'App\\Models\\Expected' => $baseDir . '/app/Models/Expected.php',
     'App\\Models\\Facility' => $baseDir . '/app/Models/Facility.php',
@@ -26,6 +28,7 @@ return array(
     'App\\Models\\SubCounty' => $baseDir . '/app/Models/SubCounty.php',
     'App\\Models\\Tier' => $baseDir . '/app/Models/Tier.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
+    'CreateBulkSmsTables' => $baseDir . '/database/migrations/2016_11_21_114226_create_bulk_sms_tables.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
