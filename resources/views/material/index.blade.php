@@ -14,7 +14,7 @@
 	<div class="card-header">
 	    <i class="fa fa-book"></i> {!! trans('messages.sample-preparation') !!}
 	    <span>
-        @ifpermission('create-sample')
+        @permission('create-sample')
 		    <a class="btn btn-sm btn-belize-hole" href="{!! url("material/create") !!}" >
   				<i class="fa fa-plus-circle"></i>
   				{!! trans('messages.add') !!}
@@ -72,7 +72,7 @@
 						</a>
             @endpermission
 					<!-- edit this test category (uses edit method found at GET /material/{id}/edit -->
-            @ifpermission('update-sample')
+            @permission('update-sample')
 						<a class="btn btn-sm btn-info" href="{!! url("material/" . $value->id . "/edit") !!}" >
 							<i class="fa fa-edit"></i>
 							{!! trans('messages.edit') !!}
