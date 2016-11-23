@@ -17,14 +17,14 @@ class CreateBulkSmsTables extends Migration
       {
           $table->string('username')->nullable();
           $table->string('api_key', 100)->nullable();
-          $table->unique('username', 'api_key')
+          $table->unique('username', 'api_key');
           $table->softDeletes();
           $table->timestamps();
       });
       //  Bulk
       Schema::create('bulk', function(Blueprint $table)
       {
-          $table->increment('id')->unsigned();
+          $table->increments('id')->unsigned();
           $table->string('message', 160)->nullable();
           $table->integer('user_id')->unsigned();
           $table->softDeletes();
@@ -34,10 +34,10 @@ class CreateBulkSmsTables extends Migration
       //  SMS
       Schema::create('sms', function(Blueprint $table)
       {
-          $table->increment('id')->unsigned();
+          $table->increments('id')->unsigned();
           $table->string('number', 25);
           $table->integer('bulk_id')->unsigned();
-          $table->decimal('cost', 5, 2)
+          $table->decimal('cost', 5, 2);
           $table->date('date_sent');
           $table->softDeletes();
           $table->timestamps();

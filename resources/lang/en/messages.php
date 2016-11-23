@@ -161,5 +161,8 @@ return [
     */
     'bulk-sms'          =>  'Bulk SMS',
     'api-key'           =>  'API Key',
+    'message'           =>  'Message',
+    'cost'              =>  'Cost',
+    'date-sent'         =>  'Date Sent',
 
 ];
