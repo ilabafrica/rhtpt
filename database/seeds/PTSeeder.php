@@ -854,7 +854,7 @@ class PTSeeder extends Seeder
           $this->command->info('Field Options table seeded');
 
           /* Dummy username and api-key for bulk sms */
-          DB::table('bulk_sms_settings')->insert(['username' => 'xxxxxx', 'api_key' => 'xxxxxxxxxxxx', 'created_at' => $now, 'updated_at' => $now]);
+          DB::table('bulk_sms_settings')->insert(['code' => 'xxxxxx', 'username' => 'xxxxxx', 'api_key' => 'xxxxxxxxxxxx', 'created_at' => $now, 'updated_at' => $now]);
           $this->command->info('Bulk SMS settings set successfully.');
     }
 }

@@ -15,9 +15,10 @@ class CreateBulkSmsTables extends Migration
       //  settings
       Schema::create('bulk_sms_settings', function(Blueprint $table)
       {
+          $table->string('code')->nullable();
           $table->string('username')->nullable();
           $table->string('api_key', 100)->nullable();
-          $table->unique('username', 'api_key');
+          $table->unique('code', 'username', 'api_key');
           $table->softDeletes();
           $table->timestamps();
       });

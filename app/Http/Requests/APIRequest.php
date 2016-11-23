@@ -22,8 +22,9 @@ class APIRequest extends Request {
 	public function rules()
 	{
 		return [
-            'username'   => 'required',
-            'api-key'   => 'required',
+						'code'   			=> 'required',
+            'username'   	=> 'required',
+            'api_key'   	=> 'required',
         ];
 	}
 }

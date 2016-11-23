@@ -37,6 +37,12 @@
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
             <!-- ./ csrf token -->
 			<div class="col-md-8">
+        <div class="form-group row">
+					{!! Form::label('code', trans('messages.code'), array('class' => 'col-sm-4 form-control-label')) !!}
+					<div class="col-sm-6">
+						{!! Form::text('code', old('code'), array('class' => 'form-control')) !!}
+					</div>
+				</div>
 				<div class="form-group row">
 					{!! Form::label('username', trans('messages.username'), array('class' => 'col-sm-4 form-control-label')) !!}
 					<div class="col-sm-6">
@@ -46,7 +52,7 @@
         <div class="form-group row">
             {!! Form::label('api-key', trans('messages.api-key'), array('class' => 'col-sm-4 form-control-label')) !!}
             <div class="col-sm-6">
-                {!! Form::textarea('api-key', $api->api_key, array('class' => 'form-control', 'rows' => '3')) !!}
+                {!! Form::textarea('api_key', old('api_key'), array('class' => 'form-control', 'rows' => '3')) !!}
             </div>
         </div>
 				<div class="form-group row col-sm-offset-4 col-sm-8">

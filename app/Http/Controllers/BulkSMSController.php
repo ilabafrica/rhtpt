@@ -36,6 +36,8 @@ class BulkSMSController extends Controller
       $apikey     = Config::get('api-key');
       //  TO DO: Use query to retrieve -- number to send messages
       $recipients = "+254711XXXYYY,+254733YYYZZZ";
+      // Specify your AfricasTalking shortCode or sender id
+      $from = "shortCode or senderId";
       //  TO DO: Use query to retrieve -- Message entered in textarea
       $message    = "";
       // Create a new instance of Bulk SMS gateway.
@@ -74,10 +76,11 @@ class BulkSMSController extends Controller
      */
     public function api(APIRequest $request)
     {
+        $code = $request->code;
         $username = $request->username;
         $key = $request->api_key;
         $updated = Carbon::today()->toDateTimeString();
-        DB::table('bulk_sms_settings')->update(['username' => $username, 'api_key' => $key, 'updated_at' => $updated]);
+        DB::table('bulk_sms_settings')->update(['code' => $code, 'username' => $username, 'api_key' => $key, 'updated_at' => $updated]);
         $url = session('SOURCE_URL');
         return redirect()->to($url)->with('message', trans('messages.record-successfully-updated'));
     }
@@ -102,22 +105,24 @@ class BulkSMSController extends Controller
         $user_id = Auth::user()->id;
         $created = Carbon::today()->toDateTimeString();
         $updated = Carbon::today()->toDateTimeString();
-        $msg = DB::table('bulk')->update(['message' => $message, 'round_id' => $round_id, 'user_id' => $user_id, 'created_at' => $created, 'updated_at' => $updated]);
-
+        DB::table('bulk')->insert(['message' => $message, 'round_id' => $round_id, 'user_id' => $user_id, 'created_at' => $created, 'updated_at' => $updated]);
+        $msg = DB::table('bulk')->where('message', $message)->where('round_id', $round_id)->first();
         //  Prepare to send SMS
         // Retrieve login credentials
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
         $apikey     = $api->api_key;
         //  TO DO: Use query to retrieve -- number to send messages
-        $recipients = $request->participant;
+        $recipients = implode(",", $request->participant);
+        // Specified sender-id
+        $from = $api->code;
         // Create a new instance of Bulk SMS gateway.
         $sms    = new Bulk($username, $apikey);
         // use try-catch to filter any errors.
         try
         {
           // Send messages
-          $results = $sms->sendMessage($recipients, $message);
+          $results = $sms->sendMessage($recipients, $message, $from);
 
           foreach($results as $result)
           {

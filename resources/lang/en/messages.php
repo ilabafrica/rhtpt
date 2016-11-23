@@ -173,4 +173,5 @@ return [
     'expand'            =>  'Expand',
     'status'            =>  'Status',
     'compose'           =>  'Compose',
+    'code'              =>  'Code',
 ];
