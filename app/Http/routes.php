@@ -123,4 +123,30 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/dropdown2/{id?}', 'ApiController@dropdown2');
     //  Ajax loading of facilities from sub-county selection
     Route::get('api/dropdown3/{id?}', 'ApiController@dropdown3');
+    //  Save sms gateway username and api-key
+    Route::post("/bulk/api", array(
+        "as"   => "bulk.api",
+        "uses" => "BulkSMSController@api"
+    ));
+    Route::get("/bulk/key", array(
+        "as"   => "bulk.key",
+        "uses" => "BulkSMSController@key"
+    ));
+    //  Form for composing and sending SMS
+    Route::get("/bulk/compose", array(
+        "as"   => "bulk.compose",
+        "uses" => "BulkSMSController@compose"
+    ));
+    Route::post("/bulk/send", array(
+        "as"   => "bulk.send",
+        "uses" => "BulkSMSController@broadcast"
+    ));
+    Route::get("/bulk/broadcast", array(
+        "as"   => "bulk.broadcast",
+        "uses" => "BulkSMSController@bulk"
+    ));
+    Route::get("/sms/{id}", array(
+        "as"   => "sms.bulk",
+        "uses" => "BulkSMSController@sms"
+    ));
 });

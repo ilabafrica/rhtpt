@@ -124,6 +124,8 @@ class PTSeeder extends Seeder
             array("name" => "view-expected", "display_name" => "Can view expected"),
             array("name" => "update-expected", "display_name" => "Can update expected"),
             array("name" => "delete-expected", "display_name" => "Can delete expected"),
+
+            array("name" => "bulk-sms", "display_name" => "Can manage bulk SMS"),
         );
         foreach ($permissions as $permission) {
             Permission::create($permission);
@@ -850,5 +852,9 @@ class PTSeeder extends Seeder
               DB::table('field_options')->insert($foption);
           }
           $this->command->info('Field Options table seeded');
+
+          /* Dummy username and api-key for bulk sms */
+          DB::table('bulk_sms_settings')->insert(['username' => 'xxxxxx', 'api_key' => 'xxxxxxxxxxxx', 'created_at' => $now, 'updated_at' => $now]);
+          $this->command->info('Bulk SMS settings set successfully.');
     }
 }

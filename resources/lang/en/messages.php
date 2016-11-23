@@ -140,7 +140,8 @@ return [
     'record-successfully-updated'   =>  'The record was successfully updated.',
     'record-successfully-deleted'   =>  'The record was successfully deleted.',
     'failure-delete-record'         =>  'Encountered error while attempting to delete record',
-    'no-records-found'              =>  'No records found',
+    'no-records-found'              =>  'No records found.',
+    'message-successfully-sent'     =>  'Message successfully sent.',
     /**
     *   Other terms
     */
@@ -164,5 +165,12 @@ return [
     'message'           =>  'Message',
     'cost'              =>  'Cost',
     'date-sent'         =>  'Date Sent',
-
+    'settings'          =>  'Settings',
+    'broadcast'         =>  'Broadcast',
+    'sms'               =>  'SMS',
+    'sender'            =>  'Sender',
+    'total'             =>  'Total',
+    'expand'            =>  'Expand',
+    'status'            =>  'Status',
+    'compose'           =>  'Compose',
 ];

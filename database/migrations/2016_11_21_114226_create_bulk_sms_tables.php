@@ -26,17 +26,20 @@ class CreateBulkSmsTables extends Migration
       {
           $table->increments('id')->unsigned();
           $table->string('message', 160)->nullable();
+          $table->integer('round_id')->unsigned();
           $table->integer('user_id')->unsigned();
           $table->softDeletes();
           $table->timestamps();
+          $table->foreign('round_id')->references('id')->on('rounds');
           $table->foreign('user_id')->references('id')->on('users');
       });
       //  SMS
-      Schema::create('sms', function(Blueprint $table)
+      Schema::create('broadcast', function(Blueprint $table)
       {
           $table->increments('id')->unsigned();
           $table->string('number', 25);
           $table->integer('bulk_id')->unsigned();
+          $table->integer('msg_id')->unsigned();
           $table->decimal('cost', 5, 2);
           $table->date('date_sent');
           $table->softDeletes();

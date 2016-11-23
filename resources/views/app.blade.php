@@ -146,6 +146,19 @@
                         <a href="{!! url('facility') !!}"><i class="fa fa-building"></i> {!! trans('messages.facility-catalog') !!}</a>
                     </li>
                     @endpermission
+                    @permission('bulk-sms')
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('sms'), strtolower('bulk'), strtolower('broadcast')])?' '.strtolower(trans('messages.active')):'' !!}">
+                        <a href="#"><i class="fa fa-envelope"></i> {!! trans('messages.bulk-sms') !!}</a>
+                        <ul class="list-unstyled">
+                            <li class="{!! Request::segment(2)==strtolower('key')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('bulk/key') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.settings') !!}</a>
+                            </li>
+                            <li class="{!! Request::segment(2)==strtolower('broadcast')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('bulk/broadcast') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.broadcast') !!}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endpermission
                     @permission('user-management')
                     <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('user'), strtolower('role'), strtolower('permission'), strtolower('assign')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-users"></i> {!! trans('messages.user-management') !!}</a>
@@ -183,7 +196,7 @@
                     <div class="collapse navbar-toggleable-xs" id="collapsingNavbar">
                         <ul class="nav navbar-nav pull-right">
                             <li class="nav-item active">
-                                <a class="nav-link text-primary" href="#">{!! Carbon::now('Africa/Nairobi')->toDayDateTimeString() !!}</a>
+                                <a class="nav-link text-primary" href="#">{!! Carbon::now(Config::get('cms.zone'))->toDayDateTimeString() !!}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">{!! 'Welcome '.Auth::user()->name !!}</a>
