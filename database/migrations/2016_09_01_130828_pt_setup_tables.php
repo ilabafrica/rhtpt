@@ -191,8 +191,8 @@ class PtSetupTables extends Migration
       Schema::dropIfExists('pt');
       Schema::dropIfExists('receipts');
       Schema::dropIfExists('shipments');
-      Schema::dropIfExists('shippers');
       Schema::dropIfExists('shipper_facilities');
+      Schema::dropIfExists('shippers');
       Schema::dropIfExists('expected_results');
       Schema::dropIfExists('items');
       Schema::dropIfExists('rounds');

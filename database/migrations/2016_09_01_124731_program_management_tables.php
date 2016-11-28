@@ -86,7 +86,8 @@ class ProgramManagementTables extends Migration
         //  Reverse migrations
         Schema::dropIfExists('field_options');
         Schema::dropIfExists('options');
-    		Schema::dropIfExists('field_questions');
+    		//Schema::dropIfExists('field_questions');
     		Schema::dropIfExists('fields');
+    		Schema::dropIfExists('field_sets');
     }
 }

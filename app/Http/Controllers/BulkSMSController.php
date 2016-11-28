@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+set_time_limit(0);
 
 use Illuminate\Http\Request;
 
@@ -91,7 +92,7 @@ class BulkSMSController extends Controller
     public function compose()
     {
         $rounds = Round::lists('name', 'id')->toArray();
-        $users = User::all();
+        $users = User::whereNotIn('id', [1, 2])->whereNotNull('phone')->get();
         return view('sms.compose', compact('rounds', 'users'));
     }
     /**

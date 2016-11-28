@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+set_time_limit(0);
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -9,11 +9,17 @@ use App\Http\Controllers\Controller;
 
 use App\Models\County;
 use App\Models\SubCounty;
+use App\Models\Facility;
+use App\Models\Program;
+use App\Models\Tier;
+use App\Models\Role;
+use App\Models\User;
 use App\Models\Shipper;
 
 use Input;
 use Response;
 use DB;
+use Hash;
 
 class ApiController extends Controller
 {
@@ -108,4 +114,105 @@ class ApiController extends Controller
     {
         //
     }
+    public static function rhtpt()
+  	{
+  		$metadata = base_path().'/public/facilities.json';
+  		$json = json_decode(file_get_contents($metadata), true);
+  		//dd($json);
+  		foreach ($json as $a => $b)
+  		{
+  			//dd($b["code"]);
+  			$c = County::where('name', 'LIKE', '%'.$b["county"].'%')->count();
+  			if($c>0)
+  			{
+  				$cnty = County::where('name', 'LIKE', '%'.$b["county"].'%')->first();
+  				$sb = new SubCounty;
+  				$sb->name = strtoupper($b['sub_county']);
+  				$sb->county_id = $cnty->id;
+  				$sb->save();
+  				if($sb)
+  				{
+  					$facility = new Facility;
+  					$facility->code = $b["code"];
+  					$facility->name = strtoupper($b["name"]);
+  					$facility->sub_county_id = $sb->id;
+  					$facility->save();
+  				}
+  			}
+  			else
+  			{
+  				dd($b);
+  			}
+  		}
+  	}
+  	public static function pt()
+  	{
+  		$metadata = base_path().'/public/participants.json';
+  		$json = json_decode(file_get_contents($metadata), true);
+  		//dd($json);
+  		foreach ($json as $a => $b)
+  		{
+  			//dd($b["code"]);
+        // Check if facility exists
+        $f = Facility::where('code', $b["mfl_code"])->orWhere('name', $b["facility_name"])->get();
+        $facility_id = NULL;
+        if(count($f)>0)
+        {
+          $facility_id = Facility::where('code', $b["mfl_code"])->orWhere('name', $b["facility_name"])->first()->id;
+        }
+        else
+        {
+          $scnty = SubCounty::where('name', $b["sub_county"])->get();
+          $sb_id = NULL;
+          if(count($scnty)>0)
+          {
+            $sb_id = SubCounty::where('name', $b["sub_county"])->first()->id;
+          }
+          else
+          {
+            $s = new SubCounty;
+            $s->name = $b["sub_county"];
+            $s->county_id = 1;
+            $s->save();
+            $sb_id = $s->id;
+          }
+          $fcty = new Facility;
+          $fcty->code = $b["mfl_code"];
+          $fcty->name = strtoupper($b["facility_name"]);
+          $fcty->sub_county_id = SubCounty::where('name', $b["sub_county"])->first()->id;
+          $fcty->save();
+          $facility_id = $fcty->id;
+        }
+  			$prg = Program::where('name', $b["program"])->first();
+  			$usr = new User;
+  			$usr->name = $b['tester_name'];
+  			$usr->gender = 0;
+        $tel = NULL;
+        if(trim($b['tester_phone'])!=NULL || trim($b['tester_phone'])!="NULL")
+        {
+          $tel = trim($b['tester_phone']);
+          $tel = rtrim($tel, '.');
+          $tel = ltrim($tel, '0');
+          $tel = "+254".$tel;
+        }
+  			$usr->phone = $tel;
+  			$usr->username = $b['id_no'];
+  			$usr->password = Hash::make("123456");
+  			$usr->uid = $b['id_no'];
+        //dd($usr->phone);
+  			$usr->save();
+  			if($usr)
+  			{
+          $role = Role::find(Role::idByName('Participant'));
+          $usr->attachRole($role);
+
+  				$tier = new Tier;
+  				$tier->user_id = $usr->id;
+  				$tier->role_id = $role->id;
+  				$tier->tier = $facility_id;
+  				$tier->program_id = $prg->id;
+  				$tier->save();
+  			}
+  		}
+  	}
 }

@@ -57,7 +57,7 @@ class CreateBulkSmsTables extends Migration
     public function down()
     {
       //  Reverse migrations
-      Schema::dropIfExists('sms');
+      Schema::dropIfExists('broadcast');
       Schema::dropIfExists('bulk');
       Schema::dropIfExists('bulk_sms_settings');
     }

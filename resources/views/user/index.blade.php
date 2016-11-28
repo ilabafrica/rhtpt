@@ -44,7 +44,7 @@
 							<th>{!! trans('messages.full-name') !!}</th>
 							<th>{!! trans('messages.username') !!}</th>
 							<th>{!! trans('messages.gender') !!}</th>
-							<th>{!! trans('messages.email') !!}</th>
+							<th>{!! trans('messages.phone') !!}</th>
 							<th>{!! trans_choice('messages.role', 1) !!}</th>
 							<th></th>
 						</tr>
@@ -56,7 +56,7 @@
 			                @endif
 			                >
 							<td>{!! $value->name !!}</td>
-							<td>{!! $value->username !!}</td>
+							<td>{!! $value->phone !!}</td>
 							<td>{!! ($value->gender == 0) ? "Male":"Female" !!}</td>
 							<td>{!! $value->email !!}</td>
 							<td></td>

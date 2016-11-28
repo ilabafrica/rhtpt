@@ -57,10 +57,12 @@
                         <th>{!! trans('messages.phone') !!}</th>
                         <th>{!! trans_choice('messages.facility', 1) !!}</th>
               					<th>{!! trans_choice('messages.sub-county', 1) !!}</th>
+                        <th>{!! trans_choice('messages.sub-county', 1) !!}</th>
               				</tr>
               			</thead>
               			<tbody>
               			@foreach($users as $key => $value)
+                    {{--*/$facility = App\Models\Facility::find($value->tier->tier)/*--}}
               				<tr>
               					<td>
                           <label class="checkbox-inline">
@@ -68,8 +70,9 @@
                           </label>
                         </td>
                         <td>{!! $value->phone !!}</td>
-              					<td>{!! $value->phone !!}</td>
-              					<td>{!! $value->phone !!}</td>
+              					<td>{!! $facility->name !!}</td>
+              					<td>{!! $facility->subCounty->name !!}</td>
+                        <td>{!! $facility->subCounty->county->name !!}</td>
               				</tr>
               			@endforeach
               			</tbody>

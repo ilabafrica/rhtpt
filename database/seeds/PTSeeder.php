@@ -206,7 +206,7 @@ class PTSeeder extends Seeder
 
         $this->command->info('Counties table seeded');
         /* Sub-Counties table */
-        $subs = array(
+        /*$subs = array(
             //  Baringo
             array("name" => "Eldama Ravine", "county_id" => $baringo->id),
             array("name" => "Baringo South", "county_id" => $baringo->id),
@@ -233,6 +233,7 @@ class PTSeeder extends Seeder
             array("name" => "Webuye East", "county_id" => $bungoma->id),
             array("name" => "Webuye West", "county_id" => $bungoma->id),
             array("name" => "Kanduyi", "county_id" => $bungoma->id),
+            array("name" => "Tongaren", "county_id" => $bungoma->id),
 
             //  Busia
             array("name" => "Teso North", "county_id" => $busia->id),
@@ -242,6 +243,7 @@ class PTSeeder extends Seeder
             array("name" => "Butula", "county_id" => $busia->id),
             array("name" => "Bunyala", "county_id" => $busia->id),
             array("name" => "Samia", "county_id" => $busia->id),
+            array("name" => "Matayos", "county_id" => $busia->id),
 
             //  Elgeyo Marakwet
             array("name" => "Keiyo North", "county_id" => $elgeyo->id),
@@ -300,11 +302,12 @@ class PTSeeder extends Seeder
             array("name" => "Butere", "county_id" => $kakamega->id),
 
             //  Kericho
-            array("name" => "Belgut", "county_id" => $kericho->id),
-            array("name" => "Buret", "county_id" => $kericho->id),
-            array("name" => "Kericho", "county_id" => $kericho->id),
-            array("name" => "Kipkelion", "county_id" => $kericho->id),
-            array("name" => "Londiani", "county_id" => $kericho->id),
+            array("name" => "Bureti", "county_id" => $kericho->id),
+            array("name" => "Kericho East", "county_id" => $kericho->id),
+            array("name" => "Kericho West", "county_id" => $kericho->id),
+            array("name" => "Kipkelion West", "county_id" => $kericho->id),
+            array("name" => "Kipkelion East", "county_id" => $kericho->id),
+            array("name" => "Sigowet", "county_id" => $kericho->id),
 
             //  Kiambu
             array("name" => "Gatundu South", "county_id" => $kiambu->id),
@@ -592,7 +595,7 @@ class PTSeeder extends Seeder
           {
               SubCounty::create($sb);
           }
-          $this->command->info('Sub-Counties table seeded');
+          $this->command->info('Sub-Counties table seeded');*/
 
           /*  Programs */
           $programs = array(
