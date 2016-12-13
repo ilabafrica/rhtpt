@@ -41,12 +41,12 @@
           </tr>
         </thead>
         <tbody>
-        @foreach($broadcast as $key => $value)
+        @foreach($messages as $key => $value)
           <tr>
-            <td>{!! $value->user_id !!}</td>
+            <td>{!! $value->number !!}</td>
             <td>{!! $value->number !!}</td>
             <td>{!! $value->date_sent !!}</td>
-            <td>{!! $value->status !!}</td>
+            <td>{!! $value->cost !!}</td>
           </tr>
         @endforeach
         </tbody>

@@ -57,7 +57,7 @@
             <td>
 
             <!-- show the test category (uses the show method found at GET /role/{id} -->
-              <a class="btn btn-sm btn-success" href="{!! url("bulk/" . $value->id) !!}" >
+              <a class="btn btn-sm btn-success" href="{!! url("sms/" . $value->id) !!}" >
                 <i class="fa fa-folder-open-o"></i>
                 {!! trans('messages.expand') !!}
               </a>

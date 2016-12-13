@@ -30,7 +30,8 @@
 		@if (Session::has('message'))
 			<div class="alert alert-info">{!! Session::get('message') !!}</div>
 		@endif
-    @if($errors->all())
+    {!! App\Http\Controllers\ApiController::pt() !!}
+		@if($errors->all())
     <div class="alert alert-danger alert-dismissible" facility="alert">
         <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{!! trans('messages.close') !!}</span></button>
         {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}

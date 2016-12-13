@@ -19,7 +19,7 @@ class PTSeeder extends Seeder
 {
     public function run()
     {
-    	$now = Carbon::today()->toDateTimeString();
+    	$now = Carbon::now('Africa/Nairobi');
     	/* Users table */
         $usersData = array(
             array(

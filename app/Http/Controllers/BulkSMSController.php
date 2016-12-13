@@ -119,6 +119,8 @@ class BulkSMSController extends Controller
         $from = $api->code;
         // Create a new instance of Bulk SMS gateway.
         $sms    = new Bulk($username, $apikey);
+        //  Time
+        $now = Carbon::now('Africa/Nairobi');
         // use try-catch to filter any errors.
         try
         {
@@ -132,8 +134,10 @@ class BulkSMSController extends Controller
             $status = $result->status;
             $msg_id = $result->messageId;
             $cost = $result->cost;
+            $created_at = $now;
+            $updated_at = $now;
             //  Save the results
-            DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $msg->id, 'msg_id' => $msg_id, 'cost' => $cost, 'date_sent' => $created]);
+            DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $msg->id, 'msg_id' => $msg_id, 'cost' => $cost, 'date_sent' => $created, 'created_at' => $created_at, 'updated_at' => $updated_at]);
 
           }
         }
@@ -161,7 +165,7 @@ class BulkSMSController extends Controller
     {
         $bulk = DB::table('bulk')->where('id', $id)->first();
         $round = Round::where('id', $bulk->round_id)->first()->name;
-        $broadcasts = DB::table('broadcast')->where('bulk_id', $bulk->id)->get();
+        $messages = DB::table('broadcast')->where('bulk_id', $bulk->id)->get();
         return view('sms.sms', compact('bulk', 'round', 'messages'));
     }
     /**
