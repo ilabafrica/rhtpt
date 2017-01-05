@@ -26,7 +26,7 @@ Route::post('password/reset', 'Auth\PasswordController@postReset');
 Route::group(['middleware' => 'auth'], function()
 {
     Route::get('/', function () {
-        return view('welcome');
+        return view('errors.404');
     });
     Route::get('welcome', function () {
         return view('welcome');

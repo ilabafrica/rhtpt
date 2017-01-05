@@ -10,7 +10,7 @@
         <title>{!! Config::get('cms.name') !!}</title>
 
         <meta name="description" content="">
-        <meta name="author" content="{{ Config::get('woburn.designer') }}">
+        <meta name="author" content="{{ Config::get('cms.designer') }}">
         <!-- Base Styling  -->
         <link href="{{ asset('css/app.v1.css') }}" rel="stylesheet">
         <!-- Bootstrap core CSS -->
