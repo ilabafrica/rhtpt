@@ -50,4 +50,13 @@ return array(
 
 	'username' => 'MyAfricasTalkingUsername',
 	'api-key' => 'MyAfricasTalkingAPIKey',
+
+	/*
+	|--------------------------------------------------------------------------
+	|	Dashboard Image
+	|--------------------------------------------------------------------------
+	|
+	*/
+
+	'dashboard' => 'img/PT.png',
 );

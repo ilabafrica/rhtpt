@@ -64,8 +64,8 @@
             </div>
             <nav class="navigation">
                 <ul class="list-unstyled">
-                    <li class="{!! count(Request::segments())==0?strtolower(trans('messages.active')):'' !!}">
-                        <a href="#"><i class="fa fa-dashboard"></i> {!! trans('messages.dashboard') !!}</a>
+                    <li class="{!! (count(Request::segments())==0 || Request::segment(1)==strtolower('welcome'))?strtolower(trans('messages.active')):'' !!}">
+                        <a href="{!! url('welcome') !!}"><i class="fa fa-dashboard"></i> {!! trans('messages.dashboard') !!}</a>
                     </li>
                     @permission('proficiency-testing')
                     <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('pt'), strtolower('program'), strtolower('shipper'), strtolower('material'), strtolower('round'), strtolower('item'), strtolower('expected'), strtolower('shipment'), strtolower('receipt'), strtolower('result')])?' '.strtolower(trans('messages.active')):'' !!}">
