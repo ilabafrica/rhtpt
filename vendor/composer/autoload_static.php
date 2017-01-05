@@ -343,6 +343,7 @@ class ComposerStaticInit4030c5d42ac5fc180861d622aa70c224
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'CreateBulkSmsTables' => __DIR__ . '/../..' . '/database/migrations/2016_11_21_114226_create_bulk_sms_tables.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
+        'CreatePtMarking' => __DIR__ . '/../..' . '/database/migrations/2017_01_05_142009_create_pt_marking.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_000000_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
         'EntrustSetupTables' => __DIR__ . '/../..' . '/database/migrations/2016_09_01_123523_entrust_setup_tables.php',
@@ -858,6 +859,7 @@ class ComposerStaticInit4030c5d42ac5fc180861d622aa70c224
         'SessionHandlerInterface' => __DIR__ . '/..' . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
         'TestCase' => __DIR__ . '/../..' . '/tests/TestCase.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
+        'UpdatePtTable' => __DIR__ . '/../..' . '/database/migrations/2017_01_05_142712_update_pt_table.php',
         'Zizaco\\Entrust\\MigrationCommand' => __DIR__ . '/..' . '/zizaco/entrust/src/commands/MigrationCommand.php',
     );
 

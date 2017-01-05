@@ -30,6 +30,7 @@ return array(
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'CreateBulkSmsTables' => $baseDir . '/database/migrations/2016_11_21_114226_create_bulk_sms_tables.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
+    'CreatePtMarking' => $baseDir . '/database/migrations/2017_01_05_142009_create_pt_marking.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'EntrustSetupTables' => $baseDir . '/database/migrations/2016_09_01_123523_entrust_setup_tables.php',
@@ -545,5 +546,6 @@ return array(
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
+    'UpdatePtTable' => $baseDir . '/database/migrations/2017_01_05_142712_update_pt_table.php',
     'Zizaco\\Entrust\\MigrationCommand' => $vendorDir . '/zizaco/entrust/src/commands/MigrationCommand.php',
 );
