@@ -42,8 +42,8 @@ $(function () {
 $(document).ready( function () {
 	var table = $('.search-table').DataTable({
     	'bStateSave': true,
-        lengthChange: false,
-        buttons: [ 'copy', 'excel', 'pdf', 'print', 'colvis' ],
+        //lengthChange: false,
+        /*buttons: [ 'copy', 'excel', 'pdf', 'print', 'colvis' ],*/
     	'fnStateSave': function (oSettings, oData) {
         	localStorage.setItem('.search-table', JSON.stringify(oData));
     	},
@@ -51,7 +51,7 @@ $(document).ready( function () {
         	return JSON.parse(localStorage.getItem('.search-table'));
     	}
 	});
-    table.buttons().container().appendTo( '#example_wrapper .col-md-6:eq(0)' );
+    //table.buttons().container().appendTo( '#example_wrapper .col-md-6:eq(0)' );
 });
 
 /*Dynamic loading of select list options for counties-sub-counties*/

@@ -114,7 +114,7 @@ class ApiController extends Controller
     {
         //
     }
-    public static function rhtpt()
+    /*public static function rhtpt()
   	{
   		$metadata = base_path().'/public/facilities.json';
   		$json = json_decode(file_get_contents($metadata), true);
@@ -144,8 +144,39 @@ class ApiController extends Controller
   				dd($b);
   			}
   		}
+  	}*/
+    public static function rhtpt()
+  	{
+  		$metadata = base_path().'/public/dirty_facilities.json';
+  		$json = json_decode(file_get_contents($metadata), true);
+  		//dd($json);
+  		foreach ($json as $a => $b)
+  		{
+  			//dd($b["code"]);
+  			$c = County::where('name', 'LIKE', '%'.$b["COUNTY"].'%')->count();
+  			if($c>0)
+  			{
+  				$cnty = County::where('name', 'LIKE', '%'.$b["COUNTY"].'%')->first();
+  				$sb = new SubCounty;
+  				$sb->name = strtoupper($b['SUBCOUNTY']);
+  				$sb->county_id = $cnty->id;
+  				$sb->save();
+  				if($sb)
+  				{
+  					$facility = new Facility;
+  					$facility->code = $b["MFL"];
+  					$facility->name = strtoupper($b["NAME"]);
+  					$facility->sub_county_id = $sb->id;
+  					$facility->save();
+  				}
+  			}
+  			else
+  			{
+  				dd($b);
+  			}
+  		}
   	}
-  	public static function pt()
+  	/*public static function pt()
   	{
   		$metadata = base_path().'/public/participants.json';
   		$json = json_decode(file_get_contents($metadata), true);
@@ -199,6 +230,56 @@ class ApiController extends Controller
   			$usr->username = $b['id_no'];
   			$usr->password = Hash::make("123456");
   			$usr->uid = $b['id_no'];
+        //dd($usr->phone);
+  			$usr->save();
+  			if($usr)
+  			{
+          $role = Role::find(Role::idByName('Participant'));
+          $usr->attachRole($role);
+
+  				$tier = new Tier;
+  				$tier->user_id = $usr->id;
+  				$tier->role_id = $role->id;
+  				$tier->tier = $facility_id;
+  				$tier->program_id = $prg->id;
+  				$tier->save();
+  			}
+  		}
+  	}*/
+    public static function pt()
+  	{
+  		$metadata = base_path().'/public/dirty_participants.json';
+  		$json = json_decode(file_get_contents($metadata), true);
+  		//dd($json);
+  		foreach ($json as $a => $b)
+  		{
+  			//dd($b["code"]);
+        // Get facility ID
+        $facility_id = Facility::where('name', $b["FACILITY"])->first()->id;
+
+  			$prg = Program::where('name', $b["PROGRAM"])->first();
+  			$usr = new User;
+  			$usr->name = $b['TESTER'];
+  			$usr->gender = 0;
+        $tel = NULL;
+        if((trim($b['PHONE'])!=NULL || trim($b['PHONE'])!="NULL") && (int)strlen($b['PHONE']) > 8)
+        {
+          $tel = str_replace(' ', '', $b['PHONE']);
+          $tel = trim($tel);
+          $tel = rtrim($tel, '.');
+          $tel = ltrim($tel, '0');
+          $tel = substr($tel, 0, 9);
+          $tel = "+254".$tel;
+        }
+        if(array_key_exists("EMAIL", $b))
+        {
+          if(trim($b["EMAIL"])!=NULL || trim($b["EMAIL"])!="NULL")
+            $usr->email = $b["EMAIL"];
+        }
+  			$usr->phone = $tel;
+  			$usr->username = $b['IDNO'];
+  			$usr->password = Hash::make("123456");
+  			$usr->uid = $b['IDNO'];
         //dd($usr->phone);
   			$usr->save();
   			if($usr)

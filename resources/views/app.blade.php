@@ -24,7 +24,9 @@
 
         <!-- Bootstrap Datatables -->
         <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
+        <!--
         <link rel="stylesheet" href="{{ asset('css/buttons.bootstrap4.min.css') }}">
+        -->
         <!-- Awesome Bootstrap checkbox -->
         <link rel="stylesheet" href="{{ asset('css/awesome-bootstrap-checkbox.css') }}">
         <style type="text/css">
@@ -236,7 +238,7 @@
         <!-- Datatables -->
         <script type="text/javascript" src="{{ asset('js/datatables/jquery.dataTables.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/datatables/dataTables.bootstrap4.min.js') }}"></script>
-
+        <!-- Datatables Fancy
         <script type="text/javascript" src="{{ asset('js/datatables/dataTables.buttons.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/datatables/buttons.bootstrap4.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/datatables/jszip.min.js') }}"></script>
@@ -245,6 +247,7 @@
         <script type="text/javascript" src="{{ asset('js/datatables/buttons.html5.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/datatables/buttons.print.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/datatables/buttons.colVis.min.js') }}"></script>
+        -->
         <!-- Datepicker -->
         <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
 
