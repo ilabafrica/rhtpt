@@ -31,10 +31,10 @@
     <div id="wrapper">
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
-            <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
+            <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-arrow-circle-left"></i></a>
                 <div class="top-left-part"><a class="logo" href="index.html"><b><img src="../img/eliteadmin-logo.png" alt="home" /></b><span class="hidden-xs"><strong>elite</strong>university</span></a></div>
                 <ul class="nav navbar-top-links navbar-left hidden-xs">
-                    <li><a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light"><i class="icon-arrow-left-circle ti-menu"></i></a></li>
+                    <li><a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light"><i class="fa fa-arrow-circle-right fa-arrow-circle-left"></i></a></li>
                     <li>
                         <form role="search" class="app-search hidden-xs">
                             <input type="text" placeholder="Search..." class="form-control"> <a href="#"><i class="fa fa-search"></i></a> </form>
@@ -144,7 +144,7 @@
                         </ul>
                         <!-- /.dropdown-user -->
                     </li>
-                    <li class="right-side-toggle"> <a class="waves-effect waves-light" href="javascript:void(0)"><i class="ti-settings"></i></a></li>
+                    <li class="right-side-toggle"> <a class="waves-effect waves-light" href="javascript:void(0)"><i class="fa fa-cog"></i></a></li>
                     <!-- /.dropdown -->
                 </ul>
             </div>
@@ -207,7 +207,7 @@
                             <li> <a href="edit-asset.html">Edit Library Asset</a></li>
                         </ul>
                     </li>
-                    <li> <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-v-card p-r-10"></i> <span class="hide-menu"> User Management <span class="fa arrow"></span></span></a>
+                    <li> <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-users p-r-10"></i> <span class="hide-menu"> User Management <span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
                             <li> <a href="departments.html">Departments</a></li>
                             <li> <a href="add-department.html">Add Department</a></li>
@@ -222,8 +222,8 @@
                         </ul>
                     </li>
                     <li class="nav-small-cap m-t-10">--- Support</li>
-                    <li> <a href="widgets.html" class="waves-effect"><i data-icon="P" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Widgets</span></a> </li>
-                    <li><a href="login.html" class="waves-effect"><i class="icon-logout fa-fw"></i> <span class="hide-menu">Log out</span></a></li>
+                    <li> <a href="widgets.html" class="waves-effect"><i class="fa fa-cog"></i> <span class="hide-menu">Widgets</span></a> </li>
+                    <li><a href="login.html" class="waves-effect"><i class="fa fa-sign-out"></i> <span class="hide-menu">Log out</span></a></li>
                 </ul>
 
             </div>
