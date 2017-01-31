@@ -1,307 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon.png">
-    <title>Elite Admin - University Admin Dashboard</title>
-    <meta id="token" name="token" value="{{ csrf_token() }}">  
-    <!-- Bootstrap Core CSS -->
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <!-- Menu CSS -->
-    <link href="{{ asset('css/sidebar-nav.min.css') }}" rel="stylesheet">
-    <!-- animation CSS -->
-    <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
-    <!-- color CSS -->
-    <link href="{{ asset('css/blue.css') }}" id="theme" rel="stylesheet">
-    </script>
-</head>
 
-<body class="content-wrapper fix-sidebar fix-header">
-    <!-- Preloader -->
-    <div class="preloader">
-        <div class="cssload-speeding-wheel"></div>
-    </div>
-    <div id="wrapper">
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top m-b-0">
-            <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-arrow-circle-left"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.html"><b><img src="../img/eliteadmin-logo.png" alt="home" /></b><span class="hidden-xs"><strong>elite</strong>university</span></a></div>
-                <ul class="nav navbar-top-links navbar-left hidden-xs">
-                    <li><a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light"><i class="fa fa-arrow-circle-right fa-arrow-circle-left"></i></a></li>
-                    <li>
-                        <form role="search" class="app-search hidden-xs">
-                            <input type="text" placeholder="Search..." class="form-control"> <a href="#"><i class="fa fa-search"></i></a> </form>
-                    </li>
-                </ul>
-                <ul class="nav navbar-top-links navbar-right pull-right">
-                    <li class="dropdown"> <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"><i class="icon-envelope"></i>
-                    <div class="notify"><span class="heartbit"></span><span class="point"></span></div>
-                    </a>
-                        <ul class="dropdown-menu mailbox animated bounceInDown">
-                            <li>
-                                <div class="drop-title">You have 4 new messages</div>
-                            </li>
-                            <li>
-                                <div class="message-center">
-                                    <a href="#">
-                                        <div class="user-img"> <img src="../img/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
-                                        <div class="mail-contnet">
-                                            <h5>Pavan kumar</h5> <span class="mail-desc">Just see the my admin!</span> <span class="time">9:30 AM</span> </div>
-                                    </a>
-                                    <a href="#">
-                                        <div class="user-img"> <img src="../img/users/sonu.jpg" alt="user" class="img-circle"> <span class="profile-status busy pull-right"></span> </div>
-                                        <div class="mail-contnet">
-                                            <h5>Sonu Nigam</h5> <span class="mail-desc">I've sung a song! See you at</span> <span class="time">9:10 AM</span> </div>
-                                    </a>
-                                    <a href="#">
-                                        <div class="user-img"> <img src="../img/users/arijit.jpg" alt="user" class="img-circle"> <span class="profile-status away pull-right"></span> </div>
-                                        <div class="mail-contnet">
-                                            <h5>Arijit Sinh</h5> <span class="mail-desc">I am a singer!</span> <span class="time">9:08 AM</span> </div>
-                                    </a>
-                                    <a href="#">
-                                        <div class="user-img"> <img src="../img/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status offline pull-right"></span> </div>
-                                        <div class="mail-contnet">
-                                            <h5>Pavan kumar</h5> <span class="mail-desc">Just see the my admin!</span> <span class="time">9:02 AM</span> </div>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <a class="text-center" href="javascript:void(0);"> <strong>See all notifications</strong> <i class="fa fa-angle-right"></i> </a>
-                            </li>
-                        </ul>
-                        <!-- /.dropdown-messages -->
-                    </li>
-                    <!-- /.dropdown -->
-                    <li class="dropdown"> <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"><i class="icon-note"></i>
-          <div class="notify"><span class="heartbit"></span><span class="point"></span></div>
-          </a>
-                        <ul class="dropdown-menu dropdown-tasks animated slideInUp">
-                            <li>
-                                <a href="#">
-                                    <div>
-                                        <p> <strong>Task 1</strong> <span class="pull-right text-muted">40% Complete</span> </p>
-                                        <div class="progress progress-striped active">
-                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%"> <span class="sr-only">40% Complete (success)</span> </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#">
-                                    <div>
-                                        <p> <strong>Task 2</strong> <span class="pull-right text-muted">20% Complete</span> </p>
-                                        <div class="progress progress-striped active">
-                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%"> <span class="sr-only">20% Complete</span> </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#">
-                                    <div>
-                                        <p> <strong>Task 3</strong> <span class="pull-right text-muted">60% Complete</span> </p>
-                                        <div class="progress progress-striped active">
-                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%"> <span class="sr-only">60% Complete (warning)</span> </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#">
-                                    <div>
-                                        <p> <strong>Task 4</strong> <span class="pull-right text-muted">80% Complete</span> </p>
-                                        <div class="progress progress-striped active">
-                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%"> <span class="sr-only">80% Complete (danger)</span> </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a class="text-center" href="#"> <strong>See All Tasks</strong> <i class="fa fa-angle-right"></i> </a>
-                            </li>
-                        </ul>
-                        <!-- /.dropdown-tasks -->
-                    </li>
-                    <!-- /.dropdown -->
-                    <li class="dropdown">
-                        <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"> <img src="../img/users/1.jpg" alt="user-img" width="36" class="img-circle"><b class="hidden-xs">Prof. Steave</b> </a>
-                        <ul class="dropdown-menu dropdown-user animated flipInY">
-                            <li><a href="javascript:void(0)"><i class="ti-user"></i>  My Profile</a></li>
-                            <li><a href="javascript:void(0)"><i class="ti-email"></i>  Inbox</a></li>
-                            <li><a href="javascript:void(0)"><i class="ti-settings"></i>  Account Setting</a></li>
-                            <li><a href="login.html"><i class="fa fa-power-off"></i>  Logout</a></li>
-                        </ul>
-                        <!-- /.dropdown-user -->
-                    </li>
-                    <li class="right-side-toggle"> <a class="waves-effect waves-light" href="javascript:void(0)"><i class="fa fa-cog"></i></a></li>
-                    <!-- /.dropdown -->
-                </ul>
-            </div>
-            <!-- /.navbar-header -->
-            <!-- /.navbar-top-links -->
-            <!-- /.navbar-static-side -->
-        </nav>
-        <!-- Left navbar-header -->
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse slimscrollsidebar">
-                <ul class="nav" id="side-menu">
-                    <li class="sidebar-search hidden-sm hidden-md hidden-lg">
-                        <!-- input-group -->
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search..."> <span class="input-group-btn">
-                            <button class="btn btn-default" type="button"> <i class="fa fa-search"></i> </button>
-                            </span> </div>
-                        <!-- /input-group -->
-                    </li>
-                    <li class="user-pro">
-                        <a href="#" class="waves-effect"><img src="../img/users/1.jpg" alt="user-img" class="img-circle"> <span class="hide-menu">Prof. Steve Gection<span class="fa arrow"></span></span>
-                        </a>
-                        <ul class="nav nav-second-level">
-                            <li><a href="javascript:void(0)"><i class="ti-user"></i> My Profile</a></li>
-                            <li><a href="javascript:void(0)"><i class="ti-email"></i> Inbox</a></li>
-                            <li><a href="javascript:void(0)"><i class="ti-settings"></i> Account Setting</a></li>
-                            <li><a href="login.html"><i class="fa fa-power-off"></i> Logout</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-small-cap m-t-10">--- Main Menu</li>
-                    <li> <a href="index.html" class="waves-effect"><i class="fa fa-dashboard p-r-10"></i> <span class="hide-menu">Dashboard</span></a> </li>
-                    <li> <a href="javascript:void(0);" class="waves-effect"><i class="icon-people p-r-10"></i> <span class="hide-menu"> Proficiency Testing <span class="fa arrow"></span></span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="professors.html">All Professors</a> </li>
-                            <li> <a href="add-professor.html">Add Professor</a> </li>
-                            <li> <a href="edit-professor.html">Edit Professor</a> </li>
-                            <li> <a href="professor-profile.html">Professor Profile</a> </li>
-                        </ul>
-                    </li>
-                    <li> <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-graduation-cap p-r-10"></i> <span class="hide-menu"> Questionnaire <span class="fa arrow"></span></span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="students.html">All Students</a> </li>
-                            <li> <a href="add-student.html">Add Student</a> </li>
-                            <li> <a href="edit-student.html">Edit Student</a> </li>
-                            <li> <a href="student-profile.html">Student Profile</a> </li>
-                        </ul>
-                    </li>
-                    <li> <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-bars p-r-10"></i> <span class="hide-menu"> Facility Catalog <span class="fa arrow"></span></span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="courses.html">All Courses</a> </li>
-                            <li> <a href="add-course.html">Add Course</a> </li>
-                            <li> <a href="edit-course.html">Edit Course</a> </li>
-                            <li> <a href="course-info.html">Course Information</a> </li>
-                        </ul>
-                    </li>
-                    <li> <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-book p-r-10"></i> <span class="hide-menu"> Bulk SMS <span class="fa arrow"></span></span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="library-assets.html">Library Assets</a></li>
-                            <li> <a href="add-asset.html">Add Library Asset</a></li>
-                            <li> <a href="edit-asset.html">Edit Library Asset</a></li>
-                        </ul>
-                    </li>
-                    <li> <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-users p-r-10"></i> <span class="hide-menu"> User Management <span class="fa arrow"></span></span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="departments.html">Departments</a></li>
-                            <li> <a href="add-department.html">Add Department</a></li>
-                            <li> <a href="edit-department.html">Edit Department</a></li>
-                        </ul>
-                    </li>
-                    <li> <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-bar-chart p-r-10"></i> <span class="hide-menu"> Reports <span class="fa arrow"></span></span></a>
-                        <ul class="nav nav-second-level">
-                            <li> <a href="general-report.html">General Report</a></li>
-                            <li> <a href="income-report.html">Income Report</a></li>
-                            <li> <a href="expense-report.html">Expense Report</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-small-cap m-t-10">--- Support</li>
-                    <li> <a href="widgets.html" class="waves-effect"><i class="fa fa-cog"></i> <span class="hide-menu">Widgets</span></a> </li>
-                    <li><a href="login.html" class="waves-effect"><i class="fa fa-sign-out"></i> <span class="hide-menu">Log out</span></a></li>
-                </ul>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="icon" type="image/x-icon" href="{{ Config::get('cms.favicon') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta id="token" name="token" value="{{ csrf_token() }}">  
 
-            </div>
-        </div>
-        <!-- Left navbar-header end -->
-        <!-- Page Content -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <div class="row bg-title">
-                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">University Dashboard</h4> </div>
-                    <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12"> <a href="https://themeforest.net/item/elite-admin-responsive-dashboard-web-app-kit-/16750820" target="_blank" class="btn btn-danger pull-right m-l-20 btn-rounded btn-outline hidden-xs hidden-sm waves-effect waves-light">Buy Now</a>
-                        <ol class="breadcrumb">
-                            <li><a href="index.html">University</a></li>
-                            <li class="active">Dashboard</li>
-                        </ol>
-                    </div>
-                    <!-- /.col-lg-12 -->
+        <title>{!! Config::get('cms.name') !!}</title>
+
+        <meta name="description" content="">
+        <meta name="author" content="{{ Config::get('cms.designer') }}">
+        <!-- Base Styling  -->
+        <link href="{{ asset('css/app.v1.css') }}" rel="stylesheet">
+        <!-- Bootstrap core CSS -->
+        <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+
+        <!-- Custom Font -->
+        <link rel="stylesheet" href="{{ asset('css/font.css') }}">
+
+        <!-- Custom Styling -->
+        <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+
+        <!-- Bootstrap Datatables 
+        <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
+        <!--
+        <link rel="stylesheet" href="{{ asset('css/buttons.bootstrap4.min.css') }}">
+        -->
+        <!-- Awesome Bootstrap checkbox -->
+        <link rel="stylesheet" href="{{ asset('css/awesome-bootstrap-checkbox.css') }}">
+        <style type="text/css">
+        /* CSS used here will be applied after bootstrap.css */
+            .picha {
+                background-color: white;
+            }
+        </style>
+        <!-- Datepicker -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/datepicker.css') }}" />
+    </head>
+    <body>
+        <!-- Preloader -->
+        <div class="loading-container">
+            <div class="loading">
+                <div class="l1">
+                    <div></div>
                 </div>
-                <!-- .row -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="white-box">
-                            @yield('content')
-                        </div>
-                    </div>
+                <div class="l2">
+                    <div></div>
+                </div>
+                <div class="l3">
+                    <div></div>
+                </div>
+                <div class="l4">
+                    <div></div>
                 </div>
             </div>
-            <!-- /.container-fluid -->
-            <footer class="footer text-center"> 2016 &copy; Elite Admin brought to you by themedesigner.in </footer>
         </div>
-        <!-- /#page-wrapper -->
-    </div>
-    <!-- /#wrapper -->
-    <!-- jQuery -->
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-      <!-- Menu Plugin JavaScript -->
-    <script src="{{ asset('js/sidebar-nav.min.js') }}"></script>
-    <!--slimscroll JavaScript -->
-    <script src="{{ asset('js/jquery.slimscroll.js') }}"></script>
-    <!-- Custom Theme JavaScript -->
-    <script src="{{ asset('js/custom.min.js') }}"></script>
-    <!-- Vue JS -->
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-    <script src="{{ asset('js/vue-resource.min.js') }}"></script>
+        <!-- Preloader -->
 
-    @if(Request::segment(1)==strtolower('event'))
-      <script src="{{ asset('controllers/event.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('role'))
-      <script src="{{ asset('controllers/role.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('option'))
-      <script src="{{ asset('controllers/option.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('program'))
-      <script src="{{ asset('controllers/program.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('round'))
-      <script src="{{ asset('controllers/round.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('field'))
-      <script src="{{ asset('controllers/field.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('set'))
-      <script src="{{ asset('controllers/set.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('shipper'))
-      <script src="{{ asset('controllers/shipper.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('facility'))
-      <script src="{{ asset('controllers/facility.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('user'))
-      <script src="{{ asset('controllers/user.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('material'))
-      <script src="{{ asset('controllers/material.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('item'))
-      <script src="{{ asset('controllers/item.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('expected'))
-      <script src="{{ asset('controllers/expected.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('shipment'))
-      <script src="{{ asset('controllers/shipment.js') }}"></script>
-    @elseif(Request::segment(1)==strtolower('receipt'))
-      <script src="{{ asset('controllers/receipt.js') }}"></script>
-    @endif
+        <aside class="left-panel">
+
+            <div class="user text-xs-center">
+                <img src="{{ (count(Request::segments())>1)?'../../'.Config::get('cms.logo'):Config::get('cms.logo') }}" class="img-circle picha" alt="...">
+                <h4 class="user-name text-warning">{!! Config::get('cms.name') !!}</h4>
+            </div>
+            <nav class="navigation">
+                <ul class="list-unstyled">
+                    <li class="{!! (count(Request::segments())==0 || Request::segment(1)==strtolower('welcome'))?strtolower(trans('messages.active')):'' !!}">
+                        <a href="{!! url('welcome') !!}"><i class="fa fa-dashboard"></i> {!! trans('messages.dashboard') !!}</a>
+                    </li>
+                    @permission('proficiency-testing')
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('pt'), strtolower('program'), strtolower('shipper'), strtolower('material'), strtolower('round'), strtolower('item'), strtolower('expected'), strtolower('shipment'), strtolower('receipt'), strtolower('result')])?' '.strtolower(trans('messages.active')):'' !!}">
+                        <a href="#"><i class="fa fa-graduation-cap"></i> {!! trans('messages.pt') !!}</a>
+                        <ul class="list-unstyled">
+                            @permission('read-program')
+                            <li class="{!! Request::segment(1)==strtolower('program')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('program') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.program', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-shipper')
+                            <li class="{!! Request::segment(1)==strtolower('shipper')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('shipper') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.shipper', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-sample')
+                            <li class="{!! Request::segment(1)==strtolower('material')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('material') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.sample-preparation') !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-round')
+                            <li class="{!! Request::segment(1)==strtolower('round')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('round') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.pt-round', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-item')
+                            <li class="{!! Request::segment(1)==strtolower('item')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('item') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.pt-item', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-expected')
+                            <li class="{!! Request::segment(1)==strtolower('expected')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('expected') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.expected-result', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-shipment')
+                            <li class="{!! Request::segment(1)==strtolower('shipment')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('shipment') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.shipment', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-receipt')
+                            <li class="{!! Request::segment(1)==strtolower('receipt')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('receipt') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.receipt', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-result')
+                            <li class="{!! Request::segment(1)==strtolower('result')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('result') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.result', 2) !!}</a>
+                            </li>
+                            @endpermission
+                        </ul>
+                    </li>
+                    @endpermission
+                    @permission('program-management')
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('set'), strtolower('field'), strtolower('option')])?' '.strtolower(trans('messages.active')):'' !!}">
+                        <a href="#"><i class="fa fa-google-wallet"></i> {!! trans('messages.program-management') !!}</a>
+                        <ul class="list-unstyled">
+                            @permission('read-set')
+                            <li class="{!! Request::segment(1)==strtolower('set')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('set') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.field-set', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-field')
+                            <li class="{!! Request::segment(1)==strtolower('field')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('field') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.field', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-option')
+                            <li class="{!! Request::segment(1)==strtolower('response')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('option') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.option', 2) !!}</a>
+                            </li>
+                            @endpermission
+                        </ul>
+                    </li>
+                    @endpermission
+                    @permission('facility-catalog')
+                    <li class="{!! Request::segment(1)==strtolower('facility')?strtolower(trans('messages.active')):'' !!}">
+                        <a href="{!! url('facility') !!}"><i class="fa fa-building"></i> {!! trans('messages.facility-catalog') !!}</a>
+                    </li>
+                    @endpermission
+                    @permission('bulk-sms')
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('sms'), strtolower('bulk'), strtolower('broadcast')])?' '.strtolower(trans('messages.active')):'' !!}">
+                        <a href="#"><i class="fa fa-envelope"></i> {!! trans('messages.bulk-sms') !!}</a>
+                        <ul class="list-unstyled">
+                            <li class="{!! Request::segment(2)==strtolower('key')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('bulk/key') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.settings') !!}</a>
+                            </li>
+                            <li class="{!! Request::segment(2)==strtolower('broadcast')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('bulk/broadcast') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.broadcast') !!}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endpermission
+                    @permission('user-management')
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('user'), strtolower('role'), strtolower('permission'), strtolower('assign')])?' '.strtolower(trans('messages.active')):'' !!}">
+                        <a href="#"><i class="fa fa-users"></i> {!! trans('messages.user-management') !!}</a>
+                        <ul class="list-unstyled">
+                            @permission('read-user')
+                            <li class="{!! Request::segment(1)==strtolower('user')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('user') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.user', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-role')
+                            <li class="{!! Request::segment(1)==strtolower('role')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('role') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.role', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-permission')
+                            <li class="{!! Request::segment(1)==strtolower('permission')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('permission') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.permission', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('assign-role')
+                            <li class="{!! Request::segment(1)==strtolower('assign')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('assign') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.assign-roles') !!}</a>
+                            </li>
+                            @endpermission
+                        </ul>
+                    </li>
+                    @endpermission
+                </ul>
+            </nav>
+        </aside>
+
+        <section class="content">
+            <header class="top-head container-fluid">
+                <nav class="navbar-default" role="navigation">
+                    <div class="collapse navbar-toggleable-xs" id="collapsingNavbar">
+                        <ul class="nav navbar-nav pull-right">
+                            <li class="nav-item active">
+                                <a class="nav-link text-primary" href="#">{!! Carbon::now(Config::get('cms.zone'))->toDayDateTimeString() !!}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">{!! 'Welcome '.Auth::user()->name !!}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{!! url('auth/logout') !!}"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            <!-- Header Ends -->
+            </header>
+
+            <div class="warper container-fluid">
+                @yield('content')
+            </div>
+            <!-- Warper Ends Here (working area) --><hr>
+            <div id="footer" class="">
+                <div class="container-fluid">
+                    <p class="text-muted gem-h7">
+                        <strong>
+                            &copy; {!! date('Y').' '.Config::get('cms.name') !!}
+                            <span style="float:right">
+                                Designed by {!! Config::get('cms.designer') !!}&nbsp;&nbsp;&nbsp;
+                                <a href="#" class="pull-right scrollToTop"><i class="fa fa-chevron-up"></i></a>
+                            </span>
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        </section>
+        <!-- JQuery v1.9.1 -->
+        <script src="{{ asset('js/jquery-1.12.3.min.js') }}"></script>
+        <script src="{{ asset('js/underscore-min.js') }}"></script>
+        <!-- Bootstrap -->
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <!-- Datatables -->
+        <script type="text/javascript" src="{{ asset('js/datatables/jquery.dataTables.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/dataTables.bootstrap4.min.js') }}"></script>
+        <!-- Datatables Fancy
+        <script type="text/javascript" src="{{ asset('js/datatables/dataTables.buttons.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/buttons.bootstrap4.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/jszip.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/pdfmake.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/vfs_fonts.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/buttons.html5.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/buttons.print.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/datatables/buttons.colVis.min.js') }}"></script>
+        -->
+        <!-- Datepicker -->
+        <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+
+        <!-- Globalize -->
+        <script src="{{ asset('js/globalize.min.js') }}"></script>
+
+        <!-- NanoScroll -->
+        <script src="{{ asset('js/jquery.nicescroll.min.js') }}"></script>
+        <!-- Custom JQuery -->
+        <script src="{{ asset('js/custom.js') }}"></script>
+        <!-- search table for datatables -->
+        <script src="{{ asset('js/harmony/custom.js') }}"></script>
+        <!-- Datepicker -->
+        <script src="{{ asset('js/harmony/bootstrap-datepicker.js') }}"></script>
+        <!-- Vue JS -->
+        <script src="{{ asset('js/vue.min.js') }}"></script>
+        <script src="{{ asset('js/vue-resource.min.js') }}"></script>
+        <!-- Toastr -->
+        <script src="{{ asset('js/toastr.min.js') }}"></script>
+
+        @if(Request::segment(1)==strtolower('event'))
+        <script src="{{ asset('controllers/event.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('role'))
+        <script src="{{ asset('controllers/role.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('option'))
+        <script src="{{ asset('controllers/option.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('program'))
+        <script src="{{ asset('controllers/program.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('round'))
+        <script src="{{ asset('controllers/round.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('field'))
+        <script src="{{ asset('controllers/field.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('set'))
+        <script src="{{ asset('controllers/set.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('shipper'))
+        <script src="{{ asset('controllers/shipper.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('facility'))
+        <script src="{{ asset('controllers/facility.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('user'))
+        <script src="{{ asset('controllers/user.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('material'))
+        <script src="{{ asset('controllers/material.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('item'))
+        <script src="{{ asset('controllers/item.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('expected'))
+        <script src="{{ asset('controllers/expected.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('shipment'))
+        <script src="{{ asset('controllers/shipment.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('receipt'))
+        <script src="{{ asset('controllers/receipt.js') }}"></script>
+        @endif
 </body>
 </html>

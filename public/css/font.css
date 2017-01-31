@@ -1,0 +1,11 @@
+/*
+Author: Kitsao Emmanuel, Mwavita Kevin
+*/
+@font-face {
+    font-family: 'gem';
+    src: url('../fonts/gems/2BE1E3_0_0.woff') format('woff'),
+         url('../fonts/gems/2BE1E3_2_0.woff') format('woff'),
+         url('../fonts/gems/2BE0F8_12_0.woff') format('woff'),
+         url('../fonts/gems/2BE0F8_14_0.woff') format('woff'),
+         url('../fonts/gems/2BE0F8_E_0.woff') format('woff');
+}

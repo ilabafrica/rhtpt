@@ -18,7 +18,7 @@ return [
     'pt'                    =>    'Proficiency Testing',
     'user-management'       =>    'User Management',
     'facility-catalog'      =>    'Facility Catalog',
-    'program-management'    =>    'Program Management',
+    'program-management'    =>    'Questionnaire',
 
     /**
     *   Sub-menus

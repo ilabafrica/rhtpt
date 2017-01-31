@@ -3,6 +3,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Program extends Model
 {
+	public $fillable = ['name','description'];
   	/**
   	 * Enabling soft deletes for programs.
   	 *

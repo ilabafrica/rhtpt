@@ -1,3 +1,7 @@
+Vue.http.headers.common['X-CSRF-TOKEN'] = $("#token").attr("value");
+
+
+
 new Vue({
 
   el: '#manage-role',
@@ -72,6 +76,13 @@ new Vue({
         this.$http.delete('/vueroles/'+role.id).then((response) => {
             this.changePage(this.pagination.current_page);
             toastr.success('Role Deleted Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
+      restoreRole: function(role){
+        this.$http.patch('/vueroles/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Role Restored Successfully.', 'Success Alert', {timeOut: 5000});
         });
       },
 

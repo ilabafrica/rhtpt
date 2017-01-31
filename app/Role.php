@@ -1,10 +1,19 @@
 <?php namespace App;
 
 use Zizaco\Entrust\EntrustRole;
+use Illuminate\Database\Eloquent\softDeletes;
 
 class Role extends EntrustRole
 {
 	public $fillable = ['name','description'];
+	use SoftDeletes;
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 	/**
     * Function for getting the admin role, currently the first user
     *

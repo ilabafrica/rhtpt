@@ -1,45 +1,15 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Laravel</title>
+@extends("app")
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-
-        <style>
-            html, body {
-                height: 100%;
-            }
-
-            body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                display: table;
-                font-weight: 100;
-                font-family: 'Lato', sans-serif;
-            }
-
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
-
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
-
-            .title {
-                font-size: 96px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="title">Laravel 5</div>
-            </div>
-        </div>
-    </body>
-</html>
+@section("content")
+<div class="row">
+    <div class="col-sm-12">
+        <ol class="breadcrumb">
+            <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
+        </ol>
+    </div>
+</div>
+<div class="card">
+  <img src="{{ (count(Request::segments())>1)?'../../'.Config::get('cms.dashboard'):Config::get('cms.dashboard') }}" class= "img-responsive" width= "80%" alt="Card image">
+</div>
+{!! session(['SOURCE_URL' => URL::full()]) !!}
+@endsection

@@ -21,7 +21,7 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $roles = Role::latest()->paginate(5);
+        $roles = Role::latest()->withTrashed()->paginate(5);
 
         $response = [
             'pagination' => [
@@ -84,6 +84,18 @@ class RoleController extends Controller
     public function destroy($id)
     {
         Role::find($id)->delete();
+        return response()->json(['done']);
+    }
+
+    /**
+     * enable soft deleted record.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id) 
+    {
+        $role = Role::withTrashed()->find($id)->restore();
         return response()->json(['done']);
     }
 }
