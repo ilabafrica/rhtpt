@@ -86,4 +86,16 @@ class ProgramController extends Controller
         Program::find($id)->delete();
         return response()->json(['done']);
     }
+
+    /**
+     * enable soft deleted record.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id) 
+    {
+        $program = Program::withTrashed()->find($id)->restore();
+        return response()->json(['done']);
+    }
 }

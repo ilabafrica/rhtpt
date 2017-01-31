@@ -90,4 +90,16 @@ class RoundController extends Controller
         Round::find($id)->delete();
         return response()->json(['done']);
     }
+
+    /**
+     * enable soft deleted record.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id) 
+    {
+        $round = Round::withTrashed()->find($id)->restore();
+        return response()->json(['done']);
+    }
 }

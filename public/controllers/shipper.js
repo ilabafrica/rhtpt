@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreShipper: function(shipper){
+        this.$http.patch('/vueshippers/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Shipper Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editShipper: function(shipper){
           this.fillShipper.name = shipper.name;
           this.fillShipper.id = shipper.id;

@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreMaterial: function(material){
+        this.$http.patch('/vuematerials/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Material Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editMaterial: function(material){
           this.fillMaterial.batch_no = material.batch_no;
           this.fillMaterial.id = material.id;

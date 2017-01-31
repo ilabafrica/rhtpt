@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreReceipt: function(receipt){
+        this.$http.patch('/vuereceipts/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Receipt Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editReceipt: function(receipt){
           this.fillReceipt.shipment = receipt.shipment;
           this.fillReceipt.id = receipt.id;

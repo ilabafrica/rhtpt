@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreProgram: function(program){
+        this.$http.patch('/vueprograms/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Program Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editProgram: function(program){
           this.fillProgram.name = program.name;
           this.fillProgram.id = program.id;

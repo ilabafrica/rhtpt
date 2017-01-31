@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreField: function(field){
+        this.$http.patch('/vuefields/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Field Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editField: function(field){
           this.fillField.name = field.name;
           this.fillField.id = field.id;

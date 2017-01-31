@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreRound: function(round){
+        this.$http.patch('/vuerounds/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Round Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editRound: function(round){
           this.fillRound.name = round.name;
           this.fillRound.id = round.id;

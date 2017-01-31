@@ -86,4 +86,16 @@ class ShipmentController extends Controller
         Shipment::find($id)->delete();
         return response()->json(['done']);
     }
+
+    /**
+     * enable soft deleted record.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id) 
+    {
+        $shipment = Shipment::withTrashed()->find($id)->restore();
+        return response()->json(['done']);
+    }
 }

@@ -86,4 +86,16 @@ class ReceiptController extends Controller
         Receipt::find($id)->delete();
         return response()->json(['done']);
     }
+
+    /**
+     * enable soft deleted record.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id) 
+    {
+        $receipt = Receipt::withTrashed()->find($id)->restore();
+        return response()->json(['done']);
+    }
 }

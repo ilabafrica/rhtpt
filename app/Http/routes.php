@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get('item', 'VueItemController@manageVue');
     Route::resource('vueitems','VueItemController');
+    Route::any('vueroles/{id}/restore','RoleController@restore');
 
     Route::get('event', 'EventController@manageEvent');
     Route::resource('vueevents','EventController');
@@ -51,42 +52,54 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get('option', 'OptionController@manageOption');
     Route::resource('vueoptions','OptionController');
+    Route::any('vueoptions/{id}/restore','RoleController@restore');
 
     Route::get('set', 'SetController@manageSet');
     Route::resource('vuesets','SetController');
+    Route::any('vuesets/{id}/restore','RoleController@restore');
 
     Route::get('program', 'ProgramController@manageProgram');
     Route::resource('vueprograms','ProgramController');
+    Route::any('vueprograms/{id}/restore','RoleController@restore');
 
     Route::get('round', 'RoundController@manageRound');
     Route::resource('vuerounds','RoundController');
+    Route::any('vuerounds/{id}/restore','RoleController@restore');
 
     Route::get('field', 'FieldController@manageField');
     Route::resource('vuefields','FieldController');
+    Route::any('vuefields/{id}/restore','RoleController@restore');
 
     Route::get('facility', 'FacilityController@manageFacility');
     Route::resource('vuefacilitys','FacilityController');
+    Route::any('vuefacilitys/{id}/restore','RoleController@restore');
 
     Route::get('user', 'UserController@manageUser');
     Route::resource('vueusers','UserController');
+    Route::any('vueusers/{id}/restore','RoleController@restore');
 
     Route::get('shipper', 'ShipperController@manageShipper');
     Route::resource('vueshippers','ShipperController');
+    Route::any('vueshippers/{id}/restore','RoleController@restore');
 
     Route::get('material', 'MaterialController@manageMaterial');
     Route::resource('vuematerials','MaterialController');
+    Route::any('vuematerials/{id}/restore','RoleController@restore');
 
     //Route::get('item', 'ItemController@manageItem');
     //Route::resource('vueitems','ItemController');
 
     Route::get('expected', 'ExpectedController@manageExpected');
     Route::resource('vueexpecteds','ExpectedController');
+    Route::any('vueexpecteds/{id}/restore','RoleController@restore');
 
     Route::get('shipment', 'ShipmentController@manageShipment');
     Route::resource('vueshipments','ShipmentController');
+    Route::any('vueshipments/{id}/restore','RoleController@restore');
 
     Route::get('receipt', 'ReceiptController@manageReceipt');
     Route::resource('vuereceipts','ReceiptController');
+    Route::any('vuereceipts/{id}/restore','RoleController@restore');
 
     Route::get('manage-vue', 'VueItemController@manageVue');
     Route::resource('vueitems','VueItemController');

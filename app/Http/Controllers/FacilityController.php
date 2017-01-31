@@ -99,4 +99,16 @@ class FacilityController extends Controller
         Facility::find($id)->delete();
         return response()->json(['done']);
     }
+
+    /**
+     * enable soft deleted record.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id) 
+    {
+        $facility = Facility::withTrashed()->find($id)->restore();
+        return response()->json(['done']);
+    }
 }

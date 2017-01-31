@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreShipment: function(shipment){
+        this.$http.patch('/vueshipments/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Shipment Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editShipment: function(shipment){
           this.fillShipment.pt_round = shipment.pt_round;
           this.fillShipment.id = shipment.id;

@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreSet: function(set){
+        this.$http.patch('/vuesets/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Field Set Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editSet: function(set){
           this.fillSet.name = set.name;
           this.fillSet.id = set.id;

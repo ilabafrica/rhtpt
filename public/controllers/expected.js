@@ -64,7 +64,7 @@ new Vue({
 		    this.changePage(this.pagination.current_page);
 			this.newExpected = {'name':'','description':''};
 			$("#create-expected").modal('hide');
-			toastr.success('Expected Results Created Successfully.', 'Success Alert', {timeOut: 5000});
+			toastr.success('Result Created Successfully.', 'Success Alert', {timeOut: 5000});
 		  }, (response) => {
 			this.formErrors = response.data;
 	    });
@@ -73,7 +73,14 @@ new Vue({
       deleteExpected: function(expected){
         this.$http.delete('/vueexpecteds/'+expected.id).then((response) => {
             this.changePage(this.pagination.current_page);
-            toastr.success('Expected Results Deleted Successfully.', 'Success Alert', {timeOut: 5000});
+            toastr.success('Result Deleted Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
+      restoreexpected: function(expected){
+        this.$http.patch('/vueexpecteds/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Result Restored Successfully.', 'Success Alert', {timeOut: 5000});
         });
       },
 
@@ -90,7 +97,7 @@ new Vue({
             this.changePage(this.pagination.current_page);
             this.fillExpected = {'name':'','description':'','id':''};
             $("#edit-expected").modal('hide');
-            toastr.success('Expected Results Updated Successfully.', 'Success Alert', {timeOut: 5000});
+            toastr.success('Result Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {
               this.formErrorsUpdate = response.data;
           });

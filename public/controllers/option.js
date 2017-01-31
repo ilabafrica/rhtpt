@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreOption: function(option){
+        this.$http.patch('/vueoptions/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Option Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editOption: function(option){
           this.fillOption.name = option.name;
           this.fillOption.id = option.id;

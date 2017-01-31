@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreUser: function(user){
+        this.$http.patch('/vueusers/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('User Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editUser: function(facility){
           this.fillFacility.name = facility.name;
           this.fillFacility.id = facility.id;

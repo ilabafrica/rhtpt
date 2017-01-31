@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreItem: function(role){
+        this.$http.patch('/vueitems/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Item Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editItem: function(item){
           this.fillItem.pt_id = item.pt_id;
           this.fillItem.id = item.id;

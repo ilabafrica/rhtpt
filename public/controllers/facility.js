@@ -77,6 +77,13 @@ new Vue({
         });
       },
 
+      restoreFacility: function(facility){
+        this.$http.patch('/vuefacilitys/'+role.id+'/restore').then((response) => {
+            this.changePage(this.pagination.current_page);
+            toastr.success('Facility Restored Successfully.', 'Success Alert', {timeOut: 5000});
+        });
+      },
+
       editFacility: function(facility){
           this.fillFacility.name = facility.name;
           this.fillFacility.id = facility.id;
