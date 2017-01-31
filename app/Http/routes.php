@@ -103,4 +103,14 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get('manage-vue', 'VueItemController@manageVue');
     Route::resource('vueitems','VueItemController');
+
+
+    Route::get("/assign", array(
+        "as"   => "role.assign",
+        "uses" => "RoleController@assign"
+    ));
+    Route::post("/assign", array(
+        "as"   => "role.assign",
+        "uses" => "RoleController@saveUserRoleAssignment"
+    ));
 });
