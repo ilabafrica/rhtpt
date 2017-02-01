@@ -17,7 +17,8 @@ new Vue({
     formErrors:{},
     formErrorsUpdate:{},
     newShipper : {'name':'','description':'','start_date':'','end_date':''},
-    fillShipper : {'name':'','description':'','start_date':'','end_date':'','id':''}
+    fillShipper : {'name':'','description':'','start_date':'','end_date':'','id':''},
+    options: ''
   },
 
   computed: {

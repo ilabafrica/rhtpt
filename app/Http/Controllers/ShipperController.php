@@ -22,7 +22,17 @@ class ShipperController extends Controller
     public function index(Request $request)
     {
         $shippers = Shipper::latest()->paginate(5);
-
+        $shipper_types = [
+            Shipper::COURIER => 'Courier',
+            Shipper::PARTNER => 'Partner',
+            Shipper::COUNTY_LAB_COORDINATOR => 'County Lab Coordinator',
+            Shipper::OTHER => 'Other'
+        ];
+        $categories = array();
+        foreach($shipper_types as $key => $value)
+        {
+            $categories[] = ['title' => $value, 'name' => $key];
+        }
         $response = [
             'pagination' => [
                 'total' => $shippers->total(),
@@ -32,7 +42,8 @@ class ShipperController extends Controller
                 'from' => $shippers->firstItem(),
                 'to' => $shippers->lastItem()
             ],
-            'data' => $shippers
+            'data' => $shippers,
+            'options' => $categories
         ];
 
         return response()->json($response);

@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::latest()->paginate(5);
+        $users = User::latest()->withTrashed()->paginate(5);
 
         $response = [
             'pagination' => [

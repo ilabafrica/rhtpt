@@ -33,14 +33,20 @@
         <tr>
             <th>Title</th>
             <th>Description</th>
+            <th>Status</th>
             <th>Action</th>
         </tr>
         <tr v-for="program in programs">
             <td>@{{ program.name }}</td>
             <td>@{{ program.description }}</td>
+            <td>
+                <button v-if="program.deleted_at==NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
+                <button v-if="program.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
+            </td>
             <td>	
-                <button class="btn btn-sm btn-primary" @click.prevent="editProgram(program)"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteProgram(program)"><i class="fa fa-trash-o"></i> Delete</button>
+                <button v-bind="{ 'disabled': program.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editProgram(program)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-if="program.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreProgram(program)">Enable</button>
+                <button v-if="program.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteProgram(program)">Disable</button>
             </td>
         </tr>
     </table>
@@ -76,27 +82,32 @@
             <h4 class="modal-title" id="myModalLabel">Create Program</h4>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createProgram">
 
-                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createProgram">
+                        <div class="col-md-12">
+				            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="name" class="form-control" v-model="newProgram.name" />
+                                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                                 </div>
+                            </div>
+				            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Description:</label>
+                                <div class="col-sm-8">
+                                    <textarea name="description" class="form-control" v-model="newProgram.description"></textarea>
+                                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            </div>
+                        </div>
 
-                    <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" name="name" class="form-control" v-model="newProgram.name" />
-                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                    </form>
                 </div>
-
-                <div class="form-group">
-                    <label for="title">Description:</label>
-                    <textarea name="description" class="form-control" v-model="newProgram.description"></textarea>
-                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-
-                </form>
-
             
             </div>
         </div>

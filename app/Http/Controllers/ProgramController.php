@@ -21,7 +21,7 @@ class ProgramController extends Controller
      */
     public function index(Request $request)
     {
-        $programs = Program::latest()->paginate(5);
+        $programs = Program::latest()->withTrashed()->paginate(5);
 
         $response = [
             'pagination' => [

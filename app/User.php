@@ -10,12 +10,16 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Illuminate\Database\Eloquent\softDeletes;
 
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
                                     CanResetPasswordContract
 {
-    use Authenticatable, CanResetPassword, EntrustUserTrait;
+    use Authenticatable, CanResetPassword, EntrustUserTrait{
+EntrustUserTrait::restore insteadof SoftDeletes;
+}
+    use SoftDeletes;
     const MALE = 0;
     const FEMALE = 1;
 
@@ -41,6 +45,12 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $fillable = ['name', 'email', 'password'];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
     /**
      * The attributes excluded from the model's JSON form.
      *

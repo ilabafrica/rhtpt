@@ -78,7 +78,7 @@ new Vue({
       },
 
       restoreProgram: function(program){
-        this.$http.patch('/vueprograms/'+role.id+'/restore').then((response) => {
+        this.$http.patch('/vueprograms/'+program.id+'/restore').then((response) => {
             this.changePage(this.pagination.current_page);
             toastr.success('Program Restored Successfully.', 'Success Alert', {timeOut: 5000});
         });
