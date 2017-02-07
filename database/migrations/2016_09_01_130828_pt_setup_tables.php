@@ -45,9 +45,8 @@ class PtSetupTables extends Migration
             $table->smallInteger('material_type');
             $table->string('original_source');
             $table->date('date_collected');
-            $table->integer('prepared_by')->unsigned();
+            $table->string('prepared_by')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->foreign('prepared_by')->references('id')->on('users');
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
       			$table->timestamps();

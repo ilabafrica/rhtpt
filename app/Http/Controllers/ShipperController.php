@@ -21,18 +21,9 @@ class ShipperController extends Controller
      */
     public function index(Request $request)
     {
-        $shippers = Shipper::latest()->paginate(5);
-        $shipper_types = [
-            Shipper::COURIER => 'Courier',
-            Shipper::PARTNER => 'Partner',
-            Shipper::COUNTY_LAB_COORDINATOR => 'County Lab Coordinator',
-            Shipper::OTHER => 'Other'
-        ];
-        $categories = array();
-        foreach($shipper_types as $key => $value)
-        {
-            $categories[] = ['title' => $value, 'name' => $key];
-        }
+        $shippers = Shipper::latest()->withTrashed()->paginate(5);
+        foreach($shippers as $shipper)
+            $shipper->st = $shipper->shipper($shipper->shipper_type);
         $response = [
             'pagination' => [
                 'total' => $shippers->total(),
@@ -42,8 +33,7 @@ class ShipperController extends Controller
                 'from' => $shippers->firstItem(),
                 'to' => $shippers->lastItem()
             ],
-            'data' => $shippers,
-            'options' => $categories
+            'data' => $shippers
         ];
 
         return response()->json($response);
@@ -59,9 +49,10 @@ class ShipperController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'description' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
+            'shipper_type' => 'required',
+            'contact' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
         ]);
 
         $create = Shipper::create($request->all());
@@ -112,5 +103,24 @@ class ShipperController extends Controller
     {
         $shipper = Shipper::withTrashed()->find($id)->restore();
         return response()->json(['done']);
+    }
+    /**
+     * Function to return list of shipper types.
+     *
+     */
+    public function options()
+    {
+        $shipper_types = [
+            Shipper::COURIER => 'Courier',
+            Shipper::PARTNER => 'Partner',
+            Shipper::COUNTY_LAB_COORDINATOR => 'County Lab Coordinator',
+            Shipper::OTHER => 'Other'
+        ];
+        $categories = [];
+        foreach($shipper_types as $key => $value)
+        {
+            $categories[] = ['title' => $value, 'name' => $key];
+        }
+        return $categories;
     }
 }

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Material;
 
+use Auth;
+
 class MaterialController extends Controller
 {
 
@@ -23,6 +25,8 @@ class MaterialController extends Controller
     {
         $materials = Material::latest()->paginate(5);
 
+        foreach($materials as $material)
+            $material->mt = $material->material($material->material_type);
         $response = [
             'pagination' => [
                 'total' => $materials->total(),
@@ -47,9 +51,15 @@ class MaterialController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
+            'batch' => 'required',
+            'date_prepared' => 'required',
+            'expiry_date' => 'required',
+            'material_type' => 'required',
+            'original_source' => 'required',
+            'date_collected' => 'required',
+            'prepared_by' => 'required',
         ]);
+        $request->request->add(['user_id' => Auth::user()->id]);
 
         $create = Material::create($request->all());
 
@@ -97,5 +107,24 @@ class MaterialController extends Controller
     {
         $material = Material::withTrashed()->find($id)->restore();
         return response()->json(['done']);
+    }
+    /**
+     * Function to return list of shipper types.
+     *
+     */
+    public function options()
+    {
+        $material_types = [
+            Material::WHOLE_BLOOD => 'Whole Blood',
+            Material::PLASMA => 'Plasma',
+            Material::SLIDE => 'Slide',
+            Material::SERUM => 'Serum'
+        ];
+        $categories = [];
+        foreach($material_types as $key => $value)
+        {
+            $categories[] = ['title' => $value, 'name' => $key];
+        }
+        return $categories;
     }
 }

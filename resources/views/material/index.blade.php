@@ -40,10 +40,10 @@
             <th>Action</th>
         </tr>
         <tr v-for="material in materials">
-            <td>@{{ material.batch_no }}</td>
+            <td>@{{ material.batch }}</td>
             <td>@{{ material.date_prepared }}</td>
             <td>@{{ material.expiry_date }}</td>
-            <td>@{{ material.type }}</td>
+            <td>@{{ material.mt }}</td>
             <td>@{{ material.original_source }}</td>
             <td>@{{ material.date_collected }}</td>
             <td>	
@@ -88,20 +88,49 @@
                 <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createMaterial">
 
                     <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" name="name" class="form-control" v-model="newMaterial.name" />
-                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
-                </div>
+                        <label for="title">Batch No:</label>
+                        <input type="text" name="batch" class="form-control" v-model="newMaterial.batch" />
+                        <span v-if="formErrors['batch']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Date Prepared:</label>
+                        <input type="date" name="date_prepared" class="form-control" v-model="newMaterial.date_prepared" />
+                        <span v-if="formErrors['date_prepared']" class="error text-danger">@{{ formErrors['date_prepared'] }}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Expiry Date:</label>
+                        <input type="date" name="expiry_date" class="form-control" v-model="newMaterial.expiry_date" />
+                        <span v-if="formErrors['expiry_date']" class="error text-danger">@{{ formErrors['expiry_date'] }}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Material Type:</label>
+                        <div class="form-radio form-radio-inline" v-for="option in options">
+                            <label class="form-radio-label">
+                                <input type="radio" :value="option.name" v-model="newMaterial.material_type" name="material_type">
+                                @{{ option.title }}
+                            </label>
+                        </div>
+                        <span v-if="formErrors['batch']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Original Source:</label>
+                        <input type="text" name="original_source" class="form-control" v-model="newMaterial.original_source" />
+                        <span v-if="formErrors['original_source']" class="error text-danger">@{{ formErrors['original_source'] }}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Date Collected:</label>
+                        <input type="date" name="date_collected" class="form-control" v-model="newMaterial.date_collected" />
+                        <span v-if="formErrors['date_collected']" class="error text-danger">@{{ formErrors['date_collected'] }}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Prepared By:</label>
+                        <input type="text" name="prepared_by" class="form-control" v-model="newMaterial.prepared_by" />
+                        <span v-if="formErrors['prepared_by']" class="error text-danger">@{{ formErrors['prepared_by'] }}</span>
+                    </div>
 
-                <div class="form-group">
-                    <label for="title">Description:</label>
-                    <textarea name="description" class="form-control" v-model="newMaterial.description"></textarea>
-                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
 
                 </form>
 

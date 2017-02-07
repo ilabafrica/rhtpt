@@ -127,20 +127,20 @@
                 <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateProgram(fillProgram.id)">
 
                     <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" name="name" class="form-control" v-model="fillProgram.name" />
-                    <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
-                </div>
+                        <label for="title">Title:</label>
+                        <input type="text" name="name" class="form-control" v-model="fillProgram.name" />
+                        <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                    </div>
 
-                <div class="form-group">
-                    <label for="title">Description:</label>
-                    <textarea name="description" class="form-control" v-model="fillProgram.description"></textarea>
-                    <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
-                </div>
+                    <div class="form-group">
+                        <label for="title">Description:</label>
+                        <textarea name="description" class="form-control" v-model="fillProgram.description"></textarea>
+                        <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
+                    </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
 
                 </form>
 

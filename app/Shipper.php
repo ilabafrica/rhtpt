@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 class Shipper extends Model
 {
+		public $fillable = ['name', 'shipper_type', 'contact', 'phone', 'email'];
   	/**
   	 * Enabling soft deletes for shippers.
   	 *
@@ -21,10 +22,10 @@ class Shipper extends Model
   	 * Type of shipper
   	 *
   	 */
-  	const COURIER = 0;
-  	const PARTNER = 1;
-    const COUNTY_LAB_COORDINATOR = 2;
-    const OTHER = 3;
+  	const COURIER = 1;
+  	const PARTNER = 2;
+    const COUNTY_LAB_COORDINATOR = 3;
+    const OTHER = 4;
     /**
     * Return readable shipper-type
     *
@@ -66,6 +67,6 @@ class Shipper extends Model
   	 */
   	public function facilities()
   	{
-  	  return $this->belongsToMany('App\Models\Facility', 'shipper_facilities', 'shipper_id', 'facility_id');
+  	  return $this->belongsToMany('App\Facility', 'shipper_facilities', 'shipper_id', 'facility_id');
   	}
 }

@@ -113,4 +113,14 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "role.assign",
         "uses" => "RoleController@saveUserRoleAssignment"
     ));
+
+    Route::get("/st", array(
+        "as"   => "st.fetch",
+        "uses" => "ShipperController@options"
+    ));
+
+    Route::get("/mt", array(
+        "as"   => "mt.fetch",
+        "uses" => "MaterialController@options"
+    ));
 });

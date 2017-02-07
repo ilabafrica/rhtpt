@@ -16,8 +16,9 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newMaterial : {'batch_no':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepare_by':''},
-    fillMaterial : {'batch_no':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepare_by':'','id':''}
+    newMaterial : {'batch':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepared_by':''},
+    fillMaterial : {'batch':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepared_by':'','id':''},
+    options: []
   },
 
   computed: {
@@ -47,6 +48,7 @@ new Vue({
 
   ready : function(){
   		this.getVueMaterials(this.pagination.current_page);
+        this.loadMaterialTypes();
   },
 
   methods : {
@@ -62,7 +64,7 @@ new Vue({
 		  var input = this.newMaterial;
 		  this.$http.post('/vuematerials',input).then((response) => {
 		    this.changePage(this.pagination.current_page);
-			this.newMaterial = {'batch_no':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepare_by':''};
+			this.newMaterial = {'batch':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepared_by':''};
 			$("#create-material").modal('hide');
 			toastr.success('Material Created Successfully.', 'Success Alert', {timeOut: 5000});
 		  }, (response) => {
@@ -85,7 +87,7 @@ new Vue({
       },
 
       editMaterial: function(material){
-          this.fillMaterial.batch_no = material.batch_no;
+          this.fillMaterial.batch = material.batch;
           this.fillMaterial.id = material.id;
           this.fillMaterial.date_prepared = material.date_prepared;
           this.fillMaterial.expiry_date = material.expiry_date;
@@ -100,7 +102,7 @@ new Vue({
         var input = this.fillMaterial;
         this.$http.put('/vuematerials/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
-            this.fillMaterial = {'batch_no':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepare_by':'','id':''};
+            this.fillMaterial = {'batch':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepare_by':'','id':''};
             $("#edit-material").modal('hide');
             toastr.success('Material Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {
@@ -111,7 +113,16 @@ new Vue({
       changePage: function (page) {
           this.pagination.current_page = page;
           this.getVueMaterials(page);
-      }
+      },
+
+      loadMaterialTypes: function() {
+      this.$http.get('/mt').then((response) => {
+        this.options = response.data;
+
+      }, (response) => {
+        console.log(response);
+      });
+    }
 
   }
 

@@ -16,9 +16,10 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newShipper : {'name':'','description':'','start_date':'','end_date':''},
-    fillShipper : {'name':'','description':'','start_date':'','end_date':'','id':''},
-    options: ''
+    shipper_type: '',
+    newShipper : {'name':'','shipper_type':'','contact':'','phone':'','email':''},
+    fillShipper : {'name':'','shipper_type':'','contact':'','phone':'','email':'','id':''},
+    options: []
   },
 
   computed: {
@@ -48,6 +49,7 @@ new Vue({
 
   ready : function(){
   		this.getVueShippers(this.pagination.current_page);
+        this.loadShipperTypes();
   },
 
   methods : {
@@ -63,7 +65,7 @@ new Vue({
 		  var input = this.newShipper;
 		  this.$http.post('/vueshippers',input).then((response) => {
 		    this.changePage(this.pagination.current_page);
-			this.newShipper = {'name':'','description':'','start_date':'','end_date':''};
+			this.newShipper = {'name':'','shipper_type':'','contact':'','phone':'','email':''};
 			$("#create-shipper").modal('hide');
 			toastr.success('Shipper Created Successfully.', 'Success Alert', {timeOut: 5000});
 		  }, (response) => {
@@ -79,7 +81,7 @@ new Vue({
       },
 
       restoreShipper: function(shipper){
-        this.$http.patch('/vueshippers/'+role.id+'/restore').then((response) => {
+        this.$http.patch('/vueshippers/'+shipper.id+'/restore').then((response) => {
             this.changePage(this.pagination.current_page);
             toastr.success('Shipper Restored Successfully.', 'Success Alert', {timeOut: 5000});
         });
@@ -88,9 +90,10 @@ new Vue({
       editShipper: function(shipper){
           this.fillShipper.name = shipper.name;
           this.fillShipper.id = shipper.id;
-          this.fillShipper.description = shipper.description;
-          this.fillShipper.start_date = shipper.start_date;
-          this.fillShipper.end_date = shipper.end_date;
+          this.fillShipper.shipper_type = shipper.shipper_type;
+          this.fillShipper.contact = shipper.contact;
+          this.fillShipper.phone = shipper.phone;
+          this.fillShipper.email = shipper.email;
           $("#edit-shipper").modal('show');
       },
 
@@ -98,7 +101,7 @@ new Vue({
         var input = this.fillShipper;
         this.$http.put('/vueshippers/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
-            this.fillShipper = {'name':'','description':'','start_date':'','end_date':'','id':''};
+            this.fillShipper = {'name':'','shipper_type':'','contact':'','phone':'','email':'','id':''};
             $("#edit-shipper").modal('hide');
             toastr.success('Shipper Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {
@@ -108,8 +111,17 @@ new Vue({
 
       changePage: function (page) {
           this.pagination.current_page = page;
-          this.getVueshippers(page);
-      }
+          this.getVueShippers(page);
+      },
+
+      loadShipperTypes: function() {
+      this.$http.get('/st').then((response) => {
+        this.options = response.data;
+
+      }, (response) => {
+        console.log(response);
+      });
+    }
 
   }
 
