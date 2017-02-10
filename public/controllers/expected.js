@@ -16,8 +16,10 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newExpected : {'name':'','description':''},
-    fillExpected : {'name':'','description':'','id':''}
+    newExpected : {'item_id':'','result':'','tested_by':''},
+    fillExpected : {'item_id':'','result':'','tested_by':'','id':''},
+    options: [],
+    items: []
   },
 
   computed: {
@@ -47,6 +49,8 @@ new Vue({
 
   ready : function(){
   		this.getVueExpecteds(this.pagination.current_page);
+        this.loadItems();
+        this.loadResults();
   },
 
   methods : {
@@ -62,7 +66,7 @@ new Vue({
 		  var input = this.newExpected;
 		  this.$http.post('/vueexpecteds',input).then((response) => {
 		    this.changePage(this.pagination.current_page);
-			this.newExpected = {'name':'','description':''};
+			this.newExpected = {'item_id':'','result':'','tested_by':''};
 			$("#create-expected").modal('hide');
 			toastr.success('Result Created Successfully.', 'Success Alert', {timeOut: 5000});
 		  }, (response) => {
@@ -78,16 +82,17 @@ new Vue({
       },
 
       restoreexpected: function(expected){
-        this.$http.patch('/vueexpecteds/'+role.id+'/restore').then((response) => {
+        this.$http.patch('/vueexpecteds/'+expected.id+'/restore').then((response) => {
             this.changePage(this.pagination.current_page);
             toastr.success('Result Restored Successfully.', 'Success Alert', {timeOut: 5000});
         });
       },
 
       editExpected: function(expected){
-          this.fillExpected.name = expected.name;
+          this.fillExpected.item_id = expected.item_id;
           this.fillExpected.id = expected.id;
-          this.fillExpected.description = expected.description;
+          this.fillExpected.result = expected.result;
+          this.fillExpected.tested_by = expected.tested_by;
           $("#edit-expected").modal('show');
       },
 
@@ -95,7 +100,7 @@ new Vue({
         var input = this.fillExpected;
         this.$http.put('/vueexpecteds/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
-            this.fillExpected = {'name':'','description':'','id':''};
+            this.fillExpected = {'item_id':'','result':'','tested_by':'','id':''};
             $("#edit-expected").modal('hide');
             toastr.success('Result Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {
@@ -106,6 +111,24 @@ new Vue({
       changePage: function (page) {
           this.pagination.current_page = page;
           this.getVueExpecteds(page);
+      },
+
+      loadItems: function() {
+        this.$http.get('/itms').then((response) => {
+            this.items = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      loadResults: function() {
+        this.$http.get('/rslts').then((response) => {
+            this.options = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
       }
 
   }

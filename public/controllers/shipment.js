@@ -16,8 +16,8 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newShipment : {'pt_round':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','panels_shipped':''},
-    fillShipment : {'pt_round':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','panels_shipped':'','id':''}
+    newShipment : {'round_id':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','panels_shipped':''},
+    fillShipment : {'round_id':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','panels_shipped':'','id':''}
   },
 
   computed: {

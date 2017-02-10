@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Item;
+use App\Material;
+use App\Round;
+use App\User;
+
+use Auth;
 
 class ItemController extends Controller
 {
@@ -21,8 +26,13 @@ class ItemController extends Controller
      */
     public function index(Request $request)
     {
-        $items = Item::latest()->paginate(5);
-
+        $items = Item::latest()->withTrashed()->paginate(5);
+        foreach($items as $item)
+        {
+            $item->mtrl = $item->material->batch;
+            $item->rnd = $item->round->name;
+            $item->tstr = User::range($item->tester_id_range);
+        }
         $response = [
             'pagination' => [
                 'total' => $items->total(),
@@ -47,9 +57,13 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
+            'tester_id_range' => 'required',
+            'pt_id' => 'required',
+            'material_id' => 'required',
+            'round_id' => 'required',
+            'prepared_by' => 'required',
         ]);
+        $request->request->add(['user_id' => Auth::user()->id]);
 
         $create = Item::create($request->all());
 
@@ -97,5 +111,33 @@ class ItemController extends Controller
     {
         $item = Item::withTrashed()->find($id)->restore();
         return response()->json(['done']);
+    }
+    /**
+     * Function to return list of materials.
+     *
+     */
+    public function materials()
+    {
+        $materials = Material::lists('batch', 'id');
+        $categories = [];
+        foreach($materials as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
+    /**
+     * Function to return list of rounds.
+     *
+     */
+    public function rounds()
+    {
+        $rounds = Round::lists('name', 'id');
+        $categories = [];
+        foreach($rounds as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
     }
 }

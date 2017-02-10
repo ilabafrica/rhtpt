@@ -3,6 +3,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Expected extends Model
 {
+  	public $fillable = ['item_id', 'result', 'tested_by', 'user_id'];
   	/**
   	 * Enabling soft deletes for expected results.
   	 *
@@ -20,15 +21,15 @@ class Expected extends Model
   	 * Type of result
   	 *
   	 */
-  	const NEGATIVE = 0;
-  	const POSITIVE = 1;
+  	const NEGATIVE = 1;
+  	const POSITIVE = 2;
     /**
   	 * User relationship
   	 *
   	 */
      public function user()
      {
-          return $this->belongsTo('App\Models\User', 'tested_by');
+          return $this->belongsTo('App\User', 'tested_by');
      }
     /**
   	 * Item relationship
@@ -36,7 +37,7 @@ class Expected extends Model
   	 */
      public function item()
      {
-          return $this->belongsTo('App\Models\Item');
+          return $this->belongsTo('App\Item');
      }
     /**
   	 * Return readable result

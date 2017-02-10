@@ -24,10 +24,10 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     const FEMALE = 1;
 
     //  Tester ID ranges
-    const ZERO_TO_TWO = 0;
-    const THREE_TO_FIVE = 1;
-    const SIX_TO_EIGHT = 2;
-    const NINE = 3;
+    const ZERO_TO_TWO = 1;
+    const THREE_TO_FIVE = 2;
+    const SIX_TO_EIGHT = 3;
+    const NINE = 4;
     //	Default password
 	  const DEFAULT_PASSWORD = '123456';
 
@@ -92,6 +92,6 @@ EntrustUserTrait::restore insteadof SoftDeletes;
 	  */
   	public function tier()
   	{
-  		return $this->hasOne('App\Models\Tier');
+  		return $this->hasOne('App\Tier');
   	}
 }

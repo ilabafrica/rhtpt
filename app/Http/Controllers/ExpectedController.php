@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Expected;
+use App\Item;
+
+use Auth;
 
 class ExpectedController extends Controller
 {
@@ -22,7 +25,11 @@ class ExpectedController extends Controller
     public function index(Request $request)
     {
         $expecteds = Expected::latest()->paginate(5);
-
+        foreach($expecteds as $expected)
+        {
+            $expected->itm = $expected->item->pt_id;
+            $expected->rslt = $expected->result($expected->result);
+        }
         $response = [
             'pagination' => [
                 'total' => $expecteds->total(),
@@ -47,9 +54,11 @@ class ExpectedController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
+            'item_id' => 'required',
+            'result' => 'required',
+            'tested_by' => 'required',
         ]);
+        $request->request->add(['user_id' => Auth::user()->id]);
 
         $create = Expected::create($request->all());
 
@@ -97,5 +106,36 @@ class ExpectedController extends Controller
     {
         $expected = Expected::withTrashed()->find($id)->restore();
         return response()->json(['done']);
+    }
+    /**
+     * Function to return list of rounds.
+     *
+     */
+    public function items()
+    {
+        $items = Item::lists('pt_id', 'id');
+        $categories = [];
+        foreach($items as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
+    /**
+     * Function to return list of shipper types.
+     *
+     */
+    public function options()
+    {
+        $results = [
+            Expected::NEGATIVE => 'Negative',
+            Expected::POSITIVE => 'Positive'
+        ];
+        $categories = [];
+        foreach($results as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
     }
 }

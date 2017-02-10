@@ -45,7 +45,7 @@ class PtSetupTables extends Migration
             $table->smallInteger('material_type');
             $table->string('original_source');
             $table->date('date_collected');
-            $table->string('prepared_by')->unsigned();
+            $table->string('prepared_by');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
@@ -72,11 +72,10 @@ class PtSetupTables extends Migration
       			$table->string('pt_id');
       			$table->integer('material_id')->unsigned();
       			$table->integer('round_id')->unsigned();
-            $table->integer('prepared_by')->unsigned();
+            $table->string('prepared_by');
             $table->integer('user_id')->unsigned();
             $table->foreign('material_id')->references('id')->on('materials');
             $table->foreign('round_id')->references('id')->on('rounds');
-            $table->foreign('prepared_by')->references('id')->on('users');
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
       			$table->timestamps();
@@ -87,10 +86,9 @@ class PtSetupTables extends Migration
       			$table->increments('id')->unsigned();
       			$table->integer('item_id')->unsigned();
             $table->smallInteger('result');
-            $table->integer('tested_by')->unsigned();
+            $table->string('tested_by');
             $table->integer('user_id')->unsigned();
             $table->foreign('item_id')->references('id')->on('items');
-            $table->foreign('tested_by')->references('id')->on('users');
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
       			$table->timestamps();
@@ -138,12 +136,10 @@ class PtSetupTables extends Migration
         Schema::create('receipts', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
-            $table->integer('shipment_id')->unsigned();
             $table->date('date_received');
             $table->string('panels_received');
       			$table->string('condition', 500);
             $table->string('receiver', 100);
-            $table->foreign('shipment_id')->references('id')->on('shipments');
             $table->softDeletes();
       			$table->timestamps();
     		});
@@ -158,6 +154,7 @@ class PtSetupTables extends Migration
           $table->string('comment', 250);
           $table->integer('verified_by')->nullable();
           $table->foreign('receipt_id')->references('id')->on('receipts');
+          $table->foreign('user_id')->references('id')->on('users');
           $table->softDeletes();
     			$table->timestamps();
     		});

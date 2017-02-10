@@ -36,8 +36,8 @@
                 background-color: white;
             }
         </style>
-        <!-- Datepicker -->
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/datepicker.css') }}" />
+        <!-- Datepicker
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/datepicker.css') }}" /> -->
     </head>
     <body>
         <!-- Preloader -->

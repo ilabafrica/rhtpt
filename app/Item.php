@@ -3,6 +3,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Item extends Model
 {
+  	public $fillable = ['tester_id_range', 'pt_id', 'material_id', 'round_id', 'prepared_by', 'user_id'];
   	/**
   	 * Enabling soft deletes for items.
   	 *
@@ -22,7 +23,7 @@ class Item extends Model
   	 */
      public function user()
      {
-          return $this->belongsTo('App\Models\User', 'prepared_by');
+          return $this->belongsTo('App\User', 'prepared_by');
      }
     /**
   	 * Program relationship
@@ -30,7 +31,7 @@ class Item extends Model
   	 */
      public function program()
      {
-          return $this->belongsTo('App\Models\Program');
+          return $this->belongsTo('App\Program');
      }
     /**
   	 * Round relationship
@@ -38,7 +39,7 @@ class Item extends Model
   	 */
      public function round()
      {
-          return $this->belongsTo('App\Models\Round');
+          return $this->belongsTo('App\Round');
      }
     /**
   	 * Material relationship
@@ -46,6 +47,6 @@ class Item extends Model
   	 */
      public function material()
      {
-          return $this->belongsTo('App\Models\Material');
+          return $this->belongsTo('App\Material');
      }
 }

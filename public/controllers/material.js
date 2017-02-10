@@ -116,13 +116,13 @@ new Vue({
       },
 
       loadMaterialTypes: function() {
-      this.$http.get('/mt').then((response) => {
-        this.options = response.data;
+        this.$http.get('/mt').then((response) => {
+            this.options = response.data;
 
-      }, (response) => {
-        console.log(response);
-      });
-    }
+        }, (response) => {
+            console.log(response);
+        });
+      }
 
   }
 

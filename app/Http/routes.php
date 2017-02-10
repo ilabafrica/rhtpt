@@ -39,9 +39,9 @@ Route::group(['middleware' => 'auth'], function()
         return view('app');
     });
 
-    Route::get('item', 'VueItemController@manageVue');
-    Route::resource('vueitems','VueItemController');
-    Route::any('vueroles/{id}/restore','VueItemController@restore');
+    Route::get('item', 'ItemController@manageItem');
+    Route::resource('vueitems','ItemController');
+    Route::any('vueitems/{id}/restore','ItemController@restore');
 
     Route::get('event', 'EventController@manageEvent');
     Route::resource('vueevents','EventController');
@@ -101,8 +101,8 @@ Route::group(['middleware' => 'auth'], function()
     Route::resource('vuereceipts','ReceiptController');
     Route::any('vuereceipts/{id}/restore','ReceiptController@restore');
 
-    Route::get('manage-vue', 'VueItemController@manageVue');
-    Route::resource('vueitems','VueItemController');
+    //Route::get('manage-vue', 'VueItemController@manageVue');
+    //Route::resource('vueitems','VueItemController');
 
 
     Route::get("/assign", array(
@@ -122,5 +122,25 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/mt", array(
         "as"   => "mt.fetch",
         "uses" => "MaterialController@options"
+    ));
+
+    Route::get("/mat", array(
+        "as"   => "mat.fetch",
+        "uses" => "ItemController@materials"
+    ));
+
+    Route::get("/rnds", array(
+        "as"   => "rnds.fetch",
+        "uses" => "ItemController@rounds"
+    ));
+
+    Route::get("/itms", array(
+        "as"   => "itms.fetch",
+        "uses" => "ExpectedController@items"
+    ));
+
+    Route::get("/rslts", array(
+        "as"   => "rslts.fetch",
+        "uses" => "ExpectedController@options"
     ));
 });
