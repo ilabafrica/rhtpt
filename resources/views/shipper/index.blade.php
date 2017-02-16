@@ -124,14 +124,14 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Contact Phone:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" name="phone" class="form-control" v-model="newShipper.phone" />
+                                    <input type="number" name="phone" class="form-control" v-model="newShipper.phone" />
                                     <span v-if="formErrors['phone']" class="error text-danger">@{{ formErrors['phone'] }}</span>
                                  </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Contact Email:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" name="email" class="form-control" v-model="newShipper.email" />
+                                    <input type="email" name="email" class="form-control" v-model="newShipper.email" />
                                     <span v-if="formErrors['email']" class="error text-danger">@{{ formErrors['email'] }}</span>
                                  </div>
                             </div>

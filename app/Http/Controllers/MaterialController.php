@@ -38,6 +38,7 @@ class MaterialController extends Controller
             ],
             'data' => $materials
         ];
+        $request->request->add(['user_id' => Auth::user()->id]);
 
         return response()->json($response);
     }

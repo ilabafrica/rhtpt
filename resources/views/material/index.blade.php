@@ -87,49 +87,63 @@
                 <div class="row">
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createMaterial">
                         <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="title">Batch No:</label>
-                                <input type="text" name="batch" class="form-control" v-model="newMaterial.batch" />
-                                <span v-if="formErrors['batch']" class="error text-danger">@{{ formErrors['name'] }}</span>
-                            </div>
-                            <div class="form-group">
-                                <label for="title">Date Prepared:</label>
-                                <input type="date" name="date_prepared" class="form-control" v-model="newMaterial.date_prepared" />
-                                <span v-if="formErrors['date_prepared']" class="error text-danger">@{{ formErrors['date_prepared'] }}</span>
-                            </div>
-                            <div class="form-group">
-                                <label for="title">Expiry Date:</label>
-                                <input type="date" name="expiry_date" class="form-control" v-model="newMaterial.expiry_date" />
-                                <span v-if="formErrors['expiry_date']" class="error text-danger">@{{ formErrors['expiry_date'] }}</span>
-                            </div>
-                            <div class="form-group">
-                                <label for="title">Material Type:</label>
-                                <div class="form-radio form-radio-inline" v-for="option in options">
-                                    <label class="form-radio-label">
-                                        <input type="radio" :value="option.name" v-model="newMaterial.material_type" name="material_type">
-                                        @{{ option.title }}
-                                    </label>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Batch No:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="batch" class="form-control" v-model="newMaterial.batch" />
+                                    <span v-if="formErrors['batch']" class="error text-danger">@{{ formErrors['name'] }}</span>
                                 </div>
-                                <span v-if="formErrors['batch']" class="error text-danger">@{{ formErrors['name'] }}</span>
                             </div>
-                            <div class="form-group">
-                                <label for="title">Original Source:</label>
-                                <input type="text" name="original_source" class="form-control" v-model="newMaterial.original_source" />
-                                <span v-if="formErrors['original_source']" class="error text-danger">@{{ formErrors['original_source'] }}</span>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Date Prepared:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" name="date_prepared" class="form-control" v-model="newMaterial.date_prepared" />
+                                    <span v-if="formErrors['date_prepared']" class="error text-danger">@{{ formErrors['date_prepared'] }}</span>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="title">Date Collected:</label>
-                                <input type="date" name="date_collected" class="form-control" v-model="newMaterial.date_collected" />
-                                <span v-if="formErrors['date_collected']" class="error text-danger">@{{ formErrors['date_collected'] }}</span>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Expiry Date:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" name="expiry_date" class="form-control" v-model="newMaterial.expiry_date" />
+                                    <span v-if="formErrors['expiry_date']" class="error text-danger">@{{ formErrors['expiry_date'] }}</span>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="title">Prepared By:</label>
-                                <input type="text" name="prepared_by" class="form-control" v-model="newMaterial.prepared_by" />
-                                <span v-if="formErrors['prepared_by']" class="error text-danger">@{{ formErrors['prepared_by'] }}</span>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Material Type:</label>
+                                <div class="col-sm-8">
+                                    <div class="form-radio form-radio-inline" v-for="option in options">
+                                        <label class="form-radio-label">
+                                            <input type="radio" :value="option.name" v-model="newMaterial.material_type" name="material_type">
+                                            @{{ option.title }}
+                                        </label>
+                                    </div>
+                                    <span v-if="formErrors['batch']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-success">Submit</button>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Original Source:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="original_source" class="form-control" v-model="newMaterial.original_source" />
+                                    <span v-if="formErrors['original_source']" class="error text-danger">@{{ formErrors['original_source'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Date Collected:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" name="date_collected" class="form-control" v-model="newMaterial.date_collected" />
+                                    <span v-if="formErrors['date_collected']" class="error text-danger">@{{ formErrors['date_collected'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Prepared By:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="prepared_by" class="form-control" v-model="newMaterial.prepared_by" />
+                                    <span v-if="formErrors['prepared_by']" class="error text-danger">@{{ formErrors['prepared_by'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>
                         </div>
 

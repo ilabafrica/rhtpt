@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Shipment;
 
+use Auth;
+
 class ShipmentController extends Controller
 {
 
@@ -22,7 +24,12 @@ class ShipmentController extends Controller
     public function index(Request $request)
     {
         $shipments = Shipment::latest()->paginate(5);
-
+        foreach($shipments as $shipment)
+        {
+            $shipment->rnd = $shipment->round->name;
+            $shipment->shppr = $shipment->shipper->name;
+            $shipment->fclty = $shipment->facility->name;
+        }
         $response = [
             'pagination' => [
                 'total' => $shipments->total(),
@@ -47,9 +54,15 @@ class ShipmentController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
+            'round_id' => 'required',
+            'date_prepared' => 'required',
+            'date_shipped' => 'required',
+            'shipping_method' => 'required',
+            'shipper_id' => 'required',
+            'facility_id' => 'required',
+            'panels_shipped' => 'required',
         ]);
+        $request->request->add(['user_id' => Auth::user()->id]);
 
         $create = Shipment::create($request->all());
 

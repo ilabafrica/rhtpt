@@ -3,7 +3,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Round extends Model
 {
-	public $fillable = ['name', 'description', 'start_date', 'end_date'];
+	public $fillable = ['name', 'description', 'start_date', 'end_date', 'user_id'];
   	/**
   	 * Enabling soft deletes for rounds.
   	 *

@@ -22,7 +22,9 @@ new Vue({
     counties: [],
     methods: [],
     subs: [],
-    facilities: []
+    facilities: [],
+    shippers: [],
+    newReceipt : {'shipment_id':'','date_received':'','panels_received':'','condition':'','receiver':''}
   },
 
   computed: {
@@ -166,7 +168,29 @@ new Vue({
         }, (response) => {
             console.log(response);
         });
-      }
+      },
+
+      fetchShippers: function() {
+        let id = $('#shipping_method').val();
+        this.$http.get('/shpprs/'+id).then((response) => {
+            this.shippers = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+        receiveShipment: function(){
+		  var input = this.newReceipt;
+		  this.$http.post('/vueshipments',input).then((response) => {
+		    this.changePage(this.pagination.current_page);
+			this.newReceipt = {'shipment_id':'','date_received':'','panels_received':'','condition':'','receiver':''};
+			$("#receive-shipment").modal('hide');
+			toastr.success('Shipment Received Successfully.', 'Success Alert', {timeOut: 5000});
+		  }, (response) => {
+			this.formErrors = response.data;
+	    });
+	}
 
   }
 

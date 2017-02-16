@@ -152,10 +152,15 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/subs/{id}", array(
         "as"   => "subs.fetch",
         "uses" => "FacilityController@subs"
-    ));;
+    ));
 
     Route::get("/fclts/{id}", array(
         "as"   => "facilities.fetch",
         "uses" => "FacilityController@facilities"
+    ));
+
+    Route::get("/shpprs/{id}", array(
+        "as"   => "shippers.fetch",
+        "uses" => "ShipperController@shippers"
     ));
 });

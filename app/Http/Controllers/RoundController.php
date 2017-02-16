@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Round;
 
+use Auth;
+
 class RoundController extends Controller
 {
 
@@ -52,6 +54,7 @@ class RoundController extends Controller
             'start_date' => 'required',
             'end_date' => 'required',
         ]);
+        $request->request->add(['user_id' => Auth::user()->id]);
 
         $create = Round::create($request->all());
 

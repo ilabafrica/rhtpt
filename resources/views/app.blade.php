@@ -109,11 +109,6 @@
                                 <a href="{!! url('shipment') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.shipment', 2) !!}</a>
                             </li>
                             @endpermission
-                            @permission('read-receipt')
-                            <li class="{!! Request::segment(1)==strtolower('receipt')?strtolower(trans('messages.active')):'' !!}">
-                                <a href="{!! url('receipt') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.receipt', 2) !!}</a>
-                            </li>
-                            @endpermission
                             @permission('read-result')
                             <li class="{!! Request::segment(1)==strtolower('result')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('result') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.result', 2) !!}</a>

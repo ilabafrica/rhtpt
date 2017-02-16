@@ -31,24 +31,27 @@
     </div>
     <table class="table table-bordered">
         <tr>
-            <th>PT Round</th>
+            <th>Round</th>
             <th>Facility</th>
-            <th>Date Prepared</th>
             <th>Date Shipped</th>
-            <th>Shipping Method</th>
-            <th>Panels Shipped</th>
+            <th>Shipper</th>
+            <th>Panels</th>
+            <th>Status</th>
             <th>Action</th>
         </tr>
         <tr v-for="shipment in shipments">
-            <td>@{{ shipment.pt_round }}</td>
-            <td>@{{ shipment.facility_id }}</td>
-            <td>@{{ shipment.date_prepared }}</td>
+            <td>@{{ shipment.rnd }}</td>
+            <td>@{{ shipment.fclty }}</td>
             <td>@{{ shipment.date_shipped }}</td>
-            <td>@{{ shipment.shipping_method }}</td>
+            <td>@{{ shipment.shppr }}</td>
             <td>@{{ shipment.panels_shipped }}</td>
+            <td>
+                <button v-if="shipment.deleted_at==NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Pending</button>
+                <button v-if="shipment.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Received</button>
+            </td>
             <td>	
+                <button v-bind="{ 'disabled': role.deleted_at!=NULL}" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#receive-shipment"><i class="fa fa-download"></i> Receive</button>
                 <button class="btn btn-sm btn-primary" @click.prevent="editShipment(shipment)"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteShipment(shipment)"><i class="fa fa-trash-o"></i> Delete</button>
             </td>
         </tr>
     </table>
@@ -130,8 +133,8 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Date Prepared:</label>
                                 <div class="col-sm-8">
-                                    <input type="date" name="date_prepapred" class="form-control" v-model="newShipment.date_prepapred" />
-                                    <span v-if="formErrors['date_prepapred']" class="error text-danger">@{{ formErrors['date_prepapred'] }}</span>
+                                    <input type="date" name="date_prepared" class="form-control" v-model="newShipment.date_prepared" />
+                                    <span v-if="formErrors['date_prepared']" class="error text-danger">@{{ formErrors['date_prepared'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -144,23 +147,21 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Shipping Method:</label>
                                 <div class="col-sm-8">
-                                    <div class="form-radio form-radio-inline" v-for="method in methods">
-                                        <label class="form-radio-label">
-                                            <input type="radio" :value="method.name" v-model="newShipment.shipping_method" name="shipping_method">
-                                            @{{ method.title }}
-                                        </label>
-                                    </div>
+                                    <select class="form-control c-select" name="shipping_method" id="shipping_method" v-model="newShipment.shipping_method" v-on:change="fetchShippers">
+                                        <option selected></option>
+                                        <option v-for="method in methods" :value="method.name">@{{ method.title }}</option>   
+                                    </select>
                                 </div>
                                 <span v-if="formErrors['shipping_method']" class="error text-danger">@{{ formErrors['shipping_method'] }}</span>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Shipper:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control c-select" name="item_id" v-model="newShipment.item_id">
+                                    <select class="form-control c-select" name="shipper_id" v-model="newShipment.shipper_id">
                                         <option selected></option>
-                                        <option v-for="item in items" :value="item.id">@{{ item.value }}</option>   
+                                        <option v-for="shipper in shippers" :value="shipper.id">@{{ shipper.value }}</option>   
                                     </select>
-                                    <span v-if="formErrors['item_id']" class="error text-danger">@{{ formErrors['item_id'] }}</span>
+                                    <span v-if="formErrors['shipper_id']" class="error text-danger">@{{ formErrors['shipper_id'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -213,6 +214,63 @@
 
                 </form>
 
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Receive Shipment Modal -->
+    <div id="receive-shipment" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <h4 class="modal-title" id="myModalLabel">Receive Shipment</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="receiveShipment">
+                        <div class="col-md-12">
+                            <input type="hidden" value="@{{ shipment.id }}" name="shipment_id" v-model="newReceipt.shipment_id" />
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Date Received:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" name="date_received" class="form-control" v-model="newReceipt.date_received" />
+                                    <span v-if="formErrors['date_received']" class="error text-danger">@{{ formErrors['date_received'] }}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Panels Received:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="panels_received" class="form-control" v-model="newReceipt.panels_received" />
+                                    <span v-if="formErrors['panels_received']" class="error text-danger">@{{ formErrors['panels_received'] }}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Received By:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="receiver" class="form-control" v-model="newReceipt.receiver" />
+                                    <span v-if="formErrors['receiver']" class="error text-danger">@{{ formErrors['receiver'] }}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Condition:</label>
+                                <div class="col-sm-8">
+                                    <textarea name="condition" class="form-control" v-model="newReceipt.condition"></textarea>
+                                    <span v-if="formErrors['condition']" class="error text-danger">@{{ formErrors['condition'] }}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div
             </div>
         </div>
         </div>

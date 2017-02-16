@@ -3,6 +3,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Shipment extends Model
 {
+	public $fillable = ['round_id', 'date_prepared', 'date_shipped', 'shipper_id', 'shipping_method', 'facility_id', 'panels_shipped', 'user_id'];
   	/**
   	 * Enabling soft deletes for shipments.
   	 *
@@ -28,7 +29,7 @@ class Shipment extends Model
   	 */
      public function facility()
      {
-          return $this->belongsTo('App\Models\Facility');
+          return $this->belongsTo('App\Facility');
      }
     /**
   	 * Round relationship
@@ -36,15 +37,15 @@ class Shipment extends Model
   	 */
      public function round()
      {
-          return $this->belongsTo('App\Models\Round');
+          return $this->belongsTo('App\Round');
      }
     /**
-  	 * Participant relationship
+  	 * Shipper relationship
   	 *
   	 */
-     public function part()
+     public function shipper()
      {
-          return $this->belongsTo('App\Models\User', 'participant');
+          return $this->belongsTo('App\Shipper', 'shipper_id');
      }
     /**
   	 * Readable shipping method

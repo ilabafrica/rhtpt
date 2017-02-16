@@ -123,4 +123,18 @@ class ShipperController extends Controller
         }
         return $categories;
     }
+    /**
+     * Function to return list of shippers.
+     *
+     */
+    public function shippers($id)
+    {
+        $shippers = Shipper::where('shipper_type', $id)->lists('name', 'id');
+        $categories = [];
+        foreach($shippers as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
 }
