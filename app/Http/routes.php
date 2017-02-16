@@ -143,4 +143,19 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "rslts.fetch",
         "uses" => "ExpectedController@options"
     ));
+
+    Route::get("/cnts", array(
+        "as"   => "cnts.fetch",
+        "uses" => "FacilityController@counties"
+    ));
+
+    Route::get("/subs/{id}", array(
+        "as"   => "subs.fetch",
+        "uses" => "FacilityController@subs"
+    ));;
+
+    Route::get("/fclts/{id}", array(
+        "as"   => "facilities.fetch",
+        "uses" => "FacilityController@facilities"
+    ));
 });

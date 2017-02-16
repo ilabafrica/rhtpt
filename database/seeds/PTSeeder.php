@@ -2,15 +2,15 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\County;
-use App\Models\SubCounty;
-use App\Models\Program;
-use App\Models\FieldSet;
-use App\Models\Field;
-use App\Models\Option;
+use App\User;
+use App\Permission;
+use App\Role;
+use App\County;
+use App\SubCounty;
+use App\Program;
+use App\Set;
+use App\Field;
+use App\Option;
 
 //	Carbon - for use with dates
 use Jenssegers\Date\Date as Carbon;

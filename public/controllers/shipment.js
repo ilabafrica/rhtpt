@@ -16,8 +16,13 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newShipment : {'round_id':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','panels_shipped':''},
-    fillShipment : {'round_id':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','panels_shipped':'','id':''}
+    newShipment : {'round_id':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','shipper_id':'','panels_shipped':''},
+    fillShipment : {'round_id':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','shipper_id':'','panels_shipped':'','id':''},
+    rounds: [],
+    counties: [],
+    methods: [],
+    subs: [],
+    facilities: []
   },
 
   computed: {
@@ -47,6 +52,9 @@ new Vue({
 
   ready : function(){
   		this.getVueShipments(this.pagination.current_page);
+        this.loadRounds();
+        this.loadCounties();
+        this.loadMethods();
   },
 
   methods : {
@@ -110,6 +118,54 @@ new Vue({
       changePage: function (page) {
           this.pagination.current_page = page;
           this.getVueShipments(page);
+      },
+
+      loadRounds: function() {
+        this.$http.get('/rnds').then((response) => {
+            this.rounds = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      loadCounties: function() {
+        this.$http.get('/cnts').then((response) => {
+            this.counties = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      loadMethods: function() {
+        this.$http.get('/st').then((response) => {
+            this.methods = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      fetchSubs: function() {
+        let id = $('#county_id').val();
+        console.log(id);
+        this.$http.get('/subs/'+id).then((response) => {
+            this.subs = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      fetchFacilities: function() {
+        let id = $('#sub_id').val();
+        this.$http.get('/fclts/'+id).then((response) => {
+            this.facilities = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
       }
 
   }

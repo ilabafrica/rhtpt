@@ -122,7 +122,7 @@ class ExpectedController extends Controller
         return $categories;
     }
     /**
-     * Function to return list of shipper types.
+     * Function to return list of options.
      *
      */
     public function options()

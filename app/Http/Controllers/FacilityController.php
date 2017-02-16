@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\County;
+use App\SubCounty;
 use App\Facility;
 
 class FacilityController extends Controller
@@ -110,5 +112,47 @@ class FacilityController extends Controller
     {
         $facility = Facility::withTrashed()->find($id)->restore();
         return response()->json(['done']);
+    }
+    /**
+     * Function to return list of counties.
+     *
+     */
+    public function counties()
+    {
+        $counties = County::lists('name', 'id');
+        $categories = [];
+        foreach($counties as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
+    /**
+     * Function to return list of sub-counties.
+     *
+     */
+    public function subs($id)
+    {
+        $subs = County::find($id)->subCounties->lists('name', 'id');
+        $categories = [];
+        foreach($subs as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
+    /**
+     * Function to return list of facilities.
+     *
+     */
+    public function facilities($id)
+    {
+        $facilities = SubCounty::find($id)->facilities->lists('name', 'id');
+        $categories = [];
+        foreach($facilities as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
     }
 }

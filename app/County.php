@@ -22,6 +22,6 @@ class County extends Model
   	 */
      public function subCounties()
      {
-       return $this->hasMany('App\Models\SubCounty');
+       return $this->hasMany('App\SubCounty');
      }
 }

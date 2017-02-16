@@ -84,28 +84,100 @@
             <h4 class="modal-title" id="myModalLabel">Create Shipment</h4>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createShipment">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">PT Round:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="round_id" v-model="newShipment.round_id">
+                                        <option selected></option>
+                                        <option v-for="round in rounds" :value="round.id">@{{ round.value }}</option>   
+                                    </select>
+                                    <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">County:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="county_id" id="county_id" v-model="newShipment.county_id" @change="fetchSubs">
+                                        <option selected></option>
+                                        <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
+                                    </select>
+                                    <span v-if="formErrors['county_id']" class="error text-danger">@{{ formErrors['county_id'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="sub_id" id="sub_id" v-model="newShipment.sub_id" v-on:change="fetchFacilities">
+                                        <option selected></option>
+                                        <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
+                                    </select>
+                                    <span v-if="formErrors['sub_id']" class="error text-danger">@{{ formErrors['sub_id'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Facility:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="facility_id" v-model="newShipment.facility_id">
+                                        <option selected></option>
+                                        <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
+                                    </select>
+                                    <span v-if="formErrors['facility_id']" class="error text-danger">@{{ formErrors['facility_id'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Date Prepared:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" name="date_prepapred" class="form-control" v-model="newShipment.date_prepapred" />
+                                    <span v-if="formErrors['date_prepapred']" class="error text-danger">@{{ formErrors['date_prepapred'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Date Shipped:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" name="date_shipped" class="form-control" v-model="newShipment.date_shipped" />
+                                    <span v-if="formErrors['date_shipped']" class="error text-danger">@{{ formErrors['date_shipped'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Shipping Method:</label>
+                                <div class="col-sm-8">
+                                    <div class="form-radio form-radio-inline" v-for="method in methods">
+                                        <label class="form-radio-label">
+                                            <input type="radio" :value="method.name" v-model="newShipment.shipping_method" name="shipping_method">
+                                            @{{ method.title }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <span v-if="formErrors['shipping_method']" class="error text-danger">@{{ formErrors['shipping_method'] }}</span>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Shipper:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="item_id" v-model="newShipment.item_id">
+                                        <option selected></option>
+                                        <option v-for="item in items" :value="item.id">@{{ item.value }}</option>   
+                                    </select>
+                                    <span v-if="formErrors['item_id']" class="error text-danger">@{{ formErrors['item_id'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Panels Shipped:</label>
+                                <div class="col-sm-8">
+                                    <input type="number" name="panels_shipped" class="form-control" v-model="newShipment.panels_shipped" />
+                                    <span v-if="formErrors['panels_shipped']" class="error text-danger">@{{ formErrors['panels_shipped'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            </div>
+                        </div>
 
-                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createShipment">
-
-                    <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" name="name" class="form-control" v-model="newShipment.name" />
-                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                    </form>
                 </div>
-
-                <div class="form-group">
-                    <label for="title">Description:</label>
-                    <textarea name="description" class="form-control" v-model="newShipment.description"></textarea>
-                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-
-                </form>
-
-            
             </div>
         </div>
         </div>
