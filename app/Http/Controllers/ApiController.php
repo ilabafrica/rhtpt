@@ -157,18 +157,28 @@ class ApiController extends Controller
   			if($c>0)
   			{
   				$cnty = County::where('name', 'LIKE', '%'.$b["COUNTY"].'%')->first();
-  				$sb = new SubCounty;
-  				$sb->name = strtoupper($b['SUBCOUNTY']);
-  				$sb->county_id = $cnty->id;
-  				$sb->save();
-  				if($sb)
-  				{
-  					$facility = new Facility;
-  					$facility->code = $b["MFL"];
-  					$facility->name = strtoupper($b["NAME"]);
-  					$facility->sub_county_id = $sb->id;
-  					$facility->save();
-  				}
+                $scnty = SubCounty::where('name', $b["SUBCOUNTY"])->get();
+                $sb_id = NULL;
+                if(count($scnty)>0)
+                {
+                    $sb_id = SubCounty::where('name', $b["SUBCOUNTY"])->first()->id;
+                }
+                else
+                {
+                    $sb = new SubCounty;
+                    $sb->name = strtoupper($b['SUBCOUNTY']);
+                    $sb->county_id = $cnty->id;
+                    $sb->save();
+                    $sb_id = $sb->id;
+                }
+                if($sb_id)
+                {
+                    $facility = new Facility;
+                    $facility->code = $b["MFL"];
+                    $facility->name = strtoupper($b["NAME"]);
+                    $facility->sub_county_id = $sb->id;
+                    $facility->save();
+                }
   			}
   			else
   			{

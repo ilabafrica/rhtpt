@@ -36,6 +36,7 @@
         {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
     </div>
     @endif
+		 {!! App\Http\Controllers\ApiController::pt() !!}
     <div class="row">
         <div class="col-sm-12">
     	 	<table class="table table-bordered table-sm search-table" id="example">

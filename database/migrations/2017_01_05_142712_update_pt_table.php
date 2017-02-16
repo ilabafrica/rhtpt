@@ -13,7 +13,7 @@ class UpdatePtTable extends Migration
     public function up()
     {
       //  Marking of PT submissions
-      Schema::table('users', function ($table)
+      Schema::table('pt', function ($table)
       {
         $table->tinyInteger('checks')->default(0);
         $table->tinyInteger('panel_result')->default(0);
@@ -26,6 +26,7 @@ class UpdatePtTable extends Migration
         $table->tinyInteger('wrong_algorithm')->default(0);
         $table->tinyInteger('incomplete_results')->default(0);
       });
+    }
 
     /**
      * Reverse the migrations.
@@ -35,7 +36,7 @@ class UpdatePtTable extends Migration
     public function down()
     {
         //  Drop columns
-        Schema::table('users', function ($table)
+        Schema::table('pt', function ($table)
         {
             $table->dropColumn(['checks', 'panel_result', 'incorrect_results', 'incomplete_kit_data', 'dev_from_procedure', 'incomplete_other_information', 'use_of_expired_kits', 'invalid_results', 'wrong_algorithm', 'incomplete_results']);
         });

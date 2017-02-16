@@ -33,7 +33,7 @@ class PTSeeder extends Seeder
         );
         foreach ($usersData as $user)
         {
-            $users[] = User::create($user);
+            //$users[] = User::create($user);
         }
         $this->command->info('Users table seeded');
 
@@ -128,11 +128,11 @@ class PTSeeder extends Seeder
             array("name" => "bulk-sms", "display_name" => "Can manage bulk SMS"),
         );
         foreach ($permissions as $permission) {
-            //Permission::create($permission);
+            Permission::create($permission);
         }
         $this->command->info('Permissions table seeded');
         /* Roles table */
-      /*  $roles = array(
+        $roles = array(
             array("name" => "Superadmin", "display_name" => "Overall Administrator"),
             array("name" => "Participant", "display_name" => "Participant"),
             array("name" => "Partner Admin", "display_name" => "Partner Admin"),
@@ -142,7 +142,7 @@ class PTSeeder extends Seeder
         {
             Role::create($role);
         }
-        $this->command->info('Roles table seeded');*/
+        $this->command->info('Roles table seeded');
 
         $role1 = Role::find(1);
         $permissions = Permission::all();
@@ -150,7 +150,7 @@ class PTSeeder extends Seeder
         //Assign all permissions to role administrator
         foreach ($permissions as $permission)
         {
-            //$role1->attachPermission($permission);
+            $role1->attachPermission($permission);
         }
         //Assign role Superadmin to all permissions
         User::find(1)->attachRole($role1);
