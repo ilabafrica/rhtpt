@@ -11,6 +11,7 @@ use App\Program;
 use App\Set;
 use App\Field;
 use App\Option;
+use App\Notification;
 
 //	Carbon - for use with dates
 use Jenssegers\Date\Date as Carbon;
@@ -154,5 +155,14 @@ class PTSeeder extends Seeder
         }
         //Assign role Superadmin to all permissions
         User::find(1)->attachRole($role1);
+        /* Notifications table */
+        $notifications = array(
+            array("template" => Notification::PANEL_DISPATCH, "message" => "Dear PT Participant, NHRL has dispatched your PT panel for Round [round]. If not received within 7 days, contact NHRL on 0722934622 or email nhrlpt@gmail.com"),
+        );
+        foreach ($notifications as $notification)
+        {
+            Notification::create($notification);
+        }
+        $this->command->info('Notifications table seeded');
     }
 }

@@ -22,12 +22,6 @@
 
         <!-- Custom Styling -->
         <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-
-        <!-- Bootstrap Datatables 
-        <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
-        <!--
-        <link rel="stylesheet" href="{{ asset('css/buttons.bootstrap4.min.css') }}">
-        -->
         <!-- Awesome Bootstrap checkbox -->
         <link rel="stylesheet" href="{{ asset('css/awesome-bootstrap-checkbox.css') }}">
         <style type="text/css">
@@ -145,11 +139,11 @@
                     </li>
                     @endpermission
                     @permission('bulk-sms')
-                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('sms'), strtolower('bulk'), strtolower('broadcast')])?' '.strtolower(trans('messages.active')):'' !!}">
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('sms'), strtolower('settings'), strtolower('bulk'), strtolower('broadcast')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-envelope"></i> {!! trans('messages.bulk-sms') !!}</a>
                         <ul class="list-unstyled">
-                            <li class="{!! Request::segment(2)==strtolower('key')?strtolower(trans('messages.active')):'' !!}">
-                                <a href="{!! url('bulk/key') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.settings') !!}</a>
+                            <li class="{!! Request::segment(1)==strtolower('settings')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('settings') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.settings') !!}</a>
                             </li>
                             <li class="{!! Request::segment(2)==strtolower('broadcast')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('bulk/broadcast') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.broadcast') !!}</a>
@@ -231,22 +225,6 @@
         <script src="{{ asset('js/underscore-min.js') }}"></script>
         <!-- Bootstrap -->
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-        <!-- Datatables -->
-        <script type="text/javascript" src="{{ asset('js/datatables/jquery.dataTables.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/datatables/dataTables.bootstrap4.min.js') }}"></script>
-        <!-- Datatables Fancy
-        <script type="text/javascript" src="{{ asset('js/datatables/dataTables.buttons.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/datatables/buttons.bootstrap4.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/datatables/jszip.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/datatables/pdfmake.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/datatables/vfs_fonts.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/datatables/buttons.html5.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/datatables/buttons.print.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/datatables/buttons.colVis.min.js') }}"></script>
-        -->
-        <!-- Datepicker -->
-        <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
-
         <!-- Globalize -->
         <script src="{{ asset('js/globalize.min.js') }}"></script>
 
@@ -254,10 +232,6 @@
         <script src="{{ asset('js/jquery.nicescroll.min.js') }}"></script>
         <!-- Custom JQuery -->
         <script src="{{ asset('js/custom.js') }}"></script>
-        <!-- search table for datatables -->
-        <script src="{{ asset('js/harmony/custom.js') }}"></script>
-        <!-- Datepicker -->
-        <script src="{{ asset('js/harmony/bootstrap-datepicker.js') }}"></script>
         <!-- Vue JS -->
         <script src="{{ asset('js/vue.min.js') }}"></script>
         <script src="{{ asset('js/vue-resource.min.js') }}"></script>
@@ -292,8 +266,8 @@
         <script src="{{ asset('controllers/expected.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('shipment'))
         <script src="{{ asset('controllers/shipment.js') }}"></script>
-        @elseif(Request::segment(1)==strtolower('receipt'))
-        <script src="{{ asset('controllers/receipt.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('bulk') || Request::segment(1)==strtolower('settings'))
+        <script src="{{ asset('controllers/bulk.js') }}"></script>
         @endif
 </body>
 </html>
