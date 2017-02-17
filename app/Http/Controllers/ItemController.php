@@ -80,10 +80,14 @@ class ItemController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
+            'tester_id_range' => 'required',
+            'pt_id' => 'required',
+            'material_id' => 'required',
+            'round_id' => 'required',
+            'prepared_by' => 'required',
         ]);
-
+        $request->request->add(['user_id' => Auth::user()->id]);
+        
         $edit = Item::find($id)->update($request->all());
 
         return response()->json($edit);

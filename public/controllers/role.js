@@ -18,8 +18,8 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newRole : {'name':'','description':''},
-    fillRole : {'name':'','description':'','id':''}
+    newRole : {'name':'','display_name':'','description':''},
+    fillRole : {'name':'','display_name':'','description':'','id':''}
   },
 
   computed: {
@@ -89,6 +89,7 @@ new Vue({
       editRole: function(role){
           this.fillRole.name = role.name;
           this.fillRole.id = role.id;
+          this.fillRole.display_name = role.display_name;
           this.fillRole.description = role.description;
           $("#edit-role").modal('show');
       },
@@ -97,7 +98,7 @@ new Vue({
         var input = this.fillRole;
         this.$http.put('/vueroles/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
-            this.fillRole = {'name':'','description':'','id':''};
+            this.fillRole = {'name':'','display_name':'','description':'','id':''};
             $("#edit-role").modal('hide');
             toastr.success('Role Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {

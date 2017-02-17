@@ -19,7 +19,8 @@ new Vue({
     newItem : {'pt_id':'','tester_id_range':'','material_id':'','round_id':'','prepared_by':''},
     fillItem : {'pt_id':'','tester_id_range':'','material':'','pt_round':'','prepared_by':'','id':''},
     materials: [],
-    rounds: []
+    rounds: [],
+    ranges: []
   },
 
   computed: {
@@ -51,6 +52,7 @@ new Vue({
   		this.getVueItems(this.pagination.current_page);
         this.loadMaterials();
         this.loadRounds();
+        this.loadRanges();
   },
 
   methods : {
@@ -127,6 +129,15 @@ new Vue({
       loadRounds: function() {
         this.$http.get('/rnds').then((response) => {
             this.rounds = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      loadRanges: function() {
+        this.$http.get('/rng').then((response) => {
+            this.ranges = response.data;
 
         }, (response) => {
             console.log(response);

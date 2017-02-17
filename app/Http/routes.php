@@ -163,6 +163,11 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "shippers.fetch",
         "uses" => "ShipperController@shippers"
     ));
+
+    Route::get("/rng", array(
+        "as"   => "ranges.fetch",
+        "uses" => "UserController@ranges"
+    ));
     
 
     Route::get('settings', 'BulkSMSController@manageSettings');

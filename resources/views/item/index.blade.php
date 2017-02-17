@@ -96,7 +96,10 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Tester ID Range:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" name="tester_id_range" class="form-control" v-model="newItem.tester_id_range" />
+                                    <select class="form-control c-select" name="tester_id_range" v-model="newItem.tester_id_range">
+                                        <option selected></option>
+                                        <option  v-for="range in ranges" :value="range.id">@{{ range.value }}</option>
+                                    </select>
                                     <span v-if="formErrors['tester_id_range']" class="error text-danger">@{{ formErrors['tester_id_range'] }}</span>
                                 </div>
                             </div>
@@ -157,14 +160,17 @@
                                 <label class="col-sm-4 form-control-label" for="title">PT Identifier:</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="pt_id" class="form-control" v-model="fillItem.pt_id" />
-                                    <span v-if="formErrors['pt_id']" class="error text-danger">@{{ formErrors['pt_id'] }}</span>
+                                    <span v-if="formErrorsUpdate['pt_id']" class="error text-danger">@{{ formErrorsUpdate['pt_id'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Tester ID Range:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" name="tester_id_range" class="form-control" v-model="fillItem.tester_id_range" />
-                                    <span v-if="formErrors['tester_id_range']" class="error text-danger">@{{ formErrors['tester_id_range'] }}</span>
+                                    <select class="form-control c-select" name="tester_id_range" v-model="fillItem.tester_id_range">
+                                        <option selected></option>
+                                        <option  v-for="range in ranges" :value="range.id">@{{ range.value }}</option>
+                                    </select>
+                                    <span v-if="formErrorsUpdate['tester_id_range']" class="error text-danger">@{{ formErrorsUpdate['tester_id_range'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -174,7 +180,7 @@
                                         <option selected></option>
                                         <option v-for="material in materials" :value="material.id">@{{ material.value }}</option>
                                     </select>
-                                    <span v-if="formErrors['material_id']" class="error text-danger">@{{ formErrors['material_id'] }}</span>
+                                    <span v-if="formErrorsUpdate['material_id']" class="error text-danger">@{{ formErrorsUpdate['material_id'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -183,14 +189,14 @@
                                     <select class="form-control c-select" name="round_id" v-model="fillItem.round_id">
                                         <option v-for="round in rounds" :value="round.id" :selected="(fillItem.round_id == round.id)">@{{ round.value }}</option>   
                                     </select>
-                                    <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
+                                    <span v-if="formErrorsUpdate['round_id']" class="error text-danger">@{{ formErrorsUpdate['round_id'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Prepared By:</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="prepared_by" class="form-control" v-model="fillItem.prepared_by" />
-                                    <span v-if="formErrors['prepared_by']" class="error text-danger">@{{ formErrors['prepared_by'] }}</span>
+                                    <span v-if="formErrorsUpdate['prepared_by']" class="error text-danger">@{{ formErrorsUpdate['prepared_by'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">

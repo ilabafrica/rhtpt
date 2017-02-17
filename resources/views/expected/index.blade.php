@@ -100,8 +100,8 @@
                                             @{{ option.value }}
                                         </label>
                                     </div>
+                                    <span v-if="formErrors['result']" class="error text-danger">@{{ formErrors['result'] }}</span>
                                 </div>
-                                <span v-if="formErrors['result']" class="error text-danger">@{{ formErrors['result'] }}</span>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Tested By:</label>
@@ -132,27 +132,46 @@
             <h4 class="modal-title" id="myModalLabel">Edit Expected</h4>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateExpected(fillExpected.id)">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">PT Item:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="item_id" v-model="fillExpected.item_id">
+                                        <option selected></option>
+                                        <option v-for="item in items" :value="item.id">@{{ item.value }}</option>   
+                                    </select>
+                                    <span v-if="formErrorsUpdate['item_id']" class="error text-danger">@{{ formErrorsUpdate['item_id'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Result:</label>
+                                <div class="col-sm-8">
+                                    <div class="form-radio form-radio-inline" v-for="option in options">
+                                        <label class="form-radio-label">
+                                            <input type="radio" :value="option.id" v-model="fillExpected.result" name="result">
+                                            @{{ option.value }}
+                                        </label>
+                                    </div>
+                                    <span v-if="formErrorsUpdate['result']" class="error text-danger">@{{ formErrorsUpdate['result'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Tested By:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="tested_by" class="form-control" v-model="fillExpected.tested_by" />
+                                    <span v-if="formErrorsUpdate['tested_by']" class="error text-danger">@{{ formErrorsUpdate['tested_by'] }}</span>
+                                 </div>
+                            </div>
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            </div>
+                        </div>
 
-                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateExpected(fillExpected.id)">
-
-                    <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" name="name" class="form-control" v-model="fillExpected.name" />
-                    <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                    </form>
                 </div>
-
-                <div class="form-group">
-                    <label for="title">Description:</label>
-                    <textarea name="description" class="form-control" v-model="fillExpected.description"></textarea>
-                    <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-
-                </form>
-
             </div>
         </div>
         </div>

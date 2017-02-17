@@ -81,27 +81,40 @@
             <h4 class="modal-title" id="myModalLabel">Create Role</h4>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRole">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="name" class="form-control" v-model="newRole.name" />
+                                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                                </div>
+                            </div>
 
-                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRole">
-                    <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" name="name" class="form-control" v-model="newRole.name" />
-                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Display Name:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="display_name" class="form-control" v-model="newRole.display_name" />
+                                    <span v-if="formErrors['display_name']" class="error text-danger">@{{ formErrors['display_name'] }}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Description:</label>
+                                <div class="col-sm-8">
+                                    <textarea name="description" class="form-control" v-model="newRole.description"></textarea>
+                                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="form-group">
-                    <label for="title">Description:</label>
-                    <textarea name="description" class="form-control" v-model="newRole.description"></textarea>
-                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-
-                </form>
-
-            
             </div>
         </div>
         </div>
@@ -116,28 +129,41 @@
             <h4 class="modal-title" id="myModalLabel">Edit Role</h4>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateRole(fillRole.id)">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="name" class="form-control" v-model="fillRole.name" />
+                                    <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                                </div>
+                            </div>
 
-                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateRole(fillRole.id)">
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Display Name:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="display_name" class="form-control" v-model="newRole.display_name" />
+                                    <span v-if="formErrors['display_name']" class="error text-danger">@{{ formErrors['display_name'] }}</span>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" name="name" class="form-control" v-model="fillRole.name" />
-                    <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Description:</label>
+                                <div class="col-sm-8">
+                                    <textarea name="description" class="form-control" v-model="fillRole.description"></textarea>
+                                    <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="form-group">
-                    <label for="title">Description:</label>
-                    <textarea name="description" class="form-control" v-model="fillRole.description"></textarea>
-                    <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-
-                </form>
-
             </div>
         </div>
-        </div>
+    </div>
 @endsection

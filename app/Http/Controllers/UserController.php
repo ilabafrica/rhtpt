@@ -98,4 +98,23 @@ class UserController extends Controller
         $user = User::withTrashed()->find($id)->restore();
         return response()->json(['done']);
     }
+    /**
+     * Function to return list of tester-ranges.
+     *
+     */
+    public function ranges()
+    {
+        $ranges = [
+            User::ZERO_TO_TWO => '0 - 2',
+            User::THREE_TO_FIVE => '3 - 5',
+            User::SIX_TO_EIGHT => '6 - 8',
+            User::NINE => '9'
+        ];
+        $categories = [];
+        foreach($ranges as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
 }

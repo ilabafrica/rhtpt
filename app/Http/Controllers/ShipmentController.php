@@ -79,9 +79,15 @@ class ShipmentController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
+            'round_id' => 'required',
+            'date_prepared' => 'required',
+            'date_shipped' => 'required',
+            'shipping_method' => 'required',
+            'shipper_id' => 'required',
+            'facility_id' => 'required',
+            'panels_shipped' => 'required',
         ]);
+        $request->request->add(['user_id' => Auth::user()->id]);
 
         $edit = Shipment::find($id)->update($request->all());
 

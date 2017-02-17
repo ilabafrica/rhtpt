@@ -75,9 +75,11 @@ class ExpectedController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
+            'item_id' => 'required',
+            'result' => 'required',
+            'tested_by' => 'required',
         ]);
+        $request->request->add(['user_id' => Auth::user()->id]);
 
         $edit = Expected::find($id)->update($request->all());
 
