@@ -17,9 +17,9 @@ use Auth;
 class BulkSMSController extends Controller
 {
 
-    public function manageProgram()
+    public function manageBroadcast()
     {
-        return view('program.index');
+        return view('broadcast.index');
     }
 
     public function manageSettings()

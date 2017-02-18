@@ -100,6 +100,8 @@ class PtSetupTables extends Migration
             $table->smallInteger('shipper_type');
       			$table->string('name');
       			$table->string('contact', 100);
+            $table->string('phone', 12)->nullable();
+            $table->string('email', 50)->nullable();
             $table->softDeletes();
       			$table->timestamps();
     		});
@@ -151,7 +153,17 @@ class PtSetupTables extends Migration
           $table->integer('user_id')->unsigned();
           $table->smallInteger('feedback')->nullable();
           $table->smallInteger('panel_status');
-          $table->string('comment', 250);
+          $table->tinyInteger('checks')->default(0);
+          $table->tinyInteger('panel_result')->default(0);
+          $table->tinyInteger('incorrect_results')->default(0);
+          $table->tinyInteger('incomplete_kit_data')->default(0);
+          $table->tinyInteger('dev_from_procedure')->default(0);
+          $table->tinyInteger('incomplete_other_information')->default(0);
+          $table->tinyInteger('use_of_expired_kits')->default(0);
+          $table->tinyInteger('invalid_results')->default(0);
+          $table->tinyInteger('wrong_algorithm')->default(0);
+          $table->tinyInteger('incomplete_results')->default(0);
+          $table->string('comment', 250)->nullable();
           $table->integer('verified_by')->nullable();
           $table->foreign('receipt_id')->references('id')->on('receipts');
           $table->foreign('user_id')->references('id')->on('users');

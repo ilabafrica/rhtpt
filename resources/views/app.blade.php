@@ -149,7 +149,7 @@
                                 <a href="{!! url('settings') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.settings') !!}</a>
                             </li>
                             <li class="{!! Request::segment(2)==strtolower('broadcast')?strtolower(trans('messages.active')):'' !!}">
-                                <a href="{!! url('bulk/broadcast') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.broadcast') !!}</a>
+                                <a href="{!! url('broadcast') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.broadcast') !!}</a>
                             </li>
                         </ul>
                     </li>

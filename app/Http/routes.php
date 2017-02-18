@@ -171,6 +171,8 @@ Route::group(['middleware' => 'auth'], function()
     
 
     Route::get('settings', 'BulkSMSController@manageSettings');
+
+    Route::get('broadcast', 'BulkSMSController@manageBroadcast');
     
     //  Save sms gateway username and api-key
     Route::post("/bulk/api", array(
