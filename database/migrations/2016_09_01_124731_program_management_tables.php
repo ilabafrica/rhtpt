@@ -16,8 +16,7 @@ class ProgramManagementTables extends Migration
         Schema::create('field_sets', function(Blueprint $table)
         {
             $table->increments('id')->unsigned();
-            $table->string('name');
-            $table->string('label')->nullable();
+            $table->string('title');
             $table->string('description', 100)->nullable();
             $table->smallInteger('order')->nullable();
             $table->softDeletes();
@@ -27,14 +26,12 @@ class ProgramManagementTables extends Migration
     		Schema::create('fields', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
-      			$table->string('name');
-      			$table->string('label')->nullable();
+      			$table->string('title');
+      			$table->string('uid')->nullable();
       			$table->string('description', 100)->nullable();
       			$table->smallInteger('order')->nullable();
             $table->smallInteger('tag');
           	$table->integer('field_set_id')->unsigned();
-            $table->smallInteger('is_matrix')->nullable();
-            $table->smallInteger('matrix')->nullable();
             $table->softDeletes();
       			$table->timestamps();
 
@@ -57,8 +54,7 @@ class ProgramManagementTables extends Migration
     		Schema::create('options', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
-      			$table->string('name');
-      			$table->string('label')->nullable();
+      			$table->string('title');
       			$table->string('description', 100)->nullable();
             $table->softDeletes();
       			$table->timestamps();

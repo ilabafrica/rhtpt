@@ -76,6 +76,7 @@ class RoundController extends Controller
             'start_date' => 'required',
             'end_date' => 'required',
         ]);
+        $request->request->add(['user_id' => Auth::user()->id]);
 
         $edit = Round::find($id)->update($request->all());
 

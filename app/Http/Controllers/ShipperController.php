@@ -71,9 +71,10 @@ class ShipperController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'description' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
+            'shipper_type' => 'required',
+            'contact' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
         ]);
 
         $edit = Shipper::find($id)->update($request->all());

@@ -20,6 +20,6 @@ class Notification extends Model
 	//  Notification templates
     const PANEL_DISPATCH = 1;
     const RESULTS_RECEIVED = 2;
-    const FEEDBACK_READY = 3;
+    const FEEDBACK_RELEASE = 3;
     const OTHER = 4;
 }

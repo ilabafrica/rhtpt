@@ -24,6 +24,9 @@
         <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
         <!-- Awesome Bootstrap checkbox -->
         <link rel="stylesheet" href="{{ asset('css/awesome-bootstrap-checkbox.css') }}">
+
+        <!-- Toastr Styling -->
+        <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet">
         <style type="text/css">
         /* CSS used here will be applied after bootstrap.css */
             .picha {

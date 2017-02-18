@@ -3,7 +3,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Option extends Model
 {
-	public $fillable = ['name', 'label', 'description'];
+	public $fillable = ['title', 'description'];
   	/**
   	 * Enabling soft deletes for options.
   	 *
