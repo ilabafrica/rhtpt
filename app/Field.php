@@ -21,13 +21,13 @@ class Field extends Model
   	 * Tags - type of field
   	 *
   	 */
-  	const CHECKBOX = 0;
-  	const DATE = 1;
-  	const EMAIL = 2;
-    const FIELD = 3;
-  	const RADIO = 4;
-  	const SELECT = 5;
-  	const TEXT = 6;
+  	const CHECKBOX = 1;
+  	const DATE = 2;
+  	const EMAIL = 3;
+    const FIELD = 4;
+  	const RADIO = 5;
+  	const SELECT = 6;
+  	const TEXT = 7;
     /**
   	 * Matrices
   	 *

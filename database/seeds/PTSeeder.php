@@ -278,12 +278,23 @@ class PTSeeder extends Seeder
             array("title" => "PT Panel 3", "description" => "Test Results"),
             array("title" => "PT Panel 4", "description" => "Test Results"),
             array("title" => "PT Panel 5", "description" => "Test Results"),
-            array("title" => "PT Panel 6", "description" => "Test Results")
+            array("title" => "PT Panel 6", "description" => "Test Results"),
+            array("title" => "Remarks", "description" => "Remarks")
         );
         foreach ($sets as $set)
         {
             Option::create($set);
         }
         $this->command->info('Field Sets table seeded');
+        /* Forms table */
+        $forms = array(
+            array("title" => "Results", "description" => "Test results entry form"),
+            array("title" => "Addressee Failure", "description" => "Addressee failure to perform tests")
+        );
+        foreach ($forms as $form)
+        {
+            Form::create($form);
+        }
+        $this->command->info('Forms table seeded');
     }
 }
