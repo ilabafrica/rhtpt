@@ -23,7 +23,7 @@ class Set extends Model
   	 */
   	public function fields()
   	{
-  	  return $this->hasMany('App\Field');
+  	  return $this->hasMany('App\Field', 'field_set_id');
   	}
     /**
   	 * Return field ordering

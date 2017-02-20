@@ -13,7 +13,7 @@ class ProgramManagementTables extends Migration
     public function up()
     {
         //  Forms
-        Schema::create('forms', function(Blueprint $table)
+        Schema::create('questionnaires', function(Blueprint $table)
         {
             $table->increments('id')->unsigned();
             $table->string('title');
@@ -28,11 +28,11 @@ class ProgramManagementTables extends Migration
             $table->string('title');
             $table->string('description', 100)->nullable();
             $table->smallInteger('order')->nullable();
-          	$table->integer('form_id')->unsigned();
+          	$table->integer('questionnaire_id')->unsigned();
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('form_id')->references('id')->on('forms');
+            $table->foreign('questionnaire_id')->references('id')->on('questionnaires');
         });
         //  Fields
     		Schema::create('fields', function(Blueprint $table)
@@ -96,5 +96,6 @@ class ProgramManagementTables extends Migration
     		//Schema::dropIfExists('field_questions');
     		Schema::dropIfExists('fields');
     		Schema::dropIfExists('field_sets');
+    		Schema::dropIfExists('questionnaires');
     }
 }

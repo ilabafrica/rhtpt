@@ -2,7 +2,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
-class Form extends Model
+class Questionnaire extends Model
 {
 		public $fillable = ['title', 'description'];
   	/**
@@ -17,7 +17,7 @@ class Form extends Model
   	 *
   	 * @var string
   	 */
-  	protected $table = 'forms';
+  	protected $table = 'questionnaires';
     /**
   	 * Sets relationship
   	 */

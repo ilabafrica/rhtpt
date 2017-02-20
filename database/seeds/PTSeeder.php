@@ -12,6 +12,7 @@ use App\Set;
 use App\Field;
 use App\Option;
 use App\Notification;
+use App\Questionnaire;
 
 //	Carbon - for use with dates
 use Jenssegers\Date\Date as Carbon;
@@ -267,34 +268,34 @@ class PTSeeder extends Seeder
             Option::create($option);
         }
         $this->command->info('Options table seeded');
-        /* Forms table */
-        $forms = array(
+        /* Questionnaires table */
+        $questionnaires = array(
             array("title" => "Results", "description" => "Test results entry form"),
             array("title" => "Addressee Failure", "description" => "Addressee failure to perform tests")
         );
-        foreach ($forms as $form)
+        foreach ($questionnaires as $questionnaire)
         {
-            Form::create($form);
+            Questionnaire::create($questionnaire);
         }
-        $this->command->info('Forms table seeded');
+        $this->command->info('Questionnaires table seeded');
         /* Field sets table */
         $sets = array(
-            array("title" => "PT Panel Dates", "description" => "", "order" => "0", "form_id" => "1"),
-            array("title" => "Test 1", "description" => "", "order" => "1", "form_id" => "1"),
-            array("title" => "Test 2", "description" => "", "order" => "2", "form_id" => "1"),
-            array("title" => "Test 3", "description" => "", "order" => "3", "form_id" => "1"),
-            array("title" => "PT Panel 1", "description" => "Test Results", "order" => "4", "form_id" => "1"),
-            array("title" => "PT Panel 2", "description" => "Test Results", "order" => "5", "form_id" => "1"),
-            array("title" => "PT Panel 3", "description" => "Test Results", "order" => "6", "form_id" => "1"),
-            array("title" => "PT Panel 4", "description" => "Test Results", "order" => "7", "form_id" => "1"),
-            array("title" => "PT Panel 5", "description" => "Test Results", "order" => "8", "form_id" => "1"),
-            array("title" => "PT Panel 6", "description" => "Test Results", "order" => "9", "form_id" => "1"),
-            array("title" => "Remarks", "description" => "Remarks", "order" => "10", "form_id" => "1"),
-            array("title" => "Addressee Non-Performance", "description" => "Addressee Non-Performance", "order" => "0", "form_id" => "2")
+            array("title" => "PT Panel Dates", "description" => "", "order" => "0", "questionnaire_id" => "1"),
+            array("title" => "Test 1", "description" => "", "order" => "1", "questionnaire_id" => "1"),
+            array("title" => "Test 2", "description" => "", "order" => "2", "questionnaire_id" => "1"),
+            array("title" => "Test 3", "description" => "", "order" => "3", "questionnaire_id" => "1"),
+            array("title" => "PT Panel 1", "description" => "Test Results", "order" => "4", "questionnaire_id" => "1"),
+            array("title" => "PT Panel 2", "description" => "Test Results", "order" => "5", "questionnaire_id" => "1"),
+            array("title" => "PT Panel 3", "description" => "Test Results", "order" => "6", "questionnaire_id" => "1"),
+            array("title" => "PT Panel 4", "description" => "Test Results", "order" => "7", "questionnaire_id" => "1"),
+            array("title" => "PT Panel 5", "description" => "Test Results", "order" => "8", "questionnaire_id" => "1"),
+            array("title" => "PT Panel 6", "description" => "Test Results", "order" => "9", "questionnaire_id" => "1"),
+            array("title" => "Remarks", "description" => "Remarks", "order" => "10", "questionnaire_id" => "1"),
+            array("title" => "Addressee Non-Performance", "description" => "Addressee Non-Performance", "order" => "0", "questionnaire_id" => "2")
         );
         foreach ($sets as $set)
         {
-            Option::create($set);
+            Set::create($set);
         }
         $this->command->info('Field Sets table seeded');
     }

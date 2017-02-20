@@ -28,7 +28,7 @@ class Result extends Model
   	 */
      public function pt()
      {
-          return $this->belongsTo('App\Models\Pt');
+          return $this->belongsTo('App\Pt');
      }
     /**
   	 * Field relationship
@@ -36,6 +36,6 @@ class Result extends Model
   	 */
      public function field()
      {
-          return $this->belongsTo('App\Models\Field');
+          return $this->belongsTo('App\Field');
      }
 }

@@ -138,10 +138,12 @@ class PtSetupTables extends Migration
         Schema::create('receipts', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
+            $table->integer('shipment_id')->unsigned();
             $table->date('date_received');
             $table->string('panels_received');
       			$table->string('condition', 500);
             $table->string('receiver', 100);
+            $table->foreign('shipment_id')->references('id')->on('shipments');
             $table->softDeletes();
       			$table->timestamps();
     		});
@@ -149,7 +151,7 @@ class PtSetupTables extends Migration
         Schema::create('pt', function(Blueprint $table)
     		{
     			$table->increments('id')->unsigned();
-    			$table->integer('receipt_id')->unsigned();
+    			$table->integer('round_id')->unsigned();
           $table->integer('user_id')->unsigned();
           $table->smallInteger('feedback')->nullable();
           $table->smallInteger('panel_status');
@@ -165,7 +167,7 @@ class PtSetupTables extends Migration
           $table->tinyInteger('incomplete_results')->default(0);
           $table->string('comment', 250)->nullable();
           $table->integer('verified_by')->nullable();
-          $table->foreign('receipt_id')->references('id')->on('receipts');
+          $table->foreign('round_id')->references('id')->on('rounds');
           $table->foreign('user_id')->references('id')->on('users');
           $table->softDeletes();
     			$table->timestamps();

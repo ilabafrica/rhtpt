@@ -269,6 +269,8 @@
         <script src="{{ asset('controllers/expected.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('shipment'))
         <script src="{{ asset('controllers/shipment.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('result'))
+        <script src="{{ asset('controllers/result.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('bulk') || Request::segment(1)==strtolower('settings'))
         <script src="{{ asset('controllers/bulk.js') }}"></script>
         @endif

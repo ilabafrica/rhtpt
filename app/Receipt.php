@@ -3,6 +3,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Receipt extends Model
 {
+  	public $fillable = ['date_received', 'panels_received', 'condition', 'receiver'];
   	/**
   	 * Enabling soft deletes for sample reception.
   	 *
@@ -23,19 +24,11 @@ class Receipt extends Model
   	 */
   	protected $table = 'receipts';
     /**
-  	 * user relationship
-  	 *
-  	 */
-     public function receiver()
-     {
-          return $this->belongsTo('App\Models\Facility', 'recipient');
-     }
-    /**
   	 * Shipment relationship
   	 *
   	 */
      public function shipment()
      {
-          return $this->belongsTo('App\Models\Shipment');
+          return $this->belongsTo('App\Shipment');
      }
 }

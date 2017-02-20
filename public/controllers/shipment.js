@@ -182,13 +182,13 @@ new Vue({
 
         receiveShipment: function(){
 		  var input = this.newReceipt;
-		  this.$http.post('/vueshipments',input).then((response) => {
+		  this.$http.post('/receive',input).then((response) => {
 		    this.changePage(this.pagination.current_page);
 			this.newReceipt = {'shipment_id':'','date_received':'','panels_received':'','condition':'','receiver':''};
 			$("#receive-shipment").modal('hide');
 			toastr.success('Shipment Received Successfully.', 'Success Alert', {timeOut: 5000});
 		  }, (response) => {
-			this.formErrors = response.data;
+			this.formReceiptErrors = response.data;
 	    });
 	}
 

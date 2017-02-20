@@ -200,4 +200,18 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "sms.bulk",
         "uses" => "BulkSMSController@sms"
     ));
+    //  Receive shipment
+    Route::post("/receive", array(
+        "as"   => "shipment.receive",
+        "uses" => "ShipmentController@receive"
+    ));
+
+    Route::get('result', 'ResultController@manageResult');
+    Route::resource('vueresults','ResultController');
+    Route::any('vueresults/{id}/restore','ResultController@restore');
+
+    Route::get("/form", array(
+        "as"   => "fields.fetch",
+        "uses" => "QuestionnaireController@fetch"
+    ));
 });

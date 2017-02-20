@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Shipment;
+use App\Receipt;
 
 use Auth;
 
@@ -29,6 +30,7 @@ class ShipmentController extends Controller
             $shipment->rnd = $shipment->round->name;
             $shipment->shppr = $shipment->shipper->name;
             $shipment->fclty = $shipment->facility->name;
+            $shipment->rcpts = $shipment->receipt->count();
         }
         $response = [
             'pagination' => [
@@ -116,5 +118,25 @@ class ShipmentController extends Controller
     {
         $shipment = Shipment::withTrashed()->find($id)->restore();
         return response()->json(['done']);
+    }
+
+    /**
+     * Receive a shipment.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function receive(Request $request)
+    {
+        $this->validate($request, [
+            'date_received' => 'required',
+            'panels_received' => 'required',
+            'condition' => 'required',
+            'receiver' => 'required'
+        ]);
+
+        $create = Receipt::create($request->all());
+
+        return response()->json($create);
     }
 }

@@ -56,4 +56,12 @@ class Shipment extends Model
         $sp = new Shipper;
         return $sp->shipper($method);
      }
+    /**
+  	 * Receipts relationship
+  	 *
+  	 */
+     public function receipts()
+     {
+          return $this->hasMany('App\Receipt', 'shipment_id');
+     }
 }

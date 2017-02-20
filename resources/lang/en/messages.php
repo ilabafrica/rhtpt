@@ -174,4 +174,8 @@ return [
     'status'            =>  'Status',
     'compose'           =>  'Compose',
     'code'              =>  'Code',
+    /**
+    *   Results
+    */
+    'enter-result'          =>  'Enter Results',
 ];

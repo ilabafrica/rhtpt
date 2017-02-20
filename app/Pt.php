@@ -3,12 +3,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Pt extends Model
 {
+  	public $fillable = ['round_id', 'user_id'];
   	/**
   	 * Enabling soft deletes for pt survey.
   	 *
   	 */
   	use SoftDeletes;
   	protected $dates = ['deleted_at'];
+	/**
+  	 * Status of result
+  	 *
+  	 */
+  	const VERIFIED = 1;
+  	const NOT_VERIFIED = 0;
+	/**
+  	 * Status of result
+  	 *
+  	 */
+  	const SATISFACTORY = 1;
+  	const UNSATISFACTORY = 0;
 
   	/**
   	 * The database table used by the model.
@@ -17,20 +30,12 @@ class Pt extends Model
   	 */
   	protected $table = 'pt';
     /**
-  	 * Receipt relationship
-  	 *
-  	 */
-     public function receipt()
-     {
-          return $this->belongsTo('App\Models\Receipt');
-     }
-    /**
   	 * Result relationship
   	 *
   	 */
      public function results()
      {
-          return $this->hasMany('App\Models\Result');
+          return $this->hasMany('App\Result');
      }
     /**
   	 * Tester relationship
@@ -38,6 +43,14 @@ class Pt extends Model
   	 */
      public function user()
      {
-          return $this->belongsTo('App\Models\User');
+          return $this->belongsTo('App\User');
+     }
+    /**
+  	 * Round relationship
+  	 *
+  	 */
+     public function round()
+     {
+          return $this->belongsTo('App\Round');
      }
 }

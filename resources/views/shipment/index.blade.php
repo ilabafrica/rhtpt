@@ -46,11 +46,11 @@
             <td>@{{ shipment.shppr }}</td>
             <td>@{{ shipment.panels_shipped }}</td>
             <td>
-                <button v-if="shipment.deleted_at==NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Pending</button>
-                <button v-if="shipment.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Received</button>
+                <button v-if="shipment.rcpts==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Pending</button>
+                <button v-if="shipment.rcpts>0" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Received</button>
             </td>
             <td>	
-                <button v-bind="{ 'disabled': role.deleted_at!=NULL}" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#receive-shipment"><i class="fa fa-download"></i> Receive</button>
+                <button v-bind="{ 'disabled': shipment.rcpts>0}" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#receive-shipment"><i class="fa fa-download"></i> Receive</button>
                 <button class="btn btn-sm btn-primary" @click.prevent="editShipment(shipment)"><i class="fa fa-edit"></i> Edit</button>
             </td>
         </tr>
@@ -300,22 +300,22 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="receiveShipment">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="receiveShipment()">
                         <div class="col-md-12">
                             <input type="hidden" value="@{{ shipment.id }}" name="shipment_id" v-model="newReceipt.shipment_id" />
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Date Received:</label>
                                 <div class="col-sm-8">
                                     <input type="date" name="date_received" class="form-control" v-model="newReceipt.date_received" />
-                                    <span v-if="formErrors['date_received']" class="error text-danger">@{{ formErrors['date_received'] }}</span>
+                                    <span v-if="formReceiptErrors['date_received']" class="error text-danger">@{{ formReceiptErrors['date_received'] }}</span>
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Panels Received:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" name="panels_received" class="form-control" v-model="newReceipt.panels_received" />
-                                    <span v-if="formErrors['panels_received']" class="error text-danger">@{{ formErrors['panels_received'] }}</span>
+                                    <input type="number" name="panels_received" class="form-control" v-model="newReceipt.panels_received" />
+                                    <span v-if="formReceiptErrors['panels_received']" class="error text-danger">@{{ formReceiptErrors['panels_received'] }}</span>
                                 </div>
                             </div>
 
@@ -323,7 +323,7 @@
                                 <label class="col-sm-4 form-control-label" for="title">Received By:</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="receiver" class="form-control" v-model="newReceipt.receiver" />
-                                    <span v-if="formErrors['receiver']" class="error text-danger">@{{ formErrors['receiver'] }}</span>
+                                    <span v-if="formReceiptErrors['receiver']" class="error text-danger">@{{ formReceiptErrors['receiver'] }}</span>
                                 </div>
                             </div>
 
@@ -331,7 +331,7 @@
                                 <label class="col-sm-4 form-control-label" for="title">Condition:</label>
                                 <div class="col-sm-8">
                                     <textarea name="condition" class="form-control" v-model="newReceipt.condition"></textarea>
-                                    <span v-if="formErrors['condition']" class="error text-danger">@{{ formErrors['condition'] }}</span>
+                                    <span v-if="formReceiptErrors['condition']" class="error text-danger">@{{ formReceiptErrors['condition'] }}</span>
                                 </div>
                             </div>
 
