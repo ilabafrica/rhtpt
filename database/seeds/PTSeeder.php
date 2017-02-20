@@ -267,25 +267,6 @@ class PTSeeder extends Seeder
             Option::create($option);
         }
         $this->command->info('Options table seeded');
-        /* Field sets table */
-        $sets = array(
-            array("title" => "PT Panel Dates", "description" => ""),
-            array("title" => "Test 1", "description" => ""),
-            array("title" => "Test 2", "description" => ""),
-            array("title" => "Test 3", "description" => ""),
-            array("title" => "PT Panel 1", "description" => "Test Results"),
-            array("title" => "PT Panel 2", "description" => "Test Results"),
-            array("title" => "PT Panel 3", "description" => "Test Results"),
-            array("title" => "PT Panel 4", "description" => "Test Results"),
-            array("title" => "PT Panel 5", "description" => "Test Results"),
-            array("title" => "PT Panel 6", "description" => "Test Results"),
-            array("title" => "Remarks", "description" => "Remarks")
-        );
-        foreach ($sets as $set)
-        {
-            Option::create($set);
-        }
-        $this->command->info('Field Sets table seeded');
         /* Forms table */
         $forms = array(
             array("title" => "Results", "description" => "Test results entry form"),
@@ -296,5 +277,25 @@ class PTSeeder extends Seeder
             Form::create($form);
         }
         $this->command->info('Forms table seeded');
+        /* Field sets table */
+        $sets = array(
+            array("title" => "PT Panel Dates", "description" => "", "order" => "0", "form_id" => "1"),
+            array("title" => "Test 1", "description" => "", "order" => "1", "form_id" => "1"),
+            array("title" => "Test 2", "description" => "", "order" => "2", "form_id" => "1"),
+            array("title" => "Test 3", "description" => "", "order" => "3", "form_id" => "1"),
+            array("title" => "PT Panel 1", "description" => "Test Results", "order" => "4", "form_id" => "1"),
+            array("title" => "PT Panel 2", "description" => "Test Results", "order" => "5", "form_id" => "1"),
+            array("title" => "PT Panel 3", "description" => "Test Results", "order" => "6", "form_id" => "1"),
+            array("title" => "PT Panel 4", "description" => "Test Results", "order" => "7", "form_id" => "1"),
+            array("title" => "PT Panel 5", "description" => "Test Results", "order" => "8", "form_id" => "1"),
+            array("title" => "PT Panel 6", "description" => "Test Results", "order" => "9", "form_id" => "1"),
+            array("title" => "Remarks", "description" => "Remarks", "order" => "10", "form_id" => "1"),
+            array("title" => "Addressee Non-Performance", "description" => "Addressee Non-Performance", "order" => "0", "form_id" => "2")
+        );
+        foreach ($sets as $set)
+        {
+            Option::create($set);
+        }
+        $this->command->info('Field Sets table seeded');
     }
 }

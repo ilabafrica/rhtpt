@@ -32,7 +32,7 @@ class ProgramManagementTables extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('field_set_id')->references('id')->on('field_sets');
+            $table->foreign('form_id')->references('id')->on('forms');
         });
         //  Fields
     		Schema::create('fields', function(Blueprint $table)
