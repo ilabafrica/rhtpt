@@ -50,7 +50,7 @@
                 <button v-if="shipment.rcpts>0" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Received</button>
             </td>
             <td>	
-                <button v-bind="{ 'disabled': shipment.rcpts>0}" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#receive-shipment"><i class="fa fa-download"></i> Receive</button>
+                <button v-bind="{ 'disabled': shipment.rcpts>0}" class="btn btn-sm btn-secondary receive" data-toggle="modal" data-target="#receive-shipment" data-fk="@{{shipment.id}}"><i class="fa fa-download"></i> Receive</button>
                 <button class="btn btn-sm btn-primary" @click.prevent="editShipment(shipment)"><i class="fa fa-edit"></i> Edit</button>
             </td>
         </tr>
@@ -302,7 +302,7 @@
                 <div class="row">
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="receiveShipment()">
                         <div class="col-md-12">
-                            <input type="hidden" value="@{{ shipment.id }}" name="shipment_id" v-model="newReceipt.shipment_id" />
+                            <input type="hidden" value="@{{fk}}" name="shipment_id" v-model="newReceipt.shipment_id" />
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Date Received:</label>
                                 <div class="col-sm-8">

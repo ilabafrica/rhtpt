@@ -87,12 +87,12 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRound">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createResult">
                         <div class="col-md-12">
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">PT Round:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="round_id" v-model="newShipment.round_id">
+                                <label class="col-sm-5 form-control-label" for="title">PT Round:</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control c-select" name="round_id">
                                         <option selected></option>
                                         <option v-for="round in rounds" :value="round.id">@{{ round.value }}</option>   
                                     </select>
@@ -100,9 +100,61 @@
                                 </div>
                             </div>
                             <div v-for="frm in form">
-                                    @{{ frm.title }}
+                                <p class="text-primary">@{{ frm.title }}</p>
+                                <hr>
+                                <div v-for="fld in frm.fields">
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 form-control-label" for="title">@{{ fld.title }}:</label>
+                                        <div class="col-sm-7">
+                                            <div v-if="fld.tag == 1">
+                                                <div class="form-checkbox form-checkbox-inline" v-for="option in fld.options">
+                                                    <label class="form-checkbox-label">
+                                                        <input type="checkbox" :value="option.id" name="field_@{{fld.id}}">
+                                                        @{{ option.title }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div v-if="fld.tag == 2">
+                                                <input type="date" name="field_@{{fld.id}}" class="form-control" />
+                                            </div>
+                                            <div v-if="fld.tag == 3">
+                                                <input type="email" name="field_@{{fld.id}}" class="form-control" />
+                                            </div>
+                                            <div v-if="fld.tag == 4">
+                                                <input type="text" name="field_@{{fld.id}}" class="form-control" />
+                                            </div>
+                                            <div v-if="fld.tag == 5">
+                                                <div class="form-radio form-radio-inline" v-for="option in fld.options">
+                                                    <label class="form-radio-label">
+                                                        <input type="radio" :value="option.id" name="field_@{{fld.id}}" @change="remark('.toggle_@{{fld.id}}', this)">
+                                                        @{{ option.title }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div v-if="fld.tag == 6">
+                                                <select class="form-control c-select" name="field_@{{fld.id}}">
+                                                    <option selected></option>
+                                                    <option v-for="option in fld.options" :value="option.id">@{{ round.title }}</option>   
+                                                </select>
+                                            </div>
+                                            <div v-if="fld.tag == 7">
+                                                <textarea name="field_@{{fld.id}}" class="form-control"></textarea>
+                                            </div>
+                                            <div class="toggle_@{{fld.id}}" style="display:none;">
+                                                <textarea name="field_@{{fld.id}}" class="form-control"></textarea>
+                                            </div>
+                                            <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row toggle_@{{fld.id}}" style="display:none;">
+                                    <label class="col-sm-5 form-control-label text-danger font-weight-bold" for="title">Please Specify:</label>
+                                    <div class="col-sm-7">
+                                        <textarea name="field_@{{fld.id}}" class="form-control"></textarea>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                            <div class="form-group row col-sm-offset-5 col-sm-7">
                                 <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                 <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>

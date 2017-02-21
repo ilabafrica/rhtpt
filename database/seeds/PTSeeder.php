@@ -298,5 +298,9 @@ class PTSeeder extends Seeder
             Set::create($set);
         }
         $this->command->info('Field Sets table seeded');
+        /* Dummy bulk sms settings */
+        DB::table('bulk_sms_settings')->insert(array("code" => "talking", "username" => "africa", "api_key" => "LBD239F81V", "created_at" => $now, "updated_at" => $now));
+
+        $this->command->info('Bulk SMS Settings table seeded');
     }
 }

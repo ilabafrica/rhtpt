@@ -59,6 +59,12 @@ new Vue({
         this.loadMethods();
   },
 
+  computed: {
+    fk: function () {
+      return parent.children('.receive').attr('data-fk');
+    }
+  },
+
   methods : {
 
         getVueShipments: function(page){

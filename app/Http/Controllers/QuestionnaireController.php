@@ -99,7 +99,7 @@ class QuestionnaireController extends Controller
         $sets = Questionnaire::first()->sets;
         $fields = [];
         $options = [];
-        /*foreach($sets as $set)
+        foreach($sets as $set)
         {
             $fields[$set->id] = $set->fields;
             foreach($fields[$set->id] as $field)
@@ -108,7 +108,7 @@ class QuestionnaireController extends Controller
                     $options[$field->id] = $field->options->get('id', 'name');
             }
         }
-        $response = ["sets" => $sets, "fields" => $fields, "options" => $options];*/
-        return response()->json($sets);
+        $response = ["sets" => $sets, "fields" => $fields, "options" => $options];
+        return response()->json($response);
     }
 }

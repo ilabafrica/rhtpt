@@ -3,7 +3,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Receipt extends Model
 {
-  	public $fillable = ['date_received', 'panels_received', 'condition', 'receiver'];
+  	public $fillable = ['shipment_id', 'date_received', 'panels_received', 'condition', 'receiver'];
   	/**
   	 * Enabling soft deletes for sample reception.
   	 *

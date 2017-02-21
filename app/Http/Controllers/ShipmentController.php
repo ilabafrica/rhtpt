@@ -30,7 +30,7 @@ class ShipmentController extends Controller
             $shipment->rnd = $shipment->round->name;
             $shipment->shppr = $shipment->shipper->name;
             $shipment->fclty = $shipment->facility->name;
-            $shipment->rcpts = $shipment->receipt->count();
+            $shipment->rcpts = $shipment->receipts->count();
         }
         $response = [
             'pagination' => [

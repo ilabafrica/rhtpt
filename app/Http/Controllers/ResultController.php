@@ -8,6 +8,7 @@ use App\Pt;
 use App\Result;
 
 use Auth;
+use Input;
 
 class ResultController extends Controller
 {
@@ -52,20 +53,41 @@ class ResultController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'round_id' => 'required',
-            'date_prepared' => 'required',
-            'date_shipped' => 'required',
-            'shipping_method' => 'required',
-            'shipper_id' => 'required',
-            'facility_id' => 'required',
-            'panels_shipped' => 'required',
-        ]);
-        $request->request->add(['user_id' => Auth::user()->id]);
+        dd(Input::all());
+        //	Save pt first then proceed to save form fields
+        $pt = new Pt;
+        $pt->receipt_id = 1;//Input::get('receipt_id');
+        $pt->user_id = Auth::user()->id;
+        //$pt->save();
+        //	Proceed to form-fields
+        foreach (Input::all() as $key => $value)
+        {
+            dd($value);
+            if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
+                continue;
+            else if(stripos($key, 'field') !==FALSE)
+            {
+                $fieldId = $this->strip($key);
+                if(is_array($value))
+                  $value = implode(', ', $value);
+                $result = new Result;
+                $result->pt_id = $pt->id;
+                $result->field_id = $fieldId;
+          		$result->response = $value;
+                $result->save();
+            }
+            else if(stripos($key, 'comment') !==FALSE)
+            {
+                if($value)
+                {
+                    $result = Result::where('field_id', $key)->first();
+                    $result->comment = $value;
+                    $result->save();
+                }
+            }
+        }
 
-        $create = Shipment::create($request->all());
-
-        return response()->json($create);
+        return response()->json($pt);
     }
 
     /**
@@ -136,4 +158,15 @@ class ResultController extends Controller
 
         return response()->json($create);
     }
+    /**
+  	 * Remove the specified begining of text to get Id alone.
+  	 *
+  	 * @param  int  $id
+  	 * @return Response
+  	 */
+  	public function strip($field)
+  	{
+    		if(($pos = strpos($field, '_')) !== FALSE)
+    		return substr($field, $pos+1);
+  	}
 }

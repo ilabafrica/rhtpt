@@ -52,7 +52,7 @@ new Vue({
   ready : function(){
   		this.getVueResults(this.pagination.current_page);
         this.loadRounds();
-        this.getFields();
+        this.getForm();
   },
 
   methods : {
@@ -65,12 +65,11 @@ new Vue({
         },
 
         createResult: function(){
-		  var input = this.newResult;
-		  this.$http.post('/vueresults',input).then((response) => {
+		  let formData = new FormData(event.target);
+		  this.$http.post('/vueresults',formData).then((response) => {
 		    this.changePage(this.pagination.current_page);
-			this.newResult = {'round_id':'','field_id[]':'','response[]':'','comment[]':''};
 			$("#create-result").modal('hide');
-			toastr.success('Result Created Successfully.', 'Success Alert', {timeOut: 5000});
+			toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
 		  }, (response) => {
 			this.formErrors = response.data;
 	    });
@@ -115,25 +114,32 @@ new Vue({
           this.getVueResults(page);
       },
 
-      getFields: function(){
+      getForm: function(){
         this.$http.get('/form').then((response) => {
-            this.form = response.data;
-            console.log(response.data);
+            this.form = response.data.sets;
 
         }, (response) => {
-            console.log(response.data.length);
+            console.log(response.data.sets);
         });
       },
 
       loadRounds: function() {
         this.$http.get('/rnds').then((response) => {
             this.rounds = response.data;
-            console.log(response.data);
 
         }, (response) => {
             console.log(response);
         });
-      }
+      },
+        /*Function to toggle input fields to specify value if 'other' is selected*/
+        remark: function(className, obj)
+        {
+            var $input = $(obj);
+            if($input.val() == 4)
+                $(className).show();
+            else
+                $(className).hide();
+        }
 
   }
 
