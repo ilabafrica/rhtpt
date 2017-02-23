@@ -59,12 +59,6 @@ new Vue({
         this.loadMethods();
   },
 
-  computed: {
-    fk: function () {
-      return parent.children('.receive').attr('data-fk');
-    }
-  },
-
   methods : {
 
         getVueShipments: function(page){
@@ -200,4 +194,16 @@ new Vue({
 
   }
 
+});
+//  Normal js
+//  Triggered when modal is about to be shown
+$('#receive-shipment').on('show.bs.modal', function(e) 
+{
+    //  Get shipment-id of the clicked element
+    var id = $(e.relatedTarget).data('fk');
+    console.log(id);
+    //  Populate the hidden field
+    //$( "#shipment-id" ).val(id);
+    $( "#shipment-id" ).attr('value', id);
+    console.log($("#shipment-id").val());
 });
