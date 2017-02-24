@@ -53,16 +53,14 @@ class ResultController extends Controller
      */
     public function store(Request $request)
     {
-        dd(Input::all());
-        //	Save pt first then proceed to save form fields
+         //	Save pt first then proceed to save form fields
         $pt = new Pt;
-        $pt->receipt_id = 1;//Input::get('receipt_id');
+        $pt->round_id = Input::get('round_id');
         $pt->user_id = Auth::user()->id;
-        //$pt->save();
+        $pt->save();
         //	Proceed to form-fields
         foreach (Input::all() as $key => $value)
         {
-            dd($value);
             if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
                 continue;
             else if(stripos($key, 'field') !==FALSE)
@@ -88,6 +86,24 @@ class ResultController extends Controller
         }
 
         return response()->json($pt);
+    }
+
+    /**
+     * Fetch pt with related components for editing
+     *
+     * @param ID of the selected pt -  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $pt = Pt::find($id);
+        $results = $pt->results;
+        $response = [
+            'pt' => $pt,
+            'results' => $results
+        ];
+
+        return response()->json($response);
     }
 
     /**

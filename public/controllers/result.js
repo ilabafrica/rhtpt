@@ -21,7 +21,8 @@ new Vue({
     newResult : {'round_id':'','field_id[]':'','response[]':'','comment[]':''},
     fillResult : {'round_id':'','field_id[]':'','response[]':'','comment[]':'','id':''},
     form: [],
-    rounds: []
+    rounds: [],
+    frmData: {}
   },
 
   computed: {
@@ -65,8 +66,9 @@ new Vue({
         },
 
         createResult: function(){
-		  let formData = new FormData(event.target);
-		  this.$http.post('/vueresults',formData).then((response) => {
+		 let myForm = document.getElementById('test_results');
+         let formData = new FormData(myForm);
+		  this.$http.post('/vueresults', formData).then((response) => {
 		    this.changePage(this.pagination.current_page);
 			$("#create-result").modal('hide');
 			toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
@@ -90,10 +92,11 @@ new Vue({
       },
 
       editResult: function(result){
-          this.fillResult.name = result.name;
-          this.fillResult.id = result.id;
-          this.fillResult.display_name = result.display_name;
-          this.fillResult.description = result.description;
+          //    Fetch the result using the id
+          let id = result.id;
+          this.$http.get('/pt/'+id).then((response) => {
+                this.frmData = response.data;
+            });
           $("#edit-result").modal('show');
       },
 

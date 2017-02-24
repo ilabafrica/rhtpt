@@ -209,6 +209,10 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('result', 'ResultController@manageResult');
     Route::resource('vueresults','ResultController');
     Route::any('vueresults/{id}/restore','ResultController@restore');
+    Route::get("/pt/{id}", array(
+        "as"   => "pt.fetch",
+        "uses" => "ResultController@edit"
+    ));
 
     Route::get("/form", array(
         "as"   => "fields.fetch",

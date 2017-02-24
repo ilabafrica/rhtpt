@@ -46,8 +46,8 @@
             <td>@{{ shipment.shppr }}</td>
             <td>@{{ shipment.panels_shipped }}</td>
             <td>
-                <button v-if="shipment.rcpts==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Pending</button>
-                <button v-if="shipment.rcpts>0" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Received</button>
+                <button v-if="shipment.rcpts==0" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
+                <button v-if="shipment.rcpts>0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Received</button>
             </td>
             <td>	
                 <button v-bind="{ 'disabled': shipment.rcpts>0}" id="receipt" class="btn btn-sm btn-secondary receive" data-toggle="modal" data-target="#receive-shipment" data-fk="@{{shipment.id}}"><i class="fa fa-download"></i> Receive</button>
