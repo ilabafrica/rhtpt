@@ -22,6 +22,10 @@ class SetController extends Controller
     public function index(Request $request)
     {
         $sets = Set::latest()->paginate(5);
+        foreach($sets as $set)
+        {
+            $set->ordr = $set->order($set->order);
+        }
 
         $response = [
             'pagination' => [

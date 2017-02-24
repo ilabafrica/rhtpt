@@ -31,15 +31,15 @@
     </div>
     <table class="table table-bordered">
         <tr>
+            <th>UID</th>
             <th>Title</th>
-            <th>Label</th>
             <th>Tag</th>
             <th>Order</th>
             <th>Action</th>
         </tr>
         <tr v-for="field in fields">
-            <td>@{{ field.name }}</td>
-            <td>@{{ field.label }}</td>
+            <td>@{{ field.uid }}</td>
+            <td>@{{ field.title }}</td>
             <td>@{{ field.tg }}</td>
             <td>@{{ field.ordr }}</td>
             <td>	

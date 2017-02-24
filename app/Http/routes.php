@@ -218,4 +218,7 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "fields.fetch",
         "uses" => "QuestionnaireController@fetch"
     ));
+
+    Route::get('permission', 'PermissionController@managePermissions');
+    Route::resource('vuepermissions','PermissionController');
 });

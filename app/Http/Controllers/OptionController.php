@@ -48,7 +48,7 @@ class OptionController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'label' => 'required',
+            'title' => 'required',
             'description' => 'required',
         ]);
 
@@ -68,7 +68,7 @@ class OptionController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'label' => 'required',
+            'title' => 'required',
             'description' => 'required',
         ]);
 

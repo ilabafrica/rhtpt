@@ -33,11 +33,13 @@
         <tr>
             <th>Title</th>
             <th>Description</th>
+            <th>Order</th>
             <th>Action</th>
         </tr>
         <tr v-for="set in sets">
-            <td>@{{ set.name }}</td>
+            <td>@{{ set.title }}</td>
             <td>@{{ set.description }}</td>
+            <td>@{{ set.ordr }}</td>
             <td>	
                 <button class="btn btn-sm btn-primary" @click.prevent="editSet(set)"><i class="fa fa-edit"></i> Edit</button>
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteSet(set)"><i class="fa fa-trash-o"></i> Delete</button>

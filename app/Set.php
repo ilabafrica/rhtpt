@@ -31,7 +31,7 @@ class Set extends Model
   	public function order($ordr = 0)
   	{
         if($ordr!=0)
-            return Set::find($ordr)->first()->label;
+            return Set::find($ordr)->first()->title;
         else
             return 'Not Applicable';
   	}

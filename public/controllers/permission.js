@@ -5,14 +5,8 @@ new Vue({
   el: '#manage-permission',
 
   data: {
-    users: [],
-    pagination: {
-        total: 0, 
-        per_page: 2,
-        from: 1, 
-        to: 0,
-        current_page: 1
-      },
+    roles: [],
+    permissions: [],
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
@@ -46,21 +40,23 @@ new Vue({
     },
 
   ready : function(){
-  		this.getVueUsers(this.pagination.current_page);
+  		this.getVuePermissions();
   },
 
   methods : {
 
-        getVueUsers: function(page){
-          this.$http.get('/vueusers?page='+page).then((response) => {
-            this.$set('users', response.data.data.data);
+        getVuePermissions: function(){
+          this.$http.get('/vuepermissions').then((response) => {
+            this.$set('permissions', response.data.data.permissions);
+            this.$set('roles', response.data.data.roles);
             this.$set('pagination', response.data.pagination);
+            console.log(response);
           });
         },
 
-        createUser: function(){
+        createPermission: function(){
 		  var input = this.newFacility;
-		  this.$http.post('/vueusers',input).then((response) => {
+		  this.$http.post('/vuepermissions',input).then((response) => {
 		    this.changePage(this.pagination.current_page);
 			this.newFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':''};
 			$("#create-facility").modal('hide');
@@ -70,14 +66,14 @@ new Vue({
 	    });
 	},
 
-      deleteUser: function(facility){
-        this.$http.delete('/vueusers/'+facility.id).then((response) => {
+      deletePermission: function(facility){
+        this.$http.delete('/vuepermissions/'+facility.id).then((response) => {
             this.changePage(this.pagination.current_page);
             toastr.success('Facility Deleted Successfully.', 'Success Alert', {timeOut: 5000});
         });
       },
 
-      editUser: function(facility){
+      editPermission: function(facility){
           this.fillFacility.name = facility.name;
           this.fillFacility.id = facility.id;
           this.fillFacility.description = facility.description;
@@ -87,9 +83,9 @@ new Vue({
           $("#edit-facility").modal('show');
       },
 
-      updateUser: function(id){
+      updatePermission: function(id){
         var input = this.fillFacility;
-        this.$http.put('/vueusers/'+id,input).then((response) => {
+        this.$http.put('/vuepermissions/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
             this.fillFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''};
             $("#edit-facility").modal('hide');
@@ -101,7 +97,7 @@ new Vue({
 
       changePage: function (page) {
           this.pagination.current_page = page;
-          this.getVueUsers(page);
+          this.getVuePermissions(page);
       }
 
   }
