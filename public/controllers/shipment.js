@@ -205,5 +205,6 @@ $('#receive-shipment').on('show.bs.modal', function(e)
     //  Populate the hidden field
     //$( "#shipment-id" ).val(id);
     $( "#shipment-id" ).attr('value', id);
+    $( "#shipment-id" ).trigger('change');
     console.log($("#shipment-id").val());
 });
