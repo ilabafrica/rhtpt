@@ -9,7 +9,7 @@
         </ol>
     </div>
 </div>
-<div class="" id="manage-round">
+<div class="" id="manage-permission">
     <!-- Round Listing -->
     <div class="row">
         <div class="col-lg-12 margin-tb">
@@ -23,35 +23,57 @@
             </div>
         </div>
     </div>
-    <table class="table table-bordered">
-        <tr>
-            <th>Permissions</th>
-            <th colspan="@{{roles.length}}">Roles</th>
-        </tr>
-        <tr>
-            <td></td>
+    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createPrivilege" id="update_privileges">
+        <table class="table table-bordered">
+            <tr>
+                <th>Permissions</th>
+                <th colspan="@{{roles.length}}">Roles</th>
+            </tr>
+            <tr>
+                <td></td>
 
-            <td v-for="role in roles">@{{ role.name }}</td>
-        </tr>
-        <tr v-for="permission in permissions">
-            <td>@{{ permission.name }}</td>
-            <td v-for="role in roles">
-                <label v-if="role.id==1" class="form-checkbox-label">
-                    <i class="fa fa-lock"></i>
-                    <input type="checkbox" value="1" name="permissionRoles[@{{permission.id}}][@{{role.id}}]">
-                    @{{ role.name }}
-                </label>
-                <label v-else="role.id!=1" class="form-checkbox-label">
-                    <input type="checkbox" value="1" name="permissionRoles[@{{permission.id}}][@{{role.id}}]">
-                    @{{ role.name }}
-                </label>
-            </td>
-        </tr>
-    </table>
-    <div class="form-group row col-sm-offset-4 col-sm-8">
-        <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-        <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-    </div>
+                <td v-for="role in roles">@{{ role.name }}</td>
+            </tr>
+            <tr v-for="permission in permissions">
+                <td>@{{ permission.name }}</td>
+                <td v-for="role in roles">
+                    <label v-if="role.id==1" class="form-checkbox-label">
+                        <i class="fa fa-lock"></i>
+                        <input type="checkbox" value="1" name="permissionRoles[@{{permission.id}}][@{{role.id}}]" v-bind="{ 'checked': checks[permission.id][role.id].checked}" style="display:none;">
+                    </label>
+                    <label v-else="role.id!=1" class="form-checkbox-label">
+                        <input type="checkbox" value="1" name="permissionRoles[@{{permission.id}}][@{{role.id}}]" v-bind="{ 'checked': checks[permission.id][role.id].checked}">
+                    </label>
+                </td>
+            </tr>
+        </table>
+        <div class="form-group row col-sm-offset-4 col-sm-8">
+            <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+            <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+        </div>
+    </form>
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination">
+            <li v-if="pagination.current_page > 1" class="page-item">
+                <a class="page-link" href="#" aria-label="Previous"
+                    @click.prevent="changePage(pagination.current_page - 1)">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+            <li v-for="page in pagesNumber" class="page-item"
+                v-bind:class="[ page == isActived ? 'active' : '']">
+                <a class="page-link" href="#"
+                    @click.prevent="changePage(page)">@{{ page }}</a>
+            </li>
+            <li v-if="pagination.current_page < pagination.last_page" class="page-item">
+                <a class="page-link" href="#" aria-label="Next"
+                    @click.prevent="changePage(pagination.current_page + 1)">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
     <!-- Create Round Modal -->
     <div class="modal fade" id="create-round" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

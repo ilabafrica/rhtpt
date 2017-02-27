@@ -7,13 +7,21 @@ new Vue({
   data: {
     roles: [],
     permissions: [],
+    checks: [],
+    /*pagination: {
+        total: 0, 
+        per_page: 2,
+        from: 1, 
+        to: 0,
+        current_page: 1
+      },*/
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
     newFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
     fillFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''}
   },
-
+  /*
   computed: {
         isActived: function () {
             return this.pagination.current_page;
@@ -38,7 +46,7 @@ new Vue({
             return pagesArray;
         }
     },
-
+    */
   ready : function(){
   		this.getVuePermissions();
   },
@@ -47,54 +55,22 @@ new Vue({
 
         getVuePermissions: function(){
           this.$http.get('/vuepermissions').then((response) => {
-            this.$set('permissions', response.data.data.permissions);
-            this.$set('roles', response.data.data.roles);
-            this.$set('pagination', response.data.pagination);
-            console.log(response);
+            this.$set('permissions', response.data.permissions);
+            this.$set('roles', response.data.roles);
+            this.$set('checks', response.data.checks);
           });
         },
 
-        createPermission: function(){
-		  var input = this.newFacility;
-		  this.$http.post('/vuepermissions',input).then((response) => {
-		    this.changePage(this.pagination.current_page);
-			this.newFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':''};
-			$("#create-facility").modal('hide');
-			toastr.success('Facility Created Successfully.', 'Success Alert', {timeOut: 5000});
-		  }, (response) => {
-			this.formErrors = response.data;
-	    });
+        createPrivilege: function(){
+		    let myForm = document.getElementById('update_privileges');
+            let formData = new FormData(myForm);
+            this.$http.post('/vuepermissions', formData).then((response) => {
+                toastr.success('Privileges Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                this.getVuePermissions();
+            }, (response) => {
+                this.formErrors = response.data;
+            });
 	},
-
-      deletePermission: function(facility){
-        this.$http.delete('/vuepermissions/'+facility.id).then((response) => {
-            this.changePage(this.pagination.current_page);
-            toastr.success('Facility Deleted Successfully.', 'Success Alert', {timeOut: 5000});
-        });
-      },
-
-      editPermission: function(facility){
-          this.fillFacility.name = facility.name;
-          this.fillFacility.id = facility.id;
-          this.fillFacility.description = facility.description;
-          this.fillFacility.order = facility.order;
-          this.fillFacility.tag = facility.tag;
-          this.fillFacility.options = facility.options;
-          $("#edit-facility").modal('show');
-      },
-
-      updatePermission: function(id){
-        var input = this.fillFacility;
-        this.$http.put('/vuepermissions/'+id,input).then((response) => {
-            this.changePage(this.pagination.current_page);
-            this.fillFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''};
-            $("#edit-facility").modal('hide');
-            toastr.success('Facility Updated Successfully.', 'Success Alert', {timeOut: 5000});
-          }, (response) => {
-              this.formErrorsUpdate = response.data;
-          });
-      },
-
       changePage: function (page) {
           this.pagination.current_page = page;
           this.getVuePermissions(page);

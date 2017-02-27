@@ -56,6 +56,7 @@
         </tr>
     </table>
     <!-- Pagination -->
+    <!--
     <nav>
         <ul class="pagination">
             <li v-if="pagination.current_page > 1" class="page-item">
@@ -77,7 +78,7 @@
             </li>
         </ul>
     </nav>
-
+     -->
     <!-- Create Shipment Modal -->
     <div class="modal fade" id="create-shipment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">

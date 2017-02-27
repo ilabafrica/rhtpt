@@ -30,11 +30,46 @@ class PermissionController extends Controller
     {
         $permissions = Permission::all();
         $roles = Role::all();
+        foreach($permissions as $permission)
+        {
+            foreach($roles as $role)
+            {
+                $checks[$permission->id][$role->id]['checked'] = $permission->hasRole($role->name);
+            }
+        }
         $response = [
             'roles' => $roles,
-            'permissions' => $permissions
+            'permissions' => $permissions,
+            'checks' => $checks
         ];
-
         return response()->json($response);
+    }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store()
+    {
+        $arrayPermissionRoleMapping = Input::get('permissionRoles');
+        $permissions = Permission::all();
+        $roles = Role::all();
+        foreach ($permissions as $permission) 
+        {
+            foreach ($roles as $role) 
+            {
+                //If checkbox is clicked attach the permission
+                if(!empty($arrayPermissionRoleMapping[$permission->id][$role->id]))
+                {   $role->detachPermission($permission);
+                    $role->attachPermission($permission);
+                }
+                //If checkbox is NOT clicked detatch the permission
+                elseif (empty($arrayPermissionRoleMapping[$permission->id][$role->id]))
+                {
+                    $role->detachPermission($permission);
+                }
+            }
+        }
+        return response()->json($arrayPermissionRoleMapping);
     }
 }

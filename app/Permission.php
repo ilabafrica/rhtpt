@@ -13,8 +13,10 @@ class Permission extends EntrustPermission
     */
     public function hasRole($name)
     {
-        foreach ($this->roles as $role) {
-            if ($role->name == $name) {
+        foreach ($this->roles as $role) 
+        {
+            if ($role->name == $name) 
+            {
                 return true;
             }
         }
