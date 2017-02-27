@@ -9,7 +9,7 @@
         </ol>
     </div>
 </div>
-<div class="" id="manage-broadcast">
+<div class="" id="manage-broadcasts">
     <!-- Program Listing -->
     <div class="row">
         <div class="col-lg-12 margin-tb">
@@ -17,7 +17,7 @@
                 <h5><i class="fa fa-book"></i> {!! trans('messages.broadcast') !!}
         
                 @permission('create-role')
-                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-program">
+                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#compose-sms">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
                     </button>
@@ -72,31 +72,44 @@
         </ul>
     </nav>
 
-    <!-- Create Program Modal -->
-    <div class="modal fade" id="create-program" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <!-- Compose SMS Modal -->
+    <div class="modal fade" id="compose-sms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Create Program</h4>
+            <h4 class="modal-title" id="myModalLabel">Compose SMS</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createProgram">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="broadcastSMS">
 
                         <div class="col-md-12">
 				            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
+                                <label class="col-sm-4 form-control-label" for="title">Round ID:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" name="name" class="form-control" v-model="newProgram.name" />
-                                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                                    <select class="form-control c-select" name="round_id" v-model="newSMS.round_id">
+                                        <option selected></option>
+                                        <option v-for="round in rounds" :value="round.id">@{{ round.value }}</option>   
+                                    </select>
+                                    <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
+                                 </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Notification:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="notification_id" v-model="newSMS.notification_id">
+                                        <option selected></option>
+                                        <option v-for="notification in notifications" :value="notification.id">@{{ notification.value }}</option>   
+                                    </select>
+                                    <span v-if="formErrors['notification_id']" class="error text-danger">@{{ formErrors['notification_id'] }}</span>
                                  </div>
                             </div>
 				            <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Description:</label>
                                 <div class="col-sm-8">
-                                    <textarea name="description" class="form-control" v-model="newProgram.description"></textarea>
-                                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                                    <textarea name="text" class="form-control" v-model="newSMS.text"></textarea>
+                                    <span v-if="formErrors['text']" class="error text-danger">@{{ formErrors['text'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">

@@ -273,6 +273,10 @@
         <script src="{{ asset('controllers/result.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('permission'))
         <script src="{{ asset('controllers/permission.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('assign'))
+        <script src="{{ asset('controllers/assign.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('broadcast'))
+        <script src="{{ asset('controllers/broadcast.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('bulk') || Request::segment(1)==strtolower('settings'))
         <script src="{{ asset('controllers/bulk.js') }}"></script>
         @endif

@@ -107,7 +107,7 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get("/assign", array(
         "as"   => "role.assign",
-        "uses" => "RoleController@assign"
+        "uses" => "RoleController@manageAssignment"
     ));
     Route::post("/assign", array(
         "as"   => "role.assign",
@@ -221,4 +221,7 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get('permission', 'PermissionController@managePermissions');
     Route::resource('vuepermissions','PermissionController');
+
+    Route::get('assign', 'AssignmentController@manageAssignments');
+    Route::resource('vueassigns','AssignmentController');
 });
