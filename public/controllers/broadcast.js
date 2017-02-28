@@ -5,9 +5,11 @@ new Vue({
   el: '#manage-broadcasts',
 
   data: {
-    code: '',
-    username: '',
-    api_key: '',
+    broadcasts: [],
+    rounds: [],
+    notifications: [],
+    counties: [],
+    template: '',
     pagination: {
         total: 0, 
         per_page: 2,
@@ -18,7 +20,8 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    fillSettings : {'code':'','username':'','api_key':''},
+    newSMS : {'round_id':'','notification_id':'','text':'','county':[]},
+    fillSMS : {'round_id':'','notification_id':'','text':'','county':[]},
     
   },
 
@@ -48,18 +51,30 @@ new Vue({
     },
 
   ready : function(){
-  		this.getVueSettings(this.pagination.current_page);
+  		this.getVueBroadcasts(this.pagination.current_page);
+        this.loadRounds();
+        this.loadCounties();
+        this.loadNotifications();
   },
 
   methods : {
 
-        getVueSettings: function(page){
-          this.$http.get('/bulk/key?page='+page).then((response) => {
-            this.$set('code', response.data.data.data[0].code);
-            this.$set('username', response.data.data.data[0].username);
-            this.$set('api_key', response.data.data.data[0].api_key);
+        getVueBroadcasts: function(page){
+          this.$http.get('/vuebroadcasts?page='+page).then((response) => {
+            this.$set('broadcasts', response.data.data.data);
             this.$set('pagination', response.data.pagination);
           });
+        },
+        broadcastSMS: function(){
+            var input = this.newSMS;
+            this.$http.post('/vuebroadcasts',input).then((response) => {
+                this.changePage(this.pagination.current_page);
+                this.newSMS = {'round_id':'','notification_id':'','text':'','county':[]};
+                $("#compose-sms").modal('hide');
+                toastr.success('SMS Sent Successfully.', 'Success Alert', {timeOut: 5000});
+            }, (response) => {
+                this.formErrors = response.data;
+            });
         },
 
       editSettings: function(code, username, api_key){
@@ -83,9 +98,48 @@ new Vue({
 
       changePage: function (page) {
           this.pagination.current_page = page;
-          this.getVueSettings(page);
+          this.getVueBroadcasts(page);
       }
+      ,
 
+      loadRounds: function() {
+        this.$http.get('/rnds').then((response) => {
+            this.rounds = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      loadCounties: function() {
+        this.$http.get('/cnts').then((response) => {
+            this.counties = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      loadNotifications: function() {
+        this.$http.get('/ntfctns').then((response) => {
+            this.notifications = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      loadTemplate: function() {
+        let id = this.newSMS.notification_id;
+        this.$http.get('/tmplt/'+id).then((response) => {
+            this.template = response.data;
+            $( "#text" ).val(this.template);
+            $( "#text" ).trigger('change');
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
   }
 
 });

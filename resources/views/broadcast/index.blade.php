@@ -38,14 +38,14 @@
             <th>Action</th>
         </tr>
         <tr v-for="broadcast in broadcasts">
-            <td>@{{ broadcast.name }}</td>
-            <td>@{{ broadcast.description }}</td>
-            <td>@{{ broadcast.name }}</td>
-            <td>@{{ broadcast.description }}</td>
+            <td>@{{ broadcast.rnd }}</td>
+            <td>@{{ broadcast.ntfctn }}</td>
+            <td>@{{ broadcast.date_sent }}</td>
+            <td>@{{ broadcast.text }}</td>
             <td>	
-                <button v-bind="{ 'disabled': program.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editProgram(program)"><i class="fa fa-edit"></i> Edit</button>
-                <button v-if="program.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreProgram(program)">Enable</button>
-                <button v-if="program.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteProgram(program)">Disable</button>
+                <button v-bind="{ 'disabled': program.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editBroadcast(broadcast)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-if="program.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreBroadcast(broadcast)">Enable</button>
+                <button v-if="program.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteBroadcast(broadcast)">Disable</button>
             </td>
         </tr>
     </table>
@@ -98,7 +98,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Notification:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control c-select" name="notification_id" v-model="newSMS.notification_id">
+                                    <select class="form-control c-select" name="notification_id" v-model="newSMS.notification_id" @change="loadTemplate">
                                         <option selected></option>
                                         <option v-for="notification in notifications" :value="notification.id">@{{ notification.value }}</option>   
                                     </select>
@@ -108,8 +108,20 @@
 				            <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Description:</label>
                                 <div class="col-sm-8">
-                                    <textarea name="text" class="form-control" v-model="newSMS.text"></textarea>
+                                    <textarea name="text" value="" class="form-control" v-model="newSMS.text" rows="4" id="text"></textarea>
                                     <span v-if="formErrors['text']" class="error text-danger">@{{ formErrors['text'] }}</span>
+                                </div>
+                            </div>
+				            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">County:</label>
+                                <div class="col-sm-8">
+                                    <div class="form-checkbox form-checkbox-inline" v-for="county in counties">
+                                        <label class="form-checkbox-label">
+                                            <input type="checkbox" class="form-checkbox-input" :value="county.id" name="county[]" v-model="newSMS.county">
+                                            @{{ county.value }}
+                                        </label>
+                                    </div>
+                                    <span v-if="formErrors['county']" class="error text-danger">@{{ formErrors['county'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">

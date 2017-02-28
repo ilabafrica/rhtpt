@@ -173,6 +173,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('settings', 'BulkSMSController@manageSettings');
 
     Route::get('broadcast', 'BulkSMSController@manageBroadcast');
+    Route::resource('vuebroadcasts','BulkSMSController');
     
     //  Save sms gateway username and api-key
     Route::post("/bulk/api", array(
@@ -224,4 +225,13 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get('assign', 'AssignmentController@manageAssignments');
     Route::resource('vueassigns','AssignmentController');
+
+    Route::get("/ntfctns", array(
+        "as"   => "notifications.fetch",
+        "uses" => "NotificationController@fetch"
+    ));
+    Route::get("/tmplt/{id}", array(
+        "as"   => "template.fetch",
+        "uses" => "NotificationController@template"
+    ));
 });

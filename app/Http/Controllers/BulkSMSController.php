@@ -4,7 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Program;
+use App\Round;
+use App\Notification;
+use App\County;
+use App\SubCounty;
+use App\Facility;
+use App\Tier;
+use App\User;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 use Config;
@@ -26,13 +32,106 @@ class BulkSMSController extends Controller
     {
         return view('bulk.index');
     }
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
+    {
+        $bulks = DB::table('bulk')->latest()->paginate(5);
+
+        foreach($bulks as $bulk)
+        {
+            $bulk->rnd = Round::find($bulk->round_id)->name;
+            $note = Notification::find($bulk->notification_id);
+            $bulk->ntfctn = $note->notification($note->template);
+        }
+
+        $response = [
+            'pagination' => [
+                'total' => $bulks->total(),
+                'per_page' => $bulks->perPage(),
+                'current_page' => $bulks->currentPage(),
+                'last_page' => $bulks->lastPage(),
+                'from' => $bulks->firstItem(),
+                'to' => $bulks->lastItem()
+            ],
+            'data' => $bulks
+        ];
+
+        return response()->json($response);
+    }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+            'round_id' => 'required',
+            'notification_id' => 'required',
+            'text' => 'required',
+            'county' => 'required',
+        ]);
+        $message = $request->text;
+        $round_id = $request->round_id;
+        $notification_id = $request->notification_id;
+        $user_id = Auth::user()->id;
+        $created = Carbon::today()->toDateTimeString();
+        $updated = Carbon::today()->toDateTimeString();
+        //  Time
+        $now = Carbon::now('Africa/Nairobi');
+        $bulk = DB::table('bulk')->insert(['notification_id' => $notification_id, 'round_id' => $round_id, 'text' => $message, 'user_id' => $user_id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
+        //  Prepare to send SMS
+        // Retrieve login credentials
+        $api = DB::table('bulk_sms_settings')->first();
+        $username   = $api->username;
+        $apikey     = $api->api_key;
+        //  TO DO: Use query to retrieve -- number to send messages
+        # Prepare to fetch list of phone numbers from the selected coounties.
+        $counties = [];
+        foreach(Input::get('county') as $key => $value)
+        {
+            array_push($counties, $value);
+        }
+        $subCounties = SubCounty::whereIn('county_id', $counties)->lists('id');
+        $facilities = Facility::whereIn('sub_county_id', $subCounties)->lists('id');
+        $tiers = Tier::where('role_id', 2)->whereIn('tier', $facilities)->lists('user_id');
+        $phone_numbers = User::whereIn('id', $tiers)->whereNotNull('phone')->lists('phone')->toArray();
+        $recipients = implode(",", $phone_numbers);
+        // Specified sender-id
+        $from = $api->code;
+        // Create a new instance of Bulk SMS gateway.
+        $sms    = new Bulk($username, $apikey);
+        // use try-catch to filter any errors.
+        try
+        {
+          // Send messages
+          $results = $sms->sendMessage($recipients, $message, $from);
+          foreach($results as $result)
+          {
+            // status is either "Success" or "error message" and save.
+            $number = $result->number;
+            //  Save the results
+            DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
+          }
+        }
+        catch ( AfricasTalkingGatewayException $e )
+        {
+          echo "Encountered an error while sending: ".$e->getMessage();
+        }
+
+        return response()->json('Sent');
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index2()
     {
       //  Prepare to send SMS
       // Retrieve login credentials

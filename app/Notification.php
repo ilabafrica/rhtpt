@@ -22,4 +22,19 @@ class Notification extends Model
     const RESULTS_RECEIVED = 2;
     const FEEDBACK_RELEASE = 3;
     const OTHER = 4;
+
+    /**
+  	 * Return readable tag
+  	 */
+  	public function notification($id)
+  	{
+  		  if($id == Notification::PANEL_DISPATCH)
+            return 'Panels Dispatched';
+        else if($id == Notification::RESULTS_RECEIVED)
+            return 'Results Received';
+        else if($id == Notification::FEEDBACK_RELEASE)
+            return 'Feedback Release';
+        else if($id == Notification::OTHER)
+            return 'Other';
+  	}
 }
