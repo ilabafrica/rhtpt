@@ -64,7 +64,7 @@
 	                                    <p>{!! session('message') !!}</p>
 	                                </div>
 	                            @endif
-								<form class="mt" role="form" method="POST" action="{{ url('auth/login') }}">
+								<form class="mt" role="form" method="POST" action="{{ url('login') }}">
 									<!-- CSRF Token -->
 	                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
 	                                <!-- ./ csrf token -->

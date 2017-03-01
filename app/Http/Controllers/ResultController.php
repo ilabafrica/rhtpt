@@ -185,4 +185,175 @@ class ResultController extends Controller
     		if(($pos = strpos($field, '_')) !== FALSE)
     		return substr($field, $pos+1);
   	}
+    /**
+     * Begin algorithm to mark test results
+     */
+    /**
+     * Function to check dates - received, constituted, tested
+     *
+     * @param  $date_pt_panel_received, $date_consituted, $date_pt_panel_tested
+     * @return Deviation from procedure.
+     */
+     public function check_dates($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested)
+     {
+         // Check Dates
+         $dev_from_procedure = 0;
+         $dt_constituted = Carbon::parse($date_pt_panel_constituted);
+         $dt_tested = Carbon::parse($date_pt_panel_tested);
+         if($date_pt_panel_tested == $date_pt_panel_constituted || $dt_constituted->diffInDays($dt_tested) == 1)
+            $dev_from_procedure = 1;
+         return $dev_from_procedure;
+     }
+    /**
+     * Function to check other info - received, constituted, tested
+     *
+     * @param  $date_pt_panel_received, $date_consituted, $date_pt_panel_tested
+     * @return Deviation from procedure.
+     */
+     public function check_other_info($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested)
+     {
+         // Check Dates
+         $incomplete_other_info = 0;
+         if(empty($date_pt_panel_tested) ||empty($date_pt_panel_constituted) || empty($dt_tested))
+            $incomplete_other_info = 1;
+         return $incomplete_other_info;
+     }
+    /**
+     * Function to completeness of HIV test kits info
+     *
+     * @param  $test_1_kit_name, $test_2_kit_name, $test_1_kit_lot_no, $test_2_kit_lot_no, $test_1_expiry_date, $test_2_expiry_date
+     * @return Incomplete kit data.
+     */
+     public function check_kit_info($test_1_kit_name, $test_2_kit_name, $test_1_kit_lot_no, $test_2_kit_lot_no, $test_1_expiry_date, $test_2_expiry_date)
+     {
+         // Check kit info
+         $incomplete_kit_info = 0;
+         if(empty($test_1_kit_name) || empty($test_2_kit_name) || empty($test_1_kit_lot_no) || empty($test_2_kit_lot_no) || empty($test_1_expiry_date) || empty($test_2_expiry_date))
+             $incomplete_kit_info = 1;
+         return $incomplete_kit_info;
+     }
+    /**
+     * Function to check kit expiry against date tested
+     *
+     * @param  $date_pt_panel_tested, $date_consituted, $date_pt_panel_tested
+     * @return Deviation from procedure.
+     */
+     public function check_expiry($date_pt_panel_tested, $test_1_expiry_date, $test_2_expiry_date_date, $test_3_expiry_date)
+     {
+         $use_of_expired_kits = 0;
+         $dt_tested = Carbon::parse($date_pt_panel_tested);
+         $dt_1_expiry = Carbon::parse($test_1_expiry_date);
+         $dt_2_expiry = Carbon::parse($test_2_expiry_date);
+         $dt_3_expiry = Carbon::parse($test_3_expiry_date);
+         if($dt_tested->gt($dt_1_expiry) || $dt_tested->gt($dt_2_expiry) || $dt_tested->gt($dt_3_expiry))
+            $use_of_expired_kits = 1;
+         return $use_of_expired_kits;
+     }
+    /**
+     * Function to check completeness of results
+     *
+     * @param  Test results, Final results
+     * @return Incomplete Results.
+     */
+     public function check_complete_results($pt_panel_1_test_1_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_final_results)
+     {
+         $incomplete_results = 1;
+         if(
+             ((($pt_panel_1_test_1_results == 'Reactive') || ($pt_panel_1_final_results == 'Non_reactive')) && (empty($pt_panel_1_final_results) || ($pt_panel_1_final_results == 'Not done') || ($pt_panel_1_final_results == 'Not_done'))) ||
+             ((($pt_panel_2_test_1_results == 'Reactive') || ($pt_panel_2_final_results == 'Non_reactive')) && (empty($pt_panel_2_final_results) || ($pt_panel_2_final_results == 'Not done') || ($pt_panel_2_final_results == 'Not_done'))) ||
+             ((($pt_panel_3_test_1_results == 'Reactive') || ($pt_panel_3_final_results == 'Non_reactive')) && (empty($pt_panel_3_final_results) || ($pt_panel_3_final_results == 'Not done') || ($pt_panel_3_final_results == 'Not_done'))) ||
+             ((($pt_panel_4_test_1_results == 'Reactive') || ($pt_panel_4_final_results == 'Non_reactive')) && (empty($pt_panel_4_final_results) || ($pt_panel_4_final_results == 'Not done') || ($pt_panel_4_final_results == 'Not_done'))) ||
+             ((($pt_panel_5_test_1_results == 'Reactive') || ($pt_panel_5_final_results == 'Non_reactive')) && (empty($pt_panel_5_final_results) || ($pt_panel_5_final_results == 'Not done') || ($pt_panel_5_final_results == 'Not_done'))) ||
+             ((($pt_panel_6_test_1_results == 'Reactive') || ($pt_panel_6_final_results == 'Non_reactive')) && (empty($pt_panel_6_final_results) || ($pt_panel_6_final_results == 'Not done') || ($pt_panel_6_final_results == 'Not_done')))
+         )
+            $incomplete_results = 1;
+         return $incomplete_results;
+     }
+    /**
+     * Function to check correctness of results
+     *
+     * @param  $date_pt_panel_received, $date_consituted, $date_pt_panel_tested
+     * @return Incorrect results.
+     */
+     public function check_correct_results($pt_panel_1_final_results, $pt_panel_2_final_results, $pt_panel_3_final_results, $pt_panel_4_final_results, $pt_panel_5_final_results, $pt_panel_6_final_results, $expected)
+     {
+         // Check correctness
+         $incorrect_results = 1;
+         if(
+             ($pt_panel_1_final_results == $expected->pt1 || $pt_panel_1_final_results == 'Descrepant') &&
+             ($pt_panel_2_final_results == $expected->pt2 || $pt_panel_2_final_results == 'Descrepant') &&
+             ($pt_panel_3_final_results == $expected->pt3 || $pt_panel_3_final_results == 'Descrepant') &&
+             ($pt_panel_4_final_results == $expected->pt4 || $pt_panel_4_final_results == 'Descrepant') &&
+             ($pt_panel_5_final_results == $expected->pt5 || $pt_panel_5_final_results == 'Descrepant') &&
+             ($pt_panel_6_final_results == $expected->pt6 || $pt_panel_6_final_results == 'Descrepant')
+         )
+            $incorrect_results = 0;
+         return $incorrect_results;
+     }
+    /**
+     * Function to check if results satisfactory
+     *
+     * @param  $incorrect_results
+     * @return Unsatisfactory results.
+     */
+     public function check_satisfaction($incorrect_results)
+     {
+         $unsatisfactory = 0;
+         if($incorrect_results == 1)
+            $unsatisfactory = 1;
+         return $unsatisfactory;
+     }
+    /**
+     * Function to check if results are valid
+     *
+     * @param  Test results
+     * @return Invalid results.
+     */
+     public function check_validity($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results)
+     {
+         $invalid = 0;
+         if(
+             ($pt_panel_1_test_1_results == 'Invalid' || $pt_panel_1_test_2_results == 'Invalid' || $pt_panel_1_test_3_results == 'Invalid' || $pt_panel_1_final_results == 'Invalid') || 
+             ($pt_panel_2_test_1_results == 'Invalid' || $pt_panel_2_test_2_results == 'Invalid' || $pt_panel_2_test_3_results == 'Invalid' || $pt_panel_2_final_results == 'Invalid') || 
+             ($pt_panel_3_test_1_results == 'Invalid' || $pt_panel_3_test_2_results == 'Invalid' || $pt_panel_3_test_3_results == 'Invalid' || $pt_panel_3_final_results == 'Invalid') || 
+             ($pt_panel_4_test_1_results == 'Invalid' || $pt_panel_4_test_2_results == 'Invalid' || $pt_panel_4_test_3_results == 'Invalid' || $pt_panel_4_final_results == 'Invalid') || 
+             ($pt_panel_5_test_1_results == 'Invalid' || $pt_panel_5_test_2_results == 'Invalid' || $pt_panel_5_test_3_results == 'Invalid' || $pt_panel_5_final_results == 'Invalid') || 
+             ($pt_panel_6_test_1_results == 'Invalid' || $pt_panel_6_test_2_results == 'Invalid' || $pt_panel_6_test_3_results == 'Invalid' || $pt_panel_6_final_results == 'Invalid')
+        )
+            $invalid = 1;
+         return $invalid;
+     }
+    /**
+     * Function to check if algorithm followed
+     *
+     * @param  Test results
+     * @return Wrong algorithm.
+     */
+     public function check_algorithm($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results)
+     {
+         $wrong_algorithm = 0;
+         if(
+             ($pt_panel_1_test_1_results == 'Non_Reactive' && $pt_panel_1_test_2_results == 'Non_Done') || ($pt_panel_1_test_1_results == 'Reactive' && ($pt_panel_1_test_2_results == 'Non_Reactive' || $pt_panel_1_test_2_results == 'Reactive')) || 
+             ($pt_panel_2_test_1_results == 'Non_Reactive' && $pt_panel_2_test_2_results == 'Non_Done') || ($pt_panel_2_test_1_results == 'Reactive' && ($pt_panel_2_test_2_results == 'Non_Reactive' || $pt_panel_2_test_2_results == 'Reactive')) || 
+             ($pt_panel_3_test_1_results == 'Non_Reactive' && $pt_panel_3_test_2_results == 'Non_Done') || ($pt_panel_3_test_1_results == 'Reactive' && ($pt_panel_3_test_2_results == 'Non_Reactive' || $pt_panel_3_test_2_results == 'Reactive')) || 
+             ($pt_panel_4_test_1_results == 'Non_Reactive' && $pt_panel_4_test_2_results == 'Non_Done') || ($pt_panel_4_test_1_results == 'Reactive' && ($pt_panel_4_test_2_results == 'Non_Reactive' || $pt_panel_4_test_2_results == 'Reactive')) || 
+             ($pt_panel_5_test_1_results == 'Non_Reactive' && $pt_panel_5_test_2_results == 'Non_Done') || ($pt_panel_5_test_1_results == 'Reactive' && ($pt_panel_5_test_2_results == 'Non_Reactive' || $pt_panel_5_test_2_results == 'Reactive')) || 
+             ($pt_panel_6_test_1_results == 'Non_Reactive' && $pt_panel_6_test_2_results == 'Non_Done') || ($pt_panel_6_test_1_results == 'Reactive' && ($pt_panel_6_test_2_results == 'Non_Reactive' || $pt_panel_6_test_2_results == 'Reactive'))
+        )
+            $wrong_algorithm = 1;
+         return $wrong_algorithm;
+     }
+    /**
+     * Function to set overall result - satisfactory/unsatisfactory
+     *
+     * @param  $dev_from_procedure, $incomplete_other_info, $incomplete_kit_info, $use_of_expired_kits, $incomplete_results, $incorrect_results, $unsatisfactory, $invalid, $wrong_algorithm
+     * @return Unsatisfactory results.
+     */
+     public function check_overall($dev_from_procedure, $incomplete_other_info, $incomplete_kit_info, $use_of_expired_kits, $incomplete_results, $incorrect_results, $unsatisfactory, $invalid, $wrong_algorithm)
+     {
+         $overall = 0;
+         if($dev_from_procedure == 0 && $incomplete_other_info == 0 && $incomplete_kit_info == 0 && $use_of_expired_kits == 0 && $incomplete_results == 0 && $incorrect_results == 0 && $unsatisfactory == 0 && $invalid == 0 && $wrong_algorithm)
+            $overall = 1;
+         return $overall;
+     }
 }
