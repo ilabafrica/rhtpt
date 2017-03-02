@@ -17,4 +17,29 @@ class Option extends Model
   	 * @var string
   	 */
   	protected $table = 'options';
+	/**
+	* Return Option ID given the title
+	* @param $title the title of the option
+	*/
+	public static function idByTitle($title=NULL)
+	{
+		if($title!=NULL)
+		{
+			try 
+			{
+				$option = Option::where('title', $title)->orderBy('title', 'asc')->firstOrFail();
+				return $option->id;
+			} 
+			catch (ModelNotFoundException $e) 
+			{
+				Log::error("The option ` $title ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
 }

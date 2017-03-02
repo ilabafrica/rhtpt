@@ -14,8 +14,10 @@ class Pt extends Model
   	 * Status of result
   	 *
   	 */
-  	const VERIFIED = 1;
-  	const NOT_VERIFIED = 0;
+  	const NOT_CHECKED = 0;
+	const CHECKED = 1;
+  	const NOT_VERIFIED = 2;
+  	const VERIFIED = 3;
 	/**
   	 * Status of result
   	 *
