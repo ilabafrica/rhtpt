@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // Create 10 users using model factory
         factory(\App\User::class, 10)->create();
-
+        //  Remember users must be created first because of the user-id fk
         factory(\App\Product::class, 50)->create();
     }
 }

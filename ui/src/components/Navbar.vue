@@ -18,6 +18,11 @@
             </router-link>
           </li>
           <li class="nav-item">
+            <router-link class="nav-link" to="/products/create" v-if="isAuth">
+              Create
+            </router-link>
+          </li>
+          <li class="nav-item">
             <router-link class="nav-link" to="/logout" v-if="isAuth">
               Logout
             </router-link>

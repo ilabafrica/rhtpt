@@ -30,6 +30,7 @@ $factory->define(App\Product::class, function (Faker\Generator $faker) {
         'name' => $faker->word,
         'price' => $faker->randomFloat(2, 1, 100),
         'description' => $faker->paragraph(random_int(1, 10)),
+        'user_id' => App\User::all()->random()->id,
     ];
 });
 
