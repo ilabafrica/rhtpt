@@ -2,15 +2,17 @@
     <div class="card">
         <div class="card-block">
             <div class="row" style="padding-bottom:20px">
-                <div class="col-md-12">
-                    <img src='../../assets/img/coa.png' class="rounded mx-auto d-block" height="75px"/>
-                    <h5 class="text-primary text-center">Kenya Serology HIV PT</h5>
+                <div class="col-md-5">
+                    <img src="coa.png" height="75px">
+                </div>
+                <div class="col-md-7">
+                    <h4 class="text-primary">{!! Config::get('cms.name') !!}</h4>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="username" class="col-sm-2 col-form-label">Username</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="username" placeholder="Username">
+                    <input type="email" class="form-control" v-model="email" placeholder="Email">
                 </div>
             </div>
             <div class="form-group row">
@@ -21,9 +23,12 @@
             </div>
             <div class="form-group row">
                 <div class="offset-sm-2 col-sm-10">
-                    <button @click="login" class="btn btn-success">Sign in</button>
+                    <button @click="login" class="btn btn-primary">Sign in</button>
                 </div>
             </div>
+        <pre>
+            {{ $data }}
+        </pre>
         </div>
     </div>
 </template>
@@ -32,7 +37,7 @@
     export default{
         data(){
             return{
-                username:'',
+                email:'',
                 password:''
             }
         },
@@ -42,7 +47,7 @@
                     client_id: 2,
                     client_secret: 'ExBrr4aMKbBaLnWVrZqerSaDynbYVbBaZTnjwMhW',
                     grant_type: 'password',
-                    username: this.username,
+                    username: this.email,
                     password: this.password
                 }
                 this.$http.post('oauth/token', data)
