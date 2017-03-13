@@ -181,7 +181,8 @@ return [
         *   Vendor
         */
         Barryvdh\Cors\ServiceProvider::class,
-        Laravel\Passport\PassportServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class, 
+        Zizaco\Entrust\EntrustServiceProvider::class,
     ],
 
     /*
@@ -229,6 +230,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        /**
+        *   Vendor
+        */
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
 
     ],
 

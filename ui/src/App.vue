@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <div class="side-bar">
+    <div v-if="authenticatedUser" class="side-bar">
       <leftnav></leftnav>
     </div>
-    <section class="content">
+    <section class="content" v-if="authenticatedUser">
       <navbar></navbar>
       <div class="warper container-fluid">
         <router-view></router-view>
@@ -11,6 +11,9 @@
       <foot></foot>
       <br />
     </section>
+    <div class="warper container-fluid" v-if="!authenticatedUser">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -20,6 +23,18 @@
   import Footer from './components/Footer.vue'
 
   export default {
+    data(){
+        return{
+            authenticatedUser:'',
+        }
+    },
+
+    computed: {
+        authenticatedUser(){
+            return this.authnticatedUser = this.$auth.getAuthenticatedUser()
+        }
+    },
+
     components: {
       'leftnav': Sidebar,
       'navbar': Navbar,

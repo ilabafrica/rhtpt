@@ -1,10 +1,10 @@
 <template>
-    <div class="card">
+    <div class="card col-sm-5" style="margin:auto; float:none">
         <div class="card-block">
-            <div class="row" style="padding-bottom:20px">
-                <div class="col-md-12">
+            <div class="row" style="padding:20px">
+                <div class="col-md-12  text-md-center">
                     <img src='../../assets/img/coa.png' class="rounded mx-auto d-block" height="75px"/>
-                    <h5 class="text-primary text-center">Kenya Serology HIV PT</h5>
+                    <h5 class="text-primary">Kenya Serology HIV PT</h5>
                 </div>
             </div>
             <div class="form-group row">
@@ -20,8 +20,8 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="offset-sm-2 col-sm-10">
-                    <button @click="login" class="btn btn-success">Sign in</button>
+                <div class="col-md-offset-2 col-sm-10">
+                    <button @click="login" class="btn btn-success btn-block">Sign in</button>
                 </div>
             </div>
         </div>
@@ -40,7 +40,7 @@
             login(){
                 var data = {
                     client_id: 2,
-                    client_secret: 'ExBrr4aMKbBaLnWVrZqerSaDynbYVbBaZTnjwMhW',
+                    client_secret: 'lKbOFTwQEmeGX3egKQO29yeJbtcGPqULXO58z7Jf',
                     grant_type: 'password',
                     username: this.username,
                     password: this.password
