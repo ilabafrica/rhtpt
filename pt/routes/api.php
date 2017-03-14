@@ -29,4 +29,6 @@ Route::get('/test', function(){
 Route::group(['middleware' => 'auth:api'], function(){
     Route::resource('products', 'ProductController');
     Route::resource('roles', 'RoleController');
+    Route::resource('programs', 'ProgramController');
+    Route::any('programs/{id}/restore','ProgramController@restore');
 });

@@ -39,6 +39,20 @@ const router = new VueRouter({
             meta: {
                 forAuth: true
             }
+        },
+        {
+            path: "/home",
+            component: require('./components/landing/Home.vue'),
+            meta: {
+                forAuth: true
+            }
+        },
+        {
+            path: "/programs",
+            component: require('./components/program/Programs.vue'),
+            meta: {
+                forAuth: true
+            }
         }
     ],
 

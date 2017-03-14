@@ -34,6 +34,7 @@ class ProgramController extends Controller
             ],
             'data' => $programs
         ];
+        dd($response);
 
         return response()->json($response);
     }

@@ -7,64 +7,84 @@
         </div>
         <nav class="navigation">
             <ul class="list-unstyled">
-                	<li class="active"><a href="#"><i class="fa fa-bookmark-o"></i><span class="nav-label">Dashboard</span></a></li>
-                    <li class="has-submenu"><a href="#"><i class="fa fa-comment-o"></i> <span class="nav-label">Widgets &amp; Apps</span></a>
-                    	<ul class="list-unstyled">
-                        	<li><a href="email.html">Email</a></li>
-                            <li><a href="timeline.html">Timeline</a></li>
-                            <li><a href="calendar.html">Calendar</a></li>
-                            <li><a href="notes.html">Notes</a></li>
-                            <li><a href="file-browser.html">File Browser</a></li>
-                        </ul>
-                    </li>
-                    <li class="has-submenu"><a href="#"><i class="fa fa-flag-o"></i> <span class="nav-label">UI Elements</span></a>
-                    	<ul class="list-unstyled">
-                        	<li><a href="uielements-general.html">General Elements</a></li>
-                            <li><a href="buttons.html">Buttons</a></li>
-                            <li><a href="icons.html">Icons</a></li>
-                            <li><a href="typography.html">Typography</a></li>
-                            <li><a href="grid.html">Grid</a></li>
-                            <li><a href="panels.html">Panels</a></li>
-                        </ul>
-                    </li>
-                    <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label">Forms</span></a>
-                    	<ul class="list-unstyled">
-                        	<li><a href="forms-element.html">General Elements</a></li>
-                            <li><a href="forms-validation.html">Form Validation</a></li>
-                            <li><a href="wysihtml.html">Wysihtml</a></li>
-                            <li><a href="file-upload.html">File Upload</a></li>
-                            <li><a href="image-crop.html">Image Crop</a></li>
-                        </ul>
-                    </li>
-                    <li class="has-submenu"><a href="#"><i class="fa fa-heart-o"></i> <span class="nav-label">Table &amp; Grid</span></a>
-                    	<ul class="list-unstyled">
-                        	<li><a href="basic-tables.html">Basic Tables</a></li>
-                            <li><a href="data-tables.html">Data Table</a></li>
-                        </ul>
-                    </li>
-                    <li class="has-submenu"><a href="#"><i class="fa fa-code"></i> <span class="nav-label">Charts</span></a>
-                    	<ul class="list-unstyled">
-                        	<li><a href="chart-variants.html">Chart Variants</a></li>
-                            <li><a href="gauges.html">Gauges</a></li>
-                            <li><a href="vector-maps.html">Vector Maps</a></li>
-                            <li><a href="range-selector.html">Range Selector</a></li>
-                        </ul>
-                    </li>
-                    <li class="has-submenu"><a href="#"><i class="fa fa-star-o"></i> <span class="nav-label">Plugins &amp; More</span></a>
-                    	<ul class="list-unstyled">
-                        	<li><a href="404.html">404 Page</a></li>
-                        	<li><a href="invoice.html">Invoice</a></li>
-                            <li><a href="elfinder.html">File Manager</a></li>
-                            <li><a href="google-maps.html">Google Maps</a></li>
-                            <li><a href="signin.html">Signin</a></li>
-                            <li><a href="signup.html">Signup</a></li>
-                            <li><a href="search.html">Search</a></li>
-                            <li><a href="full-screen.html">Full Screen</a></li>
-                            <li><a href="blank.html">Blank Page</a></li>
-                            
-                        </ul>
-                    </li>
-                </ul>
+                <li class="">
+                    <a href="home"><i class="fa fa-dashboard"></i> Dashboard</a>
+                </li>
+                <li class="has-submenu">
+                    <a href="#"><i class="fa fa-graduation-cap"></i> Proficiency Testing</a>
+                    <ul class="list-unstyled">
+                        <li class="">
+                            <a href="programs"><i class="fa fa-bookmark"></i> Programs</a>
+                        </li>
+                        <li class="">
+                            <a href="shipper"><i class="fa fa-bookmark"></i> Shippers</a>
+                        </li>
+                        <li class="">
+                            <a href="material"><i class="fa fa-bookmark"></i> Sample Preparation</a>
+                        </li>
+                        <li class="">
+                            <a href="round"><i class="fa fa-bookmark"></i> PT Rounds</a>
+                        </li>
+                        <li class="">
+                            <a href="item"><i class="fa fa-bookmark"></i> PT Items</a>
+                        </li>
+                        <li class="">
+                            <a href="expected"><i class="fa fa-bookmark"></i> Expected Results</a>
+                        </li>
+                        <li class="">
+                            <a href="shipment"><i class="fa fa-bookmark"></i> Shipments</a>
+                        </li>
+                        <li class="">
+                            <a href="result"><i class="fa fa-bookmark"></i>Test Results</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-submenu">
+                    <a href="#"><i class="fa fa-google-wallet"></i> Program Management</a>
+                    <ul class="list-unstyled">
+                        <li class="">
+                            <a href="set"><i class="fa fa-bookmark"></i> Field Sets</a>
+                        </li>
+                        <li class="">
+                            <a href="field"><i class="fa fa-bookmark"></i> Fields</a>
+                        </li>
+                        <li class="">
+                            <a href="option"><i class="fa fa-bookmark"></i> Options</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="">
+                    <a href="facility"><i class="fa fa-building"></i> Facility Catalog</a>
+                </li>
+                <li class="has-submenu">
+                    <a href="#"><i class="fa fa-envelope"></i> Notifications</a>
+                    <ul class="list-unstyled">
+                        <li class="">
+                            <a href="settings"><i class="fa fa-bookmark"></i> Settings</a>
+                        </li>
+                        <li class="">
+                            <a href="broadcast"><i class="fa fa-bookmark"></i> Broadcast</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-submenu">
+                    <a href="#"><i class="fa fa-users"></i> User Management</a>
+                    <ul class="list-unstyled">
+                        <li class="">
+                            <a href="user"><i class="fa fa-bookmark"></i> Users</a>
+                        </li>
+                        <li class="">
+                            <a href="role"><i class="fa fa-bookmark"></i> Roles</a>
+                        </li>
+                        <li class="">
+                            <a href="permission"><i class="fa fa-bookmark"></i> Permissions</a>
+                        </li>
+                        <li class="">
+                            <a href="assign"><i class="fa fa-bookmark"></i> Assign Roles</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </nav>
     </aside>
 </template>

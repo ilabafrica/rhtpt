@@ -25,14 +25,12 @@
   export default {
     data(){
         return{
-            authenticatedUser:'',
+            authenticatedUser:null,
         }
     },
 
-    computed: {
-        authenticatedUser(){
-            return this.authnticatedUser = this.$auth.getAuthenticatedUser()
-        }
+    created(){
+      this.authenticatedUser = this.$auth.isAuthenticated()
     },
 
     components: {

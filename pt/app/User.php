@@ -22,8 +22,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
-    public function findForPassport($username) {
-        return $this->where('id', $username)->first();
+    public function findForPassport($username)
+    {
+        return $this->where('username', $username)->first();
     }
 }

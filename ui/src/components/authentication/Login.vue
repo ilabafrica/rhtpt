@@ -48,7 +48,7 @@
                 this.$http.post('oauth/token', data)
                     .then(response => {
                         this.$auth.setToken(response.body.access_token, response.body.expires_in + Date.now())
-                        this.$router.push("/feed")
+                        this.$router.push("/home")
                         console.log(response)
                     })
             }
