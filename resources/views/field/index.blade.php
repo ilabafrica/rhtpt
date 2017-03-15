@@ -80,33 +80,78 @@
             <h4 class="modal-title" id="myModalLabel">Create Field</h4>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createField" id="create_field">
 
-                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createv">
+                        <div class="col-md-12">
+				            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="title" class="form-control" />
+                                    <span v-if="formErrors['title']" class="error text-danger">@{{ formErrors['title'] }}</span>
+                                 </div>
+                            </div>
+				            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">UID:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="uid" class="form-control" />
+                                    <span v-if="formErrors['uid']" class="error text-danger">@{{ formErrors['uid'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Tag:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="tag" @change="showOptions('.shhde', this)">
+                                        <option selected></option>
+                                        <option v-for="tag in tags" :value="tag.id">@{{ tag.value }}</option>
+                                    </select>
+                                    <span v-if="formErrors['tag']" class="error text-danger">@{{ formErrors['tag'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Order:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="order">
+                                        <option selected></option>
+                                        <option v-for="fld in flds" :value="fld.id">@{{ fld.value }}</option>
+                                    </select>
+                                    <span v-if="formErrors['order']" class="error text-danger">@{{ formErrors['order'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Field Set:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="field_set_id">
+                                        <option selected></option>
+                                        <option v-for="set in sets" :value="set.id">@{{ set.value }}</option>
+                                    </select>
+                                    <span v-if="formErrors['field_set_id']" class="error text-danger">@{{ formErrors['field_set_id'] }}</span>
+                                </div>
+                            </div>
+                            <div class="shhde" style="display:none;">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Options:</label>
+                                    <div class="col-sm-8">
+                                        <div class="card card-block">
+                                            <div class="form-checkbox form-checkbox-inline" v-for="option in options">
+                                                <label class="form-checkbox-label">
+                                                    <input type="checkbox" :value="option.id" name="opts[]">
+                                                    @{{ option.value }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" name="name" class="form-control" v-model="newField.name" />
-                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                    </form>
                 </div>
-
-                <div class="form-group">
-                    <label for="title">Label:</label>
-                    <input type="text" name="label" class="form-control" v-model="newField.label" />
-                    <span v-if="formErrors['label']" class="error text-danger">@{{ formErrors['label'] }}</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="title">Description:</label>
-                    <textarea name="description" class="form-control" v-model="newField.description"></textarea>
-                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-
-                </form>
-
             
             </div>
         </div>
@@ -121,34 +166,62 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             <h4 class="modal-title" id="myModalLabel">Edit Field</h4>
             </div>
-            <div class="modal-body">
+            <div class="row">
+                <div class="modal-body">
 
-                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateField(fillField.id)">
-
-                <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" name="name" class="form-control" v-model="fillField.name" />
-                    <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateField(fillField.id)">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="title" class="form-control" v-model="fillField.title" />
+                                    <span v-if="formErrorsUpdate['title']" class="error text-danger">@{{ formErrorsUpdate['title'] }}</span>
+                                </div>
+                            </div>
+				            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">UID:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="uid" class="form-control" v-model="fillField.uid" />
+                                    <span v-if="formErrorsUpdate['uid']" class="error text-danger">@{{ formErrorsUpdate['uid'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Tag:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="tag" v-model="fillField.tag">
+                                        <option selected></option>
+                                        <option v-for="tag in tags" :value="tag.id">@{{ tag.value }}</option>
+                                    </select>
+                                    <span v-if="formErrors['tag']" class="error text-danger">@{{ formErrors['tag'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Order:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="order" v-model="fillField.order">
+                                        <option selected></option>
+                                        <option v-for="fld in flds" :value="fld.id">@{{ fld.value }}</option>
+                                    </select>
+                                    <span v-if="formErrorsUpdate['order']" class="error text-danger">@{{ formErrorsUpdate['order'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Field Set:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="field_set_id" v-model="fillField.field_set_id">
+                                        <option selected></option>
+                                        <option v-for="set in sets" :value="set.id">@{{ set.value }}</option>
+                                    </select>
+                                    <span v-if="formErrorsUpdate['field_set_id']" class="error text-danger">@{{ formErrorsUpdate['field_set_id'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="form-group">
-                    <label for="title">Description:</label>
-                    <textarea name="description" class="form-control" v-model="fillField.description"></textarea>
-                    <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="title">Label:</label>
-                    <input type="text" name="label" class="form-control" v-model="fillField.label" />
-                    <span v-if="formErrorsUpdate['label']" class="error text-danger">@{{ formErrorsUpdate['label'] }}</span>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-
-                </form>
-
             </div>
         </div>
         </div>

@@ -48,7 +48,7 @@ class QuestionnaireController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'title' => 'title',
             'description' => 'required',
         ]);
 
@@ -110,5 +110,19 @@ class QuestionnaireController extends Controller
         }
         $response = ["sets" => $sets, "fields" => $fields, "options" => $options];
         return response()->json($response);
+    }
+    /**
+     * Load list of available questionnaires
+     *
+     */
+    public function quest()
+    {
+        $questionnaires = Questionnaire::lists('title', 'id');
+        $quest = [];
+        foreach($questionnaires as $key => $value)
+        {
+            $quest[] = ['id' => $key, 'value' => $value];
+        }
+        return response()->json($quest);
     }
 }

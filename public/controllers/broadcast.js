@@ -99,8 +99,7 @@ new Vue({
       changePage: function (page) {
           this.pagination.current_page = page;
           this.getVueBroadcasts(page);
-      }
-      ,
+      },
 
       loadRounds: function() {
         this.$http.get('/rnds').then((response) => {

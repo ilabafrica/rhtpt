@@ -6,6 +6,10 @@ new Vue({
 
   data: {
     fields: [],
+    tags: [],
+    sets: [],
+    flds: [],
+    options: [],
     pagination: {
         total: 0, 
         per_page: 2,
@@ -16,8 +20,7 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newField : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
-    fillField : {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''}
+    frmData: {}
   },
 
   computed: {
@@ -47,6 +50,10 @@ new Vue({
 
   ready : function(){
   		this.getVueFields(this.pagination.current_page);
+        this.loadFields();
+        this.loadSets();
+        this.loadTags();
+        this.loadOptions();
   },
 
   methods : {
@@ -59,10 +66,10 @@ new Vue({
         },
 
         createField: function(){
-		  var input = this.newField;
-		  this.$http.post('/vuefields',input).then((response) => {
+		  let myForm = document.getElementById('test_results');
+          let formData = new FormData(myForm);
+		  this.$http.post('/vuefields',formData).then((response) => {
 		    this.changePage(this.pagination.current_page);
-			this.newField = {'name':'','description':'', 'order':'', 'tag':'', 'options':''};
 			$("#create-field").modal('hide');
 			toastr.success('Field Created Successfully.', 'Success Alert', {timeOut: 5000});
 		  }, (response) => {
@@ -98,12 +105,57 @@ new Vue({
         var input = this.fillField;
         this.$http.put('/vuefields/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
-            this.fillField = {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''};
+            this.fillField = {'uid':'','title':'', 'order':'', 'tag':'', 'field_set_id':'', 'opts[]':'','id':''};
             $("#edit-field").modal('hide');
             toastr.success('Field Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {
               this.formErrorsUpdate = response.data;
           });
+      },
+
+      loadTags: function() {
+        this.$http.get('/tags').then((response) => {
+            this.tags = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      loadSets: function() {
+        this.$http.get('/preceed').then((response) => {
+            this.sets = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      loadFields: function() {
+        this.$http.get('/flds').then((response) => {
+            this.flds = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      loadOptions: function() {
+        this.$http.get('/opt').then((response) => {
+            this.options = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      showOptions: function(className, obj){
+          alert($(obj).val());
+        var $input = $(obj);
+        if($input.val() == 1 || $input.val() == 5 || $input.val() == 6)
+            $(className).show();
+        else
+            $(className).hide();
       },
 
       changePage: function (page) {

@@ -234,4 +234,24 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "template.fetch",
         "uses" => "NotificationController@template"
     ));
+    Route::get("/quest", array(
+        "as"   => "questionnaire.fetch",
+        "uses" => "QuestionnaireController@quest"
+    ));
+    Route::get("/preceed", array(
+        "as"   => "sets.fetch",
+        "uses" => "SetController@sets"
+    ));
+    Route::get("/flds", array(
+        "as"   => "fields.fetch",
+        "uses" => "FieldController@fields"
+    ));
+    Route::get("/tags", array(
+        "as"   => "tags.fetch",
+        "uses" => "FieldController@tags"
+    ));
+    Route::get("/opt", array(
+        "as"   => "options.fetch",
+        "uses" => "OptionController@options"
+    ));
 });

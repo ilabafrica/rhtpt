@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 class Set extends Model
 {
-		public $fillable = ['name', 'description'];
+		public $fillable = ['title', 'description', 'order', 'questionnaire_id'];
   	/**
   	 * Enabling soft deletes for field sets.
   	 *

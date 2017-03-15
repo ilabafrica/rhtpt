@@ -6,6 +6,8 @@ new Vue({
 
   data: {
     sets: [],
+    questionnaires: [],
+    ordrs: [],
     pagination: {
         total: 0, 
         per_page: 2,
@@ -16,8 +18,8 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newSet : {'name':'','description':''},
-    fillSet : {'name':'','description':'','id':''}
+    newSet : {'title':'','description':'','order':'','questionnaire_id':''},
+    fillSet : {'title':'','description':'','order':'','questionnaire_id':'','id':''}
   },
 
   computed: {
@@ -47,6 +49,8 @@ new Vue({
 
   ready : function(){
   		this.getVueSets(this.pagination.current_page);
+        this.loadQuests();
+        this.loadSets();
   },
 
   methods : {
@@ -62,7 +66,7 @@ new Vue({
 		  var input = this.newSet;
 		  this.$http.post('/vuesets',input).then((response) => {
 		    this.changePage(this.pagination.current_page);
-			this.newSet = {'name':'','description':''};
+			this.newSet = {'title':'','description':'','order':'','questionnaire_id':''};
 			$("#create-set").modal('hide');
 			toastr.success('Field Set Created Successfully.', 'Success Alert', {timeOut: 5000});
 		  }, (response) => {
@@ -85,9 +89,11 @@ new Vue({
       },
 
       editSet: function(set){
-          this.fillSet.name = set.name;
+          this.fillSet.title = set.title;
           this.fillSet.id = set.id;
           this.fillSet.description = set.description;
+          this.fillSet.order = set.order;
+          this.fillSet.questionnaire_id = set.questionnaire_id;
           $("#edit-set").modal('show');
       },
 
@@ -95,12 +101,30 @@ new Vue({
         var input = this.fillSet;
         this.$http.put('/vuesets/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
-            this.fillSet = {'name':'','description':'','id':''};
+            this.fillSet = {'title':'','description':'','order':'','questionnaire_id':'','id':''};
             $("#edit-set").modal('hide');
             toastr.success('Field Set Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {
               this.formErrorsUpdate = response.data;
           });
+      },
+
+      loadQuests: function() {
+        this.$http.get('/quest').then((response) => {
+            this.questionnaires = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      loadSets: function() {
+        this.$http.get('/preceed').then((response) => {
+            this.ordrs = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
       },
 
       changePage: function (page) {

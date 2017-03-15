@@ -47,7 +47,6 @@ class OptionController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
             'title' => 'required',
             'description' => 'required',
         ]);
@@ -67,7 +66,6 @@ class OptionController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
             'title' => 'required',
             'description' => 'required',
         ]);
@@ -99,5 +97,19 @@ class OptionController extends Controller
     {
         $option = Option::withTrashed()->find($id)->restore();
         return response()->json(['done']);
+    }
+    /**
+     * Load list of available options
+     *
+     */
+    public function options()
+    {
+        $options = Option::lists('title', 'id');
+        $response = [];
+        foreach($options as $key => $value)
+        {
+            $response[] = ['id' => $key, 'value' => $value];
+        }
+        return response()->json($response);
     }
 }

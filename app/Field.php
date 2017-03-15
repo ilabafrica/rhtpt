@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 class Field extends Model
 {
+	public $fillable = ['title', 'uid', 'order', 'tag', 'field_set_id'];
   	/**
   	 * Enabling soft deletes for fields.
   	 *
@@ -115,29 +116,29 @@ class Field extends Model
   		DB::table('field_options')->insert($fieldAdded);
   	}
 	
-		/**
-		* Return Field ID given the uid
-		* @param $uid the unique ID of the field
-		*/
-		public static function idByUID($uid=NULL)
+	/**
+	* Return Field ID given the uid
+	* @param $uid the unique ID of the field
+	*/
+	public static function idByUID($uid=NULL)
+	{
+		if($uid!=NULL)
 		{
-				if($uid!=NULL)
-				{
-						try 
-						{
-								$field = Field::where('uid', $uid)->orderBy('title', 'asc')->firstOrFail();
-								return $field->id;
-						} 
-						catch (ModelNotFoundException $e) 
-						{
-								Log::error("The field ` $uid ` does not exist:  ". $e->getMessage());
-								//TODO: send email?
-								return null;
-						}
-				}
-				else
-				{
-						return null;
-				}
+			try 
+			{
+				$field = Field::where('uid', $uid)->orderBy('title', 'asc')->firstOrFail();
+				return $field->id;
+			} 
+			catch (ModelNotFoundException $e) 
+			{
+				Log::error("The field ` $uid ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
 		}
+		else
+		{
+			return null;
+		}
+	}
 }

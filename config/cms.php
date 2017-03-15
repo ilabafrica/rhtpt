@@ -58,5 +58,5 @@ return array(
 	|
 	*/
 
-	'dashboard' => 'img/PT.png',
+	'dashboard' => 'img/PT.jpg',
 );

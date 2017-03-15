@@ -52,13 +52,13 @@ class FieldController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         $this->validate($request, [
-            'name' => 'required',
-            'label' => 'required',
-            'description' => 'required',
+            'title' => 'required',
+            'uid' => 'required',
+            'field_set_id' => 'required',
             'order' => 'required',
             'tag' => 'required',
-            'options' => 'required',
         ]);
 
         $create = Field::create($request->all());
@@ -111,5 +111,40 @@ class FieldController extends Controller
     {
         $field = Field::withTrashed()->find($id)->restore();
         return response()->json(['done']);
+    }
+    /**
+     * Function to return types of fields.
+     *
+     */
+    public function tags()
+    {
+        $response = [];
+        $data = [
+                    Field::CHECKBOX => "Checkbox", 
+                    Field::DATE => "Date", 
+                    Field::FIELD => "Text Field", 
+                    Field::RADIO => "Radio Button", 
+                    Field::SELECT => "Select List", 
+                    Field::TEXT => "Textarea"
+                ];
+        foreach($data as $key => $value)
+        {
+            $response[] = ['id' => $key, 'value' => $value];
+        }
+        return $response;
+    }
+    /**
+     * Load list of available fields
+     *
+     */
+    public function fields()
+    {
+        $fields = Field::lists('uid', 'id');
+        $response = [];
+        foreach($fields as $key => $value)
+        {
+            $response[] = ['id' => $key, 'value' => $value];
+        }
+        return response()->json($response);
     }
 }

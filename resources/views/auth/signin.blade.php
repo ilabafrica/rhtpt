@@ -39,12 +39,9 @@
 					<div class="card card-block">
 						<div class="well row pt-2x pb-3x bk-light">
 							<div class="col-md-8 col-md-offset-2">
-
-								<div class="row" style="padding-bottom:20px">
-			                        <div class="col-md-5">
+								<div class="row">
+			                        <div class="col-md-12  text-md-center">
 			                            <img src="{{ '../'.Config::get('cms.logo') }}" height="75px">
-			                        </div>
-			                        <div class="col-md-7">
 			                            <h4 class="text-primary">{!! Config::get('cms.name') !!}</h4>
 			                        </div>
 			                    </div>

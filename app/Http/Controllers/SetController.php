@@ -53,6 +53,8 @@ class SetController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'description' => 'required',
+            'order' => 'required',
+            'questionnaire_id' => 'required',
         ]);
 
         $create = Set::create($request->all());
@@ -72,6 +74,8 @@ class SetController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'description' => 'required',
+            'order' => 'required',
+            'questionnaire_id' => 'required',
         ]);
 
         $edit = Set::find($id)->update($request->all());
@@ -101,5 +105,19 @@ class SetController extends Controller
     {
         $set = Set::withTrashed()->find($id)->restore();
         return response()->json(['done']);
+    }
+    /**
+     * Load list of available field sets
+     *
+     */
+    public function sets()
+    {
+        $sets = Set::lists('title', 'id');
+        $response = [];
+        foreach($sets as $key => $value)
+        {
+            $response[] = ['id' => $key, 'value' => $value];
+        }
+        return response()->json($response);
     }
 }
