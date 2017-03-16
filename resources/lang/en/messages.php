@@ -19,6 +19,7 @@ return [
     'user-management'       =>    'User Management',
     'facility-catalog'      =>    'Facility Catalog',
     'program-management'    =>    'Questionnaire',
+    'reports'               =>    'Reports',
 
     /**
     *   Sub-menus

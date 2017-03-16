@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Field;
 
+use DB;
+
 class FieldController extends Controller
 {
 
@@ -52,7 +54,6 @@ class FieldController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         $this->validate($request, [
             'title' => 'required',
             'uid' => 'required',
@@ -60,10 +61,45 @@ class FieldController extends Controller
             'order' => 'required',
             'tag' => 'required',
         ]);
+        $field = new Field;
+        $field->uid = $request->uid;
+        $field->title = $request->title;
+        $field->field_set_id = $request->field_set_id;
+        $field->order = $request->order;
+        $field->tag = $request->tag;
+        $field->save();
+        try
+        {
+            $field->save();
+            if($request->opts)
+            {
+                $field->setOptions($request->opt);
+            }
+            return response()->json($field);
+        }
+    	catch(QueryException $e)
+        {
+            Log::error($e);
+        }
+    }
+    /**
+     * Fetch pt with related components for editing
+     *
+     * @param ID of the selected pt -  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $field = Field::find($id);
+        $options = [];
+        if(count(DB::table('field_options')->where('field_id', $id))>0)
+            $options = $field->options->toArray();
+        $response = [
+            'field' => $field,
+            'opts' => $options
+        ];
 
-        $create = Field::create($request->all());
-
-        return response()->json($create);
+        return response()->json($response);
     }
 
     /**
@@ -76,17 +112,33 @@ class FieldController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'label' => 'required',
-            'description' => 'required',
+            'title' => 'required',
+            'uid' => 'required',
+            'field_set_id' => 'required',
             'order' => 'required',
             'tag' => 'required',
-            'options' => 'required',
         ]);
 
-        $edit = Field::find($id)->update($request->all());
-
-        return response()->json($edit);
+        $field = Field::find($id);
+        $field->uid = $request->uid;
+        $field->title = $request->title;
+        $field->field_set_id = $request->field_set_id;
+        $field->order = $request->order;
+        $field->tag = $request->tag;
+        $field->save();
+        try
+        {
+            $field->save();
+            if($request->opts)
+            {
+                $field->setOptions($request->opt);
+            }
+            return response()->json($field);
+        }
+    	catch(QueryException $e)
+        {
+            Log::error($e);
+        }
     }
 
     /**

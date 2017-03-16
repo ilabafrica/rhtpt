@@ -10,6 +10,7 @@ new Vue({
     sets: [],
     flds: [],
     options: [],
+    selected: '',
     pagination: {
         total: 0, 
         per_page: 2,
@@ -92,12 +93,12 @@ new Vue({
       },
 
       editField: function(field){
-          this.fillField.name = field.name;
-          this.fillField.id = field.id;
-          this.fillField.description = field.description;
-          this.fillField.order = field.order;
-          this.fillField.tag = field.tag;
-          this.fillField.options = field.options;
+          //    Fetch the result using the id
+          let id = field.id;
+          this.$http.get('/frmfld/'+id).then((response) => {
+                this.frmData = response.data;
+                console.log(response.data);
+            });
           $("#edit-field").modal('show');
       },
 
@@ -147,15 +148,6 @@ new Vue({
         }, (response) => {
             console.log(response);
         });
-      },
-
-      showOptions: function(className, obj){
-          alert($(obj).val());
-        var $input = $(obj);
-        if($input.val() == 1 || $input.val() == 5 || $input.val() == 6)
-            $(className).show();
-        else
-            $(className).hide();
       },
 
       changePage: function (page) {

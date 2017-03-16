@@ -4,16 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Round;
+use App\Option;
 
-use Auth;
-
-class RoundController extends Controller
+class ReportController extends Controller
 {
 
-    public function manageRound()
+    public function manageReport()
     {
-        return view('round.index');
+        return view('report.index');
     }
 
     /**
@@ -23,18 +21,18 @@ class RoundController extends Controller
      */
     public function index(Request $request)
     {
-        $rounds = Round::latest()->paginate(5);
+        $options = Option::latest()->paginate(5);
 
         $response = [
             'pagination' => [
-                'total' => $rounds->total(),
-                'per_page' => $rounds->perPage(),
-                'current_page' => $rounds->currentPage(),
-                'last_page' => $rounds->lastPage(),
-                'from' => $rounds->firstItem(),
-                'to' => $rounds->lastItem()
+                'total' => $options->total(),
+                'per_page' => $options->perPage(),
+                'current_page' => $options->currentPage(),
+                'last_page' => $options->lastPage(),
+                'from' => $options->firstItem(),
+                'to' => $options->lastItem()
             ],
-            'data' => $rounds
+            'data' => $options
         ];
 
         return response()->json($response);
@@ -49,14 +47,11 @@ class RoundController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'title' => 'required',
             'description' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
         ]);
-        $request->request->add(['user_id' => Auth::user()->id]);
 
-        $create = Round::create($request->all());
+        $create = Option::create($request->all());
 
         return response()->json($create);
     }
@@ -71,14 +66,11 @@ class RoundController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'title' => 'required',
             'description' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
         ]);
-        $request->request->add(['user_id' => Auth::user()->id]);
 
-        $edit = Round::find($id)->update($request->all());
+        $edit = Option::find($id)->update($request->all());
 
         return response()->json($edit);
     }
@@ -91,7 +83,7 @@ class RoundController extends Controller
      */
     public function destroy($id)
     {
-        Round::find($id)->delete();
+        Option::find($id)->delete();
         return response()->json(['done']);
     }
 
@@ -103,21 +95,21 @@ class RoundController extends Controller
      */
     public function restore($id) 
     {
-        $round = Round::withTrashed()->find($id)->restore();
+        $option = Option::withTrashed()->find($id)->restore();
         return response()->json(['done']);
     }
     /**
-     * Function to return list of rounds.
+     * Load list of available options
      *
      */
-    public function rounds()
+    public function options()
     {
-        $rounds = Round::lists('name', 'id');
-        $categories = [];
-        foreach($rounds as $key => $value)
+        $options = Option::lists('title', 'id');
+        $response = [];
+        foreach($options as $key => $value)
         {
-            $categories[] = ['id' => $key, 'value' => $value];
+            $response[] = ['id' => $key, 'value' => $value];
         }
-        return $categories;
+        return response()->json($response);
     }
 }

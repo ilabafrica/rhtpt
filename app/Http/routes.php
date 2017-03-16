@@ -131,7 +131,7 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get("/rnds", array(
         "as"   => "rnds.fetch",
-        "uses" => "ItemController@rounds"
+        "uses" => "RoundController@rounds"
     ));
 
     Route::get("/itms", array(
@@ -254,4 +254,10 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "options.fetch",
         "uses" => "OptionController@options"
     ));
+    Route::get("/frmfld/{id}", array(
+        "as"   => "frmfld.fetch",
+        "uses" => "FieldController@edit"
+    ));
+    Route::get('report', 'ReportController@manageReport');
+    Route::resource('vuereports','ReportController');
 });

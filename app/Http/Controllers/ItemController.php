@@ -130,18 +130,4 @@ class ItemController extends Controller
         }
         return $categories;
     }
-    /**
-     * Function to return list of rounds.
-     *
-     */
-    public function rounds()
-    {
-        $rounds = Round::lists('name', 'id');
-        $categories = [];
-        foreach($rounds as $key => $value)
-        {
-            $categories[] = ['id' => $key, 'value' => $value];
-        }
-        return $categories;
-    }
 }

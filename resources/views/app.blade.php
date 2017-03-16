@@ -181,6 +181,11 @@
                         </ul>
                     </li>
                     @endpermission
+                    @permission('facility-catalog')
+                    <li class="{!! Request::segment(1)==strtolower('report')?strtolower(trans('messages.active')):'' !!}">
+                        <a href="{!! url('report') !!}"><i class="fa fa-bar-chart-o"></i> {!! trans('messages.reports') !!}</a>
+                    </li>
+                    @endpermission
                 </ul>
             </nav>
         </aside>
@@ -277,6 +282,10 @@
         <script src="{{ asset('controllers/assign.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('broadcast'))
         <script src="{{ asset('controllers/broadcast.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('report'))
+        <script src="{{ asset('js/highcharts.js') }}"></script>
+        <script src="{{ asset('js/exporting.js') }}"></script>
+        <script src="{{ asset('controllers/report.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('bulk') || Request::segment(1)==strtolower('settings'))
         <script src="{{ asset('controllers/bulk.js') }}"></script>
         @endif

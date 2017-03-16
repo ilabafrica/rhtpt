@@ -16,8 +16,8 @@
             <div class="pull-left">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.field', 2) !!}
         
-                @permission('create-role')
-                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-field">
+                @permission('create-field')
+                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-field" disabled>
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
                     </button>
@@ -43,7 +43,7 @@
             <td>@{{ field.tg }}</td>
             <td>@{{ field.ordr }}</td>
             <td>	
-                <button class="btn btn-sm btn-primary" @click.prevent="editField(field)"><i class="fa fa-edit"></i> Edit</button>
+                <button class="btn btn-sm btn-primary" @click.prevent="editField(field)"><i class="fa fa-edit" disabled></i> Edit</button>
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteField(field)"><i class="fa fa-trash-o"></i> Delete</button>
             </td>
         </tr>
@@ -101,7 +101,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Tag:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control c-select" name="tag" @change="showOptions('.shhde', this)">
+                                    <select class="form-control c-select" name="tag" v-model="selected">
                                         <option selected></option>
                                         <option v-for="tag in tags" :value="tag.id">@{{ tag.value }}</option>
                                     </select>
@@ -128,7 +128,7 @@
                                     <span v-if="formErrors['field_set_id']" class="error text-danger">@{{ formErrors['field_set_id'] }}</span>
                                 </div>
                             </div>
-                            <div class="shhde" style="display:none;">
+                            <div v-if="selected === 1 || selected === 5 || selected === 6" class="shhde">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">Options:</label>
                                     <div class="col-sm-8">
@@ -169,38 +169,38 @@
             <div class="row">
                 <div class="modal-body">
 
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateField(fillField.id)">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateField" id="update_field">
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Title:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" name="title" class="form-control" v-model="fillField.title" />
+                                    <input type="text" name="title" class="form-control" value="frmData.field.title"/>
                                     <span v-if="formErrorsUpdate['title']" class="error text-danger">@{{ formErrorsUpdate['title'] }}</span>
                                 </div>
                             </div>
 				            <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">UID:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" name="uid" class="form-control" v-model="fillField.uid" />
+                                    <input type="text" name="uid" class="form-control" :value="frmData.field.uid"/>
                                     <span v-if="formErrorsUpdate['uid']" class="error text-danger">@{{ formErrorsUpdate['uid'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Tag:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control c-select" name="tag" v-model="fillField.tag">
+                                    <select class="form-control c-select" name="tag" v-model="selected">
                                         <option selected></option>
-                                        <option v-for="tag in tags" :value="tag.id">@{{ tag.value }}</option>
+                                        <option v-for="tag in tags" v-bind="{ 'true': tag.id==frmData.field.tag}" :value="tag.id">@{{ tag.value }}</option>
                                     </select>
-                                    <span v-if="formErrors['tag']" class="error text-danger">@{{ formErrors['tag'] }}</span>
+                                    <span v-if="formErrorsUpdate['tag']" class="error text-danger">@{{ formErrorsUpdate['tag'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Order:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control c-select" name="order" v-model="fillField.order">
+                                    <select class="form-control c-select" name="order" >
                                         <option selected></option>
-                                        <option v-for="fld in flds" :value="fld.id">@{{ fld.value }}</option>
+                                        <option v-for="fld in flds" v-bind="{ 'true': fld.id==frmData.field.order}" :value="fld.id">@{{ fld.value }}</option>
                                     </select>
                                     <span v-if="formErrorsUpdate['order']" class="error text-danger">@{{ formErrorsUpdate['order'] }}</span>
                                 </div>
@@ -208,12 +208,28 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Field Set:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control c-select" name="field_set_id" v-model="fillField.field_set_id">
+                                    <select class="form-control c-select" name="field_set_id">
                                         <option selected></option>
                                         <option v-for="set in sets" :value="set.id">@{{ set.value }}</option>
                                     </select>
                                     <span v-if="formErrorsUpdate['field_set_id']" class="error text-danger">@{{ formErrorsUpdate['field_set_id'] }}</span>
                                 </div>
+                            </div>
+                            <div v-if="selected === 1 || selected === 5 || selected === 6" class="shhde">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Options:</label>
+                                    <div class="col-sm-8">
+                                        <div class="card card-block">
+                                            <div class="form-checkbox form-checkbox-inline" v-for="option in options">
+                                                <label class="form-checkbox-label">
+                                                    <input type="checkbox" v-bind="{ 'true': frmData.opts.includes(option)}" :value="option.id" name="opts[]">
+                                                    @{{ option.value }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">
                                 <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>

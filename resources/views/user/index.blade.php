@@ -17,7 +17,7 @@
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.user', 2) !!}
         
                 @permission('create-user')
-                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-user">
+                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-user" disabled>
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
                     </button>
@@ -49,7 +49,7 @@
                 <button v-if="user.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>	
-                <button v-bind="{ 'disabled': user.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editUser(user)">Edit</button>
+                <button v-bind="{ 'disabled': user.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editUser(user)" disabled>Edit</button>
                 <button v-if="user.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)">Enable</button>
                 <button v-if="user.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)">Disable</button>
             </td>
