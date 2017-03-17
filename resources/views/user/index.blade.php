@@ -49,7 +49,7 @@
                 <button v-if="user.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>	
-                <button v-bind="{ 'disabled': user.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editUser(user)" disabled>Edit</button>
+                <button v-bind="{ 'disabled': user.deleted_at==NULL}" class="btn btn-sm btn-primary" @click.prevent="editUser(user)" disabled>Edit</button>
                 <button v-if="user.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)">Enable</button>
                 <button v-if="user.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)">Disable</button>
             </td>

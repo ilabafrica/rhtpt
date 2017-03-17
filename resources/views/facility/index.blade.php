@@ -17,7 +17,7 @@
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.facility', 2) !!}
         
                 @permission('create-role')
-                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-facility">
+                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-facility" disabled>
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
                     </button>
@@ -45,7 +45,7 @@
             <td>@{{ facility.sub }}</td>
             <td>@{{ facility.county }}</td>
             <td>	
-                <button class="btn btn-sm btn-primary" @click.prevent="editFacility(facility)"><i class="fa fa-edit"></i> Edit</button>
+                <button class="btn btn-sm btn-primary" @click.prevent="editFacility(facility)" disabled><i class="fa fa-edit"></i> Edit</button>
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteFacility(facility)"><i class="fa fa-trash-o"></i> Delete</button>
             </td>
         </tr>

@@ -200,10 +200,11 @@
                                                     </label>
                                                 </div>
                                             </div>
+                                            <div v-for="dt in frmData.results">
                                             <div v-if="fld.tag == 2">
-                                                <div v-for="dt in frmData.results">
+                                                
                                                     <input v-if="dt.field_id==fld.id" type="date" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}" />
-                                                </div>
+                                                
                                             </div>
                                             <div v-if="fld.tag == 3">
                                                 <div v-for="dt in frmData.results">
@@ -211,30 +212,26 @@
                                                 </div>
                                             </div>
                                             <div v-if="fld.tag == 4">
-                                                <div v-for="dt in frmData.results">
                                                     <input v-if="dt.field_id==fld.id" type="text" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}" />
-                                                </div>
+                                                
                                             </div>
                                             <div v-if="fld.tag == 5">
-                                                <div v-for="dt in frmData.results">
                                                     <div v-if="dt.field_id==fld.id" class="form-radio form-radio-inline" v-for="option in fld.options">
                                                         <label class="form-radio-label">
                                                             <input type="radio" v-bind="{ 'true': option.id==dt.response}" :value="option.id" name="field_@{{fld.id}}" @change="remark('.toggle_@{{fld.id}}', this)">
                                                             @{{ option.title }}
                                                         </label>
                                                     </div>
-                                                </div>
                                             </div>
                                             <div v-if="fld.tag == 6">
-                                                <div v-for="dt in frmData.results">
                                                     <select v-if="dt.field_id==fld.id" class="form-control c-select" name="field_@{{fld.id}}">
                                                         <option selected></option>
                                                         <option v-for="option in fld.options" v-bind="{ 'selected': option.id==dt.response}" :value="option.id">@{{ round.title }}</option>   
                                                     </select>
-                                                </div>
+                                                
                                             </div>
                                             <div v-if="fld.tag == 7">
-                                                <div v-for="dt in frmData.results">
+                                                
                                                     <textarea v-if="dt.field_id==fld.id" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}"></textarea>
                                                 </div>
                                             </div>

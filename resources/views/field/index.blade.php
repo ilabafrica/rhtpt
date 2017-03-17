@@ -43,7 +43,7 @@
             <td>@{{ field.tg }}</td>
             <td>@{{ field.ordr }}</td>
             <td>	
-                <button class="btn btn-sm btn-primary" @click.prevent="editField(field)"><i class="fa fa-edit" disabled></i> Edit</button>
+                <button class="btn btn-sm btn-primary" @click.prevent="editField(field)" disabled><i class="fa fa-edit"></i> Edit</button>
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteField(field)"><i class="fa fa-trash-o"></i> Delete</button>
             </td>
         </tr>
