@@ -41,14 +41,15 @@
             <td>@{{ result.rnd }}</td>
             <td>@{{ result.tester }}</td>
             <td>
-                <button v-if="shipment.panel_status==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Not Verified</button>
-                <button v-if="shipment.panel_status==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Verified</button>
+                <button v-if="result.panel_status==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Not Verified</button>
+                <button v-if="result.panel_status==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Verified</button>
             </td>
             <td>
-                <button v-if="shipment.feedback==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Unsatisfactory</button>
-                <button v-if="shipment.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Satisfactory</button>
+                <button v-if="result.feedback==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Unsatisfactory</button>
+                <button v-if="result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Satisfactory</button>
             </td>
-            <td>	
+            <td>
+                <button class="btn btn-sm btn-secondary" @click.prevent="editResult(result)"><i class="fa fa-reorder"></i> View</button>	
                 <button class="btn btn-sm btn-primary" @click.prevent="editResult(result)"><i class="fa fa-edit"></i> Edit</button>
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteResult(result)"><i class="fa fa-trash-o"></i> Delete</button>
             </td>

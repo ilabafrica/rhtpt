@@ -32,6 +32,7 @@
     <table class="table table-bordered">
         <tr>
             <th>PT Identifier</th>
+            <th>Panel</th>
             <th>Tester ID Range</th>
             <th>Material</th>
             <th>PT Round</th>
@@ -40,6 +41,7 @@
         </tr>
         <tr v-for="item in items">
             <td>@{{ item.pt_id }}</td>
+            <td>@{{ item.panel }}</td>
             <td>@{{ item.tstr }}</td>
             <td>@{{ item.mtrl }}</td>
             <td>@{{ item.rnd }}</td>
@@ -91,6 +93,16 @@
                                 <div class="col-sm-8">
                                     <input type="text" name="pt_id" class="form-control" v-model="newItem.pt_id" />
                                     <span v-if="formErrors['pt_id']" class="error text-danger">@{{ formErrors['pt_id'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Panel ID:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="panel" v-model="newItem.panel">
+                                        <option selected></option>
+                                        <option  v-for="panel in panels" :value="panel.id">@{{ panel.value }}</option>
+                                    </select>
+                                    <span v-if="formErrors['panel']" class="error text-danger">@{{ formErrors['panel'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -161,6 +173,16 @@
                                 <div class="col-sm-8">
                                     <input type="text" name="pt_id" class="form-control" v-model="fillItem.pt_id" />
                                     <span v-if="formErrorsUpdate['pt_id']" class="error text-danger">@{{ formErrorsUpdate['pt_id'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Panel ID:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="panel" v-model="fillItem.panel">
+                                        <option selected></option>
+                                        <option  v-for="panel in panels" :value="panel.id">@{{ panel.value }}</option>
+                                    </select>
+                                    <span v-if="formErrorsUpdate['panel']" class="error text-danger">@{{ formErrorsUpdate['panel'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">

@@ -87,6 +87,7 @@ class ResultController extends Controller
                 }
             }
         }
+        dd($pt);
         /**
         * Begin background processing
         */
@@ -199,6 +200,8 @@ class ResultController extends Controller
             if($rss->field_id == Field::idByUID('PT Panel 6 Final Results'))
                 $pt_panel_6_final_results = $rss->response;
         }
+        //  Fetch expected results
+        
         $dev_from_procedure = $this->check_dates($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested);
         $incomplete_other_info = $this->check_other_info($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested);
         $incomplete_kit_info = $this->check_kit_info($test_1_kit_name, $test_2_kit_name, $test_1_kit_lot_no, $test_2_kit_lot_no, $test_1_expiry_date, $test_2_expiry_date);

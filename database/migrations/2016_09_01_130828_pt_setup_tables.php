@@ -70,6 +70,7 @@ class PtSetupTables extends Migration
       			$table->increments('id')->unsigned();
             $table->smallInteger('tester_id_range');
       			$table->string('pt_id');
+      			$table->smallInteger('panel');
       			$table->integer('material_id')->unsigned();
       			$table->integer('round_id')->unsigned();
             $table->string('prepared_by');

@@ -3,13 +3,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Item extends Model
 {
-  	public $fillable = ['tester_id_range', 'pt_id', 'material_id', 'round_id', 'prepared_by', 'user_id'];
+  	public $fillable = ['tester_id_range', 'pt_id', 'panel', 'material_id', 'round_id', 'prepared_by', 'user_id'];
   	/**
   	 * Enabling soft deletes for items.
   	 *
   	 */
   	use SoftDeletes;
   	protected $dates = ['deleted_at'];
+	  //	Constants for panel IDs
+    const ONE = 1;
+    const TWO = 2;
+	const THREE = 3;
+    const FOUR = 4;
+	const FIVE = 5;
+    const SIX = 6;
 
   	/**
   	 * The database table used by the model.
