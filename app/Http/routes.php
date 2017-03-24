@@ -265,4 +265,6 @@ Route::group(['middleware' => 'auth'], function()
     ));
     Route::get('report', 'ReportController@manageReport');
     Route::resource('vuereports','ReportController');
+
+    Route::get('api/search',['as'=>'api.search', 'uses'=>'RoleController@index']);
 });

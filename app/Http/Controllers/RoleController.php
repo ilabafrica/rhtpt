@@ -22,7 +22,13 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
+        $error = ['error' => 'No results found, please try with different keywords.'];
         $roles = Role::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $roles = Role::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
 
         $response = [
             'pagination' => [
@@ -36,7 +42,7 @@ class RoleController extends Controller
             'data' => $roles
         ];
 
-        return response()->json($response);
+        return $roles->count() > 0 ? response()->json($response) : $error;
     }
 
     /**
