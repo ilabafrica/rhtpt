@@ -8,7 +8,7 @@ return array(
 	|
 	*/
 
-	'name' => 'Kenya Serology HIV Proficiency Testing',
+	'name' => 'Kenya Serology Rapid HIV PT',
 	/*
 	|--------------------------------------------------------------------------
 	|	Logo

@@ -218,7 +218,7 @@ return [
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Carbon'    =>  Jenssegers\Date\Date::class,
         'Image'     =>  Intervention\Image\Facades\Image::class,
-        'SoftDeletes' => Illuminate\Database\Eloquent\SoftDeletes::class
+        'SoftDeletes' => Illuminate\Database\Eloquent\SoftDeletes::class,
     ],
 
 ];
