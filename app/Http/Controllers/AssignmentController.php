@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Role;
 use App\User;
+use App\Tier;
+
 
 class AssignmentController extends Controller
 {

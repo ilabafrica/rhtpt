@@ -8,6 +8,12 @@ new Vue({
     roles: [],
     users: [],
     checks: [],
+    counties: [],
+    subcounties: [],
+    programs:[],
+    facilities: [],
+    partners: [],
+    selected:'',
     pagination: {
         total: 0, 
         per_page: 2,
@@ -47,6 +53,11 @@ new Vue({
     },
   ready : function(){
   		this.getVueAssignments(this.pagination.current_page);
+      this.loadCounties();
+      this.loadSubcounties();
+      this.loadPartners();
+      this.loadFacilities();
+      this.loadPrograms();
   },
 
   methods : {
@@ -69,12 +80,61 @@ new Vue({
             }, (response) => {
                 this.formErrors = response.data;
             });
-	},
+	       },
       changePage: function (page) {
           this.pagination.current_page = page;
           this.getVueAssignments(page);
-      }
+      },
 
+      //Populate counties from FacilityController
+      loadCounties: function() {
+        this.$http.get('/cnts').then((response) => {
+            this.counties = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      //Populate subcounties from FacilityController
+      loadSubcounties: function() {
+        let id = $('#county_id').val();
+        this.$http.get('/subs/'+id).then((response) => { 
+            this.subcounties = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+      //Populate partners from ShipperController
+      loadPartners: function() {
+        this.$http.get('/shpprs/2').then((response) => { 
+            this.partners = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+      //Populate facilities from FacilityController
+      loadFacilities: function() {
+        let id = $('#sub_county_id').val();
+        this.$http.get('/fclts/'+id).then((response) => { 
+            this.facilities = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      //Populate programs from ProgramController
+      loadPrograms: function() {
+        this.$http.get('/programslist').then((response) => { 
+            this.programs = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
   }
 
 });

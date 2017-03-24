@@ -48,9 +48,12 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'description' => 'required',
+            'username'=> 'required',
+            'gender' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+            'address' => 'required'
         ]);
-
         $create = User::create($request->all());
 
         return response()->json($create);
@@ -67,7 +70,11 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'description' => 'required',
+            'username'=> 'required',
+            'gender' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+            'address' => 'required'
         ]);
 
         $edit = User::find($id)->update($request->all());

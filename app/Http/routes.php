@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('facility', 'FacilityController@manageFacility');
     Route::resource('vuefacilitys','FacilityController');
     Route::any('vuefacilitys/{id}/restore','FacilityController@restore');
+    Route::get('search_facility',array('as'=>'search_facility','uses'=>'FacilityController@search_facility'));
 
     Route::get('user', 'UserController@manageUser');
     Route::resource('vueusers','UserController');
@@ -157,6 +158,10 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/fclts/{id}", array(
         "as"   => "facilities.fetch",
         "uses" => "FacilityController@facilities"
+    ));
+    Route::get("/programslist", array(
+        "as"   => "programslist.fetch",
+        "uses" => "ProgramController@programs"
     ));
 
     Route::get("/shpprs/{id}", array(

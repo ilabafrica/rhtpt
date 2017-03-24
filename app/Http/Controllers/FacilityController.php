@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\County;
 use App\SubCounty;
 use App\Facility;
+use Input;
 
 class FacilityController extends Controller
 {
@@ -23,7 +24,9 @@ class FacilityController extends Controller
      */
     public function index(Request $request)
     {
+        
         $facilitys = Facility::latest()->paginate(5);
+       
         foreach($facilitys as $facility)
         {
             $facility->sub = $facility->subCounty->name;
@@ -44,7 +47,29 @@ class FacilityController extends Controller
 
         return response()->json($response);
     }
+    /*
+       Search for a facility in the database
+    */
 
+   public function search_facility() {
+        $term = Input::get('term');
+    
+        $results = array();
+        
+        $queries = Facility::where('name', 'LIKE', '%'.$term.'%')
+            ->take(5)->get();
+        
+        foreach ($queries as $query)
+        {
+            $results[] = [ 'id' => $query->id, 'value' => $query->name];
+        }
+        if (count($results)>0) {
+            # code...
+            $results[] = [ 'id' => 0, 'value' => 'No Records found'];
+        } 
+        return response()->json($results);
+       
+    }
     /**
      * Store a newly created resource in storage.
      *

@@ -16,8 +16,8 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
-    fillFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''}
+    newUser : {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''},
+    fillUser : {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''}
   },
 
   computed: {
@@ -59,15 +59,15 @@ new Vue({
         },
 
         createUser: function(){
-		  var input = this.newFacility;
-		  this.$http.post('/vueusers',input).then((response) => {
-		    this.changePage(this.pagination.current_page);
-			this.newFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':''};
-			$("#create-facility").modal('hide');
-			toastr.success('Facility Created Successfully.', 'Success Alert', {timeOut: 5000});
-		  }, (response) => {
-			this.formErrors = response.data;
-	    });
+    		  var input = this.newUser;
+      		  this.$http.post('/vueusers',input).then((response) => {
+    		    this.changePage(this.pagination.current_page);
+      			this.newUser = {'name':'', 'username': '','gender':'', 'phone':'', 'email':'', 'address':''};
+      			$("#create-user").modal('hide');
+      			toastr.success('User Created Successfully.', 'Success Alert', {timeOut: 5000});
+    		  }, (response) => {
+    			  this.formErrors = response.data;
+    	    });
 	},
 
       deleteUser: function(facility){
@@ -84,22 +84,23 @@ new Vue({
         });
       },
 
-      editUser: function(facility){
-          this.fillFacility.name = facility.name;
-          this.fillFacility.id = facility.id;
-          this.fillFacility.description = facility.description;
-          this.fillFacility.order = facility.order;
-          this.fillFacility.tag = facility.tag;
-          this.fillFacility.options = facility.options;
-          $("#edit-facility").modal('show');
+      editUser: function(user){
+          this.fillUser.id = user.id;
+          this.fillUser.name = user.name;
+          this.fillUser.username = user.username;
+          this.fillUser.gender = user.gender;
+          this.fillUser.phone = user.phone;
+          this.fillUser.email = user.email;
+          this.fillUser.address = user.address;
+          $("#edit-user").modal('show');
       },
 
       updateUser: function(id){
-        var input = this.fillFacility;
+        var input = this.fillUser;
         this.$http.put('/vueusers/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
-            this.fillFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''};
-            $("#edit-facility").modal('hide');
+            this.fillUser = {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''};
+            $("#edit-user").modal('hide');
             toastr.success('Facility Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {
               this.formErrorsUpdate = response.data;

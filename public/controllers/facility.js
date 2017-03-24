@@ -17,7 +17,9 @@ new Vue({
     formErrors:{},
     formErrorsUpdate:{},
     newFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
-    fillFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''}
+    fillFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''},
+    search: '',
+    fillSearch : {'search':''},
   },
 
   computed: {
@@ -59,15 +61,15 @@ new Vue({
         },
 
         createFacility: function(){
-		  var input = this.newFacility;
-		  this.$http.post('/vuefacilitys',input).then((response) => {
-		    this.changePage(this.pagination.current_page);
-			this.newFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':''};
-			$("#create-facility").modal('hide');
-			toastr.success('Facility Created Successfully.', 'Success Alert', {timeOut: 5000});
-		  }, (response) => {
-			this.formErrors = response.data;
-	    });
+  		  var input = this.newFacility;
+  		  this.$http.post('/vuefacilitys',input).then((response) => {
+  		    this.changePage(this.pagination.current_page);
+    			this.newFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':''};
+    			$("#create-facility").modal('hide');
+    			toastr.success('Facility Created Successfully.', 'Success Alert', {timeOut: 5000});
+  		  }, (response) => {
+  			 this.formErrors = response.data;
+  	    });
 	},
 
       deleteFacility: function(facility){
@@ -109,7 +111,18 @@ new Vue({
       changePage: function (page) {
           this.pagination.current_page = page;
           this.getVueFacilitys(page);
-      }
+      },
+
+      searchFacilities: function(){
+        var input = this.fillSearch;
+        this.$http.get('/vuefacilitys', input).then((response) => {
+            this.changePage(this.pagination.current_page);
+            this.fillSearch = {'search':''};
+            toastr.success('Search Completed Successfully.', 'Success Alert', {timeOut: 5000});
+          }, (response) => {
+              this.formErrorsSearch = response.data;
+          });
+      },
 
   }
 
