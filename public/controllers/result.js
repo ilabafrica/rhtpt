@@ -1,7 +1,5 @@
 Vue.http.headers.common['X-CSRF-TOKEN'] = $("#token").attr("value");
 
-
-
 new Vue({
 
   el: '#manage-result',
@@ -142,8 +140,16 @@ new Vue({
                 $(className).show();
             else
                 $(className).hide();
-        }
+        },
+        moment: function (date) {
+            return moment(date);
+        },
 
+  },
+  filters: {
+    moment: function (date) {
+      return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+    }
   }
 
 });

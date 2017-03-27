@@ -267,4 +267,8 @@ Route::group(['middleware' => 'auth'], function()
     Route::resource('vuereports','ReportController');
 
     Route::get('api/search',['as'=>'api.search', 'uses'=>'RoleController@index']);
+    Route::get("/panels", array(
+        "as"   => "panels.fetch",
+        "uses" => "ItemController@panels"
+    ));
 });

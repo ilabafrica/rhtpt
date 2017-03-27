@@ -130,4 +130,25 @@ class ItemController extends Controller
         }
         return $categories;
     }
+    /**
+     * Function to return list of panels.
+     *
+     */
+    public function panels()
+    {
+        $pnls = [
+            Item::ONE => '1',
+            Item::TWO => '2',
+            Item::THREE => '3',
+            Item::FOUR => '4',
+            Item::FIVE => '5',
+            Item::SIX => '6'
+        ];
+        $response = [];
+        foreach($pnls as $key => $value)
+        {
+            $response[] = ['id' => $key, 'value' => $value];
+        }
+        return $response;
+    }
 }

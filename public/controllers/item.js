@@ -16,11 +16,12 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newItem : {'pt_id':'','tester_id_range':'','material_id':'','round_id':'','prepared_by':''},
-    fillItem : {'pt_id':'','tester_id_range':'','material':'','pt_round':'','prepared_by':'','id':''},
+    newItem : {'pt_id':'','panel':'','tester_id_range':'','material_id':'','round_id':'','prepared_by':''},
+    fillItem : {'pt_id':'','panel':'','tester_id_range':'','material':'','pt_round':'','prepared_by':'','id':''},
     materials: [],
     rounds: [],
-    ranges: []
+    ranges: [],
+    panels: []
   },
 
   computed: {
@@ -53,6 +54,7 @@ new Vue({
         this.loadMaterials();
         this.loadRounds();
         this.loadRanges();
+        this.loadPanels();
   },
 
   methods : {
@@ -68,7 +70,7 @@ new Vue({
 		  var input = this.newItem;
 		  this.$http.post('/vueitems',input).then((response) => {
 		    this.changePage(this.pagination.current_page);
-			this.newItem = {'pt_id':'','tester_id_range':'','material':'','pt_round':'','prepared_by':''};
+			this.newItem = {'pt_id':'','panel':'','tester_id_range':'','material':'','pt_round':'','prepared_by':''};
 			$("#create-item").modal('hide');
 			toastr.success('Item Created Successfully.', 'Success Alert', {timeOut: 5000});
 		  }, (response) => {
@@ -93,6 +95,7 @@ new Vue({
       editItem: function(item){
           this.fillItem.pt_id = item.pt_id;
           this.fillItem.id = item.id;
+          this.fillItem.panel = item.panel;
           this.fillItem.tester_id_range = item.tester_id_range;
           this.fillItem.material = item.material;
           this.fillItem.pt_round = item.pt_round;
@@ -104,7 +107,7 @@ new Vue({
         var input = this.fillItem;
         this.$http.put('/vueitems/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
-            this.fillItem = {'pt_id':'','tester_id_range':'','material':'','pt_round':'','prepared_by':'','id':''};
+            this.fillItem = {'pt_id':'','panel':'','tester_id_range':'','material':'','pt_round':'','prepared_by':'','id':''};
             $("#edit-item").modal('hide');
             toastr.success('Item Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {
@@ -141,6 +144,15 @@ new Vue({
 
         }, (response) => {
             console.log(response);
+        });
+      },
+
+      loadPanels: function() {
+        this.$http.get('/panels').then((response) => {
+            this.panels = response.data;
+
+        }, (response) => {
+            //console.log(response);
         });
       }
 
