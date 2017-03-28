@@ -18,9 +18,11 @@ new Vue({
     formErrorsUpdate:{},
     newResult : {'round_id':'','field_id[]':'','response[]':'','comment[]':''},
     fillResult : {'round_id':'','field_id[]':'','response[]':'','comment[]':'','id':''},
+    fillVerifiedResult: {},
     form: [],
     rounds: [],
-    frmData: {}
+    frmData: {},
+    viewFormData:{}
   },
 
   computed: {
@@ -97,7 +99,14 @@ new Vue({
             });
           $("#edit-result").modal('show');
       },
-
+      viewResult: function(result){
+          //    Fetch the result using the id
+          let id = result.id;
+          this.$http.get('/pt/'+id).then((response) => {
+                this.viewFormData = response.data;
+            });
+          $("#view-result").modal('show');
+      },
       updateResult: function(id){
         var input = this.fillResult;
         this.$http.put('/vueresults/'+id,input).then((response) => {
@@ -108,6 +117,14 @@ new Vue({
           }, (response) => {
               this.formErrorsUpdate = response.data;
           });
+      },
+
+      verifyResult: function(id){
+        this.$http.patch('/verify_results/'+id).then((response) => {
+            this.changePage(this.pagination.current_page);
+            $("#view-result").modal('hide');
+            toastr.success('Result Verified Successfully.', 'Success Alert', {timeOut: 5000});
+        });
       },
 
       changePage: function (page) {

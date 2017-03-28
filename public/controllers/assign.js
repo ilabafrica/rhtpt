@@ -25,7 +25,7 @@ new Vue({
     formErrors:{},
     formErrorsUpdate:{},
     newFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
-    fillFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''}
+    fillRole : {'county':'','subcounty':'', 'facility':'', 'partner':'', 'program':'','role':''}
   },
   computed: {
         isActived: function () {
@@ -72,15 +72,15 @@ new Vue({
         },
 
         createAssignment: function(page){
-		    let myForm = document.getElementById('update_assignments');
-            let formData = new FormData(myForm);
-            this.$http.post('/vueassigns', formData).then((response) => {
-                toastr.success('Roles Assigned Successfully.', 'Success Alert', {timeOut: 5000});
-                this.getVueAssignments();
-            }, (response) => {
-                this.formErrors = response.data;
-            });
-	       },
+	        let myForm = document.getElementById('update_assignments');
+          let formData = new FormData(myForm);
+          this.$http.post('/vueassigns', formData).then((response) => {
+              toastr.success('Roles Assigned Successfully.', 'Success Alert', {timeOut: 5000});
+              this.getVueAssignments();
+          }, (response) => {
+              this.formErrors = response.data;
+          });
+	     },
       changePage: function (page) {
           this.pagination.current_page = page;
           this.getVueAssignments(page);
@@ -98,12 +98,13 @@ new Vue({
 
       //Populate subcounties from FacilityController
       loadSubcounties: function() {
-        let id = $('#county_id').val();
+        let id = $('#county').val();
+            console.log(id);
         this.$http.get('/subs/'+id).then((response) => { 
             this.subcounties = response.data;
 
         }, (response) => {
-            console.log(response);
+            // console.log(response);
         });
       },
       //Populate partners from ShipperController
@@ -117,7 +118,7 @@ new Vue({
       },
       //Populate facilities from FacilityController
       loadFacilities: function() {
-        let id = $('#sub_county_id').val();
+        let id = $('#sub_county').val();
         this.$http.get('/fclts/'+id).then((response) => { 
             this.facilities = response.data;
 

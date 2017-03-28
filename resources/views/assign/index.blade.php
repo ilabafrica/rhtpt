@@ -38,7 +38,7 @@
                 <td>@{{ user.name }}</td>
                 <td v-for="role in roles" v-if="role.id!=1">
                     <label v-if="role.id!=1" class="form-checkbox-label">
-                        <input type="checkbox" value="@{{role.id}}" name="userRoles[@{{user.id}}][@{{role.id}}]" v-bind="{ 'checked': checks[user.id][role.id].checked}" v-model = ''>
+                        <input type="checkbox" value="@{{role.id}}" name="userRoles[@{{user.id}}][@{{role.id}}]" v-bind="{ 'checked': checks[user.id][role.id].checked}" >
                     </label>
 
                         <!-- Display Counties form assign.js loadCounties function -->                    
@@ -46,9 +46,9 @@
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label" for="title">County:</label>
                             <div class="col-sm-8">
-                            <select class="form-control c-select" name="county_id" id="county_id" v-on:change="loadSubcounties">
+                            <select class="form-control c-select" name="county_@{{user.id}}_@{{role.id}}" id="county[@{{user.id}}][@{{role.id}}]" v-on:change="loadSubcounties" >
                                 <option selected></option>
-                                <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>
+                                <option v-for="county in counties" value="@{{county.id}}">@{{ county.value }}</option>
                             </select>
                             </div>
                         </div>
@@ -57,9 +57,9 @@
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
                             <div class="col-sm-8">
-                            <select class="form-control c-select" name="sub_county_id" id="sub_county_id" v-on:change="loadFacilities">
+                            <select class="form-control c-select" name="sub_county_@{{user.id}}_@{{role.id}}" id="sub_county[@{{user.id}}][@{{role.id}}]" v-on:change="loadFacilities">
                                 <option selected></option>
-                                <option v-for="subcounty in subcounties" :value="subcounty.id">@{{subcounty.value }}</option>
+                                <option v-for="subcounty in subcounties" value="@{{subcounty.id}}">@{{subcounty.value }}</option>
                             </select>
                             </div>
                         </div>                           
@@ -68,9 +68,9 @@
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label" for="title">Facility:</label>
                             <div class="col-sm-8">
-                            <select class="form-control c-select" name="facility" id="facility">
+                            <select class="form-control c-select" name="facility_@{{user.id}}_@{{role.id}}" id="facility[@{{user.id}}][@{{role.id}}]">
                                 <option selected></option>
-                                <option v-for="facility in facilities" :value="facility.id">@{{facility.value }}</option>
+                                <option v-for="facility in facilities" value="@{{facility.id}}">@{{facility.value }}</option>
                             </select>
                             </div>
                         </div>    
@@ -79,9 +79,9 @@
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label" for="title">Program:</label>
                             <div class="col-sm-8">
-                            <select class="form-control c-select" name="program" id="program">
+                            <select class="form-control c-select" name="program_@{{user.id}}_@{{role.id}}" id="program">
                                 <option selected></option>
-                                <option v-for="program in programs" :value="program.id">@{{program.value }}</option>
+                                <option v-for="program in programs" value="@{{program.id}}">@{{program.value }}</option>
                             </select>
                             </div>
                         </div>
@@ -91,9 +91,9 @@
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label" for="title">Partner:</label>
                             <div class="col-sm-8">
-                            <select class="form-control c-select" name="partner" id="partner">
+                            <select class="form-control c-select" name="partner_@{{user.id}}_@{{role.id}}" id="partner">
                                 <option selected></option>
-                                <option v-for="partner in partners" :value="partner.id">@{{partner.value }}</option>
+                                <option v-for="partner in partners" value="@{{partner.id}}">@{{partner.value }}</option>
                             </select>
                             </div>
                         </div>                   

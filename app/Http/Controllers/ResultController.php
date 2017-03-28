@@ -245,6 +245,20 @@ class ResultController extends Controller
 
         return response()->json($response);
     }
+    /*
+    verify the result after reviewing
+    */
+   public function verify($id)
+    {
+        $user_id = Auth::user()->id;
+
+        $result = Pt::find($id);
+        $result->verified_by = $user_id;
+        $result->panel_status = Pt::CHECKED;
+        $result->save();
+
+        return response()->json($result);
+    }
 
     /**
      * Update the specified resource in storage.

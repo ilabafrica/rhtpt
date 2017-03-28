@@ -219,6 +219,10 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "pt.fetch",
         "uses" => "ResultController@edit"
     ));
+    Route::any("/verify_results/{id}", array(
+        "as"   => "verify_results",
+        "uses" => "ResultController@verify"
+    ));
 
     Route::get("/form", array(
         "as"   => "fields.fetch",

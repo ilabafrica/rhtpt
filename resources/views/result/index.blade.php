@@ -16,16 +16,17 @@
             <div class="pull-left">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.result', 2) !!}
         
-                @permission('create-result')
+                <!-- @permission('create-result') -->
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-result">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.enter-result') !!}
                     </button>
-                @endpermission
+                <!-- @endpermission -->
                     <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
-                    </a></h5>
+                    </a>
+                    </h5>
             </div>
         </div>
     </div>
@@ -49,7 +50,7 @@
                 <button v-if="result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Satisfactory</button>
             </td>
             <td>
-                <button class="btn btn-sm btn-secondary" @click.prevent="editResult(result)"><i class="fa fa-reorder"></i> View</button>	
+                <button class="btn btn-sm btn-secondary" @click.prevent="viewResult(result)"><i class="fa fa-reorder"></i> View</button>	
                 <button class="btn btn-sm btn-primary" @click.prevent="editResult(result)"><i class="fa fa-edit"></i> Edit</button>
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteResult(result)"><i class="fa fa-trash-o"></i> Delete</button>
             </td>
@@ -249,6 +250,72 @@
                             </div>
                             <div class="form-group row col-sm-offset-5 col-sm-7">
                                 <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+      <!-- Edit Test Results Modal -->
+    <div class="modal fade" id="view-result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <h4 class="modal-title" id="myModalLabel">Test Results</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyResult(viewFormData.pt.id)" id="verify_test_results">
+                       <div class="row col-sm-offset-5">
+                            <button type="submit" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>
+                        </div> 
+                        <hr>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-5 form-control-label" for="title"><b>PT Round:</b></label>
+                                <div class="col-sm-7">
+                                    <div  v-for="round in rounds">
+                                        <label class="form-label" v-if="round.id==viewFormData.pt.round_id" >@{{ round.value }}</label>
+                                    </div>
+                                    <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
+                                </div>
+                            </div>
+                            <div v-for="frm in form">
+                                <p class="text-primary"><b>@{{ frm.title }}</b></p>
+                                <hr>
+                                <div v-for="fld in frm.fields">
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 form-control-label" for="title"><b>@{{ fld.title }}:</b></label>
+                                        <div class="col-sm-7">
+                                            <div v-if="fld.tag == 1">
+                                                <div class="form-checkbox form-checkbox-inline" v-for="option in fld.options">
+                                                    <label class="form-checkbox-label">                                                        
+                                                        @{{ option.title }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div v-for="dt in viewFormData.results">
+                                                <div v-if="fld.tag == 2 ||fld.tag == 3||fld.tag == 4||fld.tag == 7">
+                                                  <label class="form-label" v-if="dt.field_id==fld.id">@{{dt.response}}</label>
+                                                </div>
+                                                
+                                                <div v-if="fld.tag == 5||fld.tag == 6">
+                                                    <div v-if="dt.field_id==fld.id"  v-for="option in fld.options">
+                                                        <label class="form-label" v-if="option.id==dt.response" >@{{ option.title }}</label>
+                                                    </div>
+                                                </div>
+                                                                                         
+                                            </div>
+                                            <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row col-sm-offset-5 col-sm-7">
                                 <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>
                         </div>
