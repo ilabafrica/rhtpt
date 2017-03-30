@@ -52,6 +52,7 @@
                 <button v-bind="{ 'disabled': user.deleted_at!=NULL}" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)">Edit</button>
                 <button v-if="user.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)">Enable</button>
                 <button v-if="user.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)">Disable</button>
+                <button v-bind="{ 'disabled': user.deleted_at!=NULL}" class="btn btn-sm btn-primary"  @click.prevent="assignRole(user)">Assign Role</button>
             </td>
         </tr>
     </table>
@@ -177,6 +178,79 @@
                         <input type="text" name="address" class="form-control" v-model="fillUser.address" />
                         <span v-if="formErrorsUpdate['address']" class="error text-danger">@{{ formErrorsUpdate['address'] }}</span>
                     </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+
+                </form>
+
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Assign a Role to User Modal -->
+    <div class="modal fade" id="assign-role" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <h4 class="modal-title" id="myModalLabel">Assign Role to Participant</h4>
+            </div>
+            <div class="modal-body">
+
+                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="assignRole(fillUser.id)">
+                   
+                <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" name="name" class="form-control" v-model="fillUser.name"/>
+                        <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                    </div>
+                    <!-- Display Counties form assign.js loadCounties function -->                    
+                       <!-- <div v-if="selected[@{{role.id}}] === 2" class=""> -->
+                        <div class="form-group row">
+                            <label class="col-sm-4 form-control-label" for="title">County:</label>
+                            <div class="col-sm-8">
+                            <select class="form-control c-select" name="county" id="county" v-on:change="loadSubcounties" >
+                                <option selected></option>
+                                <option v-for="county in counties" value="@{{county.id}}">@{{ county.value }}</option>
+                            </select>
+                            </div>
+                        </div>
+
+                        <!-- Display Subcounties form assign.js loadSubcounties function -->
+                        <div class="form-group row">
+                            <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
+                            <div class="col-sm-8">
+                            <select class="form-control c-select" name="sub_county" id="sub_county" v-on:change="loadFacilities">
+                                <option selected></option>
+                                <option v-for="subcounty in subcounties" value="@{{subcounty.id}}">@{{subcounty.value }}</option>
+                            </select>
+                            </div>
+                        </div>                           
+
+                        <!-- Display facilities form assign.js loadFacilities function -->
+                        <div class="form-group row">
+                            <label class="col-sm-4 form-control-label" for="title">Facility:</label>
+                            <div class="col-sm-8">
+                            <select class="form-control c-select" name="facility" id="facility">
+                                <option selected></option>
+                                <option v-for="facility in facilities" value="@{{facility.id}}">@{{facility.value }}</option>
+                            </select>
+                            </div>
+                        </div>    
+
+                        <!-- Display Programs form assign.js loadProgram function -->
+                        <div class="form-group row">
+                            <label class="col-sm-4 form-control-label" for="title">Program:</label>
+                            <div class="col-sm-8">
+                            <select class="form-control c-select" name="program" id="program">
+                                <option selected></option>
+                                <option v-for="program in programs" value="@{{program.id}}">@{{program.value }}</option>
+                            </select>
+                            </div>
+                        </div>
+                        <!-- </div> -->
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">Submit</button>
                 </div>

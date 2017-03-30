@@ -9,9 +9,6 @@ new Vue({
     users: [],
     checks: [],
     counties: [],
-    subcounties: [],
-    programs:[],
-    facilities: [],
     partners: [],
     selected:'',
     pagination: {
@@ -25,7 +22,6 @@ new Vue({
     formErrors:{},
     formErrorsUpdate:{},
     newFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
-    fillRole : {'county':'','subcounty':'', 'facility':'', 'partner':'', 'program':'','role':''}
   },
   computed: {
         isActived: function () {
@@ -54,10 +50,10 @@ new Vue({
   ready : function(){
   		this.getVueAssignments(this.pagination.current_page);
       this.loadCounties();
-      this.loadSubcounties();
+      // this.loadSubcounties();
       this.loadPartners();
-      this.loadFacilities();
-      this.loadPrograms();
+      this.checkedRole();
+      // this.loadPrograms();
   },
 
   methods : {
@@ -96,17 +92,6 @@ new Vue({
         });
       },
 
-      //Populate subcounties from FacilityController
-      loadSubcounties: function() {
-        let id = $('#county').val();
-            console.log(id);
-        this.$http.get('/subs/'+id).then((response) => { 
-            this.subcounties = response.data;
-
-        }, (response) => {
-            // console.log(response);
-        });
-      },
       //Populate partners from ShipperController
       loadPartners: function() {
         this.$http.get('/shpprs/2').then((response) => { 
@@ -115,26 +100,22 @@ new Vue({
         }, (response) => {
             console.log(response);
         });
-      },
-      //Populate facilities from FacilityController
-      loadFacilities: function() {
-        let id = $('#sub_county').val();
-        this.$http.get('/fclts/'+id).then((response) => { 
-            this.facilities = response.data;
+      },      
+     checkedRole: function(id) {
+        // let id = $('#rolechecked').val();
+            console.log(id);
+            if (id ==3) {
+              $('#county').hide();
+              $('#partner').show();
+            }else if(id ==4){
+              $('#county').show();
+              $('#partner').hide();
 
-        }, (response) => {
-            console.log(response);
-        });
-      },
-
-      //Populate programs from ProgramController
-      loadPrograms: function() {
-        this.$http.get('/programslist').then((response) => { 
-            this.programs = response.data;
-
-        }, (response) => {
-            console.log(response);
-        });
+            }else{
+              $('#county').hide();
+              $('#partner').hide();
+            }
+        
       },
   }
 

@@ -6,6 +6,10 @@ new Vue({
 
   data: {
     users: [],
+    counties: [],
+    subcounties: [],
+    programs:[],
+    facilities: [],
     pagination: {
         total: 0, 
         per_page: 2,
@@ -47,6 +51,10 @@ new Vue({
 
   ready : function(){
   		this.getVueUsers(this.pagination.current_page);
+      this.loadCounties();
+      this.loadSubcounties();
+      this.loadFacilities();
+      this.loadPrograms();
   },
 
   methods : {
@@ -101,16 +109,75 @@ new Vue({
             this.changePage(this.pagination.current_page);
             this.fillUser = {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''};
             $("#edit-user").modal('hide');
-            toastr.success('Facility Updated Successfully.', 'Success Alert', {timeOut: 5000});
+            toastr.success('User Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {
               this.formErrorsUpdate = response.data;
           });
       },
-
+      updateRole: function(id){
+          let myForm = document.getElementById('update_assignments');
+          let formData = new FormData(myForm);
+          
+          this.$http.put('/assignParticipantRole/'+id,formData).then((response) => {
+            this.changePage(this.pagination.current_page);
+            
+            $("#assign-role").modal('hide');
+            toastr.success('Role Assigned Successfully.', 'Success Alert', {timeOut: 5000});
+          }, (response) => {
+              this.formErrorsUpdate = response.data;
+          });
+      },
+      assignRole: function(user){          
+          this.fillUser.name = user.name;
+          $("#assign-role").modal('show');
+      },
       changePage: function (page) {
           this.pagination.current_page = page;
           this.getVueUsers(page);
-      }
+      },
+
+       //Populate counties from FacilityController
+      loadCounties: function() {
+        this.$http.get('/cnts').then((response) => {
+            this.counties = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      // Populate subcounties from FacilityController
+      loadSubcounties: function() {
+        let id = $('#county').val();
+            console.log(id);
+        this.$http.get('/subs/'+id).then((response) => { 
+            this.subcounties = response.data;
+
+        }, (response) => {
+            // console.log(response);
+        });
+      },
+      
+      // Populate facilities from FacilityController
+      loadFacilities: function() {
+        let id = $('#sub_county').val();
+        this.$http.get('/fclts/'+id).then((response) => { 
+            this.facilities = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      //Populate programs from ProgramController
+      loadPrograms: function() {
+        this.$http.get('/programslist').then((response) => { 
+            this.programs = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
 
   }
 

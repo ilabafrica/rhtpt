@@ -54,6 +54,7 @@ class UserController extends Controller
             'email' => 'required',
             'address' => 'required'
         ]);
+        $request->merge(['password' => User::DEFAULT_PASSWORD]);
         $create = User::create($request->all());
 
         return response()->json($create);

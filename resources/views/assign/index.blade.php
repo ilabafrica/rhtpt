@@ -32,62 +32,17 @@
             <tr>
                 <td></td>
 
-                <td v-for="role in roles" v-if="role.id!=1">@{{ role.name }}</td>
+                <td v-for="role in roles" v-if="role.id!=1 && role.id!=2">@{{ role.name }}</td>
             </tr>
             <tr v-for="user in users">
                 <td>@{{ user.name }}</td>
-                <td v-for="role in roles" v-if="role.id!=1">
+                <td v-for="role in roles" v-if="role.id!=1 && role.id!=2">
                     <label v-if="role.id!=1" class="form-checkbox-label">
-                        <input type="checkbox" value="@{{role.id}}" name="userRoles[@{{user.id}}][@{{role.id}}]" v-bind="{ 'checked': checks[user.id][role.id].checked}" >
+                        <input type="checkbox" value="@{{role.id}}" name="userRoles[@{{user.id}}][@{{role.id}}]" id="rolechecked_@{{user.id}}_@{{role.id}}" v-bind="{ 'checked': checks[user.id][role.id].checked}" v-on:change='checkedRole(role.id)'>
                     </label>
-
-                        <!-- Display Counties form assign.js loadCounties function -->                    
-                       <!-- <div v-if="selected[@{{role.id}}] === 2" class=""> -->
-                        <div class="form-group row">
-                            <label class="col-sm-4 form-control-label" for="title">County:</label>
-                            <div class="col-sm-8">
-                            <select class="form-control c-select" name="county_@{{user.id}}_@{{role.id}}" id="county[@{{user.id}}][@{{role.id}}]" v-on:change="loadSubcounties" >
-                                <option selected></option>
-                                <option v-for="county in counties" value="@{{county.id}}">@{{ county.value }}</option>
-                            </select>
-                            </div>
-                        </div>
-
-                        <!-- Display Subcounties form assign.js loadSubcounties function -->
-                        <div class="form-group row">
-                            <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
-                            <div class="col-sm-8">
-                            <select class="form-control c-select" name="sub_county_@{{user.id}}_@{{role.id}}" id="sub_county[@{{user.id}}][@{{role.id}}]" v-on:change="loadFacilities">
-                                <option selected></option>
-                                <option v-for="subcounty in subcounties" value="@{{subcounty.id}}">@{{subcounty.value }}</option>
-                            </select>
-                            </div>
-                        </div>                           
-
-                        <!-- Display facilities form assign.js loadFacilities function -->
-                        <div class="form-group row">
-                            <label class="col-sm-4 form-control-label" for="title">Facility:</label>
-                            <div class="col-sm-8">
-                            <select class="form-control c-select" name="facility_@{{user.id}}_@{{role.id}}" id="facility[@{{user.id}}][@{{role.id}}]">
-                                <option selected></option>
-                                <option v-for="facility in facilities" value="@{{facility.id}}">@{{facility.value }}</option>
-                            </select>
-                            </div>
-                        </div>    
-
-                        <!-- Display Programs form assign.js loadProgram function -->
-                        <div class="form-group row">
-                            <label class="col-sm-4 form-control-label" for="title">Program:</label>
-                            <div class="col-sm-8">
-                            <select class="form-control c-select" name="program_@{{user.id}}_@{{role.id}}" id="program">
-                                <option selected></option>
-                                <option v-for="program in programs" value="@{{program.id}}">@{{program.value }}</option>
-                            </select>
-                            </div>
-                        </div>
-                        <!-- </div> -->
-                        <!-- <div v-if="selected[@{{role.id}}] === 3" class=""> -->
+                        <!-- <div v-if="checkedRole[@{{user.id}}] == 3" class="shhde"> -->
                         <!-- Display Partners form assign.js loadPartners function -->
+                       <div id="partner" class="collapse">
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label" for="title">Partner:</label>
                             <div class="col-sm-8">
@@ -98,7 +53,19 @@
                             </div>
                         </div>                   
                         </div>
-                        <!-- </div> -->
+                         <!-- Display Counties form assign.js loadCounties function -->                    
+                       <!-- <div v-if="checkedRole[@{{user.id}}][@{{role.id}}] == 4" class="shhde"> -->
+                        <div id="county" class="collapse">
+                        <div class="form-group row">
+                            <label class="col-sm-4 form-control-label" for="title">County:</label>
+                            <div class="col-sm-8">
+                            <select class="form-control c-select" name="county_@{{user.id}}_@{{role.id}}" id="county"  v-on:change ="loadFacilities">
+                                <option selected></option>
+                                <option v-for="county in counties" value="@{{county.id}}">@{{ county.value }}</option>
+                            </select>
+                            </div>
+                        </div>                       
+                        </div>
                 </td>
             </tr>
         </table>

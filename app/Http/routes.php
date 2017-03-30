@@ -110,11 +110,11 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "role.assign",
         "uses" => "RoleController@manageAssignment"
     ));
+   
     Route::post("/assign", array(
         "as"   => "role.assign",
         "uses" => "RoleController@saveUserRoleAssignment"
     ));
-
     Route::get("/st", array(
         "as"   => "st.fetch",
         "uses" => "ShipperController@options"
@@ -234,6 +234,11 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get('assign', 'AssignmentController@manageAssignments');
     Route::resource('vueassigns','AssignmentController');
+
+     Route::any("/assignParticipantRole", array(
+        "as"   => "assignParticipantRole",
+        "uses" => "AssignmentController@assignParticipantRole"
+    ));
 
     Route::get("/ntfctns", array(
         "as"   => "notifications.fetch",

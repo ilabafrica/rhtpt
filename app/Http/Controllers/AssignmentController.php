@@ -9,6 +9,7 @@ use App\User;
 use App\Tier;
 use App\County;
 use Input;
+use DB;
 
 
 class AssignmentController extends Controller
@@ -26,7 +27,12 @@ class AssignmentController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::latest()->paginate(10);
+        // $users = User::latest()->paginate(10);
+
+        $users = User::select('*')->whereNotIn('id', function($q){
+        $q->select('user_id')->from('role_user')->where('role_id', '2');
+        })->latest()->paginate(10);
+        
         $roles = Role::all();
         foreach($users as $user)
         {
@@ -60,63 +66,52 @@ class AssignmentController extends Controller
     public function store(Request $request)
     {
         $arrayUserRoleMapping = $request->get('userRoles');
-        $counties = $request->get('county');
-        $users = User::all();
-        $roles = Role::all();
 
-        foreach ($users as $userkey => $user)
-        {
-      		foreach ($roles as $roleKey => $role)
-            {
-                $county = $request->get('county_'.$user->id.'_'.$role->id);
-                $facility = $request->get('facility_'.$user->id.'_'.$role->id);
-                $partner = $request->get('partner_'.$user->id.'_'.$role->id);
-                $program = $request->get('program_'.$user->id.'_'.$role->id);
+        foreach($arrayUserRoleMapping as $user => $users){
+           
+            foreach($users as $role){
+              
+                $county = $request->get('county_'.$user.'_'.$role);
+                $partner = $request->get('partner_'.$user.'_'.$role);
 
-                dd($arrayUserRoleMapping[$userkey][$roleKey]);
-                
                 //If checkbox is clicked attach the role
-                if(!empty($arrayUserRoleMapping[$userkey][$roleKey]))
+                if(!empty($arrayUserRoleMapping[$user][$role]))
                 {
-                    $user->detachRole($role);
-                    $user->attachRole($role);
-                    if(($county || $facility || $partner) && $role != Role::getAdminRole())
-                    {
-                        $program_id = NULL;
-                        if($county && $role->id ==4)
+                    // $user->detachRole($role);
+                    // $user->attachRole($role);
+                    if(($county  || $partner) && $role != Role::getAdminRole())                    {
+                        
+                        if($county && $role ==4){
                             $tier_id = $county;
-                        else if($partner&& $role->id ==3 )
-                            $tier_id = $partner;
-                        else if($facility && $role->id ==2)
-                        {
-                            $tier_id = $facility;
-                            $program_id = $program;
                         }
-                        $tier = Tier::where('user_id', $user->id)->first();
+                        else if($partner&& $role ==3 ){
+                            $tier_id = $partner;
+                        }
+
+                        $tier = Tier::where('user_id', $user)->first();
+                        
                         if($tier)
                         {
                             $userTier = Tier::find($tier->id);
-                            $userTier->user_id = $user->id;
-                            $userTier->role_id = $role->id;
+                            $userTier->user_id = $user;
+                            $userTier->role_id = $role;
                             $userTier->tier = $tier_id;
-                            $userTier->program_id = $program_id;
                             $userTier->save();
                         }
                         else
                         {
                             $userTier = new Tier;
-                            $userTier->user_id = $user->id;
-                            $userTier->role_id = $role->id;
+                            $userTier->user_id = $user;
+                            $userTier->role_id = $role;
                             $userTier->tier = $tier_id;
-                            $userTier->program_id = $program_id;
                             $userTier->save();
                         }
                     }
                 }
                 // //If checkbox is NOT clicked detatch the role
-                else if(empty($arrayUserRoleMapping[$userkey][$roleKey]))
+                else if(empty($arrayUserRoleMapping[$user][$role]))
                 {
-                    $tier = Tier::where('user_id', $user->id)->where('role_id', $role->id)->first();
+                    $tier = Tier::where('user_id', $user)->where('role_id', $role)->first();
                     if($tier)
                         $tier->delete();
                     $user->detachRole($role);
@@ -124,6 +119,9 @@ class AssignmentController extends Controller
             }
     	}
         return response()->json($arrayUserRoleMapping);
+    }
+    public function assignParticipantRole(Request $request){
+        dd($request->all());
     }
     /**
     *   Controller function for making view for assigning roles to users
