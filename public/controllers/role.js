@@ -123,7 +123,7 @@ new Vue({
         this.loading = true;
 
         // Making a get request to our API and passing the query to it.
-        this.$http.get('/api/search?q=' + this.query).then((response) => {
+        this.$http.get('/api/search_role?q=' + this.query).then((response) => {
             // If there was an error set the error message, if not fill the roles array.
             if(response.data.error)
             {

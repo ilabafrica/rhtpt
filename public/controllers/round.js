@@ -17,7 +17,10 @@ new Vue({
     formErrors:{},
     formErrorsUpdate:{},
     newRound : {'name':'','description':'','start_date':'','end_date':''},
-    fillRound : {'name':'','description':'','start_date':'','end_date':'','id':''}
+    fillRound : {'name':'','description':'','start_date':'','end_date':'','id':''},
+    loading: false,
+    error: false,
+    query: ''
   },
 
   computed: {
@@ -78,7 +81,7 @@ new Vue({
       },
 
       restoreRound: function(round){
-        this.$http.patch('/vuerounds/'+role.id+'/restore').then((response) => {
+        this.$http.patch('/vuerounds/'+round.id+'/restore').then((response) => {
             this.changePage(this.pagination.current_page);
             toastr.success('Round Restored Successfully.', 'Success Alert', {timeOut: 5000});
         });
@@ -108,7 +111,36 @@ new Vue({
       changePage: function (page) {
           this.pagination.current_page = page;
           this.getVueRounds(page);
-      }
+      },
+
+      search: function() {
+        // Clear the error message.
+        this.error = '';
+        // Empty the rounds array so we can fill it with the new rounds.
+        this.rounds = [];
+        // Set the loading property to true, this will display the "Searching..." button.
+        this.loading = true;
+
+        // Making a get request to our API and passing the query to it.
+        this.$http.get('/api/search_round?q=' + this.query).then((response) => {
+            // If there was an error set the error message, if not fill the rounds array.
+            if(response.data.error)
+            {
+                this.error = response.data.error;
+                toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+            }
+            else
+            {
+                this.rounds = response.data.data.data;
+                this.pagination = response.data.data.pagination;
+                toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+            }
+            // The request is finished, change the loading to false again.
+            this.loading = false;
+            // Clear the query.
+            this.query = '';
+        });
+    }
 
   }
 

@@ -21,7 +21,13 @@ class OptionController extends Controller
      */
     public function index(Request $request)
     {
-        $options = Option::latest()->paginate(5);
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $options = Option::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $options = Option::where('title', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
 
         $response = [
             'pagination' => [
@@ -35,7 +41,7 @@ class OptionController extends Controller
             'data' => $options
         ];
 
-        return response()->json($response);
+        return $options->count() > 0 ? response()->json($response) : $error;
     }
 
     /**

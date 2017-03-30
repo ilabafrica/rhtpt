@@ -261,7 +261,20 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('report', 'ReportController@manageReport');
     Route::resource('vuereports','ReportController');
 
-    Route::get('api/search',['as'=>'api.search', 'uses'=>'RoleController@index']);
+    Route::get('api/search_role',['as'=>'role.search', 'uses'=>'RoleController@index']);
+    Route::get('api/search_material',['as'=>'material.search', 'uses'=>'MaterialController@index']);
+    Route::get('api/search_option',['as'=>'option.search', 'uses'=>'OptionController@index']);
+    Route::get('api/search_program',['as'=>'program.search', 'uses'=>'ProgramController@index']);
+    Route::get('api/search_result',['as'=>'result.search', 'uses'=>'ResultController@index']);
+    Route::get('api/search_round',['as'=>'round.search', 'uses'=>'RoundController@index']);
+    Route::get('api/search_set',['as'=>'set.search', 'uses'=>'SetController@index']);
+    Route::get('api/search_shipment',['as'=>'shipment.search', 'uses'=>'ShipmentController@index']);
+    Route::get('api/search_shipper',['as'=>'shipper.search', 'uses'=>'ShipperController@index']);
+    Route::get('api/search_user',['as'=>'user.search', 'uses'=>'UserController@index']);
+    Route::get('api/search_item',['as'=>'item.search', 'uses'=>'ItemController@index']);
+    Route::get('api/search_field',['as'=>'field.search', 'uses'=>'FieldController@index']);
+    Route::get('api/search_facility',['as'=>'facility.search', 'uses'=>'FacilityController@index']);
+    Route::get('api/search_expected',['as'=>'expected.search', 'uses'=>'ExpectedController@index']);
     Route::get("/panels", array(
         "as"   => "panels.fetch",
         "uses" => "ItemController@panels"

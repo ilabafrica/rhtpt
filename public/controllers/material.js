@@ -18,7 +18,10 @@ new Vue({
     formErrorsUpdate:{},
     newMaterial : {'batch':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepared_by':''},
     fillMaterial : {'batch':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepared_by':'','id':''},
-    options: []
+    options: [],
+    loading: false,
+    error: false,
+    query: ''
   },
 
   computed: {
@@ -80,7 +83,7 @@ new Vue({
       },
 
       restoreMaterial: function(material){
-        this.$http.patch('/vuematerials/'+role.id+'/restore').then((response) => {
+        this.$http.patch('/vuematerials/'+material.id+'/restore').then((response) => {
             this.changePage(this.pagination.current_page);
             toastr.success('Material Restored Successfully.', 'Success Alert', {timeOut: 5000});
         });
@@ -122,7 +125,36 @@ new Vue({
         }, (response) => {
             console.log(response);
         });
-      }
+      },
+
+      search: function() {
+        // Clear the error message.
+        this.error = '';
+        // Empty the materials array so we can fill it with the new materials.
+        this.materials = [];
+        // Set the loading property to true, this will display the "Searching..." button.
+        this.loading = true;
+
+        // Making a get request to our API and passing the query to it.
+        this.$http.get('/api/search_material?q=' + this.query).then((response) => {
+            // If there was an error set the error message, if not fill the materials array.
+            if(response.data.error)
+            {
+                this.error = response.data.error;
+                toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+            }
+            else
+            {
+                this.materials = response.data.data.data;
+                this.pagination = response.data.data.pagination;
+                toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+            }
+            // The request is finished, change the loading to false again.
+            this.loading = false;
+            // Clear the query.
+            this.query = '';
+        });
+    }
 
   }
 

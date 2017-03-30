@@ -27,7 +27,13 @@ class ResultController extends Controller
      */
     public function index(Request $request)
     {
-        $results = Pt::latest()->paginate(5);
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $results = Result::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $results = Result::where('pt_id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
         foreach($results as $result)
         {
             $result->rnd = $result->round->name;
@@ -44,7 +50,7 @@ class ResultController extends Controller
             ],
             'data' => $results
         ];
-        return response()->json($response);
+        return $results->count() > 0 ? response()->json($response) : $error;
     }
 
     /**

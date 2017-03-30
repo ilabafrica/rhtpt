@@ -23,7 +23,13 @@ class RoundController extends Controller
      */
     public function index(Request $request)
     {
-        $rounds = Round::latest()->paginate(5);
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $rounds = Round::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $rounds = Round::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
 
         $response = [
             'pagination' => [
@@ -37,7 +43,7 @@ class RoundController extends Controller
             'data' => $rounds
         ];
 
-        return response()->json($response);
+        return $rounds->count() > 0 ? response()->json($response) : $error;
     }
 
     /**

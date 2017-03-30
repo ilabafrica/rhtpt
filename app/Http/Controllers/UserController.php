@@ -21,8 +21,13 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $error = ['error' => 'No results found, please try with different keywords.'];
         $users = User::latest()->withTrashed()->paginate(5);
-
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $users = User::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
         $response = [
             'pagination' => [
                 'total' => $users->total(),
@@ -35,7 +40,7 @@ class UserController extends Controller
             'data' => $users
         ];
 
-        return response()->json($response);
+        return $users->count() > 0 ? response()->json($response) : $error;
     }
 
     /**

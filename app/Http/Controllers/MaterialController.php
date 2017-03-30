@@ -23,7 +23,13 @@ class MaterialController extends Controller
      */
     public function index(Request $request)
     {
-        $materials = Material::latest()->paginate(5);
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $materials = Material::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $materials = Material::where('batch', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
 
         foreach($materials as $material)
             $material->mt = $material->material($material->material_type);
@@ -40,7 +46,7 @@ class MaterialController extends Controller
         ];
         $request->request->add(['user_id' => Auth::user()->id]);
 
-        return response()->json($response);
+        return $materials->count() > 0 ? response()->json($response) : $error;
     }
 
     /**

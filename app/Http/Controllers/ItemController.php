@@ -26,7 +26,13 @@ class ItemController extends Controller
      */
     public function index(Request $request)
     {
+        $error = ['error' => 'No results found, please try with different keywords.'];
         $items = Item::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $items = Item::where('pt_id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
         foreach($items as $item)
         {
             $item->mtrl = $item->material->batch;
@@ -45,7 +51,7 @@ class ItemController extends Controller
             'data' => $items
         ];
 
-        return response()->json($response);
+        return $items->count() > 0 ? response()->json($response) : $error;
     }
 
     /**
@@ -59,6 +65,7 @@ class ItemController extends Controller
         $this->validate($request, [
             'tester_id_range' => 'required',
             'pt_id' => 'required',
+            'panel' => 'required',
             'material_id' => 'required',
             'round_id' => 'required',
             'prepared_by' => 'required',
@@ -82,6 +89,7 @@ class ItemController extends Controller
         $this->validate($request, [
             'tester_id_range' => 'required',
             'pt_id' => 'required',
+            'panel' => 'required',
             'material_id' => 'required',
             'round_id' => 'required',
             'prepared_by' => 'required',

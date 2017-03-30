@@ -14,6 +14,9 @@ new Vue({
     from: '',
     to: '',
     rounds: [],
+    loading: false,
+    error: false,
+    query: ''
   },
 
   computed: {
