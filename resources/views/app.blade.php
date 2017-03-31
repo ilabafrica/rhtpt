@@ -230,6 +230,8 @@
         </section>
         <!-- JQuery v1.9.1 -->
         <script src="{{ asset('js/jquery-1.12.3.min.js') }}"></script>
+        <script src="{{ asset('js/jquery.js') }}"></script>
+        <script src="{{ asset('js/jquery-ui-min.js') }}"></script>
         <script src="{{ asset('js/underscore-min.js') }}"></script>
         <!-- Bootstrap -->
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
@@ -245,6 +247,8 @@
         <script src="{{ asset('js/vue-resource.min.js') }}"></script>
         <!-- Toastr -->
         <script src="{{ asset('js/toastr.min.js') }}"></script>
+
+        <script type="text/javascript" src="{{ URL::asset('js/script.js') }} "></script>
 
         @if(Request::segment(1)==strtolower('event'))
         <script src="{{ asset('controllers/event.js') }}"></script>

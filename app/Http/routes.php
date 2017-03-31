@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('facility', 'FacilityController@manageFacility');
     Route::resource('vuefacilitys','FacilityController');
     Route::any('vuefacilitys/{id}/restore','FacilityController@restore');
+    Route::get('search_facility',array('as'=>'search_facility','uses'=>'FacilityController@search_facility'));
 
     Route::get('user', 'UserController@manageUser');
     Route::resource('vueusers','UserController');
@@ -109,11 +110,11 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "role.assign",
         "uses" => "RoleController@manageAssignment"
     ));
+   
     Route::post("/assign", array(
         "as"   => "role.assign",
         "uses" => "RoleController@saveUserRoleAssignment"
     ));
-
     Route::get("/st", array(
         "as"   => "st.fetch",
         "uses" => "ShipperController@options"
@@ -157,6 +158,10 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/fclts/{id}", array(
         "as"   => "facilities.fetch",
         "uses" => "FacilityController@facilities"
+    ));
+    Route::get("/programslist", array(
+        "as"   => "programslist.fetch",
+        "uses" => "ProgramController@programs"
     ));
 
     Route::get("/shpprs/{id}", array(
@@ -214,6 +219,10 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "pt.fetch",
         "uses" => "ResultController@edit"
     ));
+    Route::any("/verify_results/{id}", array(
+        "as"   => "verify_results",
+        "uses" => "ResultController@verify"
+    ));
 
     Route::get("/form", array(
         "as"   => "fields.fetch",
@@ -225,6 +234,11 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get('assign', 'AssignmentController@manageAssignments');
     Route::resource('vueassigns','AssignmentController');
+
+     Route::any("/assignParticipantRole", array(
+        "as"   => "assignParticipantRole",
+        "uses" => "AssignmentController@assignParticipantRole"
+    ));
 
     Route::get("/ntfctns", array(
         "as"   => "notifications.fetch",

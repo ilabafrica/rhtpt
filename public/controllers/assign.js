@@ -8,6 +8,9 @@ new Vue({
     roles: [],
     users: [],
     checks: [],
+    counties: [],
+    partners: [],
+    selected:'',
     pagination: {
         total: 0, 
         per_page: 2,
@@ -19,7 +22,6 @@ new Vue({
     formErrors:{},
     formErrorsUpdate:{},
     newFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
-    fillFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''}
   },
   computed: {
         isActived: function () {
@@ -47,6 +49,11 @@ new Vue({
     },
   ready : function(){
   		this.getVueAssignments(this.pagination.current_page);
+      this.loadCounties();
+      // this.loadSubcounties();
+      this.loadPartners();
+      this.checkedRole();
+      // this.loadPrograms();
   },
 
   methods : {
@@ -61,20 +68,55 @@ new Vue({
         },
 
         createAssignment: function(page){
-		    let myForm = document.getElementById('update_assignments');
-            let formData = new FormData(myForm);
-            this.$http.post('/vueassigns', formData).then((response) => {
-                toastr.success('Roles Assigned Successfully.', 'Success Alert', {timeOut: 5000});
-                this.getVueAssignments();
-            }, (response) => {
-                this.formErrors = response.data;
-            });
-	},
+	        let myForm = document.getElementById('update_assignments');
+          let formData = new FormData(myForm);
+          this.$http.post('/vueassigns', formData).then((response) => {
+              toastr.success('Roles Assigned Successfully.', 'Success Alert', {timeOut: 5000});
+              this.getVueAssignments();
+          }, (response) => {
+              this.formErrors = response.data;
+          });
+	     },
       changePage: function (page) {
           this.pagination.current_page = page;
           this.getVueAssignments(page);
-      }
+      },
 
+      //Populate counties from FacilityController
+      loadCounties: function() {
+        this.$http.get('/cnts').then((response) => {
+            this.counties = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      //Populate partners from ShipperController
+      loadPartners: function() {
+        this.$http.get('/shpprs/2').then((response) => { 
+            this.partners = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },      
+     checkedRole: function(id) {
+        // let id = $('#rolechecked').val();
+            console.log(id);
+            if (id ==3) {
+              $('#county').hide();
+              $('#partner').show();
+            }else if(id ==4){
+              $('#county').show();
+              $('#partner').hide();
+
+            }else{
+              $('#county').hide();
+              $('#partner').hide();
+            }
+        
+      },
   }
 
 });

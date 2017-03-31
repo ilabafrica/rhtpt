@@ -18,6 +18,7 @@ new Vue({
     formErrorsUpdate:{},
     newFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
     fillFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''},
+    search: '',
     loading: false,
     error: false,
     query: ''
@@ -62,15 +63,15 @@ new Vue({
         },
 
         createFacility: function(){
-		  var input = this.newFacility;
-		  this.$http.post('/vuefacilitys',input).then((response) => {
-		    this.changePage(this.pagination.current_page);
-			this.newFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':''};
-			$("#create-facility").modal('hide');
-			toastr.success('Facility Created Successfully.', 'Success Alert', {timeOut: 5000});
-		  }, (response) => {
-			this.formErrors = response.data;
-	    });
+  		  var input = this.newFacility;
+  		  this.$http.post('/vuefacilitys',input).then((response) => {
+  		    this.changePage(this.pagination.current_page);
+    			this.newFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':''};
+    			$("#create-facility").modal('hide');
+    			toastr.success('Facility Created Successfully.', 'Success Alert', {timeOut: 5000});
+  		  }, (response) => {
+  			 this.formErrors = response.data;
+  	    });
 	},
 
       deleteFacility: function(facility){
@@ -113,7 +114,6 @@ new Vue({
           this.pagination.current_page = page;
           this.getVueFacilitys(page);
       },
-
       search: function() {
         // Clear the error message.
         this.error = '';

@@ -17,7 +17,7 @@
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.field', 2) !!}
         
                 @permission('create-field')
-                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-field" disabled>
+                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-field" >
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
                     </button>

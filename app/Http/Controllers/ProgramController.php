@@ -104,4 +104,16 @@ class ProgramController extends Controller
         $program = Program::withTrashed()->find($id)->restore();
         return response()->json(['done']);
     }
+
+    //Display programs in an array, used in assigning  a role
+    public function programs()
+    {
+        $programs = Program::lists('name', 'id');
+        $categories = [];
+        foreach($programs as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
 }

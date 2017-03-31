@@ -29,7 +29,7 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     const SIX_TO_EIGHT = 3;
     const NINE = 4;
     //	Default password
-	  const DEFAULT_PASSWORD = '123456';
+	const DEFAULT_PASSWORD = 'secret';
 
     /**
      * The database table used by the model.
@@ -43,7 +43,7 @@ EntrustUserTrait::restore insteadof SoftDeletes;
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['name', 'email', 'password', 'username', 'address', 'phone', 'gender'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -94,4 +94,5 @@ EntrustUserTrait::restore insteadof SoftDeletes;
   	{
   		return $this->hasOne('App\Tier');
   	}
+    
 }

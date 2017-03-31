@@ -179,4 +179,5 @@ return [
     *   Results
     */
     'enter-result'          =>  'Enter Results',
+    'verify-result'          =>  'Verify Results',
 ];

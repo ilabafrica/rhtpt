@@ -38,6 +38,17 @@
                     </span>
                 </div>
             </div>
+            <div class="pull-right">
+                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="searchFacilities">
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control" name="search_text" placeholder="Search Facility" />
+                        <span v-if="formErrorsSearch['search_text']" class="error text-danger">@{{ formErrorsSearch['search_text'] }}</span>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button type="submit" class="btn btn-success">Search</button>
+                    </div>
+                </form>   
+            </div>
         </div>
     </div>
     <table class="table table-bordered">
@@ -168,4 +179,5 @@
     </div>
 
 </div>
+
 @endsection
