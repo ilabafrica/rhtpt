@@ -123,16 +123,41 @@
                                     <span v-if="formErrors['text']" class="error text-danger">@{{ formErrors['text'] }}</span>
                                 </div>
                             </div>
-				            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">County:</label>
-                                <div class="col-sm-8">
-                                    <div class="form-checkbox form-checkbox-inline" v-for="county in counties">
-                                        <label class="form-checkbox-label">
-                                            <input type="checkbox" class="form-checkbox-input" :value="county.id" name="county[]" v-model="newSMS.county">
-                                            @{{ county.value }}
-                                        </label>
+                            <div v-if="newSMS.notification_id === 1" class="shhde">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">County:</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-checkbox form-checkbox-inline" v-for="county in counties">
+                                            <label class="form-checkbox-label">
+                                                <input type="checkbox" class="form-checkbox-input" :value="county.id" name="county[]" v-model="newSMS.county">
+                                                @{{ county.value }}
+                                            </label>
+                                        </div>
+                                        <span v-if="formErrors['county']" class="error text-danger">@{{ formErrors['county'] }}</span>
                                     </div>
-                                    <span v-if="formErrors['county']" class="error text-danger">@{{ formErrors['county'] }}</span>
+                                </div>
+                            </div>
+                            <div v-if="newSMS.notification_id === 2 || newSMS.notification_id === 3" class="shhde">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Participant:</label>
+                                    <div class="col-sm-8">
+                                        <div class="input-group input-group-md">
+                                            <input type="text" class="form-control" placeholder="Search for..." v-model="srch">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-secondary" type="button" @click="find()" v-if="!loading"><i class="fa fa-search"></i></button>
+                                                <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                                            </span>
+                                        </div>
+                                        <br />
+                                        <div class="card card-block" v-if="users.length > 0">
+                                            <div class="form-checkbox form-checkbox-inline" v-for="user in users">
+                                                <label class="form-checkbox-label">
+                                                    <input type="radio" :value="user.id" name="usrs" v-model="newSMS.usrs">
+                                                    @{{ user.name+' ('+user.uid+' - '+user.phone+')' }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">

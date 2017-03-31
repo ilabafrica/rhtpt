@@ -275,6 +275,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_field',['as'=>'field.search', 'uses'=>'FieldController@index']);
     Route::get('api/search_facility',['as'=>'facility.search', 'uses'=>'FacilityController@index']);
     Route::get('api/search_expected',['as'=>'expected.search', 'uses'=>'ExpectedController@index']);
+    Route::get('api/search_participant',['as'=>'participant.search', 'uses'=>'UserController@participant']);
     Route::get("/panels", array(
         "as"   => "panels.fetch",
         "uses" => "ItemController@panels"
