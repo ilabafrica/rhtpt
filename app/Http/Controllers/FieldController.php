@@ -23,7 +23,13 @@ class FieldController extends Controller
      */
     public function index(Request $request)
     {
-        $fields = Field::latest()->paginate(5);
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $fields = Field::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $fields = Field::where('title', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
 
         foreach($fields as $field)
         {
@@ -43,7 +49,7 @@ class FieldController extends Controller
             'data' => $fields
         ];
 
-        return response()->json($response);
+        return $fields->count() > 0 ? response()->json($response) : $error;
     }
 
     /**

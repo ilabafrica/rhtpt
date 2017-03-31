@@ -11,6 +11,7 @@ use App\SubCounty;
 use App\Facility;
 use App\Tier;
 use App\User;
+use App\Role;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 use Config;
@@ -74,7 +75,6 @@ class BulkSMSController extends Controller
             'round_id' => 'required',
             'notification_id' => 'required',
             'text' => 'required',
-            'county' => 'required',
         ]);
         $message = $request->text;
         $round_id = $request->round_id;
@@ -91,37 +91,51 @@ class BulkSMSController extends Controller
         $username   = $api->username;
         $apikey     = $api->api_key;
         //  TO DO: Use query to retrieve -- number to send messages
-        # Prepare to fetch list of phone numbers from the selected coounties.
-        $counties = [];
-        foreach(Input::get('county') as $key => $value)
+        # Prepare to fetch list of phone numbers from the selected counties.
+        $recipients = NULL;
+        if($request->county)
         {
-            array_push($counties, $value);
+            $counties = [];
+            foreach(Input::get('county') as $key => $value)
+            {
+                array_push($counties, $value);
+            }
+            $pRole = Role::idByName('Participant');
+            $subCounties = SubCounty::whereIn('county_id', $counties)->lists('id');
+            $facilities = Facility::whereIn('sub_county_id', $subCounties)->lists('id');
+            $tiers = Tier::where('role_id', $pRole)->whereIn('tier', $facilities)->lists('user_id');
+            $phone_numbers = User::whereIn('id', $tiers)->whereNotNull('phone')->lists('phone')->toArray();
+            $recipients = implode(",", $phone_numbers);
         }
-        $subCounties = SubCounty::whereIn('county_id', $counties)->lists('id');
-        $facilities = Facility::whereIn('sub_county_id', $subCounties)->lists('id');
-        $tiers = Tier::where('role_id', 2)->whereIn('tier', $facilities)->lists('user_id');
-        $phone_numbers = User::whereIn('id', $tiers)->whereNotNull('phone')->lists('phone')->toArray();
-        $recipients = implode(",", $phone_numbers);
-        // Specified sender-id
-        $from = $api->code;
-        // Create a new instance of Bulk SMS gateway.
-        $sms    = new Bulk($username, $apikey);
-        // use try-catch to filter any errors.
-        try
+        else if($request->usrs)
         {
-          // Send messages
-          $results = $sms->sendMessage($recipients, $message, $from);
-          foreach($results as $result)
-          {
-            // status is either "Success" or "error message" and save.
-            $number = $result->number;
-            //  Save the results
-            DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
-          }
+            $id = $request->usrs;
+            $phone_numbers = User::find($id)->phone;
+            $recipients = $phone_numbers;
         }
-        catch ( AfricasTalkingGatewayException $e )
+        if($recipients)
         {
-          echo "Encountered an error while sending: ".$e->getMessage();
+            // Specified sender-id
+            $from = $api->code;
+            // Create a new instance of Bulk SMS gateway.
+            $sms    = new Bulk($username, $apikey);
+            // use try-catch to filter any errors.
+            try
+            {
+            // Send messages
+            $results = $sms->sendMessage($recipients, $message, $from);
+            foreach($results as $result)
+            {
+                // status is either "Success" or "error message" and save.
+                $number = $result->number;
+                //  Save the results
+                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
+            }
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+            echo "Encountered an error while sending: ".$e->getMessage();
+            }
         }
 
         return response()->json('Sent');

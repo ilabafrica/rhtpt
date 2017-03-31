@@ -24,7 +24,13 @@ class ExpectedController extends Controller
      */
     public function index(Request $request)
     {
-        $expecteds = Expected::latest()->paginate(5);
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $expecteds = Expected::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $expected = Expected::join('items', 'items.id', '=', 'expected_results.item_id')->where('items.pt_id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
         foreach($expecteds as $expected)
         {
             $expected->itm = $expected->item->pt_id;
@@ -42,7 +48,7 @@ class ExpectedController extends Controller
             'data' => $expecteds
         ];
 
-        return response()->json($response);
+        return $expecteds->count() > 0 ? response()->json($response) : $error;
     }
 
     /**

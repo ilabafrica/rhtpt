@@ -19,7 +19,9 @@ new Vue({
     newFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
     fillFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''},
     search: '',
-    fillSearch : {'search':''},
+    loading: false,
+    error: false,
+    query: ''
   },
 
   computed: {
@@ -80,7 +82,7 @@ new Vue({
       },
 
       restoreFacility: function(facility){
-        this.$http.patch('/vuefacilitys/'+role.id+'/restore').then((response) => {
+        this.$http.patch('/vuefacilitys/'+facility.id+'/restore').then((response) => {
             this.changePage(this.pagination.current_page);
             toastr.success('Facility Restored Successfully.', 'Success Alert', {timeOut: 5000});
         });
@@ -112,17 +114,34 @@ new Vue({
           this.pagination.current_page = page;
           this.getVueFacilitys(page);
       },
+      search: function() {
+        // Clear the error message.
+        this.error = '';
+        // Empty the facilitys array so we can fill it with the new facilitys.
+        this.facilitys = [];
+        // Set the loading property to true, this will display the "Searching..." button.
+        this.loading = true;
 
-      searchFacilities: function(){
-        var input = this.fillSearch;
-        this.$http.get('/vuefacilitys', input).then((response) => {
-            this.changePage(this.pagination.current_page);
-            this.fillSearch = {'search':''};
-            toastr.success('Search Completed Successfully.', 'Success Alert', {timeOut: 5000});
-          }, (response) => {
-              this.formErrorsSearch = response.data;
-          });
-      },
+        // Making a get request to our API and passing the query to it.
+        this.$http.get('/api/search_facility?q=' + this.query).then((response) => {
+            // If there was an error set the error message, if not fill the facilitys array.
+            if(response.data.error)
+            {
+                this.error = response.data.error;
+                toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+            }
+            else
+            {
+                this.facilitys = response.data.data.data;
+                this.pagination = response.data.data.pagination;
+                toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+            }
+            // The request is finished, change the loading to false again.
+            this.loading = false;
+            // Clear the query.
+            this.query = '';
+        });
+    }
 
   }
 

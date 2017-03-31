@@ -24,7 +24,13 @@ class ShipmentController extends Controller
      */
     public function index(Request $request)
     {
-        $shipments = Shipment::latest()->paginate(5);
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $shipments = Shipment::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $shipments = Shipment::where('facility_id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
         foreach($shipments as $shipment)
         {
             $shipment->rnd = $shipment->round->name;
@@ -44,7 +50,7 @@ class ShipmentController extends Controller
             'data' => $shipments
         ];
 
-        return response()->json($response);
+        return $shipments->count() > 0 ? response()->json($response) : $error;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Role;
 
 class UserController extends Controller
 {
@@ -21,8 +22,13 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $error = ['error' => 'No results found, please try with different keywords.'];
         $users = User::latest()->withTrashed()->paginate(5);
-
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $users = User::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
         $response = [
             'pagination' => [
                 'total' => $users->total(),
@@ -35,7 +41,7 @@ class UserController extends Controller
             'data' => $users
         ];
 
-        return response()->json($response);
+        return $users->count() > 0 ? response()->json($response) : $error;
     }
 
     /**
@@ -124,5 +130,36 @@ class UserController extends Controller
             $categories[] = ['id' => $key, 'value' => $value];
         }
         return $categories;
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function participant(Request $request)
+    {
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $participant = Role::idByName('Participant');
+        $users = [];
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $users = User::join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $participant)
+                        ->where('name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")
+                        ->orWhere('phone', 'LIKE', "%{$search}%")->latest()->paginate(5);
+        }
+        $response = [
+            'pagination' => [
+                'total' => $users->total(),
+                'per_page' => $users->perPage(),
+                'current_page' => $users->currentPage(),
+                'last_page' => $users->lastPage(),
+                'from' => $users->firstItem(),
+                'to' => $users->lastItem()
+            ],
+            'data' => $users
+        ];
+
+        return $users->count() > 0 ? response()->json($response) : $error;
     }
 }

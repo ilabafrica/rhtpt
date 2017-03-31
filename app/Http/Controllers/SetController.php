@@ -21,7 +21,13 @@ class SetController extends Controller
      */
     public function index(Request $request)
     {
-        $sets = Set::latest()->paginate(5);
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $sets = Set::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $sets = Set::where('title', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
         foreach($sets as $set)
         {
             $set->ordr = $set->order($set->order);
@@ -39,7 +45,7 @@ class SetController extends Controller
             'data' => $sets
         ];
 
-        return response()->json($response);
+        return $sets->count() > 0 ? response()->json($response) : $error;
     }
 
     /**

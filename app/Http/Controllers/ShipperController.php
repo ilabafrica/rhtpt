@@ -21,7 +21,13 @@ class ShipperController extends Controller
      */
     public function index(Request $request)
     {
+        $error = ['error' => 'No results found, please try with different keywords.'];
         $shippers = Shipper::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $shippers = Shipper::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
         foreach($shippers as $shipper)
             $shipper->st = $shipper->shipper($shipper->shipper_type);
         $response = [
@@ -36,7 +42,7 @@ class ShipperController extends Controller
             'data' => $shippers
         ];
 
-        return response()->json($response);
+        return $shippers->count() > 0 ? response()->json($response) : $error;
     }
 
     /**

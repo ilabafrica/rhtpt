@@ -24,9 +24,14 @@ class FacilityController extends Controller
      */
     public function index(Request $request)
     {
-        
         $facilitys = Facility::latest()->paginate(5);
-       
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $facilitys = Facility::latest()->withTrashed()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $facilitys = Facility::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+        }
         foreach($facilitys as $facility)
         {
             $facility->sub = $facility->subCounty->name;
@@ -45,7 +50,7 @@ class FacilityController extends Controller
             'data' => $facilitys
         ];
 
-        return response()->json($response);
+        return $facilitys->count() > 0 ? response()->json($response) : $error;
     }
     /*
        Search for a facility in the database

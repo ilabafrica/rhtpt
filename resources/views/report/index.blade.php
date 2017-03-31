@@ -30,7 +30,6 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-refresh'></i> Submit</button>
-            </div>
         </div>
     </form>
     <br />

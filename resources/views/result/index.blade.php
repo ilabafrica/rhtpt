@@ -13,7 +13,7 @@
     <!-- Round Listing -->
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
+            <div class="pull-left col-md-6">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.result', 2) !!}
         
                 <!-- @permission('create-result') -->
@@ -26,7 +26,17 @@
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
                     </a>
-                    </h5>
+                </h5>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" placeholder="Search for..." v-model="query">
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary" type="button" @click="search()" v-if="!loading"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
