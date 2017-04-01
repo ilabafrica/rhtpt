@@ -202,7 +202,7 @@
                                 <a class="nav-link" href="#">{!! 'Welcome '.Auth::user()->name !!}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{!! url('auth/logout') !!}"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+                                <a class="nav-link" href="{!! url('logout') !!}"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
                             </li>
                         </ul>
                     </div>

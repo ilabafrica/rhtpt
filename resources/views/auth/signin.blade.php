@@ -22,74 +22,58 @@
 	<link rel="stylesheet" href="{{ asset('harmony/css/style.css') }}">
 	<!-- Custom Font -->
 	<link rel="stylesheet" href="{{ asset('harmony/css/font.css') }}">
-
-	<!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
 </head>
 
 <body>
-	<div class="login-page bk-img" style="">
-		<div class="form-content">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6 col-md-offset-3" style="padding-top:20px;">
-					<div class="card card-block">
-						<div class="well row pt-2x pb-3x bk-light">
-							<div class="col-md-8 col-md-offset-2">
-								<div class="row">
-			                        <div class="col-md-12  text-md-center">
-			                            <img src="{{ '../'.Config::get('cms.logo') }}" height="75px">
-			                            <h4 class="text-primary">{!! Config::get('cms.name') !!}</h4>
-			                        </div>
-			                    </div>
-								@if($errors)
-	                                @if (count($errors) > 0)
-	                                <div class="alert alert-danger col-sm-12">
-	                                    <ul class="list-unstyled">
-	                                        @foreach ($errors->all() as $error)
-	                                            <li>{{ $error }}</li>
-	                                        @endforeach
-	                                    </ul>
-	                                </div>
-	                              @endif
-	                            @endif
-	                            @if (session()->has('message'))
-	                                <div class="alert alert-danger">
-	                                    <p>{!! session('message') !!}</p>
-	                                </div>
-	                            @endif
-								<form class="mt" role="form" method="POST" action="{{ url('login') }}">
-									<!-- CSRF Token -->
-	                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-	                                <!-- ./ csrf token -->
-
-									<label for="" class="text-uppercase text-sm">Your Username or Email</label>
-									<input type="text" name="username" id="username" placeholder="Username" class="form-control mb">
-
-									<label for="" class="text-uppercase text-sm">Password</label>
-									<input type="password" name="password" id="password" placeholder="Password" class="form-control mb">
-
-									<div class="checkbox checkbox-circle checkbox-info">
-										<input id="checkbox7" type="checkbox" checked>
-										<label for="checkbox7">
-											Keep me signed in
-										</label>
-									</div>
-
-									<button class="btn btn-primary btn-block" type="submit">LOGIN</button>
-
-								</form>
-							</div>
-						</div>
-						<div class="text-center text-light">
-							<a href="#" class="text-light">Forgot password?</a>
-						</div>
-					</div>
+	<div class="login-page" style="padding-top:20px;">
+		<div class="card col-md-5" style="margin:auto; float:none">
+			<div class="card-block">
+				<div class="row" style="padding:20px">
+					<div class="col-md-12  text-md-center">
+						<img src="{{ '../'.Config::get('cms.logo') }}" height="75px">
+						<h4 class="text-primary">{!! Config::get('cms.name') !!}</h4>
 					</div>
 				</div>
+				<form class="mt" role="form" method="POST" action="{{ url('login') }}">
+					<!-- CSRF Token -->
+					<input type="hidden" name="_token" value="{{ csrf_token() }}">
+					<!-- ./ csrf token -->
+					@if($errors)
+						@if (count($errors) > 0)
+						<div class="alert alert-danger col-md-12">
+							<ul class="list-unstyled">
+								@foreach ($errors->all() as $error)
+									<li>{{ $error }}</li>
+								@endforeach
+							</ul>
+						</div>
+						@endif
+					@endif
+					@if (session()->has('message'))
+						<div class="alert alert-danger">
+							<p>{!! session('message') !!}</p>
+						</div>
+					@endif
+					<div class="form-group row">
+						<label for="username" class="col-md-2 col-form-label">Username</label>
+						<div class="col-md-10">
+							<input type="text" class="form-control" name="username" placeholder="Username">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputPassword3" class="col-md-2 col-form-label">Password</label>
+						<div class="col-md-10">
+							<input type="password" class="form-control" name="password" placeholder="Password">
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-md-offset-2 col-md-10">
+							<button class="btn btn-primary btn-block" type="submit">LOGIN</button>
+							<hr>
+							<h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NHRL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>

@@ -94,5 +94,19 @@ EntrustUserTrait::restore insteadof SoftDeletes;
   	{
   		return $this->hasOne('App\Tier');
   	}
-    
+    /**
+  	 * Return tester-id-range
+  	 */
+  	public function idRange($id)
+  	{
+          $last = substr($id, -1);
+          if($last == 0 || $last == 1 || $last == 2)
+                return User::ZERO_TO_TWO;
+          else if($last == 3 || $last == 4 || $last == 5)
+                return User::THREE_TO_FIVE;
+          else if($last == 6 || $last == 7 || $last == 8)
+                return User::SIX_TO_EIGHT;
+          else if($last == 9)
+                return User::NINE;
+  	}
 }

@@ -8,6 +8,8 @@ use App\Pt;
 use App\Result;
 use App\Field;
 use App\Option;
+use App\Expected;
+use App\User;
 
 use Auth;
 use Jenssegers\Date\Date as Carbon;
@@ -93,10 +95,21 @@ class ResultController extends Controller
                 }
             }
         }
-        dd($pt);
+        //dd($pt);
         /**
         * Begin background processing
         */
+        //  Fetch expected results
+        $round = $pt->round_id;
+        $user = $pt->user_id;
+        $tester_id_range = User::find($user)->idRange($user);
+        $ex_1 = Expected::getExpected(1, $tester_id_range);
+        $ex_2 = Expected::getExpected(2, $tester_id_range);
+        $ex_3 = Expected::getExpected(3, $tester_id_range);
+        $ex_4 = Expected::getExpected(4, $tester_id_range);
+        $ex_5 = Expected::getExpected(5, $tester_id_range);
+        $ex_6 = Expected::getExpected(6, $tester_id_range);
+        //  End fetch
         $rs = $pt->results;
         $date_pt_panel_received = NULL;
         $date_pt_panel_constituted = NULL;
@@ -213,20 +226,20 @@ class ResultController extends Controller
         $incomplete_kit_info = $this->check_kit_info($test_1_kit_name, $test_2_kit_name, $test_1_kit_lot_no, $test_2_kit_lot_no, $test_1_expiry_date, $test_2_expiry_date);
         $use_of_expired_kits = $this->check_expiry($date_pt_panel_tested, $test_1_expiry_date, $test_2_expiry_date, $test_3_expiry_date);
         $incomplete_results = $this->check_complete_results($pt_panel_1_test_1_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_final_results);
-        $incorrect_results = $this->check_correct_results($pt_panel_1_final_results, $pt_panel_2_final_results, $pt_panel_3_final_results, $pt_panel_4_final_results, $pt_panel_5_final_results, $pt_panel_6_final_results, $expected);
+        $incorrect_results = $this->check_correct_results($pt_panel_1_final_results, $pt_panel_2_final_results, $pt_panel_3_final_results, $pt_panel_4_final_results, $pt_panel_5_final_results, $pt_panel_6_final_results, $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6);
         $unsatisfactory = $this->check_satisfaction($incorrect_results);
-        $invalid = $this->check_validity($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results);
+        $invalid_results = $this->check_validity($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results);
         $wrong_algorithm = $this->check_algorithm($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results);
-        $overall = $this->check_overall($dev_from_procedure, $incomplete_other_info, $incomplete_kit_info, $use_of_expired_kits, $incomplete_results, $incorrect_results, $unsatisfactory, $invalid, $wrong_algorithm);
+        $overall = $this->check_overall($dev_from_procedure, $incomplete_other_info, $incomplete_kit_info, $use_of_expired_kits, $incomplete_results, $incorrect_results, $unsatisfactory, $invalid_results, $wrong_algorithm);
         //  Update PT with the outcome of the algorithm.
         $pt->dev_from_procedure = $dev_from_procedure;
-        $pt->incomplete_other_info = $incomplete_other_info;
+        $pt->incomplete_other_information = $incomplete_other_info;
         $pt->incomplete_kit_data = $incomplete_kit_info;
         $pt->use_of_expired_kits = $use_of_expired_kits;
         $pt->incomplete_results = $incomplete_results;
         $pt->incorrect_results = $incorrect_results;
         $pt->panel_result = $unsatisfactory;
-        $pt->invalid = $invalid_results;
+        $pt->invalid_results = $invalid_results;
         $pt->wrong_algorithm = $wrong_algorithm;
         $pt->feedback = $overall;
         $pt->panel_status = Pt::CHECKED;
@@ -438,18 +451,18 @@ class ResultController extends Controller
      * @param  $date_pt_panel_received, $date_consituted, $date_pt_panel_tested
      * @return Incorrect results.
      */
-     public function check_correct_results($pt_panel_1_final_results, $pt_panel_2_final_results, $pt_panel_3_final_results, $pt_panel_4_final_results, $pt_panel_5_final_results, $pt_panel_6_final_results, $expected)
+     public function check_correct_results($pt_panel_1_final_results, $pt_panel_2_final_results, $pt_panel_3_final_results, $pt_panel_4_final_results, $pt_panel_5_final_results, $pt_panel_6_final_results, $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6)
      {
          // Check correctness
          $incorrect_results = 1;
          $indeterminate = Option::idByTitle('Indeterminate');
          if(
-             ($pt_panel_1_final_results == $expected->pt1 || $pt_panel_1_final_results == $indeterminate) &&
-             ($pt_panel_2_final_results == $expected->pt2 || $pt_panel_2_final_results == $indeterminate) &&
-             ($pt_panel_3_final_results == $expected->pt3 || $pt_panel_3_final_results == $indeterminate) &&
-             ($pt_panel_4_final_results == $expected->pt4 || $pt_panel_4_final_results == $indeterminate) &&
-             ($pt_panel_5_final_results == $expected->pt5 || $pt_panel_5_final_results == $indeterminate) &&
-             ($pt_panel_6_final_results == $expected->pt6 || $pt_panel_6_final_results == $indeterminate)
+             ($pt_panel_1_final_results == $ex_1 || $pt_panel_1_final_results == $indeterminate) &&
+             ($pt_panel_2_final_results == $ex_2 || $pt_panel_2_final_results == $indeterminate) &&
+             ($pt_panel_3_final_results == $ex_3 || $pt_panel_3_final_results == $indeterminate) &&
+             ($pt_panel_4_final_results == $ex_4 || $pt_panel_4_final_results == $indeterminate) &&
+             ($pt_panel_5_final_results == $ex_5 || $pt_panel_5_final_results == $indeterminate) &&
+             ($pt_panel_6_final_results == $ex_6 || $pt_panel_6_final_results == $indeterminate)
          )
             $incorrect_results = 0;
          return $incorrect_results;
@@ -475,7 +488,7 @@ class ResultController extends Controller
      */
      public function check_validity($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results)
      {
-         $invalid = 0;
+         $invalid_results = 0;
          $invalid = Option::idByTitle('Invalid');
          if(
              ($pt_panel_1_test_1_results == $invalid || $pt_panel_1_test_2_results == $invalid || $pt_panel_1_test_3_results == $invalid || $pt_panel_1_final_results == $invalid) || 
@@ -485,8 +498,8 @@ class ResultController extends Controller
              ($pt_panel_5_test_1_results == $invalid || $pt_panel_5_test_2_results == $invalid || $pt_panel_5_test_3_results == $invalid || $pt_panel_5_final_results == $invalid) || 
              ($pt_panel_6_test_1_results == $invalid || $pt_panel_6_test_2_results == $invalid || $pt_panel_6_test_3_results == $invalid || $pt_panel_6_final_results == $invalid)
         )
-            $invalid = 1;
-         return $invalid;
+            $invalid_results = 1;
+         return $invalid_results;
      }
     /**
      * Function to check if algorithm followed

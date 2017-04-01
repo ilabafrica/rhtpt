@@ -50,4 +50,19 @@ class Expected extends Model
           else
               return 'Positive';
      }
+    /**
+  	 * Return expectes result
+  	 *
+  	 */
+     public static function getExpected($panelId, $testerRange)
+     {
+          $expected = Expected::join('items', 'expected_results.item_id', '=', 'items.id')
+                            ->where('tester_id_range', $testerRange)
+							->where('panel', $panelId)
+							->value('result');
+		  if((int)$expected == Expected::NEGATIVE)
+		  		return Option::idByTitle('Negative');
+		  else
+		  		return Option::idByTitle('Positive');
+     }
 }
