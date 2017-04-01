@@ -109,11 +109,11 @@ class ProgramController extends Controller
     public function programs()
     {
         $programs = Program::lists('name', 'id');
-        $categories = [];
+        $response = [];
         foreach($programs as $key => $value)
         {
-            $categories[] = ['id' => $key, 'value' => $value];
+            $response[] = ['id' => $key, 'value' => $value];
         }
-        return $categories;
+        return $response;
     }
 }

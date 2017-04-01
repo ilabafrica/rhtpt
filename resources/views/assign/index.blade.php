@@ -42,29 +42,29 @@
                     </label>
                         <!-- <div v-if="checkedRole[@{{user.id}}] == 3" class="shhde"> -->
                         <!-- Display Partners form assign.js loadPartners function -->
-                       <div id="partner" class="collapse">
-                        <div class="form-group row">
-                            <label class="col-sm-4 form-control-label" for="title">Partner:</label>
-                            <div class="col-sm-8">
-                            <select class="form-control c-select" name="partner_@{{user.id}}_@{{role.id}}" id="partner">
-                                <option selected></option>
-                                <option v-for="partner in partners" value="@{{partner.id}}">@{{partner.value }}</option>
-                            </select>
-                            </div>
-                        </div>                   
+                       <div id="partner" class="collapse" v-if="role.id==3">
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Partner:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="partner_@{{user.id}}_@{{role.id}}" id="partner">
+                                        <option selected></option>
+                                        <option v-for="partner in partners" value="@{{partner.id}}">@{{partner.value }}</option>
+                                    </select>
+                                </div>
+                            </div>                   
                         </div>
                          <!-- Display Counties form assign.js loadCounties function -->                    
                        <!-- <div v-if="checkedRole[@{{user.id}}][@{{role.id}}] == 4" class="shhde"> -->
-                        <div id="county" class="collapse">
-                        <div class="form-group row">
-                            <label class="col-sm-4 form-control-label" for="title">County:</label>
-                            <div class="col-sm-8">
-                            <select class="form-control c-select" name="county_@{{user.id}}_@{{role.id}}" id="county"  v-on:change ="loadFacilities">
-                                <option selected></option>
-                                <option v-for="county in counties" value="@{{county.id}}">@{{ county.value }}</option>
-                            </select>
-                            </div>
-                        </div>                       
+                        <div id="county" class="collapse" v-if="role.id==4">
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">County:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control c-select" name="county_@{{user.id}}_@{{role.id}}" id="county"  v-on:change ="loadFacilities">
+                                        <option selected></option>
+                                        <option v-for="county in counties" value="@{{county.id}}">@{{ county.value }}</option>
+                                    </select>
+                                </div>
+                            </div>                       
                         </div>
                 </td>
             </tr>
@@ -96,6 +96,5 @@
             </li>
         </ul>
     </nav>
-
 </div>
 @endsection

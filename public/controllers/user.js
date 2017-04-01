@@ -7,7 +7,7 @@ new Vue({
   data: {
     users: [],
     counties: [],
-    subcounties: [],
+    subs: [],
     programs:[],
     facilities: [],
     pagination: {
@@ -20,11 +20,13 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newUser : {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''},
-    fillUser : {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':'', 'id':''},
+    newUser : {'name':'','username': '','participant': '','gender':'', 'phone':'', 'email':'', 'address':''},
+    fillUser : {'name':'','username': '','participant': '','gender':'', 'phone':'', 'email':'', 'address':'', 'id':''},
+    transferUser : {'facility_id':'','program_id':'', 'id':''},
     loading: false,
     error: false,
-    query: ''
+    query: '',
+    formTransErrors:{},
   },
 
   computed: {
@@ -54,10 +56,8 @@ new Vue({
 
   ready : function(){
   		this.getVueUsers(this.pagination.current_page);
-      this.loadCounties();
-      this.loadSubcounties();
-      this.loadFacilities();
-      this.loadPrograms();
+        this.loadPrograms();
+        this.loadCounties();
   },
 
   methods : {
@@ -79,7 +79,7 @@ new Vue({
     		  }, (response) => {
     			  this.formErrors = response.data;
     	    });
-	},
+	    },
 
       deleteUser: function(facility){
         this.$http.delete('/vueusers/'+facility.id).then((response) => {
@@ -116,23 +116,6 @@ new Vue({
           }, (response) => {
               this.formErrorsUpdate = response.data;
           });
-      },
-      updateRole: function(id){
-          let myForm = document.getElementById('update_assignments');
-          let formData = new FormData(myForm);
-          
-          this.$http.put('/assignParticipantRole/'+id,formData).then((response) => {
-            this.changePage(this.pagination.current_page);
-            
-            $("#assign-role").modal('hide');
-            toastr.success('Role Assigned Successfully.', 'Success Alert', {timeOut: 5000});
-          }, (response) => {
-              this.formErrorsUpdate = response.data;
-          });
-      },
-      assignRole: function(user){          
-          this.fillUser.name = user.name;
-          $("#assign-role").modal('show');
       },
       changePage: function (page) {
           this.pagination.current_page = page;
@@ -173,7 +156,7 @@ new Vue({
 
       //Populate programs from ProgramController
       loadPrograms: function() {
-        this.$http.get('/programslist').then((response) => { 
+        this.$http.get('/progs').then((response) => { 
             this.programs = response.data;
 
         }, (response) => {
@@ -207,7 +190,53 @@ new Vue({
             // Clear the query.
             this.query = '';
         });
-    }
+    },
+    loadCounties: function() {
+        this.$http.get('/cnts').then((response) => {
+            this.counties = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      fetchSubs: function() {
+        let id = $('#county_id').val();
+        this.$http.get('/subs/'+id).then((response) => {
+            this.subs = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      fetchFacilities: function() {
+        let id = $('#sub_id').val();
+        this.$http.get('/fclts/'+id).then((response) => {
+            this.facilities = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+      populateUser: function(user){
+          this.transferUser.id = user.id;
+          this.transferUser.facility_id = user.facility;
+          this.transferUser.program_id = user.program;
+          $("#transfer-user").modal('show');
+      },
+
+      transUser: function(id){
+        var input = this.transferUser;
+        this.$http.put('/transfer/'+id,input).then((response) => {
+            this.changePage(this.pagination.current_page);
+            this.transferUser = {'facility_id':'', 'program_id':'','id': ''};
+            $("#transfer-user").modal('hide');
+            toastr.success('User Updated Successfully.', 'Success Alert', {timeOut: 5000});
+          }, (response) => {
+              this.formTransErrors = response.data;
+          });
+      },
 
   }
 

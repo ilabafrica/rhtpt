@@ -200,61 +200,54 @@
                             <div v-for="frm in form">
                                 <p class="text-primary">@{{ frm.title }}</p>
                                 <hr>
-                                <div v-for="fld in frm.fields">
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 form-control-label" for="title">@{{ fld.title }}:</label>
-                                        <div class="col-sm-7">
-                                            <div v-if="fld.tag == 1">
-                                                <div class="form-checkbox form-checkbox-inline" v-for="option in fld.options">
-                                                    <label class="form-checkbox-label">
-                                                        <input type="checkbox" :value="option.id" name="field_@{{fld.id}}">
-                                                        @{{ option.title }}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div v-for="dt in frmData.results">
-                                            <div v-if="fld.tag == 2">
-                                                
-                                                    <input v-if="dt.field_id==fld.id" type="date" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}" />
-                                                
-                                            </div>
-                                            <div v-if="fld.tag == 3">
-                                                <div v-for="dt in frmData.results">
-                                                    <input v-if="dt.field_id==fld.id" type="email" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}" />
-                                                </div>
-                                            </div>
-                                            <div v-if="fld.tag == 4">
-                                                    <input v-if="dt.field_id==fld.id" type="text" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}" />
-                                                
-                                            </div>
-                                            <div v-if="fld.tag == 5">
-                                                    <div v-if="dt.field_id==fld.id" class="form-radio form-radio-inline" v-for="option in fld.options">
-                                                        <label class="form-radio-label">
-                                                            <input type="radio" v-bind="{ 'true': option.id==dt.response}" :value="option.id" name="field_@{{fld.id}}" @change="remark('.toggle_@{{fld.id}}', this)">
+                                <div v-for="dt in frmData.results">
+                                    <div v-for="fld in frm.fields">
+                                        <div class="form-group row" v-if="dt.field_id==fld.id">
+                                            <label class="col-sm-5 form-control-label" for="title">@{{ fld.title }}:</label>
+                                            <div class="col-sm-7">
+                                                <div v-if="fld.tag == 1">
+                                                    <div class="form-checkbox form-checkbox-inline" v-for="option in fld.options">
+                                                        <label class="form-checkbox-label">
+                                                            <input type="checkbox" :value="option.id" name="field_@{{fld.id}}">
                                                             @{{ option.title }}
                                                         </label>
                                                     </div>
-                                            </div>
-                                            <div v-if="fld.tag == 6">
-                                                    <select v-if="dt.field_id==fld.id" class="form-control c-select" name="field_@{{fld.id}}">
+                                                </div>
+                                                <div v-if="fld.tag == 2">
+                                                    <input type="date" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}" />
+                                                </div>
+                                                <div v-if="fld.tag == 3">
+                                                    <input type="email" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}" />
+                                                </div>
+                                                <div v-if="fld.tag == 4">
+                                                    <input type="text" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}" />
+                                                </div>
+                                                <div v-if="fld.tag == 5">
+                                                    <div class="form-radio form-radio-inline" v-for="option in fld.options">
+                                                        <label class="form-radio-label">
+                                                            <input type="radio" @click="specToggle('togglable'@{{fld.id}}, @{{fld.id}})" v-bind="{ 'checked': option.id==dt.response}" :value="option.id" name="field_@{{fld.id}}">
+                                                            @{{ option.title }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div v-if="fld.tag == 6">
+                                                    <select class="form-control c-select" name="field_@{{fld.id}}">
                                                         <option selected></option>
                                                         <option v-for="option in fld.options" v-bind="{ 'selected': option.id==dt.response}" :value="option.id">@{{ round.title }}</option>   
                                                     </select>
-                                                
-                                            </div>
-                                            <div v-if="fld.tag == 7">
-                                                
-                                                    <textarea v-if="dt.field_id==fld.id" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}"></textarea>
+                                                </div>
+                                                <div v-if="fld.tag == 7">
+                                                    <textarea v-if="dt.field_id==fld.id" name="field_@{{fld.id}}" class="form-control">@{{dt.response}}</textarea>
                                                 </div>
                                             </div>
                                             <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="form-group row toggle_@{{fld.id}}" style="display:none;">
-                                    <label class="col-sm-5 form-control-label text-danger font-weight-bold" for="title">Please Specify:</label>
-                                    <div class="col-sm-7">
-                                        <textarea name="field_@{{fld.id}}" class="form-control" v-model="formInputs.field_@{{fld.id}}"></textarea>
+                                        <div class="form-group row togglable@{{fld.id}}" v-if="fld.tag == 6" style="display:none;">
+                                            <label class="col-sm-5 form-control-label text-danger font-weight-bold" for="title">Please Specify:</label>
+                                            <div class="col-sm-7">
+                                                <textarea name="comment_@{{fld.id}}" class="form-control"></textarea>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -269,7 +262,7 @@
         </div>
         </div>
     </div>
-      <!-- Edit Test Results Modal -->
+      <!-- View Test Results Modal -->
     <div class="modal fade" id="view-result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -280,11 +273,7 @@
             <div class="modal-body">
                 <div class="row">
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyResult(viewFormData.pt.id)" id="verify_test_results">
-                       <div class="row col-sm-offset-5">
-                            <button type="submit" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>
-                        </div> 
-                        <hr>
-                        <div class="col-md-12">
+                       <div class="col-md-12">
                             <div class="form-group row">
                                 <label class="col-sm-5 form-control-label" for="title"><b>PT Round:</b></label>
                                 <div class="col-sm-7">
@@ -297,35 +286,34 @@
                             <div v-for="frm in form">
                                 <p class="text-primary"><b>@{{ frm.title }}</b></p>
                                 <hr>
-                                <div v-for="fld in frm.fields">
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 form-control-label" for="title"><b>@{{ fld.title }}:</b></label>
-                                        <div class="col-sm-7">
-                                            <div v-if="fld.tag == 1">
-                                                <div class="form-checkbox form-checkbox-inline" v-for="option in fld.options">
-                                                    <label class="form-checkbox-label">                                                        
-                                                        @{{ option.title }}
-                                                    </label>
+                                <div v-for="dt in viewFormData.results">
+                                    <div v-for="fld in frm.fields">
+                                        <div class="form-group row" v-if="dt.field_id==fld.id">
+                                            <label class="col-sm-5 form-control-label" for="title"><b>@{{ fld.title }}:</b></label>
+                                            <div class="col-sm-7">
+                                                <div v-if="fld.tag == 1">
+                                                    <div class="form-checkbox form-checkbox-inline" v-for="option in fld.options">
+                                                        <label class="form-checkbox-label">                                                        
+                                                            @{{ option.title }}
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div v-for="dt in viewFormData.results">
                                                 <div v-if="fld.tag == 2 ||fld.tag == 3||fld.tag == 4||fld.tag == 7">
-                                                  <label class="form-label" v-if="dt.field_id==fld.id">@{{dt.response}}</label>
+                                                    <label class="form-label" v-if="dt.field_id==fld.id">@{{dt.response}}</label>
                                                 </div>
                                                 
                                                 <div v-if="fld.tag == 5||fld.tag == 6">
                                                     <div v-if="dt.field_id==fld.id"  v-for="option in fld.options">
                                                         <label class="form-label" v-if="option.id==dt.response" >@{{ option.title }}</label>
                                                     </div>
-                                                </div>
-                                                                                         
+                                                </div>                                  
                                             </div>
-                                            <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-5 col-sm-7">
+                                <button type="submit" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>
                                 <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>
                         </div>

@@ -159,8 +159,8 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "facilities.fetch",
         "uses" => "FacilityController@facilities"
     ));
-    Route::get("/programslist", array(
-        "as"   => "programslist.fetch",
+    Route::get("/progs", array(
+        "as"   => "programs.fetch",
         "uses" => "ProgramController@programs"
     ));
 

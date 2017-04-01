@@ -25,7 +25,8 @@ new Vue({
     viewFormData:{},
     loading: false,
     error: false,
-    query: ''
+    query: '',
+    other: ''
   },
 
   computed: {
@@ -202,3 +203,12 @@ new Vue({
     }
 
 });
+
+//  Normal js
+function specToggle(className, id){
+    var $input = $("#field_"+id);
+    if($input.val() != 4)
+        $(className).hide();
+    else
+        $(className).show();
+}

@@ -60,10 +60,10 @@
                 <button v-if="user.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>	
-                <button v-bind="{ 'disabled': user.deleted_at!=NULL}" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)">Edit</button>
+                <button v-bind="{ 'disabled': user.deleted_at!=NULL}" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)"><i class="fa fa-edit"></i> Edit</button>
                 <button v-if="user.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)">Enable</button>
-                <button v-if="user.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)">Disable</button>
-                <button v-bind="{ 'disabled': user.deleted_at!=NULL}" class="btn btn-sm btn-primary"  @click.prevent="assignRole(user)">Assign Role</button>
+                <button v-if="user.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="user.uid!=NULL" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
             </td>
         </tr>
     </table>
@@ -93,53 +93,118 @@
     <!-- Create User Modal -->
     <div class="modal fade" id="create-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Create User</h4>
-            </div>
-            <div class="modal-body">
-
-                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createUser">
-
-                    <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" name="name" class="form-control" v-model="newUser.name" placeholder="e.g. John Doe" />
-                        <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Create User</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createUser">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Name:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="name" class="form-control" v-model="newUser.name" placeholder="e.g. John Doe" />
+                                        <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Gender:</label>
+                                    <div class="col-sm-8">
+                                        <input type="radio" id="male" value="0" v-model="newUser.gender">
+                                        <label for="male">Male</label>
+                                        <br />
+                                        <input type="radio" id="female" value="1" v-model="newUser.gender">
+                                        <label for="female">Female</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Phone Number:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="phone" class="form-control" v-model="newUser.phone" />
+                                        <span v-if="formErrors['phone']" class="error text-danger">@{{ formErrors['phone'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Email:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="email" class="form-control" v-model="newUser.email" />
+                                        <span v-if="formErrors['email']" class="error text-danger">@{{ formErrors['email'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Address:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="address" class="form-control" v-model="newUser.address" />
+                                        <span v-if="formErrors['address']" class="error text-danger">@{{ formErrors['address'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-offset-4 col-sm-8">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" value="1" class="form-check-input" v-model="newUser.participant"> Participant?
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="part" v-if="newUser.participant">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 form-control-label" for="title">County:</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs()">
+                                                <option selected></option>
+                                                <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
+                                            </select>
+                                            <span v-if="formErrors['county_id']" class="error text-danger">@{{ formErrors['county_id'] }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control c-select" name="sub_id" id="sub_id" @change="fetchFacilities">
+                                                <option selected></option>
+                                                <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
+                                            </select>
+                                            <span v-if="formErrors['sub_id']" class="error text-danger">@{{ formErrors['sub_id'] }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 form-control-label" for="title">Facility:</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control c-select" name="facility_id" v-model="newUser.facility_id">
+                                                <option selected></option>
+                                                <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
+                                            </select>
+                                            <span v-if="formErrors['facility_id']" class="error text-danger">@{{ formErrors['facility_id'] }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 form-control-label" for="title">Program:</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control c-select" name="program_id" v-model="newUser.program_id">
+                                                <option selected></option>
+                                                <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
+                                            </select>
+                                            <span v-if="formErrors['program_id']" class="error text-danger">@{{ formErrors['program_id'] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="!newUser.participant">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 form-control-label" for="title">Username:</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="username" class="form-control" v-model="newUser.username" />
+                                            <span v-if="formErrors['username']" class="error text-danger">@{{ formErrors['username'] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="username">UID for Tester:</label>
-                        <input type="text" name="username" class="form-control" v-model="newUser.username" placeholder="e.g. 123456" />
-                        <span v-if="formErrors['username']" class="error text-danger">@{{ formErrors['username'] }}</span>
-                    </div>
-                    <div class="form-group">
-                        <input type="radio" id="male" value="0" v-model="newUser.gender">
-                        <label for="male">Male</label>
-                        <br>
-                        <input type="radio" id="female" value="1" v-model="newUser.gender">
-                        <label for="female">Female</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number:</label>
-                        <input type="text" name="phone" class="form-control" v-model="newUser.phone" />
-                        <span v-if="formErrors['phone']" class="error text-danger">@{{ formErrors['phone'] }}</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="text" name="email" class="form-control" v-model="newUser.email" />
-                        <span v-if="formErrors['email']" class="error text-danger">@{{ formErrors['email'] }}</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Address:</label>
-                        <input type="text" name="address" class="form-control" v-model="newUser.address" />
-                        <span v-if="formErrors['address']" class="error text-danger">@{{ formErrors['address'] }}</span>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success">Submit</button>
-                    </div>
-
-                </form>
-                
                 </div>
             </div>
         </div>
@@ -148,130 +213,133 @@
     <!-- Edit User Modal -->
     <div class="modal fade" id="edit-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Edit User</h4>
-            </div>
-            <div class="modal-body">
-
-                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateUser(fillUser.id)">
-                   
-                <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" name="name" class="form-control" v-model="fillUser.name"/>
-                        <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="username">UID for Tester:</label>
-                        <input type="text" name="username" class="form-control" v-model="fillUser.username"/>
-                        <span v-if="formErrorsUpdate['username']" class="error text-danger">@{{ formErrorsUpdate['username'] }}</span>
-                    </div>
-                    <div class="form-group">
-                        <input type="radio" id="male" value="0" v-model="fillUser.gender">
-                        <label for="male">Male</label>
-                        <br>
-                        <input type="radio" id="female" value="1" v-model="fillUser.gender">
-                        <label for="female">Female</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number:</label>
-                        <input type="text" name="phone" class="form-control" v-model="fillUser.phone" />
-                        <span v-if="formErrorsUpdate['phone']" class="error text-danger">@{{ formErrorsUpdate['phone'] }}</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="text" name="email" class="form-control" v-model="fillUser.email" />
-                        <span v-if="formErrorsUpdate['email']" class="error text-danger">@{{ formErrorsUpdate['email'] }}</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Address:</label>
-                        <input type="text" name="address" class="form-control" v-model="fillUser.address" />
-                        <span v-if="formErrorsUpdate['address']" class="error text-danger">@{{ formErrorsUpdate['address'] }}</span>
-                    </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Submit</button>
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Edit User</h4>
                 </div>
-
-                </form>
-
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateUser(fillUser.id)">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Name:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="name" class="form-control" v-model="fillUser.name"/>
+                                        <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Gender:</label>
+                                    <div class="col-sm-8">
+                                        <input type="radio" id="male" value="0" v-model="newUser.gender">
+                                        <label for="male">Male</label>
+                                        <br />
+                                        <input type="radio" id="female" value="1" v-model="newUser.gender">
+                                        <label for="female">Female</label>
+                                        <span v-if="formErrorsUpdate['gender']" class="error text-danger">@{{ formErrorsUpdate['gender'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Phone Number:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="phone" class="form-control" v-model="fillUser.phone" />
+                                        <span v-if="formErrorsUpdate['phone']" class="error text-danger">@{{ formErrorsUpdate['phone'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Email:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="email" class="form-control" v-model="fillUser.email" />
+                                        <span v-if="formErrorsUpdate['email']" class="error text-danger">@{{ formErrorsUpdate['email'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Address:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="address" class="form-control" v-model="fillUser.address" />
+                                        <span v-if="formErrorsUpdate['address']" class="error text-danger">@{{ formErrorsUpdate['address'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Username:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="username" class="form-control" v-model="fillUser.username" />
+                                        <span v-if="formErrorsUpdate['username']" class="error text-danger">@{{ formErrorsUpdate['username'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </div>
         </div>
     </div>
-
-    <!-- Assign a Role to User Modal -->
-    <div class="modal fade" id="assign-role" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <!-- Transfer user to different facility -->
+    <div class="modal fade" id="transfer-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Assign Role to Participant</h4>
-            </div>
-            <div class="modal-body">
-
-                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="assignRole(fillUser.id)">
-                   
-                <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" name="name" class="form-control" v-model="fillUser.name"/>
-                        <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
-                    </div>
-                    <!-- Display Counties form assign.js loadCounties function -->                    
-                       <!-- <div v-if="selected[@{{role.id}}] === 2" class=""> -->
-                        <div class="form-group row">
-                            <label class="col-sm-4 form-control-label" for="title">County:</label>
-                            <div class="col-sm-8">
-                            <select class="form-control c-select" name="county" id="county" v-on:change="loadSubcounties" >
-                                <option selected></option>
-                                <option v-for="county in counties" value="@{{county.id}}">@{{ county.value }}</option>
-                            </select>
-                            </div>
-                        </div>
-
-                        <!-- Display Subcounties form assign.js loadSubcounties function -->
-                        <div class="form-group row">
-                            <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
-                            <div class="col-sm-8">
-                            <select class="form-control c-select" name="sub_county" id="sub_county" v-on:change="loadFacilities">
-                                <option selected></option>
-                                <option v-for="subcounty in subcounties" value="@{{subcounty.id}}">@{{subcounty.value }}</option>
-                            </select>
-                            </div>
-                        </div>                           
-
-                        <!-- Display facilities form assign.js loadFacilities function -->
-                        <div class="form-group row">
-                            <label class="col-sm-4 form-control-label" for="title">Facility:</label>
-                            <div class="col-sm-8">
-                            <select class="form-control c-select" name="facility" id="facility">
-                                <option selected></option>
-                                <option v-for="facility in facilities" value="@{{facility.id}}">@{{facility.value }}</option>
-                            </select>
-                            </div>
-                        </div>    
-
-                        <!-- Display Programs form assign.js loadProgram function -->
-                        <div class="form-group row">
-                            <label class="col-sm-4 form-control-label" for="title">Program:</label>
-                            <div class="col-sm-8">
-                            <select class="form-control c-select" name="program" id="program">
-                                <option selected></option>
-                                <option v-for="program in programs" value="@{{program.id}}">@{{program.value }}</option>
-                            </select>
-                            </div>
-                        </div>
-                        <!-- </div> -->
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Submit</button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Transfer Participant</h4>
                 </div>
-
-                </form>
-
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="transUser(transferUser.id)">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">County:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs()">
+                                            <option selected></option>
+                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="sub_id" id="sub_id" @change="fetchFacilities">
+                                            <option selected></option>
+                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Facility:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="facility_id" v-model="newUser.facility_id">
+                                            <option selected></option>
+                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
+                                        </select>
+                                        <span v-if="formTransErrors['facility_id']" class="error text-danger">@{{ formTransErrors['facility_id'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Program:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="program_id" v-model="newUser.program_id">
+                                            <option selected></option>
+                                            <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
+                                        </select>
+                                        <span v-if="formTransErrors['program_id']" class="error text-danger">@{{ formTransErrors['program_id'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </div>
         </div>
     </div>
-
 </div>
 @endsection

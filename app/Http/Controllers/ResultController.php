@@ -28,11 +28,11 @@ class ResultController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $results = Result::latest()->withTrashed()->paginate(5);
+        $results = Pt::latest()->withTrashed()->paginate(5);
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $results = Result::where('pt_id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            $results = Pt::where('pt_id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
         }
         foreach($results as $result)
         {

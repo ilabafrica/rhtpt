@@ -29,6 +29,16 @@ class UserController extends Controller
             $search = $request->get('q');
             $users = User::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
         }
+        foreach($users as $user)
+        {
+            if(!empty($user->uid) && count($user->tier)>0)
+            {
+                $user->facility = $user->tier->tier;
+                $user->program = $user->tier->program_id;
+            }
+            $user->facility = '';
+            $user->program = '';
+        }
         $response = [
             'pagination' => [
                 'total' => $users->total(),
@@ -54,7 +64,6 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'username'=> 'required',
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
@@ -62,7 +71,24 @@ class UserController extends Controller
         ]);
         $request->merge(['password' => User::DEFAULT_PASSWORD]);
         $create = User::create($request->all());
-
+        if($request->participant)
+        {
+            $role = Role::idByName('Participant');
+            $create->attachRole(Role::find($role));
+            $tier = new Tier;
+            $facility = NULL;
+            $program = NULL;
+            if($request->facility_id)
+                $facility = $request->facility_id;
+            if($request->program_id)
+                $proram = $request->program_id;
+            if($facility || $program)
+            {
+                $tier->tier = $facility;
+                $tier->program_id = $program;
+                $tier->save();
+            }
+        }
         return response()->json($create);
     }
 
@@ -77,7 +103,6 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'username'=> 'required',
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
@@ -161,5 +186,35 @@ class UserController extends Controller
         ];
 
         return $users->count() > 0 ? response()->json($response) : $error;
+    }
+    /**
+     * Transfer the specified participant.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function transfer(Request $request, $id)
+    {
+        $this->validate($request, [
+            'facility_id' => 'required',
+            'program_id' => 'required',
+        ]);
+        $tier = Tier::where('user_id', $id)->first();
+        $prog = NULL;
+        $fac = NULL;
+        if($request->facility_id)
+        {
+            $fac = $request->facility_id;
+            $tier->tier = $fac;
+        }
+        if($request->program_id)
+        {
+            $prog = $request->program_id;
+            $tier->program_id = $prog;
+        }
+        $response = $tier->save();
+
+        return response()->json($response);
     }
 }
