@@ -102,6 +102,10 @@ Route::group(['middleware' => 'auth'], function()
     Route::resource('vuereceipts','ReceiptController');
     Route::any('vuereceipts/{id}/restore','ReceiptController@restore');
 
+    Route::get('nonperf', 'NonperformanceController@manageNonperformance');
+    Route::resource('vuenonperfs','NonperformanceController');
+    Route::any('vuenonperfs/{id}/restore','NonperformanceController@restore');
+
     //Route::get('manage-vue', 'VueItemController@manageVue');
     //Route::resource('vueitems','VueItemController');
 
@@ -172,6 +176,11 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/rng", array(
         "as"   => "ranges.fetch",
         "uses" => "UserController@ranges"
+    ));
+
+    Route::get("/reasons", array(
+        "as"   => "reasons.fetch",
+        "uses" => "NonperformanceController@reasons"
     ));
     
 
@@ -290,6 +299,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_facility',['as'=>'facility.search', 'uses'=>'FacilityController@index']);
     Route::get('api/search_expected',['as'=>'expected.search', 'uses'=>'ExpectedController@index']);
     Route::get('api/search_participant',['as'=>'participant.search', 'uses'=>'UserController@participant']);
+    Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
     Route::get("/panels", array(
         "as"   => "panels.fetch",
         "uses" => "ItemController@panels"

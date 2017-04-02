@@ -115,7 +115,7 @@
                     </li>
                     @endpermission
                     @permission('program-management')
-                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('set'), strtolower('field'), strtolower('option')])?' '.strtolower(trans('messages.active')):'' !!}">
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('set'), strtolower('field'), strtolower('nonperf'), strtolower('option')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-google-wallet"></i> {!! trans('messages.program-management') !!}</a>
                         <ul class="list-unstyled">
                             @permission('read-set')
@@ -131,6 +131,11 @@
                             @permission('read-option')
                             <li class="{!! Request::segment(1)==strtolower('response')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('option') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.option', 2) !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-nonperf')
+                            <li class="{!! Request::segment(1)==strtolower('nonperf')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('nonperf') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.nonperf', 2) !!}</a>
                             </li>
                             @endpermission
                         </ul>
@@ -286,6 +291,8 @@
         <script src="{{ asset('controllers/assign.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('broadcast'))
         <script src="{{ asset('controllers/broadcast.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('nonperf'))
+        <script src="{{ asset('controllers/nonperf.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('report'))
         <script src="{{ asset('js/highcharts.js') }}"></script>
         <script src="{{ asset('js/exporting.js') }}"></script>

@@ -80,6 +80,11 @@ class PTSeeder extends Seeder
             array("name" => "view-option", "display_name" => "Can view option"),
             array("name" => "update-option", "display_name" => "Can update option"),
             array("name" => "delete-option", "display_name" => "Can delete option"),
+            array("name" => "create-nonperf", "display_name" => "Can create non-performance"),
+            array("name" => "read-nonperf", "display_name" => "Can read non-performance"),
+            array("name" => "view-nonperf", "display_name" => "Can view non-performance"),
+            array("name" => "update-nonperf", "display_name" => "Can update non-performance"),
+            array("name" => "delete-nonperf", "display_name" => "Can delete non-performance"),
 
             array("name" => "create-notification", "display_name" => "Can create option"),
             array("name" => "read-notification", "display_name" => "Can read notification"),

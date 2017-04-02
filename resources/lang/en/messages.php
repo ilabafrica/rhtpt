@@ -92,6 +92,7 @@ return [
     'field-set'             =>     'Field Set|Field Sets',
     'option'                =>     'Option|Options',
     'field'                 =>     'Field|Fields',
+    'nonperf'               =>     'Non-performance|Non-performance',
     /* Views */
     'order'                 =>    'Order',
     'tag'                   =>    'Tag',
