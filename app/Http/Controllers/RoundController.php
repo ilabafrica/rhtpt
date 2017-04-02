@@ -10,6 +10,8 @@ use App\Program;
 use App\Facility;
 use App\Notification;
 
+use App\Libraries\AfricasTalkingGateway as Bulk;
+
 use Auth;
 use DB;
 
@@ -140,7 +142,7 @@ class RoundController extends Controller
     public function enrol(Request $request)
     {
         $roundId = $request->round_id;
-        $recipients = NULL;
+        $phone_numbers = [];
         foreach($request->usrs as $key => $value)
         {
             $enrol = new Enrol;
@@ -150,13 +152,15 @@ class RoundController extends Controller
             $user = User::find($enrol->user_id);
             if($user->phone)
             {
-                array_push($recipients, $user->phone);
+                array_push($phone_numbers, $user->phone);
             }
         }
+        $recipients = NULL;
+        $recipients = implode(",", $phone_numbers);
         //  Send SMS
         $round = Round::find($roundId)->nae;
         $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
-        $message = replace_between($message, '[', ']', $round);
+        $message = ApiController::replace_between($message, '[', ']', $round);
         $message = str_replace(' [', ' ', $message);
         $message = str_replace('] ', ' ', $message);
         //  Bulk-sms settings
@@ -188,15 +192,5 @@ class RoundController extends Controller
             }
         }
         return response()->json('Enrolled.');
-    }
-    //  Function to replace text between two delimiters
-    function replace_between($str, $needle_start, $needle_end, $replacement) {
-        $pos = strpos($str, $needle_start);
-        $start = $pos === false ? 0 : $pos + strlen($needle_start);
-
-        $pos = strpos($str, $needle_end, $start);
-        $end = $start === false ? strlen($str) : $pos;
-    
-        return substr_replace($str,$replacement,  $start, $end - $start);
     }
 }

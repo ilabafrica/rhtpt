@@ -306,4 +306,14 @@ class ApiController extends Controller
   			}
   		}
   	}
+    //  Function to replace text between two delimiters
+    public static function replace_between($str, $needle_start, $needle_end, $replacement) {
+        $pos = strpos($str, $needle_start);
+        $start = $pos === false ? 0 : $pos + strlen($needle_start);
+
+        $pos = strpos($str, $needle_end, $start);
+        $end = $start === false ? strlen($str) : $pos;
+    
+        return substr_replace($str,$replacement,  $start, $end - $start);
+    }
 }

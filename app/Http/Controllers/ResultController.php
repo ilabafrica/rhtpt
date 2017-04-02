@@ -10,6 +10,9 @@ use App\Field;
 use App\Option;
 use App\Expected;
 use App\User;
+use App\Notification;
+
+use App\Libraries\AfricasTalkingGateway as Bulk;
 
 use Auth;
 use Jenssegers\Date\Date as Carbon;
@@ -94,8 +97,44 @@ class ResultController extends Controller
                     $result->save();
                 }
             }
-        }        
-        return response()->json($pt);
+        }    
+        //  Send SMS
+        $round = Round::find($pt->round_id)->nae;
+        $message = Notification::where('template', Notification::RESULTS_RECEIVED)->first()->message;
+        $message = replace_between($message, '[', ']', $round);
+        $message = str_replace(' [', ' ', $message);
+        $message = str_replace('] ', ' ', $message);
+        $recipients = NULL;
+        $recipients = User::find($pt->user_id)->value('phone');
+        //  Bulk-sms settings
+        $api = DB::table('bulk_sms_settings')->first();
+        $username   = $api->username;
+        $apikey     = $api->api_key;
+        if($recipients)
+        {
+            // Specified sender-id
+            $from = $api->code;
+            // Create a new instance of Bulk SMS gateway.
+            $sms    = new Bulk($username, $apikey);
+            // use try-catch to filter any errors.
+            try
+            {
+            // Send messages
+            $results = $sms->sendMessage($recipients, $message, $from);
+            foreach($results as $result)
+            {
+                // status is either "Success" or "error message" and save.
+                $number = $result->number;
+                //  Save the results
+                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
+            }
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+            echo "Encountered an error while sending: ".$e->getMessage();
+            }
+        }
+        return response()->json('Saved.');
     }
 
     /**
