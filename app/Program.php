@@ -17,4 +17,29 @@ class Program extends Model
   	 * @var string
   	 */
   	protected $table = 'programs';
+    /**
+	* Return program ID given the name
+	* @param $title the name of the program
+	*/
+	public static function idByTitle($title=NULL)
+	{
+		if($title!=NULL)
+		{
+			try 
+			{
+				$program = Program::where('name', $title)->orderBy('name', 'asc')->firstOrFail();
+				return $program->id;
+			} 
+			catch (ModelNotFoundException $e) 
+			{
+				Log::error("The program ` $title ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
 }

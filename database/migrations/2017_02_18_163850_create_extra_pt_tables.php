@@ -141,6 +141,7 @@ class CreateExtraPtTables extends Migration
             $table->string('New_incharge_mobile_No', 50)->nullable();
             $table->string('New_Incharge_email', 50)->nullable();
             $table->string('lot', 50)->nullable();
+            $table->softDeletes();
         });
     }
 

@@ -109,4 +109,39 @@ EntrustUserTrait::restore insteadof SoftDeletes;
           else if($last == 9)
                 return User::NINE;
   	}
+    /**
+	* Return User ID given the uid
+	* @param $uid the unique ID of the field
+	*/
+	public static function idByUID($uid=NULL)
+	{
+		if($uid!=NULL)
+		{
+			try 
+			{
+				$user = Field::where('uid', $uid)->orderBy('uid', 'asc')->firstOrFail();
+				return $user->id;
+			} 
+			catch (ModelNotFoundException $e) 
+			{
+				Log::error("The user ` $uid ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
+    /**
+  	 * Return readable gender
+  	 */
+  	public static function gender($gender)
+  	{
+  		  if($gender == "Male")
+              return USER::MALE;
+          else
+              return USER::FEMALE;;
+  	}
 }

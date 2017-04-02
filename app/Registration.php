@@ -1,10 +1,10 @@
 <?php namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class County extends Model
+class Registration extends Model
 {
   	/**
-  	 * Enabling soft deletes for counties.
+  	 * Enabling soft deletes for registration.
   	 *
   	 */
   	use SoftDeletes;
@@ -15,13 +15,13 @@ class County extends Model
   	 *
   	 * @var string
   	 */
-  	protected $table = 'counties';
+  	protected $table = 'registrations';
     /**
-  	 * Relationship with sub-countis.
+  	 * Relationship with users.
   	 *
   	 */
-     public function subCounties()
+     public function user()
      {
-       return $this->hasMany('App\SubCounty');
+       return $this->belongsTo('App\User');
      }
 }

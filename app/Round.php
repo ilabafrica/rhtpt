@@ -17,4 +17,29 @@ class Round extends Model
   	 * @var string
   	 */
   	protected $table = 'rounds';
+	/**
+	* Return round ID given the uid
+	* @param $title the unique title of the round
+	*/
+	public static function idByTitle($title=NULL)
+	{
+		if($title!=NULL)
+		{
+			try 
+			{
+				$round = Field::where('name', $title)->orderBy('name', 'asc')->firstOrFail();
+				return $round->id;
+			} 
+			catch (ModelNotFoundException $e) 
+			{
+				Log::error("The round ` $title ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
 }

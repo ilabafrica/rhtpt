@@ -13,6 +13,7 @@ use App\Field;
 use App\Option;
 use App\Notification;
 use App\Questionnaire;
+use App\Nonperformance;
 
 //	Carbon - for use with dates
 use Jenssegers\Date\Date as Carbon;
@@ -258,12 +259,7 @@ class PTSeeder extends Seeder
             array("title" => "Not Done", "description" => ""),
             array("title" => "Positive", "description" => ""),
             array("title" => "Negative", "description" => ""),
-            array("title" => "Indeterminate", "description" => ""),
-            array("title" => "Transferred", "description" => ""),
-            array("title" => "Resigned", "description" => ""),
-            array("title" => "On Leave", "description" => ""),
-            array("title" => "Off Duty", "description" => ""),
-            array("title" => "Deceased", "description" => "")
+            array("title" => "Indeterminate", "description" => "")
         );
         foreach ($options as $option)
         {
@@ -304,5 +300,19 @@ class PTSeeder extends Seeder
         DB::table('bulk_sms_settings')->insert(array("code" => "talking", "username" => "africa", "api_key" => "LBD239F81V", "created_at" => $now, "updated_at" => $now));
 
         $this->command->info('Bulk SMS Settings table seeded');
+        /* Non-performance table */
+        $reasons = array(
+            array("title" => "Transferred", "description" => ""),
+            array("title" => "Resigned", "description" => ""),
+            array("title" => "On Leave", "description" => ""),
+            array("title" => "Off Duty", "description" => ""),
+            array("title" => "Deceased", "description" => ""),
+            array("title" => "Other", "description" => "")
+        );
+        foreach ($reasons as $reason)
+        {
+            Nonperformance::create($reason);
+        }
+        $this->command->info('Non-performance table seeded');
     }
 }
