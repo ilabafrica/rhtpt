@@ -243,9 +243,10 @@ class PTSeeder extends Seeder
 
         /* Notifications table */
         $notifications = array(
-            array("template" => Notification::PANEL_DISPATCH, "message" => "Dear PT Participant, NHRL has dispatched your PT Panel for Round [round]. If not received within 7 days, contact NHRL on 0722934622 or nhrlpt@gmail.com"),
-            array("template" => Notification::RESULTS_RECEIVED, "message" => "Dear PT Participant, NHRL has received your PT Results for Round [round]. You will get your feedback shortly."),
-            array("template" => Notification::FEEDBACK_RELEASE, "message" => "Dear PT Participant, NHRL has released your PT Feedback for Round [round]. If not received within 7 days, contact NHRL on 0722934622 or nhrlpt@gmail.com"),            
+            array("template" => Notification::ENROLMENT, "message" => "Dear PT Participant, you have been enrolled into [round] of PT. If not not participating, contact NHRL on 0722934622 or nhrlpt@gmail.com"),
+            array("template" => Notification::PANEL_DISPATCH, "message" => "Dear PT Participant, NHRL has dispatched your PT Panel for [round]. If not received within 7 days, contact NHRL on 0722934622 or nhrlpt@gmail.com"),
+            array("template" => Notification::RESULTS_RECEIVED, "message" => "Dear PT Participant, NHRL has received your PT Results for [round]. You will get your feedback shortly."),
+            array("template" => Notification::FEEDBACK_RELEASE, "message" => "Dear PT Participant, NHRL has released your PT Feedback for [round]. If not received within 7 days, contact NHRL on 0722934622 or nhrlpt@gmail.com"),            
         );
         foreach ($notifications as $notification)
         {

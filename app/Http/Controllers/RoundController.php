@@ -8,8 +8,10 @@ use App\Round;
 use App\Enrol;
 use App\Program;
 use App\Facility;
+use App\Notification;
 
 use Auth;
+use DB;
 
 class RoundController extends Controller
 {
@@ -138,13 +140,63 @@ class RoundController extends Controller
     public function enrol(Request $request)
     {
         $roundId = $request->round_id;
+        $recipients = NULL;
         foreach($request->usrs as $key => $value)
         {
             $enrol = new Enrol;
             $enrol->user_id = (int)$value;
             $enrol->round_id = $roundId;
             $enrol->save();
+            $user = User::find($enrol->user_id);
+            if($user->phone)
+            {
+                array_push($recipients, $user->phone);
+            }
+        }
+        //  Send SMS
+        $round = Round::find($roundId)->nae;
+        $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
+        $message = replace_between($message, '[', ']', $round);
+        $message = str_replace(' [', ' ', $message);
+        $message = str_replace('] ', ' ', $message);
+        //  Bulk-sms settings
+        $api = DB::table('bulk_sms_settings')->first();
+        $username   = $api->username;
+        $apikey     = $api->api_key;
+        if($recipients)
+        {
+            // Specified sender-id
+            $from = $api->code;
+            // Create a new instance of Bulk SMS gateway.
+            $sms    = new Bulk($username, $apikey);
+            // use try-catch to filter any errors.
+            try
+            {
+            // Send messages
+            $results = $sms->sendMessage($recipients, $message, $from);
+            foreach($results as $result)
+            {
+                // status is either "Success" or "error message" and save.
+                $number = $result->number;
+                //  Save the results
+                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
+            }
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+            echo "Encountered an error while sending: ".$e->getMessage();
+            }
         }
         return response()->json('Enrolled.');
+    }
+    //  Function to replace text between two delimiters
+    function replace_between($str, $needle_start, $needle_end, $replacement) {
+        $pos = strpos($str, $needle_start);
+        $start = $pos === false ? 0 : $pos + strlen($needle_start);
+
+        $pos = strpos($str, $needle_end, $start);
+        $end = $start === false ? strlen($str) : $pos;
+    
+        return substr_replace($str,$replacement,  $start, $end - $start);
     }
 }
