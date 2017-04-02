@@ -14,6 +14,7 @@ use App\Libraries\AfricasTalkingGateway as Bulk;
 
 use Auth;
 use DB;
+use Jenssegers\Date\Date as Carbon;
 
 class RoundController extends Controller
 {
@@ -158,7 +159,7 @@ class RoundController extends Controller
         $recipients = NULL;
         $recipients = implode(",", $phone_numbers);
         //  Send SMS
-        $round = Round::find($roundId)->nae;
+        $round = Round::find($roundId)->name;
         $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
         $message = ApiController::replace_between($message, '[', ']', $round);
         $message = str_replace(' [', ' ', $message);

@@ -99,11 +99,18 @@ class ResultController extends Controller
             }
         }    
         //  Send SMS
-        $round = Round::find($pt->round_id)->nae;
+        $round = Round::find($pt->round_id)->name;
         $message = Notification::where('template', Notification::RESULTS_RECEIVED)->first()->message;
         $message = replace_between($message, '[', ']', $round);
         $message = str_replace(' [', ' ', $message);
         $message = str_replace('] ', ' ', $message);
+
+        $created = Carbon::today()->toDateTimeString();
+        $updated = Carbon::today()->toDateTimeString();
+        //  Time
+        $now = Carbon::now('Africa/Nairobi');
+        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::RESULTS_RECEIVED, 'round_id' => $pt->round_id, 'text' => $message, 'user_id' => $pt->user_id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
+     
         $recipients = NULL;
         $recipients = User::find($pt->user_id)->value('phone');
         //  Bulk-sms settings
@@ -165,7 +172,49 @@ class ResultController extends Controller
         $result->verified_by = $user_id;
         $result->panel_status = Pt::CHECKED;
         $result->save();
-
+        // Send SMS
+        $round = Round::find($result->round_id)->name;
+        $message = Notification::where('template', Notification::FEEDBACK_RELEASE)->first()->message;
+        $message = replace_between($message, '[', ']', $round);
+        $message = str_replace(' [', ' ', $message);
+        $message = str_replace('] ', ' ', $message);
+        
+        $created = Carbon::today()->toDateTimeString();
+        $updated = Carbon::today()->toDateTimeString();
+        //  Time
+        $now = Carbon::now('Africa/Nairobi');
+        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $result->round_id, 'text' => $message, 'user_id' => $result->user_id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
+     
+        $recipients = NULL;
+        $recipients = User::find($result->user_id)->value('phone');
+        //  Bulk-sms settings
+        $api = DB::table('bulk_sms_settings')->first();
+        $username   = $api->username;
+        $apikey     = $api->api_key;
+        if($recipients)
+        {
+            // Specified sender-id
+            $from = $api->code;
+            // Create a new instance of Bulk SMS gateway.
+            $sms    = new Bulk($username, $apikey);
+            // use try-catch to filter any errors.
+            try
+            {
+            // Send messages
+            $results = $sms->sendMessage($recipients, $message, $from);
+            foreach($results as $result)
+            {
+                // status is either "Success" or "error message" and save.
+                $number = $result->number;
+                //  Save the results
+                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
+            }
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+            echo "Encountered an error while sending: ".$e->getMessage();
+            }
+        }
         return response()->json($result);
     }
 
