@@ -305,57 +305,57 @@
     <!-- Receive Shipment Modal -->
     <div id="receive-shipment" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Receive Shipment</h4>
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Receive Shipment</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="receiveShipment()" id="frm">
+                            <div class="col-md-12">
+                                <input type="hidden" class="form-control" name="shipment_id" id="shipment-id" v-model="newReceipt.shipment_id" value=""/>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Date Received:</label>
+                                    <div class="col-sm-8">
+                                        <input type="date" name="date_received" class="form-control" v-model="newReceipt.date_received" />
+                                        <span v-if="formReceiptErrors['date_received']" class="error text-danger">@{{ formReceiptErrors['date_received'] }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Panels Received:</label>
+                                    <div class="col-sm-8">
+                                        <input type="number" name="panels_received" class="form-control" v-model="newReceipt.panels_received" />
+                                        <span v-if="formReceiptErrors['panels_received']" class="error text-danger">@{{ formReceiptErrors['panels_received'] }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Received By:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="receiver" class="form-control" v-model="newReceipt.receiver" />
+                                        <span v-if="formReceiptErrors['receiver']" class="error text-danger">@{{ formReceiptErrors['receiver'] }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Condition:</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="condition" class="form-control" v-model="newReceipt.condition"></textarea>
+                                        <span v-if="formReceiptErrors['condition']" class="error text-danger">@{{ formReceiptErrors['condition'] }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="receiveShipment()" id="frm">
-                        <div class="col-md-12">
-                            <input type="hidden" class="form-control" name="shipment_id" id="shipment-id" v-model="newReceipt.shipment_id" value=""/>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Date Received:</label>
-                                <div class="col-sm-8">
-                                    <input type="date" name="date_received" class="form-control" v-model="newReceipt.date_received" />
-                                    <span v-if="formReceiptErrors['date_received']" class="error text-danger">@{{ formReceiptErrors['date_received'] }}</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Panels Received:</label>
-                                <div class="col-sm-8">
-                                    <input type="number" name="panels_received" class="form-control" v-model="newReceipt.panels_received" />
-                                    <span v-if="formReceiptErrors['panels_received']" class="error text-danger">@{{ formReceiptErrors['panels_received'] }}</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Received By:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="receiver" class="form-control" v-model="newReceipt.receiver" />
-                                    <span v-if="formReceiptErrors['receiver']" class="error text-danger">@{{ formReceiptErrors['receiver'] }}</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Condition:</label>
-                                <div class="col-sm-8">
-                                    <textarea name="condition" class="form-control" v-model="newReceipt.condition"></textarea>
-                                    <span v-if="formReceiptErrors['condition']" class="error text-danger">@{{ formReceiptErrors['condition'] }}</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
-                    </form>
-                </div
-            </div>
-        </div>
         </div>
     </div>
 

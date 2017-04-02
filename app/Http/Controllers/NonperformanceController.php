@@ -54,7 +54,6 @@ class NonperformanceController extends Controller
     {
         $this->validate($request, [
             'title' => 'required',
-            'description' => 'required',
         ]);
 
         $create = Nonperformance::create($request->all());
@@ -73,7 +72,6 @@ class NonperformanceController extends Controller
     {
         $this->validate($request, [
             'title' => 'required',
-            'description' => 'required',
         ]);
 
         $edit = Nonperformance::find($id)->update($request->all());

@@ -220,6 +220,16 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "shipment.receive",
         "uses" => "ShipmentController@receive"
     ));
+    //  Enrol participanets
+    Route::post("/enrol", array(
+        "as"   => "enrol.participants",
+        "uses" => "RoundController@enrol"
+    ));
+    //  Enrolled participanets
+    Route::get("/enrolled/{id}", array(
+        "as"   => "enrolled.participants",
+        "uses" => "UserController@enrolled"
+    ));
 
     Route::get('result', 'ResultController@manageResult');
     Route::resource('vueresults','ResultController');
@@ -277,6 +287,10 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "options.fetch",
         "uses" => "OptionController@options"
     ));
+    Route::get("/parts", array(
+        "as"   => "participants.fetch",
+        "uses" => "UserController@forEnrol"
+    ));
     Route::get("/frmfld/{id}", array(
         "as"   => "frmfld.fetch",
         "uses" => "FieldController@edit"
@@ -300,6 +314,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_expected',['as'=>'expected.search', 'uses'=>'ExpectedController@index']);
     Route::get('api/search_participant',['as'=>'participant.search', 'uses'=>'UserController@participant']);
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
+    Route::get('api/search_parts',['as'=>'participants.search', 'uses'=>'UserController@forEnrol']);
     Route::get("/panels", array(
         "as"   => "panels.fetch",
         "uses" => "ItemController@panels"

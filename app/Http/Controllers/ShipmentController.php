@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Shipment;
 use App\Receipt;
+use App\Enrol;
 
 use Auth;
 

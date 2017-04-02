@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Round;
+use App\Enrol;
+use App\Program;
+use App\Facility;
 
 use Auth;
 
@@ -125,5 +128,23 @@ class RoundController extends Controller
             $categories[] = ['id' => $key, 'value' => $value];
         }
         return $categories;
+    }
+    /**
+     * Enrol a user(s).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function enrol(Request $request)
+    {
+        $roundId = $request->round_id;
+        foreach($request->usrs as $key => $value)
+        {
+            $enrol = new Enrol;
+            $enrol->user_id = (int)$value;
+            $enrol->round_id = $roundId;
+            $enrol->save();
+        }
+        return response()->json('Enrolled.');
     }
 }

@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Role;
+use App\Facility;
+use App\Program;
+use App\Round;
 
 class UserController extends Controller
 {
@@ -216,5 +219,76 @@ class UserController extends Controller
         $response = $tier->save();
 
         return response()->json($response);
+    }
+    /**
+     * Function for enrolling users to a round of testing
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function forEnrol(Request $request)
+    {
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $usrs = Role::find(Role::idByName('Participant'))->users()->latest()->paginate(5);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $usrs = Role::find(Role::idByName('Participant'))->users()->where('name', 'LIKE', "%{$search}%")->latest()->paginate(5);
+        }
+        if(count($usrs)>0)
+        {
+            foreach($usrs as $user)
+            {
+                $user->facility = Facility::find($user->tier->tier)->name;
+                $user->program = Program::find($user->tier->program_id)->name;
+            }
+        }
+        $response = [
+            'pagination' => [
+                'total' => $usrs->total(),
+                'per_page' => $usrs->perPage(),
+                'current_page' => $usrs->currentPage(),
+                'last_page' => $usrs->lastPage(),
+                'from' => $usrs->firstItem(),
+                'to' => $usrs->lastItem()
+            ],
+            'data' => $usrs
+        ];
+
+        return !empty($usrs) ? response()->json($response) : $error;
+    }
+    /**
+     * Get enrolled user(s).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function enrolled($id)
+    {
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $usrs = Round::find($id)->enrolments;
+        if(count($usrs)>0)
+        {
+            foreach($usrs as $enrol)
+            {
+                $enrol->name = $enrol->user->name;
+                $enrol->uid = $enrol->user->name;
+                $facility = Facility::find($enrol->tier->tier);
+                $enrol->facility = $facility->name;
+                $enrol->mfl = $facility->code;
+                $enrol->program = Program::find($enrol->tier->program_id)->name;
+            }
+        }
+        $response = [
+            'pagination' => [
+                'total' => $usrs->total(),
+                'per_page' => $usrs->perPage(),
+                'current_page' => $usrs->currentPage(),
+                'last_page' => $usrs->lastPage(),
+                'from' => $usrs->firstItem(),
+                'to' => $usrs->lastItem()
+            ],
+            'data' => $usrs
+        ];
+        return !empty($usrs) ? response()->json($response) : $error;
     }
 }

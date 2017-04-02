@@ -17,6 +17,14 @@ class Round extends Model
   	 * @var string
   	 */
   	protected $table = 'rounds';
+    /**
+  	* Enrolment relationship
+  	*
+  	*/
+    public function enrolments()
+    {
+         return $this->hasMany('App\Enrol');
+    }
 	/**
 	* Return round ID given the uid
 	* @param $title the unique title of the round

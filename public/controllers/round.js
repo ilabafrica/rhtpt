@@ -20,7 +20,11 @@ new Vue({
     fillRound : {'name':'','description':'','start_date':'','end_date':'','id':''},
     loading: false,
     error: false,
-    query: ''
+    query: '',
+    participants: [],
+    psrch: '',
+    enrollments: [],
+    esrch: ''
   },
 
   computed: {
@@ -50,6 +54,8 @@ new Vue({
 
   ready : function(){
   		this.getVueRounds(this.pagination.current_page);
+        this.loadParticipants();
+        this.loadEnrollments();
   },
 
   methods : {
@@ -140,8 +146,78 @@ new Vue({
             // Clear the query.
             this.query = '';
         });
-    }
+    },
+      srchEnrol: function() {
+        // Clear the error message.
+        this.error = '';
+        // Empty the participants array so we can fill it with the new participants.
+        this.participants = [];
+        // Set the loading property to true, this will display the "Searching..." button.
+        this.loading = true;
 
+        // Making a get request to our API and passing the query to it.
+        this.$http.get('/api/search_parts?q=' + this.psrch).then((response) => {
+            // If there was an error set the error message, if not fill the rounds array.
+            if(response.data.error)
+            {
+                this.error = response.data.error;
+                toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+            }
+            else
+            {
+                this.participants = response.data.data.data;
+                this.pagination = response.data.data.pagination;
+                toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+            }
+            // The request is finished, change the loading to false again.
+            this.loading = false;
+            // Clear the query.
+            this.psrch = '';
+        });
+    },
+
+      loadParticipants: function() {
+        this.$http.get('/parts').then((response) => {
+            this.participants = response.data.data.data;
+            console.log(response.data.data.data);
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+      enrolParticipants: function(){
+		    let myForm = document.getElementById('partFrm');
+            let formData = new FormData(myForm);
+            this.$http.post('/enrol', formData).then((response) => {
+                this.changePage(this.pagination.current_page);
+                $("#enrol-participants").modal('hide');
+                toastr.success('Participant(s) Enrolled Successfully.', 'Success Alert', {timeOut: 5000});
+            }, (response) => {
+                this.formErrors = response.data;
+            });
+	  },
+      loadEnrollments: function(round) {
+        this.$http.get('/enrolled/'+round.id).then((response) => {
+            this.enrolments = response.data.data.data;
+            $("#enrolled-participants").modal('show');
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
   }
 
+});
+//  Normal js
+//  Triggered when modal is about to be shown
+$('#enrol-participants').on('show.bs.modal', function(e) 
+{
+    //  Get round-id of the clicked element
+    var id = $(e.relatedTarget).data('fk');
+    console.log(id);
+    //  Populate the hidden field
+    //$( "#shipment-id" ).val(id);
+    $( "#round-id" ).attr('value', id);
+    $( "#round-id" ).trigger('change');
+    console.log($("#round-id").val());
 });
