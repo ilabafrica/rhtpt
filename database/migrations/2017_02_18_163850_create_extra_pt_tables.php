@@ -12,7 +12,7 @@ class CreateExtraPtTables extends Migration
      */
     public function up()
     {
-        //  Non-performance table
+        //  Teleform dump table
         Schema::create('pt_dump', function(Blueprint $table)
         {
             $table->increments('id')->unsigned();

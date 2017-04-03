@@ -22,6 +22,7 @@ class Notification extends Model
     const RESULTS_RECEIVED = 2;
     const FEEDBACK_RELEASE = 3;
     const OTHER = 4;
+    const ENROLMENT = 5;
 
     /**
   	 * Return readable tag
@@ -36,5 +37,7 @@ class Notification extends Model
             return 'Feedback Release';
         else if($id == Notification::OTHER)
             return 'Other';
+        else if($id == Notification::ENROLMENT)
+            return 'Enrolment';
   	}
 }
