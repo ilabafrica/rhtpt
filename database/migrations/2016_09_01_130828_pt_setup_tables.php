@@ -21,20 +21,6 @@ class PtSetupTables extends Migration
             $table->softDeletes();
       			$table->timestamps();
     		});
-        //	User tiers - county/sub-county/facility
-    		Schema::create('user_tiers', function(Blueprint $table)
-    		{
-      			$table->increments('id')->unsigned();
-      			$table->integer('user_id')->unsigned();
-      			$table->integer('role_id')->unsigned();
-            $table->integer('tier');
-      			$table->integer('program_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('role_id')->references('id')->on('roles');
-            $table->unique(array('user_id','role_id'));
-            $table->softDeletes();
-    			  $table->timestamps();
-    		});
         //  Sample Preparation
         Schema::create('materials', function(Blueprint $table)
     		{
@@ -64,37 +50,37 @@ class PtSetupTables extends Migration
             $table->softDeletes();
       			$table->timestamps();
     		});
-        //  PT item
-        Schema::create('items', function(Blueprint $table)
+        //  Lots
+        Schema::create('lots', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
-            $table->smallInteger('tester_id_range');
-      			$table->string('pt_id');
-      			$table->smallInteger('panel');
-      			$table->integer('material_id')->unsigned();
-      			$table->integer('round_id')->unsigned();
-            $table->string('prepared_by');
+            $table->integer('round_id')->unsigned();
+      			$table->smallInteger('lot');
+      			$table->string('tester_id', 25);
             $table->integer('user_id')->unsigned();
-            $table->foreign('material_id')->references('id')->on('materials');
             $table->foreign('round_id')->references('id')->on('rounds');
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
       			$table->timestamps();
     		});
-        //  Expected Results
-        Schema::create('expected_results', function(Blueprint $table)
+        //  PT panels
+        Schema::create('panels', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
-      			$table->integer('item_id')->unsigned();
+      			$table->integer('lot_id')->unsigned();
+      			$table->smallInteger('panel');
+      			$table->integer('material_id')->unsigned();
             $table->smallInteger('result');
+            $table->string('prepared_by');
             $table->string('tested_by');
             $table->integer('user_id')->unsigned();
-            $table->foreign('item_id')->references('id')->on('items');
+            $table->foreign('material_id')->references('id')->on('materials');
+            $table->foreign('lot_id')->references('id')->on('lots');
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
       			$table->timestamps();
     		});
-        //  Shippers
+        //  Shipping agents
         Schema::create('shippers', function(Blueprint $table)
     		{
       			$table->increments('id')->unsigned();
@@ -106,16 +92,6 @@ class PtSetupTables extends Migration
             $table->softDeletes();
       			$table->timestamps();
     		});
-        //  Shipper-facilties
-        Schema::create('shipper_facilities', function(Blueprint $table)
-    		{
-      			$table->increments('id')->unsigned();
-            $table->integer('shipper_id')->unsigned();
-            $table->integer('facility_id')->unsigned();
-            $table->foreign('shipper_id')->references('id')->on('shippers');
-            $table->foreign('facility_id')->references('id')->on('facilities');
-            $table->unique(array('shipper_id','facility_id'));
-    		});
         //  Shipments
         Schema::create('shipments', function(Blueprint $table)
     		{
@@ -126,25 +102,16 @@ class PtSetupTables extends Migration
             $table->integer('shipper_id')->unsigned();
             $table->string('shipping_method')->nullable();
             $table->integer('facility_id')->unsigned();
-      			$table->string('panels_shipped');
+      			$table->string('panels_shipped')->nullable();
+            $table->date('date_received')->nullable();
+            $table->string('panels_received')->nullable();
+      			$table->string('condition', 500)->nullable();
+            $table->string('receiver', 100)->nullable();
             $table->integer('user_id')->unsigned();
             $table->foreign('round_id')->references('id')->on('rounds');
             $table->foreign('shipper_id')->references('id')->on('shippers');
             $table->foreign('facility_id')->references('id')->on('facilities');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->softDeletes();
-      			$table->timestamps();
-    		});
-        //  Receive Samples
-        Schema::create('receipts', function(Blueprint $table)
-    		{
-      			$table->increments('id')->unsigned();
-            $table->integer('shipment_id')->unsigned();
-            $table->date('date_received');
-            $table->string('panels_received');
-      			$table->string('condition', 500);
-            $table->string('receiver', 100);
-            $table->foreign('shipment_id')->references('id')->on('shipments');
             $table->softDeletes();
       			$table->timestamps();
     		});
@@ -198,14 +165,10 @@ class PtSetupTables extends Migration
       //  Reverse migrations
       Schema::dropIfExists('results');
       Schema::dropIfExists('pt');
-      Schema::dropIfExists('receipts');
       Schema::dropIfExists('shipments');
-      Schema::dropIfExists('shipper_facilities');
       Schema::dropIfExists('shippers');
-      Schema::dropIfExists('expected_results');
-      Schema::dropIfExists('items');
+      Schema::dropIfExists('panels');
       Schema::dropIfExists('rounds');
-      Schema::dropIfExists('user_tiers');
       Schema::dropIfExists('materials');
       Schema::dropIfExists('programs');
     }

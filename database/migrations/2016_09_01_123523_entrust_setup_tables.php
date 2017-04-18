@@ -26,6 +26,8 @@ class EntrustSetupTables extends Migration
         Schema::create('role_user', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->integer('role_id')->unsigned();
+            $table->string('tier', 25)->nullable();
+            $table->integer('program_id')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');

@@ -20,22 +20,24 @@ return [
     'facility-catalog'      =>    'Facility Catalog',
     'program-management'    =>    'Questionnaire',
     'reports'               =>    'Reports',
+    'config'                =>    'Configs',
 
     /**
     *   Sub-menus
     */
     //  PT
     'program'               =>    'Program|Programs',
-    'shipper'               =>    'Shipper|Shippers',
+    'shipper'               =>    'Shipping Agent|Shipping Agents',
     'material'              =>    'Material|Materials',
     'sample-preparation'    =>    'Sample Preparation',
     'pt-round'              =>    'PT Round|PT Rounds',
-    'pt-item'               =>    'PT Item|PT Items',
+    'panel'                 =>    'Panel|Panels',
     'expected-result'       =>    'Expected Result|Expected Results',
     'shipment'              =>    'Shipment|Shipments',
     'receipt'               =>    'Receipt|Receipts',
     'result'                =>    'Result|Results',
     'partner'               =>    'Partner|Partners',
+    'lot'                   =>    'Lot|Lots',
     /* Views */
     'batch'                 =>    'Batch No.',
     'date-prepared'         =>    'Date Prepared',

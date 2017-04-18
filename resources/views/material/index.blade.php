@@ -122,7 +122,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Material Type:</label>
                                 <div class="col-sm-8">
-                                    <div class="form-radio form-radio-inline" v-for="option in options">
+                                    <div class="form-radio radio-inline" v-for="option in options">
                                         <label class="form-radio-label">
                                             <input type="radio" :value="option.name" v-model="newMaterial.material_type" name="material_type">
                                             @{{ option.title }}

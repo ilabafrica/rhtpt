@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Questionnaire;
+use App\Set;
 use App\Field;
 
 class QuestionnaireController extends Controller
@@ -18,7 +18,7 @@ class QuestionnaireController extends Controller
      */
     public function fetch() 
     {
-        $sets = Questionnaire::first()->sets;
+        $sets = Set::all();
         $fields = [];
         $options = [];
         foreach($sets as $set)
@@ -27,7 +27,7 @@ class QuestionnaireController extends Controller
             foreach($fields[$set->id] as $field)
             {
                 if($field->tag == Field::CHECKBOX || $field->tag == Field::RADIO || $field->tag == Field::SELECT)
-                    $options[$field->id] = $field->options->get('id', 'name');
+                    $options[$field->id] = $field->options->get('id', 'title');
             }
         }
         $response = ["sets" => $sets, "fields" => $fields, "options" => $options];

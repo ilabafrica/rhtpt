@@ -46,7 +46,8 @@
             <th>Name</th>
             <th>Gender</th>
             <th>Phone</th>
-            <th>U-ID</th>
+            <th>Username</th>
+            <th>Role</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -54,7 +55,8 @@
             <td>@{{ user.name }}</td>
             <td>@{{ user.gender==0?'Male':'Female' }}</td>
             <td>@{{ user.phone }}</td>
-            <td>@{{ user.uid }}</td>
+            <td>@{{ user.username }}</td>
+            <td>@{{ user.role }}</td>
             <td>
                 <button v-if="user.deleted_at==NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
                 <button v-if="user.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
@@ -141,55 +143,67 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <div class="col-sm-offset-4 col-sm-8">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" value="1" class="form-check-input" v-model="newUser.participant"> Participant?
-                                        </label>
+                                    <label class="col-sm-4 form-control-label" for="title">Role:</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-radio radio-inline" v-for="role in roles">
+                                            <label class="form-radio-label">
+                                                <input type="radio" :value="role.id" v-model="newUser.role" name="role">
+                                                @{{ role.value }}
+                                            </label>
+                                        </div>
+                                        <span v-if="formErrors['role']" class="error text-danger">@{{ formErrors['role'] }}</span>
                                     </div>
                                 </div>
-                                <div class="part" v-if="newUser.participant">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 form-control-label" for="title">County:</label>
-                                        <div class="col-sm-8">
-                                            <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs()">
-                                                <option selected></option>
-                                                <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
-                                            </select>
-                                            <span v-if="formErrors['county_id']" class="error text-danger">@{{ formErrors['county_id'] }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
-                                        <div class="col-sm-8">
-                                            <select class="form-control c-select" name="sub_id" id="sub_id" @change="fetchFacilities">
-                                                <option selected></option>
-                                                <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
-                                            </select>
-                                            <span v-if="formErrors['sub_id']" class="error text-danger">@{{ formErrors['sub_id'] }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 form-control-label" for="title">Facility:</label>
-                                        <div class="col-sm-8">
-                                            <select class="form-control c-select" name="facility_id" v-model="newUser.facility_id">
-                                                <option selected></option>
-                                                <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
-                                            </select>
-                                            <span v-if="formErrors['facility_id']" class="error text-danger">@{{ formErrors['facility_id'] }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 form-control-label" for="title">Program:</label>
-                                        <div class="col-sm-8">
-                                            <select class="form-control c-select" name="program_id" v-model="newUser.program_id">
-                                                <option selected></option>
-                                                <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
-                                            </select>
-                                            <span v-if="formErrors['program_id']" class="error text-danger">@{{ formErrors['program_id'] }}</span>
-                                        </div>
+                                <div class="form-group row" v-if="newUser.role == 3">
+                                    <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" name="jimbo" multiple v-model="newUser.jimbo">
+                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrors['jimbo']" class="error text-danger">@{{ formErrors['jimbo'] }}</span>
                                     </div>
                                 </div>
-                                <div v-if="!newUser.participant">
+                                <div class="form-group row" v-if="newUser.role == 4 || newUser.role == 6 || newUser.role == 7">
+                                    <label class="col-sm-4 form-control-label" for="title">County:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs()" v-model="newUser.county_id">
+                                            <option selected></option>
+                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrors['county_id']" class="error text-danger">@{{ formErrors['county_id'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-if="newUser.role == 6 || newUser.role == 7">
+                                    <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="sub_id" id="sub_id" @change="fetchFacilities" v-model="newUser.sub_id">
+                                            <option selected></option>
+                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrors['sub_id']" class="error text-danger">@{{ formErrors['sub_id'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-if="newUser.role == 6">
+                                    <label class="col-sm-4 form-control-label" for="title">Facility:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="facility_id" v-model="newUser.facility_id">
+                                            <option selected></option>
+                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrors['facility_id']" class="error text-danger">@{{ formErrors['facility_id'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-if="newUser.role == 2">
+                                    <label class="col-sm-4 form-control-label" for="title">Program:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="program_id" v-model="newUser.program_id">
+                                            <option selected></option>
+                                            <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrors['program_id']" class="error text-danger">@{{ formErrors['program_id'] }}</span>
+                                    </div>
+                                </div>
+                                <div v-if="newUser.role != 2">
                                     <div class="form-group row">
                                         <label class="col-sm-4 form-control-label" for="title">Username:</label>
                                         <div class="col-sm-8">

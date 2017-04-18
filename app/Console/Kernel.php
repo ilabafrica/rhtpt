@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         
-        $schedule->command('scheduled:cron')
-                 ->daily();
+        $schedule->command('scheduled:cron')->everyFiveMinutes();
+                 //->daily();
     }
 }

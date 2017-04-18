@@ -21,7 +21,9 @@ class ReportController extends Controller
      */
     public function index(Request $request)
     {
-        $options = Option::latest()->paginate(5);
+        $summaries = DB::select("SELECT r.id, r.description AS 'round', COUNT(e.round_id) AS 'enrolment', COUNT(pt.id) AS 'response', SUM(feedback=1) AS 'satisfactory', SUM(feedback=0) AS 'unsatisfactory' FROM rounds r, enrolments e, pt AS pt WHERE r.id=e.round_id AND r.id=pt.round_id GROUP BY r.id");
+        $percentiles = DB::select("SELECT r.id, r.description AS 'round', COUNT(e.round_id) AS 'enrolment', COUNT(pt.id) AS 'total_response', concat(round(( COUNT(pt.id)/COUNT(e.round_id) * 100 ),2),'%') AS 'response', concat(round(( SUM(feedback=1)/COUNT(pt.id) * 100 ),2),'%') AS 'satisfactory' FROM rounds r, enrolments e, pt as pt WHERE r.id=e.round_id AND r.id=pt.round_id GROUP BY r.id");
+        $unsperf = DB::select("SELECT r.id, r.description AS 'round', COUNT(pt.id) AS 'response', SUM(feedback=0) AS 'total_unsatisfactory', concat(round(( SUM(feedback=0)/COUNT(pt.id) * 100 ),2),'%') AS 'unsatisfactory', concat(round(( SUM(incorrect_results=1)/SUM(feedback=0) * 100 ),2),'%') AS 'incorrect_results', concat(round(( SUM(wrong_algorithm=1)/SUM(feedback=0) * 100 ),2),'%') AS 'wrong_algorithm'  FROM rounds r, enrolments e, pt AS pt WHERE r.id=e.round_id AND r.id=pt.round_id GROUP BY r.id");
 
         $response = [
             'pagination' => [
@@ -32,7 +34,9 @@ class ReportController extends Controller
                 'from' => $options->firstItem(),
                 'to' => $options->lastItem()
             ],
-            'data' => $options
+            'summaries' => $summaries,
+            'percentiles' => $percentiles,
+            'unsperf' => $unsperf
         ];
 
         return response()->json($response);

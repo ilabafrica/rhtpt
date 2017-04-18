@@ -6,6 +6,7 @@ new Vue({
 
   data: {
     users: [],
+    roles: [],
     counties: [],
     subs: [],
     programs:[],
@@ -20,8 +21,8 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newUser : {'name':'','username': '','participant': '','gender':'', 'phone':'', 'email':'', 'address':''},
-    fillUser : {'name':'','username': '','participant': '','gender':'', 'phone':'', 'email':'', 'address':'', 'id':''},
+    newUser : {'name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':''},
+    fillUser : {'name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':'', 'id':''},
     transferUser : {'facility_id':'','program_id':'', 'id':''},
     loading: false,
     error: false,
@@ -58,6 +59,7 @@ new Vue({
   		this.getVueUsers(this.pagination.current_page);
         this.loadPrograms();
         this.loadCounties();
+        this.loadRoles();
   },
 
   methods : {
@@ -154,7 +156,7 @@ new Vue({
         });
       },
 
-      //Populate programs from ProgramController
+      //    Populate programs from ProgramController
       loadPrograms: function() {
         this.$http.get('/progs').then((response) => { 
             this.programs = response.data;
@@ -163,6 +165,17 @@ new Vue({
             console.log(response);
         });
       },
+
+      //    Populate roles from RoleController
+      loadRoles: function() {
+        this.$http.get('/priv').then((response) => { 
+            this.roles = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
       search: function() {
         // Clear the error message.
         this.error = '';

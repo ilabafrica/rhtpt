@@ -2,10 +2,10 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = $("#token").attr("value");
 
 new Vue({
 
-  el: '#manage-item',
+  el: '#manage-panel',
 
   data: {
-    items: [],
+    panels: [],
     pagination: {
         total: 0, 
         per_page: 2,
@@ -16,11 +16,11 @@ new Vue({
     offset: 4,
     formErrors:{},
     formErrorsUpdate:{},
-    newItem : {'pt_id':'','panel':'','tester_id_range':'','material_id':'','round_id':'','prepared_by':''},
-    fillItem : {'pt_id':'','panel':'','tester_id_range':'','material':'','pt_round':'','prepared_by':'','id':''},
+    newPanel : {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':''},
+    fillPanel : {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':'','id':''},
     materials: [],
-    rounds: [],
-    ranges: [],
+    options: [],
+    lots: [],
     panels: [],
     loading: false,
     error: false,
@@ -53,66 +53,65 @@ new Vue({
     },
 
   ready : function(){
-  		this.getVueItems(this.pagination.current_page);
+  		this.getVuePanels(this.pagination.current_page);
         this.loadMaterials();
-        this.loadRounds();
-        this.loadRanges();
-        this.loadPanels();
+        this.loadResults();
+        this.loadLots();
   },
 
   methods : {
 
-        getVueItems: function(page){
-          this.$http.get('/vueitems?page='+page).then((response) => {
-            this.$set('items', response.data.data.data);
+        getVuePanels: function(page){
+          this.$http.get('/vuepanels?page='+page).then((response) => {
+            this.$set('panels', response.data.data.data);
             this.$set('pagination', response.data.pagination);
           });
         },
 
-        createItem: function(){
-		  var input = this.newItem;
-		  this.$http.post('/vueitems',input).then((response) => {
+        createPanel: function(){
+		  var input = this.newPanel;
+		  this.$http.post('/vuepanels',input).then((response) => {
 		    this.changePage(this.pagination.current_page);
-			this.newItem = {'pt_id':'','panel':'','tester_id_range':'','material':'','pt_round':'','prepared_by':''};
-			$("#create-item").modal('hide');
-			toastr.success('Item Created Successfully.', 'Success Alert', {timeOut: 5000});
+			this.newPanel = {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':''};
+			$("#create-panel").modal('hide');
+			toastr.success('Panel Created Successfully.', 'Success Alert', {timeOut: 5000});
 		  }, (response) => {
 			this.formErrors = response.data;
 	    });
 	},
 
-      deleteItem: function(item){
-        this.$http.delete('/vueitems/'+item.id).then((response) => {
+      deletePanel: function(panel){
+        this.$http.delete('/vuepanels/'+panel.id).then((response) => {
             this.changePage(this.pagination.current_page);
-            toastr.success('Item Deleted Successfully.', 'Success Alert', {timeOut: 5000});
+            toastr.success('Panel Deleted Successfully.', 'Success Alert', {timeOut: 5000});
         });
       },
 
-      restoreItem: function(item){
-        this.$http.patch('/vueitems/'+item.id+'/restore').then((response) => {
+      restorePanel: function(panel){
+        this.$http.patch('/vuepanels/'+panel.id+'/restore').then((response) => {
             this.changePage(this.pagination.current_page);
-            toastr.success('Item Restored Successfully.', 'Success Alert', {timeOut: 5000});
+            toastr.success('Panel Restored Successfully.', 'Success Alert', {timeOut: 5000});
         });
       },
 
-      editItem: function(item){
-          this.fillItem.pt_id = item.pt_id;
-          this.fillItem.id = item.id;
-          this.fillItem.panel = item.panel;
-          this.fillItem.tester_id_range = item.tester_id_range;
-          this.fillItem.material = item.material;
-          this.fillItem.pt_round = item.pt_round;
-          this.fillItem.prepared_by = item.prepared_by;
-          $("#edit-item").modal('show');
+      editPanel: function(panel){
+          this.fillPanel.id = panel.id;
+          this.fillPanel.lot_id = panel.lot_id;
+          this.fillPanel.panel = panel.panel;
+          this.fillPanel.material_id = panel.material_id;
+          this.fillPanel.prepared_by = panel.prepared_by;
+          this.fillPanel.result = panel.result;
+          this.fillPanel.tested_by = panel.tested_by;
+          $("#edit-panel").modal('show');
       },
 
-      updateItem: function(id){
-        var input = this.fillItem;
-        this.$http.put('/vueitems/'+id,input).then((response) => {
+      updatePanel: function(id){
+        var input = this.fillPanel;
+        this.$http.put('/vuepanels/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
-            this.fillItem = {'pt_id':'','panel':'','tester_id_range':'','material':'','pt_round':'','prepared_by':'','id':''};
-            $("#edit-item").modal('hide');
-            toastr.success('Item Updated Successfully.', 'Success Alert', {timeOut: 5000});
+            this.fillPanel = {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':'', 'id':''};
+            $("#edit-panel").modal('hide');
+            toastr.success('Panel Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {
               this.formErrorsUpdate = response.data;
           });
@@ -120,7 +119,7 @@ new Vue({
 
       changePage: function (page) {
           this.pagination.current_page = page;
-          this.getVueItems(page);
+          this.getVuePanels(page);
       },
 
       loadMaterials: function() {
@@ -132,44 +131,35 @@ new Vue({
         });
       },
 
-      loadRounds: function() {
-        this.$http.get('/rnds').then((response) => {
-            this.rounds = response.data;
+      loadLots: function() {
+        this.$http.get('/lots').then((response) => {
+            this.lots = response.data;
 
         }, (response) => {
             console.log(response);
         });
       },
 
-      loadRanges: function() {
-        this.$http.get('/rng').then((response) => {
-            this.ranges = response.data;
+      loadResults: function() {
+        this.$http.get('/rslts').then((response) => {
+            this.options = response.data;
 
         }, (response) => {
             console.log(response);
-        });
-      },
-
-      loadPanels: function() {
-        this.$http.get('/panels').then((response) => {
-            this.panels = response.data;
-
-        }, (response) => {
-            //console.log(response);
         });
       },
 
       search: function() {
         // Clear the error message.
         this.error = '';
-        // Empty the items array so we can fill it with the new items.
-        this.items = [];
+        // Empty the Panels array so we can fill it with the new Panels.
+        this.panels = [];
         // Set the loading property to true, this will display the "Searching..." button.
         this.loading = true;
 
         // Making a get request to our API and passing the query to it.
-        this.$http.get('/api/search_item?q=' + this.query).then((response) => {
-            // If there was an error set the error message, if not fill the items array.
+        this.$http.get('/api/search_panel?q=' + this.query).then((response) => {
+            // If there was an error set the error message, if not fill the Panels array.
             if(response.data.error)
             {
                 this.error = response.data.error;
@@ -177,7 +167,7 @@ new Vue({
             }
             else
             {
-                this.items = response.data.data.data;
+                this.panels = response.data.data.data;
                 this.pagination = response.data.data.pagination;
                 toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
             }

@@ -12,6 +12,8 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Illuminate\Database\Eloquent\softDeletes;
 
+use DB;
+
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
                                     CanResetPasswordContract
@@ -24,10 +26,16 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     const FEMALE = 1;
 
     //  Tester ID ranges
-    const ZERO_TO_TWO = 1;
-    const THREE_TO_FIVE = 2;
-    const SIX_TO_EIGHT = 3;
-    const NINE = 4;
+    const ZERO = 0;
+    const ONE = 1;
+    const TWO = 2;
+    const THREE = 3;
+    const FOUR = 4;
+    const FIVE = 5;
+    const SIX = 6;
+    const SEVEN = 7;
+    const EIGHT = 8;
+    const NINE = 9;
     //	Default password
 	const DEFAULT_PASSWORD = 'secret';
 
@@ -86,13 +94,14 @@ EntrustUserTrait::restore insteadof SoftDeletes;
             return '9';
   	}
     /**
-	  * Relationship with user-tier
+	  * role-user
 	  *
 	  * @return RoleUserTier object
 	  */
-  	public function tier()
+  	public function ru()
   	{
-  		return $this->hasOne('App\Tier');
+          $res = DB::table('role_user')->where('user_id', $this->id)->first();
+          return $res;
   	}
     /**
   	 * Return tester-id-range

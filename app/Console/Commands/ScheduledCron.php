@@ -65,7 +65,7 @@ class ScheduledCron extends Command
             $rsController = new ResultController;
             $rsController->runAlgorithm($pts);
         }
-        $this->info('Scheduled:Cron Cummand Run successfully!');
+        $this->info('Scheduled:Cron Command Run successfully!');
     }
     /**
     * Function to move data from pt-dump to pt table
@@ -96,18 +96,20 @@ class ScheduledCron extends Command
                 $userId = $user->id;
                 //  Creare role-user
                 $role = Role::find(Role::idByName('Participant'));
-                $user->attachRole($role);
-                //  Copy to user-tiers
-                $tier = new Tier;
-                $tier->tier = Facility::idByCode($dump->MFL_Code);
-                $tier->program_id = Program::idByTitle($dump->NT_Program);
-                $tier->save();
+                $facility = Facility::idByCode($dump->MFL_Code);
+                $program_id = Program::idByTitle($dump->NT_Program);
+                DB::table('role_user')->insert(["user_id" => $userId, "role_id" => $role, "tier" => $facility, "program_id" => $program_id]);
                 //  Reasons for non-performance to registration
                 $reg = new Registration;
                 $reg->user_id = $userId;
                 $reg->uid = $dump->ID_No;
-                if(!empty($dump->Transferred_County))
+                if(!empty($dump->Transferred_County) || !empty($dump->Transferred_Facility))
+                {
                     $reg->nonperformance_id = Nonperformance::idByTitle('Transferred');
+                    $reg->comment = $dump->Transferred_Facility;
+                }
+                else if(!empty($dump->Tester_Off_Duty))
+                    $reg->nonperformance_id = Nonperformance::idByTitle('Off Duty');
                 else
                     $reg->nonperformance_id = Nonperformance::idByTitle('Other');
                 $reg->save();
@@ -210,11 +212,15 @@ class ScheduledCron extends Command
     {
         if($field_id = Field::idByUID($field))
         {
+            //if (preg_match('/', $dmp))
+              //  if(explode('/', $))
             if(!empty($dmp))
             {
                 $result = new Result;
                 $result->pt_id = $ptId;
                 $result->field_id = $field_id;
+                if (preg_match('/_/', $dmp))
+                    $dmp = str_replace('_', ' ', $dmp);
                 $result->response = $dmp;
                 if(!empty($comment))
                     $result->comment = $comment;

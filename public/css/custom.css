@@ -1189,3 +1189,17 @@ fieldset[disabled][disabled] .mbtn-group-vertical.mbtn-group-raised:focus:not(:a
 .mbtn-group-vertical .mbtn-group {
   margin: 0;
 }
+.radio-inline+.radio-inline {
+    margin-left: 0;
+}
+
+.radio-inline {
+    margin-right: 10px;
+}
+.checkbox-inline+.checkbox-inline {
+    margin-left: 0;
+}
+
+.checkbox-inline {
+    margin-right: 10px;
+}

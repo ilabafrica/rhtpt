@@ -105,4 +105,15 @@ class RoleController extends Controller
         $role = Role::withTrashed()->find($id)->restore();
         return response()->json(['done']);
     }
+    //  Fetch roles for user-assignment
+    public function roles()
+    {
+        $roles = Role::lists('name', 'id');
+        $response = [];
+        foreach($roles as $key => $value)
+        {
+            $response[] = ['id' => $key, 'value' => $value];
+        }
+        return $response;
+    }
 }

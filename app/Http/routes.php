@@ -39,9 +39,13 @@ Route::group(['middleware' => 'auth'], function()
         return view('app');
     });
 
-    Route::get('item', 'ItemController@manageItem');
-    Route::resource('vueitems','ItemController');
-    Route::any('vueitems/{id}/restore','ItemController@restore');
+    Route::get('panel', 'PanelController@managePanel');
+    Route::resource('vuepanels','PanelController');
+    Route::any('vuepanels/{id}/restore','PanelController@restore');
+
+    Route::get('lot', 'LotController@manageLot');
+    Route::resource('vuelots','LotController');
+    Route::any('vuelots/{id}/restore','LotController@restore');
 
     Route::get('event', 'EventController@manageEvent');
     Route::resource('vueevents','EventController');
@@ -131,7 +135,7 @@ Route::group(['middleware' => 'auth'], function()
 
     Route::get("/mat", array(
         "as"   => "mat.fetch",
-        "uses" => "ItemController@materials"
+        "uses" => "PanelController@materials"
     ));
 
     Route::get("/rnds", array(
@@ -181,6 +185,11 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/reasons", array(
         "as"   => "reasons.fetch",
         "uses" => "NonperformanceController@reasons"
+    ));
+
+    Route::get("/lots", array(
+        "as"   => "lots.fetch",
+        "uses" => "LotController@lots"
     ));
     
 
@@ -295,6 +304,10 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "frmfld.fetch",
         "uses" => "FieldController@edit"
     ));
+    Route::get("/priv", array(
+        "as"   => "roles.fetch",
+        "uses" => "RoleController@roles"
+    ));
     Route::get('report', 'ReportController@manageReport');
     Route::resource('vuereports','ReportController');
 
@@ -308,15 +321,11 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_shipment',['as'=>'shipment.search', 'uses'=>'ShipmentController@index']);
     Route::get('api/search_shipper',['as'=>'shipper.search', 'uses'=>'ShipperController@index']);
     Route::get('api/search_user',['as'=>'user.search', 'uses'=>'UserController@index']);
-    Route::get('api/search_item',['as'=>'item.search', 'uses'=>'ItemController@index']);
+    Route::get('api/search_panel',['as'=>'panel.search', 'uses'=>'PanelController@index']);
     Route::get('api/search_field',['as'=>'field.search', 'uses'=>'FieldController@index']);
     Route::get('api/search_facility',['as'=>'facility.search', 'uses'=>'FacilityController@index']);
     Route::get('api/search_expected',['as'=>'expected.search', 'uses'=>'ExpectedController@index']);
     Route::get('api/search_participant',['as'=>'participant.search', 'uses'=>'UserController@participant']);
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
     Route::get('api/search_parts',['as'=>'participants.search', 'uses'=>'UserController@forEnrol']);
-    Route::get("/panels", array(
-        "as"   => "panels.fetch",
-        "uses" => "ItemController@panels"
-    ));
 });

@@ -43,13 +43,11 @@
     <table class="table table-bordered">
         <tr>
             <th>Title</th>
-            <th>Description</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Action</th>
         </tr>
         <tr v-for="round in rounds">
-            <td>@{{ round.name }}</td>
             <td>@{{ round.description }}</td>
             <td>@{{ round.start_date }}</td>
             <td>@{{ round.end_date }}</td>
@@ -57,7 +55,7 @@
                 <button class="btn btn-sm btn-primary" @click.prevent="editRound(round)"><i class="fa fa-edit"></i> Edit</button>
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-trash-o"></i> Delete</button>
                 <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}"><i class="fa fa-send"></i> Enrol Testers</button>
-                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Enrollments</button>
+                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Enrolments</button>
             </td>
         </tr>
     </table>

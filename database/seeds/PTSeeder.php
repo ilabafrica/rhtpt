@@ -113,33 +113,30 @@ class PTSeeder extends Seeder
             array("name" => "view-round", "display_name" => "Can view round"),
             array("name" => "update-round", "display_name" => "Can update round"),
             array("name" => "delete-round", "display_name" => "Can delete round"),
-            array("name" => "create-item", "display_name" => "Can create item"),
-            array("name" => "read-item", "display_name" => "Can read item"),
-            array("name" => "view-item", "display_name" => "Can view item"),
-            array("name" => "update-item", "display_name" => "Can update item"),
-            array("name" => "delete-item", "display_name" => "Can delete item"),
-            array("name" => "create-result", "display_name" => "Can create result"),
-            array("name" => "read-result", "display_name" => "Can read result"),
-            array("name" => "view-result", "display_name" => "Can view result"),
-            array("name" => "update-result", "display_name" => "Can update result"),
-            array("name" => "delete-result", "display_name" => "Can delete result"),
+            array("name" => "create-panel", "display_name" => "Can create panel"),
+            array("name" => "read-panel", "display_name" => "Can read panel"),
+            array("name" => "view-panel", "display_name" => "Can view panel"),
+            array("name" => "update-panel", "display_name" => "Can update panel"),
+            array("name" => "delete-panel", "display_name" => "Can delete panel"),
             array("name" => "create-shipment", "display_name" => "Can create shipment"),
             array("name" => "read-shipment", "display_name" => "Can read shipment"),
             array("name" => "view-shipment", "display_name" => "Can view shipment"),
             array("name" => "update-shipment", "display_name" => "Can update shipment"),
             array("name" => "delete-shipment", "display_name" => "Can delete shipment"),
-            array("name" => "create-receipt", "display_name" => "Can create receipt"),
-            array("name" => "read-receipt", "display_name" => "Can read receipt"),
-            array("name" => "view-receipt", "display_name" => "Can view receipt"),
-            array("name" => "update-receipt", "display_name" => "Can update receipt"),
-            array("name" => "delete-receipt", "display_name" => "Can delete receipt"),
-            array("name" => "create-expected", "display_name" => "Can create expected"),
-            array("name" => "read-expected", "display_name" => "Can read expected"),
-            array("name" => "view-expected", "display_name" => "Can view expected"),
-            array("name" => "update-expected", "display_name" => "Can update expected"),
-            array("name" => "delete-expected", "display_name" => "Can delete expected"),
+            array("name" => "receive-shipment", "display_name" => "Can receiceive shipment"),
+            array("name" => "enrol-participants", "display_name" => "Can enrol participants"),
+            array("name" => "create-result", "display_name" => "Can create result"),
+            array("name" => "read-result", "display_name" => "Can read result"),
+            array("name" => "view-result", "display_name" => "Can view result"),
+            array("name" => "update-result", "display_name" => "Can update result"),
+            array("name" => "delete-result", "display_name" => "Can delete result"),
+            array("name" => "verify-result", "display_name" => "Can verify result"),
 
             array("name" => "bulk-sms", "display_name" => "Can manage bulk SMS"),
+            array("name" => "lot", "display_name" => "Can manage lots"),
+            array("name" => "config", "display_name" => "Can manage Configurations"),
+            array("name" => "view-report", "display_name" => "Can view report"),
+            array("name" => "export-report", "display_name" => "Can export report")
         );
         foreach ($permissions as $permission) {
             Permission::create($permission);
@@ -149,8 +146,11 @@ class PTSeeder extends Seeder
         $roles = array(
             array("name" => "Superadmin", "display_name" => "Overall Administrator"),
             array("name" => "Participant", "display_name" => "Participant"),
-            array("name" => "Partner Admin", "display_name" => "Partner Admin"),
-            array("name" => "County Lab Coordinator", "display_name" => "County Lab Coordinator")
+            array("name" => "Partner", "display_name" => "Partner"),
+            array("name" => "County Coordinator", "display_name" => "County Coordinator"),
+            array("name" => "Program Manager", "display_name" => "Program Manager"),
+            array("name" => "Facility Incharge", "display_name" => "Facility Incharge"),
+            array("name" => "Sub-County Coordinator", "display_name" => "Sub-County Coordinator")
         );
         foreach ($roles as $role)
         {
@@ -272,30 +272,19 @@ class PTSeeder extends Seeder
             Option::create($option);
         }
         $this->command->info('Options table seeded');
-        /* Questionnaires table */
-        $questionnaires = array(
-            array("title" => "Results", "description" => "Test results entry form"),
-            array("title" => "Addressee Failure", "description" => "Addressee failure to perform tests")
-        );
-        foreach ($questionnaires as $questionnaire)
-        {
-            Questionnaire::create($questionnaire);
-        }
-        $this->command->info('Questionnaires table seeded');
         /* Field sets table */
         $sets = array(
-            array("title" => "PT Panel Dates", "description" => "", "order" => "0", "questionnaire_id" => "1"),
-            array("title" => "Test 1", "description" => "", "order" => "1", "questionnaire_id" => "1"),
-            array("title" => "Test 2", "description" => "", "order" => "2", "questionnaire_id" => "1"),
-            array("title" => "Test 3", "description" => "", "order" => "3", "questionnaire_id" => "1"),
-            array("title" => "PT Panel 1", "description" => "Test Results", "order" => "4", "questionnaire_id" => "1"),
-            array("title" => "PT Panel 2", "description" => "Test Results", "order" => "5", "questionnaire_id" => "1"),
-            array("title" => "PT Panel 3", "description" => "Test Results", "order" => "6", "questionnaire_id" => "1"),
-            array("title" => "PT Panel 4", "description" => "Test Results", "order" => "7", "questionnaire_id" => "1"),
-            array("title" => "PT Panel 5", "description" => "Test Results", "order" => "8", "questionnaire_id" => "1"),
-            array("title" => "PT Panel 6", "description" => "Test Results", "order" => "9", "questionnaire_id" => "1"),
-            array("title" => "Remarks", "description" => "Remarks", "order" => "10", "questionnaire_id" => "1"),
-            array("title" => "Addressee Non-Performance", "description" => "Addressee Non-Performance", "order" => "0", "questionnaire_id" => "2")
+            array("title" => "PT Panel Dates", "description" => "", "order" => "0"),
+            array("title" => "Test 1", "description" => "", "order" => "1"),
+            array("title" => "Test 2", "description" => "", "order" => "2"),
+            array("title" => "Test 3", "description" => "", "order" => "3"),
+            array("title" => "PT Panel 1", "description" => "Test Results", "order" => "4"),
+            array("title" => "PT Panel 2", "description" => "Test Results", "order" => "5"),
+            array("title" => "PT Panel 3", "description" => "Test Results", "order" => "6"),
+            array("title" => "PT Panel 4", "description" => "Test Results", "order" => "7"),
+            array("title" => "PT Panel 5", "description" => "Test Results", "order" => "8"),
+            array("title" => "PT Panel 6", "description" => "Test Results", "order" => "9"),
+            array("title" => "Remarks", "description" => "Remarks", "order" => "10"),
         );
         foreach ($sets as $set)
         {

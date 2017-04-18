@@ -10,6 +10,9 @@ use App\Facility;
 use App\Program;
 use App\Round;
 
+use DB;
+use Hash;
+
 class UserController extends Controller
 {
 
@@ -41,6 +44,7 @@ class UserController extends Controller
             }
             $user->facility = '';
             $user->program = '';
+            $user->ru()?$user->role = Role::find($user->ru()->role_id)->name:$user->role = '';
         }
         $response = [
             'pagination' => [
@@ -65,6 +69,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request);
         $this->validate($request, [
             'name' => 'required',
             'gender' => 'required',
@@ -72,25 +77,35 @@ class UserController extends Controller
             'email' => 'required',
             'address' => 'required'
         ]);
-        $request->merge(['password' => User::DEFAULT_PASSWORD]);
+        $request->merge(['password' => Hash::make(User::DEFAULT_PASSWORD)]);
         $create = User::create($request->all());
-        if($request->participant)
+        if($request->role)
         {
-            $role = Role::idByName('Participant');
-            $create->attachRole(Role::find($role));
-            $tier = new Tier;
-            $facility = NULL;
-            $program = NULL;
-            if($request->facility_id)
-                $facility = $request->facility_id;
-            if($request->program_id)
-                $proram = $request->program_id;
-            if($facility || $program)
+            $role = $request->role;
+            $tier = NULL;
+            $program_id = NULL;
+            if($role == Role::idByName("Partner"))
             {
-                $tier->tier = $facility;
-                $tier->program_id = $program;
-                $tier->save();
+                $tier = implode(", ", $request->jimbo);
             }
+            else if($role == Role::idByName("County Coordinator"))
+            {
+                $tier = $request->county_id;
+            }
+            else if($role == Role::idByName("Sub-County Coordinator"))
+            {
+                $tier = $request->sub_id;
+            }
+            else if($role == Role::idByName("Participant"))
+            {
+                $tier = $request->facility_id;
+                $program_id = $request->program_id;
+            }
+            else if($role == Role::idByName("Facility Incharge"))
+            {
+                $tier = $request->facility_id;
+            }
+            $ru = DB::table('role_user')->insert(["user_id" => $create->id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
         }
         return response()->json($create);
     }

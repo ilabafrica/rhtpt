@@ -119,7 +119,7 @@
                                         <label class="col-sm-5 form-control-label" for="title">@{{ fld.title }}:</label>
                                         <div class="col-sm-7">
                                             <div v-if="fld.tag == 1">
-                                                <div class="form-checkbox form-checkbox-inline" v-for="option in fld.options">
+                                                <div class="form-checkbox checkbox-inline" v-for="option in fld.options">
                                                     <label class="form-checkbox-label">
                                                         <input type="checkbox" :value="option.id" name="field_@{{fld.id}}">
                                                         @{{ option.title }}
@@ -136,7 +136,7 @@
                                                 <input type="text" name="field_@{{fld.id}}" class="form-control" />
                                             </div>
                                             <div v-if="fld.tag == 5">
-                                                <div class="form-radio form-radio-inline" v-for="option in fld.options">
+                                                <div class="form-radio radio-inline" v-for="option in fld.options">
                                                     <label class="form-radio-label">
                                                         <input type="radio" :value="option.id" name="field_@{{fld.id}}" @change="remark('.toggle_@{{fld.id}}', this)">
                                                         @{{ option.title }}
@@ -152,7 +152,7 @@
                                             <div v-if="fld.tag == 7">
                                                 <textarea name="field_@{{fld.id}}" class="form-control"></textarea>
                                             </div>
-                                            <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                                            <span v-if="formErrorsUpdate['comment']" class="error text-danger">@{{ formErrorsUpdate['comment'] }}</span>
                                         </div>
                                     </div>
                                 </div>
