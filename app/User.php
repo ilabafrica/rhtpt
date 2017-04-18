@@ -128,7 +128,7 @@ EntrustUserTrait::restore insteadof SoftDeletes;
 		{
 			try 
 			{
-				$user = Field::where('uid', $uid)->orderBy('uid', 'asc')->firstOrFail();
+				$user = User::where('uid', $uid)->orderBy('uid', 'asc')->firstOrFail();
 				return $user->id;
 			} 
 			catch (ModelNotFoundException $e) 

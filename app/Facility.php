@@ -22,31 +22,31 @@ class Facility extends Model
   	 */
      public function subCounty()
      {
-       		return $this->belongsTo('App\SubCounty');
+   		return $this->belongsTo('App\SubCounty');
      }
     /**
-		* Return Facility ID given the mfl code
-		* @param $code the unique mfl code of the facility
-		*/
-		public static function idByCode($code=NULL)
+	* Return Facility ID given the mfl code
+	* @param $code the unique mfl code of the facility
+	*/
+	public static function idByCode($code=NULL)
+	{
+		if($code!=NULL)
 		{
-				if($code!=NULL)
-				{
-						try 
-						{
-								$facility = Facility::where('code', $code)->orderBy('code', 'asc')->firstOrFail();
-								return $facility->id;
-						} 
-						catch (ModelNotFoundException $e) 
-						{
-								Log::error("The facility ` $code ` does not exist:  ". $e->getMessage());
-								//TODO: send email?
-								return null;
-						}
-				}
-				else
-				{
-						return null;
-				}
+			try 
+			{
+				$facility = Facility::where('code', $code)->orderBy('code', 'asc')->firstOrFail();
+				return $facility->id;
+			} 
+			catch (ModelNotFoundException $e) 
+			{
+				Log::error("The facility ` $code ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
 		}
+		else
+		{
+			return null;
+		}
+	}
 }

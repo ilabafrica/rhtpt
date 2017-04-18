@@ -26,28 +26,28 @@ class NonPerformance extends Model
   	  	return $this->hasMany('App\Registration');
   	}
     /**
-		* Return reason ID given the name
-		* @param $title the name of the reason
-		*/
-		public static function idByTitle($title=NULL)
+	* Return reason ID given the name
+	* @param $title the name of the reason
+	*/
+	public static function idByTitle($title=NULL)
+	{
+		if($title!=NULL)
 		{
-				if($title!=NULL)
-				{
-						try 
-						{
-								$reason = Nonperformance::where('title', $title)->orderBy('title', 'asc')->firstOrFail();
-								return $reason->id;
-						} 
-						catch (ModelNotFoundException $e) 
-						{
-								Log::error("The reason ` $title ` does not exist:  ". $e->getMessage());
-								//TODO: send email?
-								return null;
-						}
-				}
-				else
-				{
-						return null;
-				}
+			try 
+			{
+				$reason = Nonperformance::where('title', $title)->orderBy('title', 'asc')->firstOrFail();
+				return $reason->id;
+			} 
+			catch (ModelNotFoundException $e) 
+			{
+				Log::error("The reason ` $title ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
 		}
+		else
+		{
+			return null;
+		}
+	}
 }

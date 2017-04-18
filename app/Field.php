@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 class Field extends Model
 {
 	public $fillable = ['title', 'uid', 'order', 'tag', 'field_set_id'];

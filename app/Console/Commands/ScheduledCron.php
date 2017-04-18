@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 use DB;
+use Hash;
+
 use App\Dump;
 use App\Round;
 use App\User;
@@ -13,6 +15,12 @@ use App\Result;
 use App\Facility;
 use App\Program;
 use App\Registration;
+use App\Role;
+use App\Nonperformance;
+use App\Field;
+use App\Option;
+
+use Jenssegers\Date\Date as Carbon;
 
 class ScheduledCron extends Command
 {
@@ -52,9 +60,12 @@ class ScheduledCron extends Command
         *
         */
         //  Fetch all pending records
-        $dumps = Dump::all();
-        if(is_array($dumps))
+        $counter = Dump::count();
+        if($counter > 0)
+        {
+            $dumps = Dump::all();
             $this->moveDump($dumps);
+        }
         /**
         * 2. Get all unchecked results and execute the algorithm.
         *
@@ -75,7 +86,7 @@ class ScheduledCron extends Command
     public function moveDump($dumps)
     {
         foreach($dumps as $dump)
-        {
+        {        
             //  Check if new tester
             $userId = NULL;
             if(!empty($dump->Participant_Full_Names))
@@ -83,10 +94,10 @@ class ScheduledCron extends Command
                 $user = new User;
                 $user->name = $dump->Participant_Full_Names;
                 $user->email = $dump->NT_Email;
-                $user->password = Hash(User::DEFAULT_PASSWORD);
+                $user->password = Hash::make(User::DEFAULT_PASSWORD);
                 $user->address = NULL;
                 $user->gender = User::gender($dump->NTester_gender);
-                $user->phone = $dump->NTMobile_Number;
+                $user->phone = "+254$dump->NTMobile_Number";
                 $user->username = '';
                 $user->save();
                 //  Update username
@@ -95,9 +106,12 @@ class ScheduledCron extends Command
                 $user->save();
                 $userId = $user->id;
                 //  Creare role-user
-                $role = Role::find(Role::idByName('Participant'));
+                $role = Role::idByName('Participant');
                 $facility = Facility::idByCode($dump->MFL_Code);
-                $program_id = Program::idByTitle($dump->NT_Program);
+                if($dump->NT_Program == "LVCT")
+                    $program_id = Program::idByTitle("VCT");
+                else
+                    $program_id = Program::idByTitle($dump->NT_Program);
                 DB::table('role_user')->insert(["user_id" => $userId, "role_id" => $role, "tier" => $facility, "program_id" => $program_id]);
                 //  Reasons for non-performance to registration
                 $reg = new Registration;
@@ -146,11 +160,11 @@ class ScheduledCron extends Command
             //  Test 2 kit expiry date
             $test2kitExpiryDate = $this->saveToPt($pt->id, 'Test 2 Expiry Date', $dump->Kit2_Exp_Date);
             //  Test 3 kit name
-            $test3kitName = $this->saveToPt($pt->id, 'Test 2 Kit Name', $dump->Test3_Name);
+            $test3kitName = $this->saveToPt($pt->id, 'Test 3 Kit Name', $dump->Test3_Name);
             //  Test 3 kit lot no
-            $test3kitLotNo = $this->saveToPt($pt->id, 'Test 2 Lot No.', $dump->Kit3_Lot_No);
+            $test3kitLotNo = $this->saveToPt($pt->id, 'Test 3 Lot No.', $dump->Kit3_Lot_No);
             //  Test 3 kit expiry date
-            $test3kitExpiryDate = $this->saveToPt($pt->id, 'Test 2 Expiry Date', $dump->Kit3_Exp_Date);
+            $test3kitExpiryDate = $this->saveToPt($pt->id, 'Test 3 Expiry Date', $dump->Kit3_Exp_Date);
             //  Panel 1 test 1 results
             $ptPanel1Test1Result = $this->saveToPt($pt->id, 'PT Panel 1 Test 1 Results', $dump->PT1TEST1Results);
             //  Panel 1 test 2 results
@@ -212,21 +226,51 @@ class ScheduledCron extends Command
     {
         if($field_id = Field::idByUID($field))
         {
-            //if (preg_match('/', $dmp))
-              //  if(explode('/', $))
+            if($field_id == Field::idByUID("Test 1 Kit Name") && $dmp == "Determine")
+            {
+                $comment = $dmp;
+                $dmp = "Other";
+            }
+            if (strpos($dmp, '/') !== false)
+            {
+                if(empty($this->strip($this->strip($dmp))))
+                    $dmp = NULL;
+                else{
+                    $dmp = Carbon::createFromFormat('d/m/Y', $dmp)->toDateString();
+                }
+            }
             if(!empty($dmp))
             {
+                $fld = Field::find($field_id);
                 $result = new Result;
                 $result->pt_id = $ptId;
                 $result->field_id = $field_id;
                 if (preg_match('/_/', $dmp))
                     $dmp = str_replace('_', ' ', $dmp);
-                $result->response = $dmp;
+                if($fld->tag == 5)
+                    $result->response = Option::idByTitle($dmp);
+                else
+                    $result->response = $dmp;
                 if(!empty($comment))
                     $result->comment = $comment;
                 $result->save();
             }
         }
+        else
+        {
+            print($field);
+        }
         return response()->json('Saved.');
+    }
+    /**
+     * Remove the specified begining of text to get Id alone.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function strip($field)
+    {
+        if(($pos = strpos($field, '/')) !== FALSE)
+            return substr($field, $pos+1);
     }
 }

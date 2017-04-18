@@ -35,7 +35,7 @@ class Round extends Model
 		{
 			try 
 			{
-				$round = Field::where('name', $title)->orderBy('name', 'asc')->firstOrFail();
+				$round = Round::where('name', $title)->orderBy('name', 'asc')->firstOrFail();
 				return $round->id;
 			} 
 			catch (ModelNotFoundException $e) 

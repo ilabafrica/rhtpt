@@ -9,6 +9,7 @@ class Dump extends Model
   	 */
   	use SoftDeletes;
   	protected $dates = ['deleted_at'];
+    public $timestamps = false;
 
   	/**
   	 * The database table used by the model.

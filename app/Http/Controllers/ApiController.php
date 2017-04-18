@@ -34,11 +34,6 @@ class ApiController extends Controller
        $facilities = SubCounty::find($id)->facilities();
        return Response::make($facilities->get(['id','name']));
     }
-    public function dropdown3($id)
-    {
-       $partners = Shipper::whereIn('id', DB::table('shipper_facilities')->where('facility_id', $id)->lists('shipper_id'));
-       return Response::make($partners->get(['id','name']));
-    }
     /**
      * Display a listing of the resource.
      *
