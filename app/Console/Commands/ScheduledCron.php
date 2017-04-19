@@ -19,6 +19,7 @@ use App\Role;
 use App\Nonperformance;
 use App\Field;
 use App\Option;
+use App\Enrol;
 
 use App\Http\Controllers\ResultController;
 
@@ -66,7 +67,7 @@ class ScheduledCron extends Command
         if($counter > 0)
         {
             $dumps = Dump::all();
-            // $this->moveDump($dumps);
+            $this->moveDump($dumps);
         }
         /**
         * 2. Get all unchecked results and execute the algorithm.
@@ -134,9 +135,15 @@ class ScheduledCron extends Command
             {
                 $userId = User::idByUID($dump->ID_No);
             }
+            //  Enrol user to the available round
+            $round = Round::idByTitle($dump->Round);
+            $enrol = new Enrol;
+            $enrol->user_id = $userId;
+            $enrol->round_id = $round;
+            $enrol->save();
             //  Save to pt table
             $pt = new Pt;
-            $pt->round_id = Round::idByTitle($dump->Round);
+            $pt->round_id = $round;
             $pt->user_id = $userId;
             $pt->panel_status = Pt::NOT_CHECKED;
             $pt->comment = $dump->Comments;

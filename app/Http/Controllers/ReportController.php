@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Option;
 
+use DB;
+
 class ReportController extends Controller
 {
 
@@ -26,14 +28,6 @@ class ReportController extends Controller
         $unsperf = DB::select("SELECT r.id, r.description AS 'round', COUNT(pt.id) AS 'response', SUM(feedback=0) AS 'total_unsatisfactory', concat(round(( SUM(feedback=0)/COUNT(pt.id) * 100 ),2),'%') AS 'unsatisfactory', concat(round(( SUM(incorrect_results=1)/SUM(feedback=0) * 100 ),2),'%') AS 'incorrect_results', concat(round(( SUM(wrong_algorithm=1)/SUM(feedback=0) * 100 ),2),'%') AS 'wrong_algorithm'  FROM rounds r, enrolments e, pt AS pt WHERE r.id=e.round_id AND r.id=pt.round_id GROUP BY r.id");
 
         $response = [
-            'pagination' => [
-                'total' => $options->total(),
-                'per_page' => $options->perPage(),
-                'current_page' => $options->currentPage(),
-                'last_page' => $options->lastPage(),
-                'from' => $options->firstItem(),
-                'to' => $options->lastItem()
-            ],
             'summaries' => $summaries,
             'percentiles' => $percentiles,
             'unsperf' => $unsperf

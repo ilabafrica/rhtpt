@@ -311,6 +311,11 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('report', 'ReportController@manageReport');
     Route::resource('vuereports','ReportController');
 
+    Route::get("/rdata", array(
+        "as"   => "lots.fetch",
+        "uses" => "LotController@lots"
+    ));
+
     Route::get('api/search_role',['as'=>'role.search', 'uses'=>'RoleController@index']);
     Route::get('api/search_material',['as'=>'material.search', 'uses'=>'MaterialController@index']);
     Route::get('api/search_option',['as'=>'option.search', 'uses'=>'OptionController@index']);

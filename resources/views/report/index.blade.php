@@ -44,33 +44,12 @@
                     <th>Satisfactory</th>
                     <th>Unsatisfactory</th>
                 </tr>
-                <tr>
-                    <td>Round 13</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Round 14</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Round 15</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Round 16</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                <tr v-for="tally in tallies">
+                    <td>@{{ tally.round }}</td>
+                    <td>@{{ tally.enrolment }}</td>
+                    <td>@{{ tally.response }}</td>
+                    <td>@{{ tally.satisfactory }}</td>
+                    <td>@{{ tally.unsatisfactory }}</td>
                 </tr>
             </table>
             <div id="talliesContainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
@@ -78,12 +57,44 @@
     </div>
     <div class="card">
         <div class="card-block">
-            <h4 class="card-title">Percentiles go here</h4>
+            <table class="table table-bordered">
+                <tr>
+                    <th></th>
+                    <th>Enrollment</th>
+                    <th>Response</th>
+                    <th>Satisfactory</th>
+                </tr>
+                <tr v-for="percentile in percentiles">
+                    <td>@{{ percentile.round }}</td>
+                    <td>@{{ percentile.enrolment }}</td>
+                    <td>@{{ percentile.response }}</td>
+                    <td>@{{ percentile.satisfactory }}</td>
+                </tr>
+            </table>
+            <div id="persContainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         </div>
     </div>
     <div class="card">
         <div class="card-block">
-            <h4 class="card-title">Unsatisfactiry Responses go here</h4>
+            <div class="card-block">
+            <table class="table table-bordered">
+                <tr>
+                    <th></th>
+                    <th>Response</th>
+                    <th>Unsatisfactory</th>
+                    <th>Incrorrect Results</th>
+                    <th>Wrong Algorithm</th>
+                </tr>
+                <tr v-for="unsperf in uns">
+                    <td>@{{ unsperf.round }}</td>
+                    <td>@{{ unsperf.response }}</td>
+                    <td>@{{ unsperf.unsatisfactory }}</td>
+                    <td>@{{ unsperf.incorrect_results }}</td>
+                    <td>@{{ unsperf.wrong_algorithm }}</td>
+                </tr>
+            </table>
+            <div id="unsperfContainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        </div>
         </div>
     </div>
 </div>
