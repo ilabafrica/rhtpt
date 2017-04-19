@@ -80,18 +80,13 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     }
 
     /**
-  	 * Return readable tester-id-range
+  	 * Return lot
   	 */
-  	public static function range($range)
+  	public function lot($round)
   	{
-  		  if($range == User::ZERO_TO_TWO)
-            return '0 - 2';
-        else if($range == User::THREE_TO_FIVE)
-            return '3 - 5';
-        else if($range == User::SIX_TO_EIGHT)
-            return '6 - 8';
-        else if($range == User::NINE)
-            return '9';
+        $last = substr($this->uid, -1);
+        $lot = Lot::where('round_id', $round)->where('tester_id', 'LIKE', '%'.$last.'%')->first();
+        return $lot;
   	}
     /**
 	  * role-user
@@ -153,4 +148,13 @@ EntrustUserTrait::restore insteadof SoftDeletes;
           else
               return USER::FEMALE;;
   	}
+    /**
+    * Check if new user...use intended tester lot
+    *
+    * @return user object
+    */
+    public function registration()
+    {
+        return $this->hasOne('App\Registration');
+    }
 }

@@ -10,12 +10,12 @@ class Panel extends Model
   	 */
   	use SoftDeletes;
   	protected $dates = ['deleted_at'];
-	//	Constants for panel IDs
+	  //	Constants for panel IDs
     const S1 = 1;
     const S2 = 2;
-	const S3 = 3;
+	  const S3 = 3;
     const S4 = 4;
-	const S5 = 5;
+	  const S5 = 5;
     const S6 = 6;
     /**
   	 * Type of result
@@ -60,7 +60,7 @@ class Panel extends Model
   	 */
      public function result($result)
      {
-          if($result == Expected::NEGATIVE)
+          if($result == Panel::NEGATIVE)
               return 'Negative';
           else
               return 'Positive';

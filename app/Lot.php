@@ -41,4 +41,12 @@ class Lot extends Model
      {
           return $this->belongsTo('App\Round');
      }
+    /**
+     * Panel relationship
+     *
+     */
+     public function panels()
+     {
+          return $this->hasMany('App\Panel');
+     }
 }

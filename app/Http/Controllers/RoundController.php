@@ -126,7 +126,7 @@ class RoundController extends Controller
      */
     public function rounds()
     {
-        $rounds = Round::lists('name', 'id');
+        $rounds = Round::lists('description', 'id');
         $categories = [];
         foreach($rounds as $key => $value)
         {
