@@ -36,7 +36,6 @@ new Vue({
   methods : {
         getVueReports: function(page){
           this.$http.get('/vuereports').then((response) => {
-            console.log(response);
             this.$set('tallies', response.data.summaries);
             this.$set('percentiles', response.data.percentiles);
             this.$set('uns', response.data.unsperf);
@@ -74,6 +73,9 @@ new Vue({
                         pointPadding: 0.2,
                         borderWidth: 0
                     }
+                },
+                credits: {
+                    enabled: false
                 },
                 series: [{
                     name: 'Enrollment',
@@ -120,6 +122,9 @@ new Vue({
                     title: {
                         text: 'Counts'
                     }
+                },
+                credits: {
+                    enabled: false
                 },
                 plotOptions: {
                     column: {
@@ -172,6 +177,9 @@ new Vue({
                     title: {
                         text: 'Counts'
                     }
+                },
+                credits: {
+                    enabled: false
                 },
                 plotOptions: {
                     column: {

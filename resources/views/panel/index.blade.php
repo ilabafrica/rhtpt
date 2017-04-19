@@ -42,6 +42,7 @@
     </div>
     <table class="table table-bordered">
         <tr>
+            <th>Lot</th>
             <th>PT Sample ID</th>
             <th>Expected Result</th>
             <th>Prepared By</th>
@@ -49,6 +50,7 @@
             <th>Action</th>
         </tr>
         <tr v-for="panel in panels">
+            <td>@{{ panel.lt }}</td>
             <td>@{{ panel.sample }}</td>
             <td>@{{ panel.rslt }}</td>
             <td>@{{ panel.prepared_by }}</td>

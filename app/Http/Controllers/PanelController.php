@@ -37,6 +37,7 @@ class PanelController extends Controller
         {
             $panel->sample = "PT-".$panel->lot->round->name."-S".$panel->panel;
             $panel->rslt = $panel->result($panel->result);
+            $panel->lt = $panel->lot->lt();
         }
         $response = [
             'pagination' => [

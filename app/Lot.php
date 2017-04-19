@@ -32,7 +32,7 @@ class Lot extends Model
      public function user()
      {
           return $this->belongsTo('App\User');
-	 }
+	   }
     /**
   	 * Round relationship
   	 *
@@ -48,5 +48,22 @@ class Lot extends Model
      public function panels()
      {
           return $this->hasMany('App\Panel');
+     }
+    /**
+     * Return readable lot numbers
+     *
+     */
+     public function lt()
+     {
+          if($this->lot == Lot::ONE)
+              return "Lot 1";
+          else if($this->lot == Lot::TWO)
+              return "Lot 2";
+          else if($this->lot == Lot::THREE)
+              return "Lot 3";
+          else if($this->lot == Lot::FOUR)
+              return "Lot 4";
+          else if($this->lot == Lot::FIVE)
+              return "Lot 5";
      }
 }
