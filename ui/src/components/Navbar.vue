@@ -1,17 +1,36 @@
 <template>
-    <header class="top-head container-fluid">
-        <nav class="navbar-default" role="navigation">
-            <div class="collapse navbar-toggleable-xs" id="collapsingNavbar">
-                <ul class="nav navbar-nav pull-right">
-                    <li class="nav-item active">
-                        <a class="nav-link text-primary" href="#">Date</a>
-                    </li>
-                </ul>
-                
-            </div>
-        </nav>
-    <!-- Header Ends -->
-    </header>
+  <div class="header clearfix">
+      <nav>
+        <ul class="nav nav-pills float-right">
+          <li class="nav-item">
+            <router-link class="nav-link" to="/login" v-if=" ! isAuth">
+              Login
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/register" v-if=" ! isAuth">
+              Register
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/feed" v-if="isAuth">
+              Feed
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/products/create" v-if="isAuth">
+              Create
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/logout" v-if="isAuth">
+              Logout
+            </router-link>
+          </li>
+        </ul>
+      </nav>
+      <h3 class="text-muted">Project name</h3>
+    </div>
 </template>
 
 <script>
@@ -21,7 +40,6 @@
         isAuth:null
       }
     },
-
     created(){
       this.isAuth = this.$auth.isAuthenticated()
       this.setAuthenticatedUser()
@@ -38,3 +56,78 @@
     }
   }
 </script>
+
+<style>
+  /* Space out content a bit */
+body {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+/* Custom page header */
+.header {
+  padding-bottom: 1rem;
+  border-bottom: .05rem solid #e5e5e5;
+}
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 3rem;
+}
+/* Custom page footer */
+.footer {
+  padding-top: 1.5rem;
+  color: #777;
+  border-top: .05rem solid #e5e5e5;
+}
+/* Customize container */
+@media (min-width: 48em) {
+  .container {
+    max-width: 46rem;
+  }
+}
+.container-narrow > hr {
+  margin: 2rem 0;
+}
+/* Main marketing message and sign up button */
+.jumbotron {
+  text-align: center;
+  border-bottom: .05rem solid #e5e5e5;
+}
+.jumbotron .btn {
+  padding: .75rem 1.5rem;
+  font-size: 1.5rem;
+}
+/* Supporting marketing content */
+.marketing {
+  margin: 3rem 0;
+}
+.marketing p + h4 {
+  margin-top: 1.5rem;
+}
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 48em) {
+  /* Remove the padding we set earlier */
+  .header,
+  .marketing,
+  .footer {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 2rem;
+  }
+  /* Remove the bottom border on the jumbotron for visual effect */
+  .jumbotron {
+    border-bottom: 0;
+  }
+}
+</style>
