@@ -40,18 +40,8 @@
         <!-- Preloader -->
         <div class="loading-container">
             <div class="loading">
-                <div class="l1">
-                    <div></div>
-                </div>
-                <div class="l2">
-                    <div></div>
-                </div>
-                <div class="l3">
-                    <div></div>
-                </div>
-                <div class="l4">
-                    <div></div>
-                </div>
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                <span class="sr-only">Loading...</span>
             </div>
         </div>
         <!-- Preloader -->
@@ -59,7 +49,7 @@
         <aside class="left-panel">
 
             <div class="user text-xs-center">
-                <img src="{{ (count(Request::segments())>1)?'../../'.Config::get('cms.logo'):Config::get('cms.logo') }}" class="img-circle picha" alt="...">
+                <img src="{{ (count(Request::segments())>1)?'../../'.Config::get('cms.logo'):Config::get('cms.logo') }}" class="img-circle" alt="...">
                 <h4 class="user-name text-warning">{!! Config::get('cms.name') !!}</h4>
             </div>
             <nav class="navigation">
@@ -210,8 +200,15 @@
                             <li class="nav-item active">
                                 <a class="nav-link text-primary" href="#">{!! Carbon::now(Config::get('cms.zone'))->toDayDateTimeString() !!}</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">{!! 'Welcome '.Auth::user()->name !!}</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{!! Auth::user()->name !!}</a>
+                                <div class="dropdown-menu  dropdown-menu-right">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Separated link</a>
+                                </div>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{!! url('logout') !!}"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
@@ -230,7 +227,7 @@
                 <div class="container-fluid">
                     <p class="text-muted gem-h7">
                         <strong>
-                            &copy; {!! date('Y').' '.Config::get('cms.name') !!}
+                            &copy; {!! date('Y').' '.Config::get('cms.copyright') !!}
                             <span style="float:right">
                                 Designed by {!! Config::get('cms.designer') !!}&nbsp;&nbsp;&nbsp;
                                 <a href="#" class="pull-right scrollToTop"><i class="fa fa-chevron-up"></i></a>
