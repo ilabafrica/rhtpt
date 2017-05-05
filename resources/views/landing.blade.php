@@ -186,65 +186,6 @@
     <script src="{{ asset('js/exporting.js') }}"></script>
     <script src="{{ asset('controllers/dashboard.js') }}"></script>
     <script>
-        // Enrolment by program
-        $(function () {
-            Highcharts.setOptions({
-            colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263',      '#6AF9C4']
-            });
-            var chart;
-            $(document).ready(function() {
-                chart = new Highcharts.Chart({
-                    chart: {
-                        renderTo: 'pContainer',
-                        plotBackgroundColor: null,
-                        plotBorderWidth: null,
-                        plotShadow: false
-                    },
-                    title: {
-                        text: 'Enrolment by Program, Round 16'
-                    },
-                    credits: {
-                      enabled: false
-                    },
-                    tooltip: {
-                        formatter: function() {
-                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
-                        }
-                    },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: true,
-                            cursor: 'pointer',
-                            dataLabels: {
-                                enabled: true,
-                                color: '#000000',
-                                connectorColor: '#000000',
-                                formatter: function() {
-                                    return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
-                                }
-                            }
-                        }
-                    },
-                    series: [{
-                        type: 'pie',
-                        name: 'Browser share',
-                        data: [
-                            ['Firefox',   45.0],
-                            ['IE',       26.8],
-                            {
-                                name: 'Chrome',
-                                y: 12.8,
-                                sliced: true,
-                                selected: true
-                            },
-                            ['Safari',    8.5],
-                            ['Opera',     6.2],
-                            ['Others',   0.7]
-                        ]
-                    }]
-                });
-            });
-        });
         // Shipment receiving rate
         $(function () {
             Highcharts.setOptions({

@@ -24,6 +24,7 @@ new Vue({
 
   ready : function(){
         this.getGender();
+        this.getProgram();
         //this.getVueReports();
         //this.getTallies();
         //this.getPercentiles();
@@ -61,6 +62,56 @@ new Vue({
                     colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263','#6AF9C4'],
                     title: {
                         text: 'Enrolment By Gender'
+                    },
+                    credits: {
+                      enabled: false
+                    },
+                    tooltip: {
+                        formatter: function() {
+                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                formatter: function() {
+                                    return '<b>'+ this.point.name +'</b>: '+ this.y;
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        data: processed_json
+                    }]
+                });
+            }, (response) => {
+                //cont = response.data;
+                //console.log(response);
+            });
+        },
+
+        getProgram: function()
+        {
+            this.$http.get('dash/pr').then((response) => {
+                processed_json = new Array();
+                cont = response.data;
+                $.map(cont, function(obj, i) {
+                    processed_json.push([obj.key, parseInt(obj.value)]);
+                });
+                $('#pContainer').highcharts({
+                    chart: {
+                        type: 'pie',
+                        name: 'Program',
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false
+                    },
+                    colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#2E2E2E', '#6d4c41', '#607d8b', '#45526E', '#007E33'],
+                    title: {
+                        text: 'Enrolment By Program'
                     },
                     credits: {
                       enabled: false

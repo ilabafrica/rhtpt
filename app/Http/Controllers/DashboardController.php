@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Program;
+
 class DashboardController extends Controller
 {
     public function manageDash()
@@ -44,6 +46,13 @@ class DashboardController extends Controller
      */
      public function program()
      {
+         $programs = Program::lists('name');
+         $response = [];
+         foreach($programs as $program)
+         {
+              $response[] = ['key' => $program, 'value' => '200'];
+         }
+         return response()->json($response);
          
      }
      /**

@@ -29,6 +29,10 @@ Route::get("dash/ge", array(
     "as"   => "enrolment.gender",
     "uses" => "DashboardController@gender"
 ));
+Route::get("dash/pr", array(
+    "as"   => "enrolment.program",
+    "uses" => "DashboardController@program"
+));
 /*
 Route::group(['middleware' => 'auth'], function()
 {
