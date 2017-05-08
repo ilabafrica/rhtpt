@@ -115,43 +115,54 @@ class PtSetupTables extends Migration
             $table->softDeletes();
       			$table->timestamps();
     		});
+        //  Capture details of enrolments
+        Schema::create('enrolments', function(Blueprint $table)
+        {
+            $table->increments('id')->unsigned();
+            $table->integer('user_id')->unsigned();
+            $table->integer('round_id')->unsigned();
+
+            $table->softDeletes();
+            $table->timestamps();
+            
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('round_id')->references('id')->on('rounds');
+        });
         //  Results Entry
         Schema::create('pt', function(Blueprint $table)
     		{
-    			$table->increments('id')->unsigned();
-    			$table->integer('round_id')->unsigned();
-          $table->integer('user_id')->unsigned();
-          $table->smallInteger('feedback')->nullable();
-          $table->smallInteger('panel_status');
-          $table->tinyInteger('checks')->default(0);
-          $table->tinyInteger('panel_result')->default(0);
-          $table->tinyInteger('incorrect_results')->default(0);
-          $table->tinyInteger('incomplete_kit_data')->default(0);
-          $table->tinyInteger('dev_from_procedure')->default(0);
-          $table->tinyInteger('incomplete_other_information')->default(0);
-          $table->tinyInteger('use_of_expired_kits')->default(0);
-          $table->tinyInteger('invalid_results')->default(0);
-          $table->tinyInteger('wrong_algorithm')->default(0);
-          $table->tinyInteger('incomplete_results')->default(0);
-          $table->string('comment', 250)->nullable();
-          $table->integer('verified_by')->nullable();
-          $table->foreign('round_id')->references('id')->on('rounds');
-          $table->foreign('user_id')->references('id')->on('users');
-          $table->softDeletes();
-    			$table->timestamps();
+      			$table->increments('id')->unsigned();
+      			$table->integer('enrolment_id')->unsigned();
+            $table->smallInteger('feedback')->nullable();
+            $table->smallInteger('panel_status');
+            $table->tinyInteger('checks')->default(0);
+            $table->tinyInteger('panel_result')->default(0);
+            $table->tinyInteger('incorrect_results')->default(0);
+            $table->tinyInteger('incomplete_kit_data')->default(0);
+            $table->tinyInteger('dev_from_procedure')->default(0);
+            $table->tinyInteger('incomplete_other_information')->default(0);
+            $table->tinyInteger('use_of_expired_kits')->default(0);
+            $table->tinyInteger('invalid_results')->default(0);
+            $table->tinyInteger('wrong_algorithm')->default(0);
+            $table->tinyInteger('incomplete_results')->default(0);
+            $table->string('comment', 250)->nullable();
+            $table->integer('verified_by')->nullable();
+            $table->foreign('enrolment_id')->references('id')->on('enrolments');
+            $table->softDeletes();
+      			$table->timestamps();
     		});
         //  Actual Analysis results
         Schema::create('results', function(Blueprint $table)
     		{
-    			$table->increments('id')->unsigned();
-    			$table->integer('pt_id')->unsigned();
-          $table->integer('field_id')->unsigned();
-    			$table->string('response');
-    			$table->string('comment')->nullable();
-          $table->foreign('pt_id')->references('id')->on('pt');
-          $table->foreign('field_id')->references('id')->on('fields');
-          $table->softDeletes();
-    			$table->timestamps();
+      			$table->increments('id')->unsigned();
+      			$table->integer('pt_id')->unsigned();
+            $table->integer('field_id')->unsigned();
+      			$table->string('response');
+      			$table->string('comment')->nullable();
+            $table->foreign('pt_id')->references('id')->on('pt');
+            $table->foreign('field_id')->references('id')->on('fields');
+            $table->softDeletes();
+      			$table->timestamps();
     		});
     }
 

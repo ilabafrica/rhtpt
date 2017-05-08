@@ -2,230 +2,210 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = $("#token").attr("value");
 
 new Vue({
 
-  el: '#manage-report',
+    el: '#manage-report',
 
-  data: {
-    tallies: [],
-    percentiles: [],
-    uns: [],
-    talliesChart: null,
-    percentilesChart: null,
-    unsChart: null,
-    from: '',
-    to: '',
-    rounds: [],
-    loading: false,
-    error: false,
-    query: ''
-  },
-
-  computed: {
+    data: {
+        tallies: [],
+        percentiles: [],
+        uns: [],
+        talliesChart: [],
+        percentilesChart: [],
+        unsChart: [],
+        from: '',
+        to: '',
+        rounds: [],
+        loading: false,
+        error: false,
+        query: ''
     },
 
-  ready : function(){
+    computed: 
+    {
+    },
+
+    ready : function()
+    {
         this.loadRounds();
         this.getVueReports();
-        this.getTallies();
-        this.getPercentiles();
-        this.getUnperfs();
-  		//this.getTallies(this.from, this.to);
-        //this.getPercentiles(this.from, this.to);
-        //this.getUns(this.from, this.to);
-  },
+    },
 
-  methods : {
+    methods : {
         getVueReports: function(page){
           this.$http.get('/vuereports').then((response) => {
             this.$set('tallies', response.data.summaries);
             this.$set('percentiles', response.data.percentiles);
             this.$set('uns', response.data.unsperf);
+            this.$set('talliesChart', response.data.summariesChart);
+            this.$set('percentilesChart', response.data.percentilesChart);
+            this.$set('unsChart', response.data.unsPerfChart);
+            this.getTallies(this.talliesChart);
+            this.getPercentiles(this.percentilesChart);
+            this.getUnperfs(this.unsChart);
           });
         },
 
-        getTallies: function(){
-            Highcharts.chart('talliesContainer', {
+        getTallies: function(content)
+        {
+            var xCategories = this.buildChart(content)[0];
+            var seriesData = this.buildChart(content)[1];
+        
+            $('#talliesContainer').highcharts({
                 chart: {
                     type: 'column'
                 },
                 title: {
-                    text: 'Enrollment, Response and Satisfaction'
+                    text: 'Enrolment, Response and Satisfaction',
+                    x: -20 //center
                 },
                 subtitle: {
-                    text: 'Rounds 13 - 16'
+                    text: '',
+                    x: -20
                 },
                 xAxis: {
-                    categories: [
-                        'Round 13',
-                        'Round 14',
-                        'Round 15',
-                        'Round 16'
-                    ],
-                    crosshair: true
+                    categories: xCategories
                 },
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'Counts'
+                        text: 'Count'
                     }
                 },
-                plotOptions: {
-                    column: {
-                        pointPadding: 0.2,
-                        borderWidth: 0
-                    }
-                },
+                colors: ['#00acc1', '#bf360c', '#afb42b', '#45526E'],
                 credits: {
                     enabled: false
                 },
-                series: [{
-                    name: 'Enrollment',
-                    data: [7333, 7319, 9541, 19600]
-
-                }, {
-                    name: 'Response',
-                    data: [4283, 4152, 7534, 0]
-
-                }, {
-                    name: 'Satisfactory',
-                    data: [3609, 3062, 6069, 0]
-
-                }, {
-                    name: 'Unsatisfactory',
-                    data: [674, 1090, 1465, 0]
-
-                }]
+                series:seriesData
             });
         },
 
-        getPercentiles: function(){
-            Highcharts.chart('persContainer', {
+        getPercentiles: function(content)
+        {
+            var xCategories = this.buildChart(content)[0];
+            var seriesData = this.buildChart(content)[1];
+        
+            $('#persContainer').highcharts({
                 chart: {
                     type: 'column'
                 },
                 title: {
-                    text: 'Enrollment, Response and Satisfaction'
+                    text: 'Response and Satisfaction',
+                    x: -20 //center
                 },
                 subtitle: {
-                    text: 'Rounds 13 - 16'
+                    text: '',
+                    x: -20
                 },
                 xAxis: {
-                    categories: [
-                        'Round 13',
-                        'Round 14',
-                        'Round 15',
-                        'Round 16'
-                    ],
-                    crosshair: true
+                    categories: xCategories
                 },
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'Counts'
+                        text: 'Count'
                     }
                 },
+                colors: ['#00acc1', '#afb42b'],
                 credits: {
                     enabled: false
                 },
-                plotOptions: {
-                    column: {
-                        pointPadding: 0.2,
-                        borderWidth: 0
-                    }
-                },
-                series: [{
-                    name: 'Enrollment',
-                    data: [7333, 7319, 9541, 19600]
-
-                }, {
-                    name: 'Response',
-                    data: [4283, 4152, 7534, 0]
-
-                }, {
-                    name: 'Satisfactory',
-                    data: [3609, 3062, 6069, 0]
-
-                }, {
-                    name: 'Unsatisfactory',
-                    data: [674, 1090, 1465, 0]
-
-                }]
+                series:seriesData
             });
         },
 
-        getUnperfs: function(){
-            Highcharts.chart('unsperfContainer', {
+        getUnperfs: function(content){
+            var xCategories = this.buildChart(content)[0];
+            var seriesData = this.buildChart(content)[1];
+        
+            $('#unsPerfContainer').highcharts({
                 chart: {
                     type: 'column'
                 },
                 title: {
-                    text: 'Enrollment, Response and Satisfaction'
+                    text: 'Unsatisfactory Performance',
+                    x: -20 //center
                 },
                 subtitle: {
-                    text: 'Rounds 13 - 16'
+                    text: '',
+                    x: -20
                 },
                 xAxis: {
-                    categories: [
-                        'Round 13',
-                        'Round 14',
-                        'Round 15',
-                        'Round 16'
-                    ],
-                    crosshair: true
+                    categories: xCategories
                 },
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'Counts'
+                        text: 'Count'
                     }
                 },
+                colors: ['#00acc1', '#bf360c', '#afb42b'],
                 credits: {
                     enabled: false
                 },
-                plotOptions: {
-                    column: {
-                        pointPadding: 0.2,
-                        borderWidth: 0
-                    }
-                },
-                series: [{
-                    name: 'Enrollment',
-                    data: [7333, 7319, 9541, 19600]
-
-                }, {
-                    name: 'Response',
-                    data: [4283, 4152, 7534, 0]
-
-                }, {
-                    name: 'Satisfactory',
-                    data: [3609, 3062, 6069, 0]
-
-                }, {
-                    name: 'Unsatisfactory',
-                    data: [674, 1090, 1465, 0]
-
-                }]
+                series:seriesData
             });
         },
 
-      loadRounds: function() {
-        this.$http.get('/rnds').then((response) => {
-            this.rounds = response.data;
+        loadRounds: function() 
+        {
+            this.$http.get('/rnds').then((response) => {
+                this.rounds = response.data;
+            }, (response) => {
+                //console.log(response);
+            });
+        },
 
-        }, (response) => {
-            console.log(response);
-        });
-      },
+        getData: function() 
+        {
+            this.$http.get('/rdata').then((response) => {
+                this.tallies = response.data;
+                //console.log(this.tallies);
+                this.percentiles = response.data;
+                this.uns = response.data;
+            }, (response) => {
+                //console.log(response);
+            });
+        },
 
-      getData: function() {
-        this.$http.get('/rdata').then((response) => {
-            this.tallies = response.data;
-            this.percentiles = response.data;
-            this.uns = response.data;
-
-        }, (response) => {
-            console.log(response);
-        });
-      },
-  }
-
+        buildChart: function(content)
+        {
+            var jsonRoundData = content;
+                
+            var seriesData = [];
+            var xCategories = [];
+            var i, cat;
+            for(i = 0; i < jsonRoundData.length; i++)
+            {
+                cat = '' + jsonRoundData[i].round;
+                if(xCategories.indexOf(cat) === -1)
+                {
+                   xCategories[xCategories.length] = cat;
+                }
+            }
+            for(i = 0; i < jsonRoundData.length; i++)
+            {
+                if(seriesData)
+                {
+                    var currSeries = seriesData.filter(function(seriesObject)
+                    {
+                        return seriesObject.name == jsonRoundData[i].title;
+                    });
+                    if(currSeries.length === 0)
+                    {
+                        seriesData[seriesData.length] = currSeries = {name: jsonRoundData[i].title, data: []};
+                    } 
+                    else 
+                    {
+                        currSeries = currSeries[0];
+                    }
+                    var index = currSeries.data.length;
+                    currSeries.data[index] = jsonRoundData[i].total;
+                } 
+                else 
+                {
+                   seriesData[0] = {name: jsonRoundData[i].title, data: [jsonRoundData[i].total]}
+                }
+            }
+            return [xCategories, seriesData];
+        }
+    }
 });

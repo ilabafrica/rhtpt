@@ -137,17 +137,34 @@ class ScheduledCron extends Command
             }
             //  Enrol user to the available round
             $round = Round::idByTitle($dump->Round);
-            $enrol = new Enrol;
-            $enrol->user_id = $userId;
-            $enrol->round_id = $round;
-            $enrol->save();
-            //  Save to pt table
-            $pt = new Pt;
-            $pt->round_id = $round;
-            $pt->user_id = $userId;
-            $pt->panel_status = Pt::NOT_CHECKED;
-            $pt->comment = $dump->Comments;
-            $pt->save();
+            //  Check if record already exists
+            $enrol = null;
+            if(Enrol::where('user_id', $userId)->where('round_id', $round)->count() != 0)
+            {
+                $enrol = Enrol::where('user_id', $userId)->where('round_id', $round)->first();
+            }
+            else // Add new enrolment record
+            {
+                $enrol = new Enrol;
+                $enrol->user_id = $userId;
+                $enrol->round_id = $round;
+                $enrol->save();
+            }
+            //  Check if record exists
+            $pt = null;
+            if($enrolment->pt->count() != 0)
+            {
+                $pt = $enrolment->pt->first();
+            }
+            else
+            {
+                //  Save to pt table
+                $pt = new Pt;
+                $pt->enrolment_id = $enrol->id;
+                $pt->panel_status = Pt::NOT_CHECKED;
+                $pt->comment = $dump->Comments;
+                $pt->save();
+            }
 
             //  Save results - one by one for the whole form
             //  Date received
@@ -472,12 +489,12 @@ class ScheduledCron extends Command
         foreach($pts as $pt)
         {
             //  Fetch expected results
-            $round = $pt->round_id;
-            $user = $pt->user;
-            if($user->registration)
+            $round = $pt->enrolment->round_id;
+            $user = $pt->enrolment->user;
+            if($pt->enrolment->user->registration)
                 $user = User::where('uid', $user->registration->uid)->first();
             $lot = $user->lot($round);
-
+            
             $res_1 = $lot->panels()->where('panel', 1)->first();
             $res_2 = $lot->panels()->where('panel', 2)->first();
             $res_3 = $lot->panels()->where('panel', 3)->first();

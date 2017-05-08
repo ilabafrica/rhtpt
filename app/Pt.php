@@ -40,19 +40,11 @@ class Pt extends Model
           return $this->hasMany('App\Result');
      }
     /**
-  	 * Tester relationship
+  	 * Enrolment relationship
   	 *
   	 */
-     public function user()
+     public function enrolment()
      {
-          return $this->belongsTo('App\User');
-     }
-    /**
-  	 * Round relationship
-  	 *
-  	 */
-     public function round()
-     {
-          return $this->belongsTo('App\Round');
+          return $this->belongsTo('App\Enrol');
      }
 }

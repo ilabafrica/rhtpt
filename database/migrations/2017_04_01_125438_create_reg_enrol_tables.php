@@ -37,19 +37,6 @@ class CreateRegEnrolTables extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('nonperformance_id')->references('id')->on('nonperformance');
         });
-        //  Capture details of enrolments
-        Schema::create('enrolments', function(Blueprint $table)
-        {
-            $table->increments('id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->integer('round_id')->unsigned();
-
-            $table->softDeletes();
-            $table->timestamps();
-            
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('round_id')->references('id')->on('rounds');
-        });
     }
 
     /**

@@ -32,4 +32,12 @@ class Enrol extends Model
      {
        return $this->belongsTo('App\Round');
      }
+     /**
+     * Relationship with pt.
+     *
+     */
+     public function pt()
+     {
+       return $this->hasOne('App\Pt');
+     }
 }

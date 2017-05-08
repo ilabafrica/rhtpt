@@ -23,7 +23,7 @@ Route::post('password/email', 'Auth\PasswordController@postEmail');
 Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
 Route::post('password/reset', 'Auth\PasswordController@postReset');
 
-Route::get('/', 'DashboardController@manageDash');
+/*Route::get('/', 'DashboardController@manageDash');
 Route::resource('/','DashboardController');
 Route::get("dash/ge", array(
     "as"   => "enrolment.gender",
@@ -32,8 +32,7 @@ Route::get("dash/ge", array(
 Route::get("dash/pr", array(
     "as"   => "enrolment.program",
     "uses" => "DashboardController@program"
-));
-/*
+));*/
 Route::group(['middleware' => 'auth'], function()
 {
     Route::get('/', function () {
