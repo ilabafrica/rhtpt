@@ -14,10 +14,11 @@ new Vue({
         current_page: 1
       },
     offset: 4,
-    formErrors:{},
-    formErrorsUpdate:{},
-    newShipment : {'round_id':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','shipper_id':'','panels_shipped':''},
-    fillShipment : {'round_id':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','shipper_id':'','panels_shipped':'','id':''},
+    formErrors: {},
+    formErrorsUpdate: {},
+    formConsignmentErrors: {},
+    newShipment : {'round_id':'','county_id':'','date_prepared':'','date_shipped':'','shipping_method':'','tracker':'','shipper_id':'','panels_shipped':''},
+    fillShipment : {'round_id':'','county_id':'','date_prepared':'','date_shipped':'','shipping_method':'','tracker':'','shipper_id':'','panels_shipped':'','id':''},
     rounds: [],
     counties: [],
     methods: [],
@@ -25,9 +26,11 @@ new Vue({
     facilities: [],
     shippers: [],
     newReceipt : {'shipment_id':'','date_received':'','panels_received':'','condition':'','receiver':''},
+    newConsignment : {'shipment_id':'','facility_id':'','tracker':'','total':'','date_picked':'','picked_by':'','contacts':''},
     loading: false,
     error: false,
-    query: ''
+    query: '',
+    consignments: [],
   },
 
   computed: {
@@ -57,9 +60,10 @@ new Vue({
 
   ready : function(){
   		this.getVueShipments(this.pagination.current_page);
-        this.loadRounds();
-        this.loadCounties();
-        this.loadMethods();
+      this.loadRounds();
+      this.loadCounties();
+      this.loadSubs();
+      this.loadMethods();
   },
 
   methods : {
@@ -72,16 +76,16 @@ new Vue({
         },
 
         createShipment: function(){
-		  var input = this.newShipment;
-		  this.$http.post('/vueshipments',input).then((response) => {
-		    this.changePage(this.pagination.current_page);
-			this.newShipment = {'pt_round':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','panels_shipped':''};
-			$("#create-shipment").modal('hide');
-			toastr.success('Shipment Created Successfully.', 'Success Alert', {timeOut: 5000});
-		  }, (response) => {
-			this.formErrors = response.data;
-	    });
-	},
+    		  var input = this.newShipment;
+    		  this.$http.post('/vueshipments',input).then((response) => {
+    		    this.changePage(this.pagination.current_page);
+    			this.newShipment = {'pt_round':'','county_id':'','date_prepared':'','date_shipped':'','tracker':'','shipping_method':'','panels_shipped':''};
+    			$("#create-shipment").modal('hide');
+    			toastr.success('Shipment Created Successfully.', 'Success Alert', {timeOut: 5000});
+    		  }, (response) => {
+    			this.formErrors = response.data;
+    	    });
+    	},
 
       deleteShipment: function(shipment){
         this.$http.delete('/vueshipments/'+shipment.id).then((response) => {
@@ -100,7 +104,7 @@ new Vue({
       editShipment: function(shipment){
           this.fillShipment.pt_round = shipment.pt_round;
           this.fillShipment.id = shipment.id;
-          this.fillShipment.facility_id = shipment.facility_id;
+          this.fillShipment.county_id = shipment.county_id;
           this.fillShipment.date_prepared = shipment.date_prepared;
           this.fillShipment.date_shipped = shipment.date_shipped;
           this.fillShipment.shipping_method = shipment.shipping_method;
@@ -112,7 +116,7 @@ new Vue({
         var input = this.fillShipment;
         this.$http.put('/vueshipments/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
-            this.fillShipment = {'pt_round':'','facility_id':'','date_prepared':'','date_shipped':'','shipping_method':'','panels_shipped':'','id':''};
+            this.fillShipment = {'pt_round':'','county_id':'','date_prepared':'','date_shipped':'','tracker':'','shipping_method':'','panels_shipped':'','id':''};
             $("#edit-shipment").modal('hide');
             toastr.success('Shipment Updated Successfully.', 'Success Alert', {timeOut: 5000});
           }, (response) => {
@@ -152,10 +156,8 @@ new Vue({
         });
       },
 
-      fetchSubs: function() {
-        let id = $('#county_id').val();
-        console.log(id);
-        this.$http.get('/subs/'+id).then((response) => {
+      loadSubs: function() {
+        this.$http.get('/con_subs').then((response) => {
             this.subs = response.data;
 
         }, (response) => {
@@ -183,17 +185,38 @@ new Vue({
         });
       },
 
-        receiveShipment: function(){
-		  var input = this.newReceipt;
-		  this.$http.post('/receive',input).then((response) => {
-		    this.changePage(this.pagination.current_page);
-			this.newReceipt = {'shipment_id':'','date_received':'','panels_received':'','condition':'','receiver':''};
-			$("#receive-shipment").modal('hide');
-			toastr.success('Shipment Received Successfully.', 'Success Alert', {timeOut: 5000});
-		  }, (response) => {
-			this.formReceiptErrors = response.data;
-	    });
-	},
+      receiveShipment: function(){
+    		  var input = this.newReceipt;
+    		  this.$http.post('/receive',input).then((response) => {
+    		  this.changePage(this.pagination.current_page);
+    			this.newReceipt = {'shipment_id':'','date_received':'','panels_received':'','condition':'','receiver':''};
+    			$("#receive-shipment").modal('hide');
+    			toastr.success('Shipment Received Successfully.', 'Success Alert', {timeOut: 5000});
+    		  }, (response) => {
+    			this.formReceiptErrors = response.data;
+    	    });
+    	},
+      distributeShipment: function(){
+          var input = this.newConsignment;
+          this.$http.post('/distribute',input).then((response) => {
+          this.changePage(this.pagination.current_page);
+          this.newConsignment = {'shipment_id':'','facility_id':'','tracker':'','total':'','date_picked':'','picked_by':'','contacts':''};
+          $("#distribute-shipment").modal('hide');
+          toastr.success('Distribution done Successfully.', 'Success Alert', {timeOut: 5000});
+          }, (response) => {
+          this.formReceiptErrors = response.data;
+          });
+      },
+
+      loadConsignments: function(shipment) {
+          this.$http.get('/consignments/'+shipment.id).then((response) => {
+              this.consignments = response.data.data;
+              $("#picked-consignments").modal('show');
+
+          }, (response) => {
+              console.log(response);
+          });
+      },
 
       search: function() {
         // Clear the error message.
@@ -233,10 +256,22 @@ $('#receive-shipment').on('show.bs.modal', function(e)
 {
     //  Get shipment-id of the clicked element
     var id = $(e.relatedTarget).data('fk');
-    console.log(id);
+    // console.log(id);
     //  Populate the hidden field
     //$( "#shipment-id" ).val(id);
     $( "#shipment-id" ).attr('value', id);
     $( "#shipment-id" ).trigger('change');
+    console.log($("#shipment-id").val());
+});
+//  Triggered when modal is about to be shown
+$('#distribute-shipment').on('show.bs.modal', function(e) 
+{
+    //  Get shipment-id of the clicked element
+    var id = $(e.relatedTarget).data('fk');
+    // console.log(id);
+    //  Populate the hidden field
+    //$( "#shipment-id" ).val(id);
+    $( "#shpmnt-id" ).attr('value', id);
+    $( "#shpmnt-id" ).trigger('change');
     console.log($("#shipment-id").val());
 });

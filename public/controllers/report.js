@@ -54,7 +54,7 @@ new Vue({
                     type: 'column'
                 },
                 title: {
-                    text: 'Enrolment, Response and Satisfaction',
+                    text: 'Enrolment, Response and Performance',
                     x: -20 //center
                 },
                 subtitle: {

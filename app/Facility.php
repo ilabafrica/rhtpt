@@ -49,4 +49,37 @@ class Facility extends Model
 			return null;
 		}
 	}
+    /**
+	* Return Facility ID given the name
+	* @param $code the unique mfl code of the facility
+	*/
+	public static function idByName($name=NULL)
+	{
+		if($code!=NULL)
+		{
+			try 
+			{
+				$facility = Facility::where('name', $name)->orderBy('name', 'asc')->count();
+				if($facility > 0)
+				{
+					$facility = Facility::where('name', $name)->orderBy('name', 'asc')->first();
+					return $facility->id;
+				}
+				else
+				{
+					return null;
+				}
+			} 
+			catch (ModelNotFoundException $e) 
+			{
+				Log::error("The facility ` $name ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
 }

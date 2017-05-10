@@ -20,6 +20,7 @@ use App\Nonperformance;
 use App\Field;
 use App\Option;
 use App\Enrol;
+use App\SubCounty;
 
 use App\Http\Controllers\ResultController;
 
@@ -110,7 +111,26 @@ class ScheduledCron extends Command
                 $userId = $user->id;
                 //  Creare role-user
                 $role = Role::idByName('Participant');
-                $facility = Facility::idByCode($dump->MFL_Code);
+                if($dump->MFL_Code)
+                {
+                    $facility = Facility::idByCode($dump->MFL_Code);
+                }
+                else
+                {
+                    if($dump->Facility_Name)
+                        $facility = Facility::idByName($dump->Facility_Name);
+                    if(!$facility)
+                    {
+                        $fclty = new Facility;
+                        $facility->name = strtoupper($dump->Facility_Name);
+                        $sub = SubCounty::idByName($dump->SUBCOUNTY);
+                        if(!$sub)
+                            $facility->sub_county_id = SubCounty::idByName($dump->SUBCOUNTY);
+                        else
+                            $facility->sub_county_id = 1;                        
+                        $facility->save();
+                    }
+                }
                 if($dump->NT_Program == "LVCT")
                     $program_id = Program::idByTitle("VCT");
                 else

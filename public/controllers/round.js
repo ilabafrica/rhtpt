@@ -54,8 +54,7 @@ new Vue({
 
   ready : function(){
   		this.getVueRounds(this.pagination.current_page);
-        this.loadParticipants();
-        this.loadEnrollments();
+      this.loadParticipants();
   },
 
   methods : {
@@ -178,9 +177,7 @@ new Vue({
 
       loadParticipants: function() {
         this.$http.get('/parts').then((response) => {
-            this.participants = response.data.data.data;
-            console.log(response.data.data.data);
-
+            this.participants = response.data.data;
         }, (response) => {
             console.log(response);
         });

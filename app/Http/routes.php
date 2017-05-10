@@ -168,6 +168,11 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "FacilityController@counties"
     ));
 
+    Route::get("/con_subs", array(
+        "as"   => "cons.subs",
+        "uses" => "FacilityController@consignment"
+    ));
+
     Route::get("/subs/{id}", array(
         "as"   => "subs.fetch",
         "uses" => "FacilityController@subs"
@@ -238,6 +243,11 @@ Route::group(['middleware' => 'auth'], function()
     Route::post("/receive", array(
         "as"   => "shipment.receive",
         "uses" => "ShipmentController@receive"
+    ));
+    //  Distribute shipment
+    Route::post("/distribute", array(
+        "as"   => "shipment.distribute",
+        "uses" => "ShipmentController@distribute"
     ));
     //  Enrol participanets
     Route::post("/enrol", array(
@@ -324,6 +334,12 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/rdata", array(
         "as"   => "lots.fetch",
         "uses" => "LotController@lots"
+    ));
+
+    //  Picked consignments
+    Route::get("/consignments/{id}", array(
+        "as"   => "picked.consignments",
+        "uses" => "ShipmentController@consignments"
     ));
 
     Route::get('api/search_role',['as'=>'role.search', 'uses'=>'RoleController@index']);

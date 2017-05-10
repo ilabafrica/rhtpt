@@ -253,8 +253,9 @@ class UserController extends Controller
         {
             foreach($usrs as $user)
             {
-                $user->facility = Facility::find($user->tier->tier)->name;
-                $user->program = Program::find($user->tier->program_id)->name;
+                dd($user->ru());
+                $user->facility = Facility::find($user->ru()->tier)->name;
+                $user->program = Program::find($user->ru()->program_id)->name;
             }
         }
         $response = [
@@ -287,7 +288,7 @@ class UserController extends Controller
             {
                 $enrol->name = $enrol->user->name;
                 $enrol->uid = $enrol->user->name;
-                $facility = Facility::find($enrol->tier->tier);
+                $facility = Facility::find($enrol->user->ru()->tier);
                 $enrol->facility = $facility->name;
                 $enrol->mfl = $facility->code;
                 $enrol->program = Program::find($enrol->tier->program_id)->name;

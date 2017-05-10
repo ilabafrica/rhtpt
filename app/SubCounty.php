@@ -32,4 +32,33 @@ class SubCounty extends Model
     {
       return $this->hasMany('App\Facility');
     }
+    public static function idByName($name=NULL)
+    {
+        if($code!=NULL)
+        {
+            try 
+            {
+                $subCounty = SubCounty::where('name', $name)->orderBy('name', 'asc')->count();
+                if($subCounty > 0)
+                {
+                    $subCounty = SubCounty::where('name', $name)->orderBy('name', 'asc')->first();
+                    return $subCounty->id;
+                }
+                else
+                {
+                    return null;
+                }
+            } 
+            catch (ModelNotFoundException $e) 
+            {
+                Log::error("The sub-county ` $name ` does not exist:  ". $e->getMessage());
+                //TODO: send email?
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

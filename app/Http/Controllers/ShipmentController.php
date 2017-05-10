@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Shipment;
 use App\Receipt;
 use App\Enrol;
+use App\Consignment;
 
 use Auth;
 
@@ -36,8 +37,8 @@ class ShipmentController extends Controller
         {
             $shipment->rnd = $shipment->round->name;
             $shipment->shppr = $shipment->shipper->name;
-            $shipment->fclty = $shipment->facility->name;
-            $shipment->rcpts = $shipment->receipts->count();
+            $shipment->cnty = $shipment->county->name;
+            $shipment->cons = $shipment->consignments->count();
         }
         $response = [
             'pagination' => [
@@ -68,7 +69,7 @@ class ShipmentController extends Controller
             'date_shipped' => 'required',
             'shipping_method' => 'required',
             'shipper_id' => 'required',
-            'facility_id' => 'required',
+            'county_id' => 'required',
             'panels_shipped' => 'required',
         ]);
         $request->request->add(['user_id' => Auth::user()->id]);
@@ -93,7 +94,7 @@ class ShipmentController extends Controller
             'date_shipped' => 'required',
             'shipping_method' => 'required',
             'shipper_id' => 'required',
-            'facility_id' => 'required',
+            'county_id' => 'required',
             'panels_shipped' => 'required',
         ]);
         $request->request->add(['user_id' => Auth::user()->id]);
@@ -135,6 +136,7 @@ class ShipmentController extends Controller
      */
     public function receive(Request $request)
     {
+
         $this->validate($request, [
             'date_received' => 'required',
             'panels_received' => 'required',
@@ -142,8 +144,50 @@ class ShipmentController extends Controller
             'receiver' => 'required'
         ]);
 
-        $create = Receipt::create($request->all());
+        $request->request->add(['user_id' => Auth::user()->id]);
+
+        $edit = Shipment::find($request->shipment_id)->update($request->all());
+
+        return response()->json($edit);
+    }
+    /**
+     * Distribute a shipment.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function distribute(Request $request)
+    {
+        $this->validate($request, [
+            'facility_id' => 'required',
+            'total' => 'required',
+            'date_picked' => 'required',
+            'picked_by' => 'required',
+            'contacts' => 'required'
+        ]);
+
+        $create = Consignment::create($request->all());
 
         return response()->json($create);
+    }
+    /**
+     * Get picked consignment(s).
+     *
+    */
+    public function consignments($id)
+    {
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $picks = Shipment::find($id)->consignments;
+        if(count($picks)>0)
+        {
+            foreach($picks as $pick)
+            {
+                $pick->fclty = $pick->facility->name;
+            }
+        }
+        $response = [
+            'data' => $picks
+        ];
+        return !empty($picks) ? response()->json($response) : $error;
     }
 }

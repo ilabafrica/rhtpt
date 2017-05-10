@@ -185,4 +185,19 @@ class FacilityController extends Controller
         }
         return $categories;
     }
+    /**
+     * Function to return list of sub-counties for consignments.
+     *
+     */
+    public function consignment()
+    {
+        $id = 1;//Auth::user()->ru()->tier;
+        $subs = County::find($id)->subCounties->lists('name', 'id');
+        $categories = [];
+        foreach($subs as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
 }

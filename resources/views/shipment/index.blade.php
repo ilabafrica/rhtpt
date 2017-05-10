@@ -43,7 +43,7 @@
     <table class="table table-bordered">
         <tr>
             <th>Round</th>
-            <th>Facility</th>
+            <th>County</th>
             <th>Date Shipped</th>
             <th>Shipper</th>
             <th>Panels</th>
@@ -52,17 +52,19 @@
         </tr>
         <tr v-for="shipment in shipments">
             <td>@{{ shipment.rnd }}</td>
-            <td>@{{ shipment.fclty }}</td>
+            <td>@{{ shipment.cnty }}</td>
             <td>@{{ shipment.date_shipped }}</td>
             <td>@{{ shipment.shppr }}</td>
             <td>@{{ shipment.panels_shipped }}</td>
             <td>
-                <button v-if="shipment.rcpts==0" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
-                <button v-if="shipment.rcpts>0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Received</button>
+                <button v-if="shipment.date_received==NULL" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
+                <button v-if="shipment.date_received!=NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Received</button>
             </td>
             <td>	
-                <button v-bind="{ 'disabled': shipment.rcpts>0}" id="receipt" class="btn btn-sm btn-secondary receive" data-toggle="modal" data-target="#receive-shipment" data-fk="@{{shipment.id}}"><i class="fa fa-download"></i> Receive</button>
-                <button v-bind="{ 'disabled': shipment.rcpts>0}" class="btn btn-sm btn-primary" @click.prevent="editShipment(shipment)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': shipment.date_received!=NULL}" id="receipt" class="btn btn-sm btn-asbestos receive" data-toggle="modal" data-target="#receive-shipment" data-fk="@{{shipment.id}}"><i class="fa fa-download"></i> Receive</button>
+                <button v-bind="{ 'disabled': shipment.date_received!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editShipment(shipment)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': shipment.date_received==NULL}"  id="distribute" data-toggle="modal" data-target="#distribute-shipment" data-fk="@{{shipment.id}}" class="btn btn-sm btn-pomegranate distribute"><i class="fa fa-pie-chart"></i> Distribute</button>
+                <button v-bind="{ 'disabled': shipment.shipment.cons==0}" class="btn btn-sm btn-midnight-blue" @click.prevent="loadConsignments(shipment)"><i class="fa fa-link"></i> Picks</button>
             </td>
         </tr>
     </table>
@@ -115,13 +117,14 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">County:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control c-select" name="county_id" id="county_id" v-model="newShipment.county_id" @change="fetchSubs">
+                                    <select class="form-control c-select" name="county_id" id="county_id" v-model="newShipment.county_id">
                                         <option selected></option>
                                         <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
                                     </select>
                                     <span v-if="formErrors['county_id']" class="error text-danger">@{{ formErrors['county_id'] }}</span>
                                 </div>
                             </div>
+                            <!--
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
                                 <div class="col-sm-8">
@@ -141,7 +144,8 @@
                                     </select>
                                     <span v-if="formErrors['facility_id']" class="error text-danger">@{{ formErrors['facility_id'] }}</span>
                                 </div>
-                            </div>
+                            </div> 
+                            -->
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Date Prepared:</label>
                                 <div class="col-sm-8">
@@ -154,6 +158,13 @@
                                 <div class="col-sm-8">
                                     <input type="date" name="date_shipped" class="form-control" v-model="newShipment.date_shipped" />
                                     <span v-if="formErrors['date_shipped']" class="error text-danger">@{{ formErrors['date_shipped'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Tracker ID:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="tracker" class="form-control" v-model="newShipment.tracker" />
+                                    <span v-if="formErrors['tracker']" class="error text-danger">@{{ formErrors['tracker'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -221,13 +232,14 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">County:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control c-select" name="county_id" id="county_id" v-model="fillShipment.county_id" @change="fetchSubs">
+                                    <select class="form-control c-select" name="county_id" id="county_id" v-model="fillShipment.county_id">
                                         <option selected></option>
                                         <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
                                     </select>
                                     <span v-if="formErrorsUpdate['county_id']" class="error text-danger">@{{ formErrorsUpdate['county_id'] }}</span>
                                 </div>
                             </div>
+                            <!--
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
                                 <div class="col-sm-8">
@@ -248,6 +260,7 @@
                                     <span v-if="formErrorsUpdate['facility_id']" class="error text-danger">@{{ formErrorsUpdate['facility_id'] }}</span>
                                 </div>
                             </div>
+                            -->
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Date Prepared:</label>
                                 <div class="col-sm-8">
@@ -260,6 +273,13 @@
                                 <div class="col-sm-8">
                                     <input type="date" name="date_shipped" class="form-control" v-model="fillShipment.date_shipped" />
                                     <span v-if="formErrorsUpdate['date_shipped']" class="error text-danger">@{{ formErrorsUpdate['date_shipped'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Tracker ID:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="tracker" class="form-control" v-model="newShipment.tracker" />
+                                    <span v-if="formErrorsUpdate['tracker']" class="error text-danger">@{{ formErrorsUpdate['tracker'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -353,6 +373,136 @@
                                 </div>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Distribute Shipment Modal -->
+    <div id="distribute-shipment" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Distribute Shipment</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="distributeShipment()" id="frm">
+                            <div class="col-md-12">
+                                <input type="hidden" class="form-control" name="shipment_id" id="shpmnt-id" v-model="newConsignment.shipment_id" value=""/>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="sub_id" id="sub_id" v-model="newConsignment.sub_id" v-on:change="fetchFacilities">
+                                            <option selected></option>
+                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Facility:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="facility_id" v-model="newConsignment.facility_id">
+                                            <option selected></option>
+                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
+                                        </select>
+                                        <span v-if="formConsignmentErrors['facility_id']" class="error text-danger">@{{ formConsignmentErrors['facility_id'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Tracker ID:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="tracker" class="form-control" v-model="newConsignment.tracker" />
+                                        <span v-if="formConsignmentErrors['tracker']" class="error text-danger">@{{ formConsignmentErrors['tracker'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Total Panels:</label>
+                                    <div class="col-sm-8">
+                                        <input type="number" name="total" class="form-control" v-model="newConsignment.total" />
+                                        <span v-if="formConsignmentErrors['total']" class="error text-danger">@{{ formConsignmentErrors['total'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Date Picked:</label>
+                                    <div class="col-sm-8">
+                                        <input type="date" name="date_picked" class="form-control" v-model="newConsignment.date_picked" />
+                                        <span v-if="formConsignmentErrors['date_picked']" class="error text-danger">@{{ formConsignmentErrors['date_picked'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Picked By:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="picked_by" class="form-control" v-model="newConsignment.picked_by" />
+                                        <span v-if="formConsignmentErrors['picked_by']" class="error text-danger">@{{ formConsignmentErrors['picked_by'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Picker Phone:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="contacts" class="form-control" v-model="newConsignment.contacts" />
+                                        <span v-if="formConsignmentErrors['contacts']" class="error text-danger">@{{ formConsignmentErrors['contacts'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View picked consignments Modal -->
+    <div id="picked-consignments" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Distributed Consignments</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4" style="padding-bottom:10px;">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" placeholder="Search for..." v-model="psrch">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-secondary" type="button" @click="srchEnrol()" v-if="!loading"><i class="fa fa-search"></i></button>
+                                    <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="hidden" class="form-control" name="round_id" id="round-id" value=""/>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Facility</th>
+                                    <th>Panels</th>
+                                    <th>Date Picked</th>
+                                    <th>Picked By</th>
+                                    <th>Contact</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr v-for="consignment in consignments">
+                                    <td>@{{ consignment.fclty }}</td>
+                                    <td>@{{ consignment.total }}</td>
+                                    <td>@{{ consignment.date_picked }}</td>
+                                    <td>@{{ consignment.picked_by }}</td>
+                                    <td>@{{ consignment.contacts }}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" @click.prevent="editConsignment(consignment)"><i class="fa fa-edit"></i> Edit</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

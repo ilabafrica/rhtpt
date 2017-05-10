@@ -101,8 +101,9 @@ class PtSetupTables extends Migration
             $table->date('date_shipped');
             $table->integer('shipper_id')->unsigned();
             $table->string('shipping_method')->nullable();
-            $table->integer('facility_id')->unsigned();
+            $table->integer('county_id')->unsigned();
       			$table->string('panels_shipped')->nullable();
+            $table->string('tracker', 50)->nullable();
             $table->date('date_received')->nullable();
             $table->string('panels_received')->nullable();
       			$table->string('condition', 500)->nullable();
@@ -110,7 +111,7 @@ class PtSetupTables extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('round_id')->references('id')->on('rounds');
             $table->foreign('shipper_id')->references('id')->on('shippers');
-            $table->foreign('facility_id')->references('id')->on('facilities');
+            $table->foreign('county_id')->references('id')->on('counties');
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
       			$table->timestamps();
