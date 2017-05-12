@@ -26,7 +26,7 @@ class ReportController extends Controller
     {
         $summaries = DB::select("SELECT r.id, r.description AS 'round', COUNT(e.round_id) AS 'enrolment', COUNT(pt.id) AS 'response', SUM(feedback=0) AS 'satisfactory', SUM(feedback=1) AS 'unsatisfactory' FROM rounds r, enrolments e, pt AS pt WHERE r.id=e.round_id AND e.id=pt.enrolment_id GROUP BY r.id");
         $percentiles = DB::select("SELECT r.id, r.description AS 'round', COUNT(e.round_id) AS 'enrolment', COUNT(pt.id) AS 'total_response', concat(round(( COUNT(pt.id)/COUNT(e.round_id) * 100 ),2),'%') AS 'response', concat(round(( SUM(feedback=0)/COUNT(pt.id) * 100 ),2),'%') AS 'satisfactory' FROM rounds r, enrolments e, pt as pt WHERE r.id=e.round_id AND e.id=pt.enrolment_id GROUP BY r.id;");
-        $unsperf = DB::select("SELECT r.id, r.description AS 'round', COUNT(pt.id) AS 'response', SUM(feedback=0) AS 'total_unsatisfactory', concat(round(( SUM(feedback=1)/COUNT(pt.id) * 100 ),2),'%') AS 'unsatisfactory', concat(round(( SUM(incorrect_results=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incorrect_results', concat(round(( SUM(wrong_algorithm=1)/SUM(feedback=1) * 100 ),2),'%') AS 'wrong_algorithm'  FROM rounds r, enrolments e, pt AS pt WHERE r.id=e.round_id AND e.id=pt.enrolment_id GROUP BY r.id;");
+        $unsperf = DB::select("SELECT r.id, r.description AS 'round', COUNT(pt.id) AS 'response', SUM(feedback=0) AS 'total_unsatisfactory', concat(round(( SUM(feedback=1)/COUNT(pt.id) * 100 ),2),'%') AS 'unsatisfactory', concat(round(( SUM(incomplete_kit_data=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incomplete_kit_data', concat(round(( SUM(incorrect_results=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incorrect_results', concat(round(( SUM(wrong_algorithm=1)/SUM(feedback=1) * 100 ),2),'%') AS 'wrong_algorithm', concat(round(( SUM(dev_from_procedure=1)/SUM(feedback=1) * 100 ),2),'%') AS 'deviation_from_procedure', concat(round(( SUM(incomplete_other_information=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incomplete_other_information', concat(round(( SUM(use_of_expired_kits=1)/SUM(feedback=1) * 100 ),2),'%') AS 'use_of_expired_kits', concat(round(( SUM(invalid_results=1)/SUM(feedback=1) * 100 ),2),'%') AS 'invalid_results', concat(round(( SUM(incomplete_results=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incomplete_results'  FROM rounds r, enrolments e, pt AS pt WHERE r.id=e.round_id AND e.id=pt.enrolment_id GROUP BY r.id;");
         $summariesChart = [];
         $sumCategories = ['Enrolment', 'Response', 'Satisfactory', 'Unsatisfactory'];
         foreach ($summaries as $content) 
@@ -56,17 +56,27 @@ class ReportController extends Controller
             }
         }
         $unsPerfChart = [];
-        $unsPerCategories = ['Unsatisfactory', 'Incorrect Results', 'Wrong Algorithm'];
+        $unsPerCategories = ['Incomplete Kit Data', 'Incorrect Results', 'Wrong Algorithm', 'Deviation from Procedure', 'Incomplete Other Information', 'Use of Expired Kits', 'Invalid Results', 'Incomplete Results'];
         foreach ($unsperf as $content) 
         {
             foreach ($unsPerCategories as $category) 
             {
-                if(strcasecmp("unsatisfactory", $category) == 0)
-                    $unsPerfChart[] = ['round' => $content->round, 'title' => $category, 'total' => (float)$content->unsatisfactory];
+                if(strcasecmp("incomplete kit data", $category) == 0)
+                    $unsPerfChart[] = ['round' => $content->round, 'title' => $category, 'total' => (float)$content->incomplete_kit_data];
                 else if(strcasecmp("incorrect results", $category) == 0)
                     $unsPerfChart[] = ['round' => $content->round, 'title' => $category, 'total' => (float)$content->incorrect_results];
                 else if(strcasecmp("wrong algorithm", $category) == 0)
                     $unsPerfChart[] = ['round' => $content->round, 'title' => $category, 'total' => (float)$content->wrong_algorithm];
+                else if(strcasecmp("deviation from procedure", $category) == 0)
+                    $unsPerfChart[] = ['round' => $content->round, 'title' => $category, 'total' => (float)$content->deviation_from_procedure];
+                else if(strcasecmp("incomplete other information", $category) == 0)
+                    $unsPerfChart[] = ['round' => $content->round, 'title' => $category, 'total' => (float)$content->incomplete_other_information];
+                else if(strcasecmp("use of expired kits", $category) == 0)
+                    $unsPerfChart[] = ['round' => $content->round, 'title' => $category, 'total' => (float)$content->use_of_expired_kits];
+                else if(strcasecmp("invalid results", $category) == 0)
+                    $unsPerfChart[] = ['round' => $content->round, 'title' => $category, 'total' => (float)$content->invalid_results];
+                else if(strcasecmp("incomplete results", $category) == 0)
+                    $unsPerfChart[] = ['round' => $content->round, 'title' => $category, 'total' => (float)$content->incomplete_results];
             }
         }
 

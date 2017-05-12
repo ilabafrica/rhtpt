@@ -137,7 +137,7 @@ new Vue({
                         text: 'Count'
                     }
                 },
-                colors: ['#00acc1', '#bf360c', '#afb42b'],
+                colors: ['#2E2E2E', '#007E33', '#e91e63', '#6d4c41','#1a237e', '#ff6f00', '#bf360c', '#607d8b', '#45526E'],
                 credits: {
                     enabled: false
                 },

@@ -80,17 +80,25 @@
             <table class="table table-bordered">
                 <tr>
                     <th></th>
-                    <th>Response</th>
-                    <th>Unsatisfactory</th>
                     <th>Incrorrect Results</th>
                     <th>Wrong Algorithm</th>
+                    <th>Incompete Kit Data</th>
+                    <th>Deviation from Procedure</th>
+                    <th>Incomplete Other Information</th>
+                    <th>Use of Expired Kits</th>
+                    <th>Invalid Results</th>
+                    <th>Incomplete Results</th>
                 </tr>
                 <tr v-for="unsperf in uns">
                     <td>@{{ unsperf.round }}</td>
-                    <td>@{{ unsperf.response }}</td>
-                    <td>@{{ unsperf.unsatisfactory }}</td>
                     <td>@{{ unsperf.incorrect_results }}</td>
                     <td>@{{ unsperf.wrong_algorithm }}</td>
+                    <td>@{{ unsperf.incomplete_kit_data }}</td>
+                    <td>@{{ unsperf.deviation_from_procedure }}</td>
+                    <td>@{{ unsperf.incomplete_other_information }}</td>
+                    <td>@{{ unsperf.use_of_expired_kits }}</td>
+                    <td>@{{ unsperf.invalid_results }}</td>
+                    <td>@{{ unsperf.incomplete_results }}</td>
                 </tr>
             </table>
             <div id="unsPerfContainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>

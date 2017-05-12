@@ -157,4 +157,53 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     {
         return $this->hasOne('App\Registration');
     }
+
+    /**
+     * Check if user is County Coordinator
+     *
+     * @return User model
+     */
+    public function isCountyCoordinator()
+    {
+        if($this->hasRole('County Coordinator'))
+            return true;
+        else
+            return false;
+    }
+    /**
+     * Check if user is Sub-County Coordinator
+     *
+     * @return User model
+     */
+    public function isSubCountyCoordinator()
+    {
+        if($this->hasRole('Sub-County Coordinator'))
+            return true;
+        else
+            return false;
+    }
+    /**
+     * Check if user is Facility Incharge
+     *
+     * @return User model
+     */
+    public function isFacilityInCharge()
+    {
+        if($this->hasRole('Facility Incharge'))
+            return true;
+        else
+            return false;
+    }
+    /**
+     * Check if user is Participant
+     *
+     * @return User model
+     */
+    public function isParticipant()
+    {
+        if($this->hasRole('Participant'))
+            return true;
+        else
+            return false;
+    }
 }
