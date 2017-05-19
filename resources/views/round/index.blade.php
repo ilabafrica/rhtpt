@@ -13,7 +13,7 @@
     <!-- Round Listing -->
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="pull-left col-md-6">
+            <div class="pull-left col-md-8">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.pt-round', 2) !!}
         
                 @permission('create-round')
@@ -26,6 +26,12 @@
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
                     </a>
+                @permission('enrol-participants')
+                    <button type="button" class="btn btn-sm btn-concrete" data-toggle="modal" data-target="#create-round">
+                        <i class="fa fa-download"></i>
+                        Enrolment Template
+                    </button>
+                @endpermission
                 </h5>
             </div>
             <div class="col-md-2"></div>
@@ -53,14 +59,18 @@
             <td>@{{ round.end_date }}</td>
             <td>
             @permission('update-round')	
-                <button class="btn btn-sm btn-primary" @click.prevent="editRound(round)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': round.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editRound(round)"><i class="fa fa-edit"></i> Edit</button>
+            @endpermission
+            @permission('restore-round')
+                <button v-if="round.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreRound(round)"><i class="fa fa-toggle-on"></i> Enable</button>
             @endpermission
             @permission('delete-round')
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             @permission('enrol-participants')
                 <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}"><i class="fa fa-send"></i> Enrol Testers</button>
-                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Enrolments</button>
+                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-nephritis" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}"><i class="fa fa-level-up"></i> Upload Sheet</button>
+                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Enrolled Testers</button>
             @endpermission
             </td>
         </tr>

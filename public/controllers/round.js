@@ -211,10 +211,10 @@ $('#enrol-participants').on('show.bs.modal', function(e)
 {
     //  Get round-id of the clicked element
     var id = $(e.relatedTarget).data('fk');
-    console.log(id);
+    //  console.log(id);
     //  Populate the hidden field
-    //$( "#shipment-id" ).val(id);
+    //  $( "#shipment-id" ).val(id);
     $( "#round-id" ).attr('value', id);
     $( "#round-id" ).trigger('change');
-    console.log($("#round-id").val());
+    //console.log($("#round-id").val());
 });

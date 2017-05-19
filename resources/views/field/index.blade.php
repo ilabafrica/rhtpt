@@ -57,8 +57,9 @@
             @permission('update-field')
                 <button class="btn btn-sm btn-primary" @click.prevent="editField(field)" disabled><i class="fa fa-edit"></i> Edit</button>
             @endpermission
+                <button v-if="field.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreField(field)"><i class="fa fa-toggle-on"></i> Enable</button>
             @permission('delete-field')
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteField(field)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="field.deleted_at==NULL" class="btn btn-sm btn-danger" @click.prevent="deleteField(field)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             </td>
         </tr>

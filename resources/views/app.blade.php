@@ -203,11 +203,9 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{!! Auth::user()->name !!}</a>
                                 <div class="dropdown-menu  dropdown-menu-right">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    <a class="dropdown-item" href="#">Profile</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Separated link</a>
+                                    <a class="dropdown-item" href="{!! url('logout') !!}">Sign Out</a>
                                 </div>
                             </li>
                             <li class="nav-item">

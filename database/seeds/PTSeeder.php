@@ -119,6 +119,7 @@ class PTSeeder extends Seeder
             array("name" => "view-round", "display_name" => "Can view round"),
             array("name" => "update-round", "display_name" => "Can update round"),
             array("name" => "delete-round", "display_name" => "Can delete round"),
+            array("name" => "restore-round", "display_name" => "Can restore round"),
             array("name" => "create-lot", "display_name" => "Can create lot"),
             array("name" => "read-lot", "display_name" => "Can read lot"),
             array("name" => "view-lot", "display_name" => "Can view lot"),
