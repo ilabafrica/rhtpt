@@ -55,8 +55,8 @@
             <td>@{{ broadcast.text }}</td>
             <td>	
                 <button v-bind="{ 'disabled': program.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editBroadcast(broadcast)"><i class="fa fa-edit"></i> Edit</button>
-                <button v-if="program.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreBroadcast(broadcast)">Enable</button>
-                <button v-if="program.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteBroadcast(broadcast)">Disable</button>
+                <button v-if="program.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreBroadcast(broadcast)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <button v-if="program.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteBroadcast(broadcast)"><i class="fa fa-power-off"></i> Disable</button>
             </td>
         </tr>
     </table>

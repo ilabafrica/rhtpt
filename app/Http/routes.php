@@ -168,7 +168,7 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "FacilityController@counties"
     ));
 
-    Route::get("/con_subs", array(
+    Route::get("/con_subs/{id?}", array(
         "as"   => "cons.subs",
         "uses" => "FacilityController@consignment"
     ));
@@ -267,12 +267,17 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "pt.fetch",
         "uses" => "ResultController@edit"
     ));
-    Route::any("/verify_results/{id}", array(
+    Route::any("/verify_results", array(
         "as"   => "verify_results",
         "uses" => "ResultController@verify"
     ));
 
     Route::get("/form", array(
+        "as"   => "fields.fetch",
+        "uses" => "QuestionnaireController@fetch"
+    ));
+
+    Route::get("/frmSets", array(
         "as"   => "fields.fetch",
         "uses" => "QuestionnaireController@fetch"
     ));

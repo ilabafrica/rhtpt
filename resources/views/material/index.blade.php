@@ -16,7 +16,7 @@
             <div class="pull-left col-md-6">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.sample-preparation', 2) !!}
         
-                @permission('create-role')
+                @permission('create-sample')
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-material">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
@@ -57,9 +57,13 @@
             <td>@{{ material.mt }}</td>
             <td>@{{ material.original_source }}</td>
             <td>@{{ material.date_collected }}</td>
-            <td>	
+            <td>
+            @permission('update-sample')	
                 <button class="btn btn-sm btn-primary" @click.prevent="editMaterial(material)"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteMaterial(material)"><i class="fa fa-trash-o"></i> Delete</button>
+            @endpermission
+            @permission('delete-sample')
+                <button class="btn btn-sm btn-danger" @click.prevent="deleteMaterial(material)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission
             </td>
         </tr>
     </table>

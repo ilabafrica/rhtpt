@@ -67,16 +67,16 @@ new Vue({
         },
 
         createRound: function(){
-		  var input = this.newRound;
-		  this.$http.post('/vuerounds',input).then((response) => {
-		    this.changePage(this.pagination.current_page);
-			this.newRound = {'name':'','description':'','start_date':'','end_date':''};
-			$("#create-round").modal('hide');
-			toastr.success('Round Created Successfully.', 'Success Alert', {timeOut: 5000});
-		  }, (response) => {
-			this.formErrors = response.data;
-	    });
-	},
+    		  var input = this.newRound;
+    		  this.$http.post('/vuerounds',input).then((response) => {
+    		    this.changePage(this.pagination.current_page);
+    			this.newRound = {'name':'','description':'','start_date':'','end_date':''};
+    			$("#create-round").modal('hide');
+    			toastr.success('Round Created Successfully.', 'Success Alert', {timeOut: 5000});
+    		  }, (response) => {
+    			this.formErrors = response.data;
+    	    });
+    	},
 
       deleteRound: function(round){
         this.$http.delete('/vuerounds/'+round.id).then((response) => {

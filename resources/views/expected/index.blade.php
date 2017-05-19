@@ -53,7 +53,7 @@
             <td>@{{ expected.tested_by }}</td>
             <td>	
                 <button class="btn btn-sm btn-primary" @click.prevent="editExpected(expected)"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteExpected(expected)"><i class="fa fa-trash-o"></i> Delete</button>
+                <button class="btn btn-sm btn-danger" @click.prevent="deleteExpected(expected)"><i class="fa fa-power-off"></i> Disable</button>
             </td>
         </tr>
     </table>

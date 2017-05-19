@@ -16,12 +16,12 @@
             <div class="pull-left col-md-6">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.result', 2) !!}
         
-                <!-- @permission('create-result') -->
+                @permission('create-result')
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-result">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.enter-result') !!}
                     </button>
-                <!-- @endpermission -->
+                @endpermission
                     <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
@@ -52,17 +52,26 @@
             <td>@{{ result.rnd }}</td>
             <td>@{{ result.tester }}</td>
             <td>
-                <button v-if="result.panel_status==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Not Verified</button>
-                <button v-if="result.panel_status==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Verified</button>
+                <button v-if="result.panel_status==0" class="mbtn mbtn-raised mbtn-danger mbtn-xs">Not Checked</button>
+                <button v-if="result.panel_status==1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Checked</button>
+                <button v-if="result.panel_status==2" class="mbtn mbtn-raised mbtn-info mbtn-xs">Not Verified</button>
+                <button v-if="result.panel_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
             </td>
             <td>
-                <button v-if="result.feedback==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Unsatisfactory</button>
-                <button v-if="result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Satisfactory</button>
+                <button v-if="result.feedback==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Satisfactory</button>
+                <button v-if="result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">UnSatisfactory</button>
             </td>
             <td>
+            @permission('view-result')
                 <button class="btn btn-sm btn-secondary" @click.prevent="viewResult(result)"><i class="fa fa-reorder"></i> View</button>	
-                <button class="btn btn-sm btn-primary" @click.prevent="editResult(result)"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteResult(result)"><i class="fa fa-trash-o"></i> Delete</button>
+            @endpermission
+            @permission('update-result')
+                <button  v-if="result.panel_status!=3" class="btn btn-sm btn-primary" @click.prevent="editResult(result)"><i class="fa fa-edit"></i> Edit</button>
+            @endpermission
+            @permission('delete-result')
+                <button class="btn btn-sm btn-danger" @click.prevent="deleteResult(result)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission
+            <button v-if="result.panel_status==3" class="btn btn-sm btn-concrete" @click="printFeedback(result.id)"><i class="fa fa-print"></i> Print</button>
             </td>
         </tr>
     </table>
@@ -192,7 +201,7 @@
                                 <div class="col-sm-7">
                                     <select class="form-control c-select" name="round_id">
                                         <option selected></option>
-                                        <option v-for="round in rounds" v-bind="{ 'selected': round.id==frmData.pt.round_id}" :value="round.id">@{{ round.value }}</option>   
+                                        <option v-for="round in rounds" v-bind="{ 'selected': round.id==frmData.round.id}" :value="round.id">@{{ round.value }}</option>   
                                     </select>
                                     <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
                                 </div>
@@ -200,8 +209,8 @@
                             <div v-for="frm in form">
                                 <p class="text-primary">@{{ frm.title }}</p>
                                 <hr>
-                                <div v-for="dt in frmData.results">
-                                    <div v-for="fld in frm.fields">
+                                <div v-for="fld in frm.fields">
+                                    <div v-for="dt in frmData.results">
                                         <div class="form-group row" v-if="dt.field_id==fld.id">
                                             <label class="col-sm-5 form-control-label" for="title">@{{ fld.title }}:</label>
                                             <div class="col-sm-7">
@@ -272,52 +281,60 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyResult(viewFormData.pt.id)" id="verify_test_results">
-                       <div class="col-md-12">
-                            <div class="form-group row">
-                                <label class="col-sm-5 form-control-label" for="title"><b>PT Round:</b></label>
-                                <div class="col-sm-7">
-                                    <div  v-for="round in rounds">
-                                        <label class="form-label" v-if="round.id==viewFormData.pt.round_id" >@{{ round.value }}</label>
-                                    </div>
-                                    <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-sm-5 form-control-label" for="title"><b>PT Round:</b></label>
+                            <div class="col-sm-7">
+                                <div  v-for="round in rounds">
+                                    <label class="form-label" v-if="round.id==viewFormData.round.id" >@{{ round.value }}</label>
                                 </div>
+                                <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
                             </div>
-                            <div v-for="frm in form">
-                                <p class="text-primary"><b>@{{ frm.title }}</b></p>
-                                <hr>
-                                <div v-for="dt in viewFormData.results">
-                                    <div v-for="fld in frm.fields">
-                                        <div class="form-group row" v-if="dt.field_id==fld.id">
-                                            <label class="col-sm-5 form-control-label" for="title"><b>@{{ fld.title }}:</b></label>
-                                            <div class="col-sm-7">
-                                                <div v-if="fld.tag == 1">
-                                                    <div class="form-checkbox form-checkbox-inline" v-for="option in fld.options">
-                                                        <label class="form-checkbox-label">                                                        
-                                                            @{{ option.title }}
-                                                        </label>
-                                                    </div>
+                        </div>
+                        <div v-for="frm in sets">
+                            <p class="text-primary"><b>@{{ frm.title }}</b></p>
+                            <hr>
+                            <div v-for="dt in viewFormData.results">
+                                <div v-for="fld in frm.fields">
+                                    <div class="form-group row" v-if="dt.field_id==fld.id">
+                                        <label class="col-sm-5 form-control-label" for="title"><b>@{{ fld.title }}:</b></label>
+                                        <div class="col-sm-7">
+                                            <div v-if="fld.tag == 1">
+                                                <div class="form-checkbox form-checkbox-inline" v-for="option in fld.options">
+                                                    <label class="form-checkbox-label">
+                                                        @{{ option.title }}
+                                                    </label>
                                                 </div>
-                                                <div v-if="fld.tag == 2 ||fld.tag == 3||fld.tag == 4||fld.tag == 7">
-                                                    <label class="form-label" v-if="dt.field_id==fld.id">@{{dt.response}}</label>
-                                                </div>
-                                                
-                                                <div v-if="fld.tag == 5||fld.tag == 6">
-                                                    <div v-if="dt.field_id==fld.id"  v-for="option in fld.options">
-                                                        <label class="form-label" v-if="option.id==dt.response" >@{{ option.title }}</label>
-                                                    </div>
-                                                </div>                                  
                                             </div>
+                                            <div v-if="fld.tag == 2 ||fld.tag == 3||fld.tag == 4||fld.tag == 7">
+                                                <label class="form-label" v-if="dt.field_id==fld.id">@{{dt.response}}</label>
+                                            </div>
+                                            
+                                            <div v-if="fld.tag == 5||fld.tag == 6">
+                                                <div v-if="dt.field_id==fld.id"  v-for="option in fld.options">
+                                                    <label class="form-label" v-if="option.id==dt.response" >@{{ option.title }}<span v-if="dt.response == 4">@{{ '-'+dt.comment}}</span></label>
+                                                </div>
+                                            </div>                                 
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyResult" id="verify_test_results">
+                            <input type="hidden" class="form-control" name="pt_id" value="@{{viewFormData.pt.id}}"/>
+                            <div class="form-group row" v-if="viewFormData.pt.panel_status!=3">
+                                <label class="col-sm-5 form-control-label" for="title"><b>Verification Comment:</b></label>
+                                <div class="col-sm-7">
+                                    <textarea name="comment" class="form-control"> @{{dt.response}}</textarea>
+                                </div>
+                            </div>
+                            <hr v-if="viewFormData.pt.panel_status!=3">
                             <div class="form-group row col-sm-offset-5 col-sm-7">
-                                <button type="submit" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>
+                                <button v-if="viewFormData.pt.panel_status!=3" type="submit" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
                                 <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

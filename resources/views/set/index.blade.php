@@ -16,7 +16,7 @@
             <div class="pull-left col-md-6">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.field-set', 2) !!}
         
-                @permission('create-role')
+                @permission('create-set')
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-set">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
@@ -51,10 +51,16 @@
             <td>@{{ set.title }}</td>
             <td>@{{ set.description }}</td>
             <td>@{{ set.ordr }}</td>
-            <td>	
+            <td>
+            @permission('update-set')	
                 <button v-bind="{ 'disabled': set.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editSet(set)"><i class="fa fa-edit"></i> Edit</button>
-                <button v-if="set.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreSet(set)">Enable</button>
-                <button v-if="set.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteSet(set)">Disable</button>
+            @endpermission
+            @permission('restore-set')
+                <button v-if="set.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreSet(set)"><i class="fa fa-toggle-on"></i> Enable</button>
+            @endpermission
+            @permission('delete-set')
+                <button v-if="set.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteSet(set)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission
             </td>
         </tr>
     </table>

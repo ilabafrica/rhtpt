@@ -18,7 +18,7 @@ new Vue({
     formErrorsUpdate: {},
     formConsignmentErrors: {},
     newShipment : {'round_id':'','county_id':'','date_prepared':'','date_shipped':'','shipping_method':'','tracker':'','shipper_id':'','panels_shipped':''},
-    fillShipment : {'round_id':'','county_id':'','date_prepared':'','date_shipped':'','shipping_method':'','tracker':'','shipper_id':'','panels_shipped':'','id':''},
+    fillShipment : {'round_id':'','county_id':'','date_prepared':'','date_shipped':'','shipping_agent':'','tracker':'','shipper_id':'','panels_shipped':'','id':''},
     rounds: [],
     counties: [],
     methods: [],
@@ -71,6 +71,7 @@ new Vue({
         getVueShipments: function(page){
           this.$http.get('/vueshipments?page='+page).then((response) => {
             this.$set('shipments', response.data.data.data);
+            this.$set('consignments', response.data.data.data);
             this.$set('pagination', response.data.pagination);
           });
         },
@@ -102,11 +103,13 @@ new Vue({
       },
 
       editShipment: function(shipment){
-          this.fillShipment.pt_round = shipment.pt_round;
+          this.fillShipment.round_id = shipment.round_id;
           this.fillShipment.id = shipment.id;
           this.fillShipment.county_id = shipment.county_id;
           this.fillShipment.date_prepared = shipment.date_prepared;
           this.fillShipment.date_shipped = shipment.date_shipped;
+          this.fillShipment.tracker = shipment.tracker;
+          this.fillShipment.shipper_id = shipment.shipper_id;
           this.fillShipment.shipping_method = shipment.shipping_method;
           this.fillShipment.panels_shipped = shipment.panels_shipped;
           $("#edit-shipment").modal('show');
@@ -177,6 +180,18 @@ new Vue({
 
       fetchShippers: function() {
         let id = $('#shipping_method').val();
+        console.log(id);
+        this.$http.get('/shpprs/'+id).then((response) => {
+            this.shippers = response.data;
+
+        }, (response) => {
+            console.log(response);
+        });
+      },
+
+      fetchAgents: function() {
+        let id = $('#shipping_agent').val();
+        console.log(id);
         this.$http.get('/shpprs/'+id).then((response) => {
             this.shippers = response.data;
 

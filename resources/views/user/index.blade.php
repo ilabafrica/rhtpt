@@ -61,11 +61,19 @@
                 <button v-if="user.deleted_at==NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
                 <button v-if="user.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
-            <td>	
+            <td>
+            @permission('update-user')	
                 <button v-bind="{ 'disabled': user.deleted_at!=NULL}" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)"><i class="fa fa-edit"></i> Edit</button>
-                <button v-if="user.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)">Enable</button>
+            @endpermission
+            @permission('restore-user') 
+                <button v-if="user.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)"><i class="fa fa-toggle-on"></i> Enable</button>
+            @endpermission
+            @permission('delete-user') 
                 <button v-if="user.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission
+            @permission('transfer-user') 
                 <button v-if="user.uid!=NULL" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
+            @endpermission
             </td>
         </tr>
     </table>
@@ -246,10 +254,10 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">Gender:</label>
                                     <div class="col-sm-8">
-                                        <input type="radio" id="male" value="0" v-model="newUser.gender">
+                                        <input type="radio" id="male" value="0" v-model="fillUser.gender">
                                         <label for="male">Male</label>
                                         <br />
-                                        <input type="radio" id="female" value="1" v-model="newUser.gender">
+                                        <input type="radio" id="female" value="1" v-model="fillUser.gender">
                                         <label for="female">Female</label>
                                         <span v-if="formErrorsUpdate['gender']" class="error text-danger">@{{ formErrorsUpdate['gender'] }}</span>
                                     </div>
@@ -273,6 +281,67 @@
                                     <div class="col-sm-8">
                                         <input type="text" name="address" class="form-control" v-model="fillUser.address" />
                                         <span v-if="formErrorsUpdate['address']" class="error text-danger">@{{ formErrorsUpdate['address'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Role:</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-radio radio-inline" v-for="role in roles">
+                                            <label class="form-radio-label">
+                                                <input type="radio" :value="role.id" v-model="fillUser.role" name="role">
+                                                @{{ role.value }}
+                                            </label>
+                                        </div>
+                                        <span v-if="formErrorsUpdate['role']" class="error text-danger">@{{ formErrorsUpdate['role'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-if="fillUser.role == 3">
+                                    <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" name="jimbo" multiple v-model="fillUser.jimbo">
+                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrorsUpdate['jimbo']" class="error text-danger">@{{ formErrorsUpdate['jimbo'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-if="fillUser.role == 4 || fillUser.role == 6 || fillUser.role == 7">
+                                    <label class="col-sm-4 form-control-label" for="title">County:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs()" v-model="fillUser.county_id">
+                                            <option selected></option>
+                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrorsUpdate['county_id']" class="error text-danger">@{{ formErrorsUpdate['county_id'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-if="fillUser.role == 6 || fillUser.role == 7">
+                                    <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="sub_id" id="sub_id" @change="fetchFacilities" v-model="fillUser.sub_id">
+                                            <option selected></option>
+                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrorsUpdate['sub_id']" class="error text-danger">@{{ formErrorsUpdate['sub_id'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-if="fillUser.role == 6">
+                                    <label class="col-sm-4 form-control-label" for="title">Facility:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="facility_id" v-model="fillUser.facility_id">
+                                            <option selected></option>
+                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrorsUpdate['facility_id']" class="error text-danger">@{{ formErrorsUpdate['facility_id'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-if="fillUser.role == 2">
+                                    <label class="col-sm-4 form-control-label" for="title">Program:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="program_id" v-model="fillUser.program_id">
+                                            <option selected></option>
+                                            <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrorsUpdate['program_id']" class="error text-danger">@{{ formErrorsUpdate['program_id'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">

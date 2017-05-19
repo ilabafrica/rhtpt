@@ -15,10 +15,12 @@
         <div class="col-lg-12 margin-tb">
             <div class="pull-left col-md-6">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.lot', 2) !!}
+                @permission('create-lot')
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-lot">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
                     </button>
+                @endpermission
                     <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
@@ -48,9 +50,13 @@
             <td>@{{ lot.rnd }}</td>
             <td>@{{ lot.lot }}</td>
             <td>@{{ lot.tester_id }}</td>
-            <td>	
+            <td>
+            @permission('update-lot')	
                 <button class="btn btn-sm btn-primary" @click.prevent="editLot(lot)"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteLot(lot)"><i class="fa fa-trash-o"></i> Delete</button>
+            @endpermission
+            @permission('delete-lot')
+                <button class="btn btn-sm btn-danger" @click.prevent="deleteLot(lot)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission
             </td>
         </tr>
     </table>

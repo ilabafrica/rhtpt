@@ -55,7 +55,7 @@ class Facility extends Model
 	*/
 	public static function idByName($name=NULL)
 	{
-		if($code!=NULL)
+		if($name!=NULL)
 		{
 			try 
 			{
@@ -82,4 +82,22 @@ class Facility extends Model
 			return null;
 		}
 	}
+	/**
+  	* Relationship with participant.
+  	*
+  	*/
+    public function users()
+    {
+   		$prole = Role::idByName('Participant');
+        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->where('tier', $this->id);
+        return $users;
+    }
+	/**
+  	* Relationship with consignments.
+  	*
+  	*/
+    public function consignments()
+    {
+   		return $this->hasMany('App\Consignment');
+    }
 }

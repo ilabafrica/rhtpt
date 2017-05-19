@@ -9,6 +9,8 @@ use App\SubCounty;
 use App\Facility;
 use Input;
 
+use Auth;
+
 class FacilityController extends Controller
 {
 
@@ -27,10 +29,31 @@ class FacilityController extends Controller
         $facilitys = Facility::latest()->paginate(5);
         $error = ['error' => 'No results found, please try with different keywords.'];
         $facilitys = Facility::latest()->withTrashed()->paginate(5);
+        //  Check user against roles assigned.        
+        if(Auth::user()->isCountyCoordinator())
+        {
+            $facilitys = County::find(Auth::user()->ru()->tier)->facilities()->latest()->withTrashed()->paginate(5);
+        }
+        else if(Auth::user()->isSubCountyCoordinator())
+        {
+            $facilitys = SubCounty::find(Auth::user()->ru()->tier)->facilities()->latest()->withTrashed()->paginate(5);
+        }
+        else if(Auth::user()->isFacilityInCharge())
+        {
+            $facilitys = Facility::find(Auth::user()->ru()->tier);
+        }
         if($request->has('q')) 
         {
             $search = $request->get('q');
             $facilitys = Facility::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            if(Auth::user()->isCountyCoordinator())
+            {
+                $facilitys = County::find(Auth::user()->ru()->tier)->facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            }
+            else if(Auth::user()->isSubCountyCoordinator())
+            {
+                $facilitys = SubCounty::find(Auth::user()->ru()->tier)->facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            }
         }
         foreach($facilitys as $facility)
         {
@@ -191,13 +214,20 @@ class FacilityController extends Controller
      */
     public function consignment()
     {
-        $id = 1;//Auth::user()->ru()->tier;
-        $subs = County::find($id)->subCounties->lists('name', 'id');
-        $categories = [];
-        foreach($subs as $key => $value)
+        if(Auth::user()->isCountyCoordinator())
         {
-            $categories[] = ['id' => $key, 'value' => $value];
+            $id = Auth::user()->ru()->tier;
+            $subs = County::find($id)->subCounties->lists('name', 'id');
+            $categories = [];
+            foreach($subs as $key => $value)
+            {
+                $categories[] = ['id' => $key, 'value' => $value];
+            }
+            return $categories;
         }
-        return $categories;
+        else
+        {
+            return response()->json();
+        }
     }
 }

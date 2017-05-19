@@ -10,11 +10,16 @@ use App\Field;
 use App\Option;
 use App\User;
 use App\Notification;
+use App\Enrol;
+use App\Round;
+use App\County;
+use App\SubCounty;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
 use Auth;
 use Jenssegers\Date\Date as Carbon;
+use DB;
 
 class ResultController extends Controller
 {
@@ -33,6 +38,18 @@ class ResultController extends Controller
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
         $results = Pt::latest()->withTrashed()->paginate(5);
+        if(Auth::user()->isCountyCoordinator())
+        {
+            $results = County::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate(5);
+        }
+        else if(Auth::user()->isSubCountyCoordinator())
+        {
+           $results = SubCounty::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate(5);
+        }
+        else if(Auth::user()->isFacilityInCharge())
+        {
+           $results = Facility::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate(5);
+        }
         if($request->has('q')) 
         {
             $search = $request->get('q');
@@ -40,8 +57,8 @@ class ResultController extends Controller
         }
         foreach($results as $result)
         {
-            $result->rnd = $result->round->name;
-            $result->tester = $result->user->name;
+            $result->rnd = $result->enrolment->round->name;
+            $result->tester = $result->enrolment->user->name;
         }
         $response = [
             'pagination' => [
@@ -66,9 +83,10 @@ class ResultController extends Controller
     public function store(Request $request)
     {
          //	Save pt first then proceed to save form fields
+        $round_id = $request->get('round_id');
+        $enrolment = Enrol::where('user_id', Auth::user()->id)->where('round_id', $round_id)->first();
         $pt = new Pt;
-        $pt->round_id = $request->get('round_id');
-        $pt->user_id = Auth::user()->id;
+        $pt->enrolment_id = 1;//$enrolment->id;
         $pt->panel_status = Pt::NOT_CHECKED;
         $pt->save();
         //	Proceed to form-fields
@@ -98,20 +116,20 @@ class ResultController extends Controller
             }
         }    
         //  Send SMS
-        $round = Round::find($pt->round_id)->name;
+        $round = Round::find($pt->enrolment->round->id)->description;
         $message = Notification::where('template', Notification::RESULTS_RECEIVED)->first()->message;
-        $message = replace_between($message, '[', ']', $round);
+        $message = $this->replace_between($message, '[', ']', $round);
         $message = str_replace(' [', ' ', $message);
-        $message = str_replace('] ', ' ', $message);
+        $message = str_replace(']', ' ', $message);
 
         $created = Carbon::today()->toDateTimeString();
         $updated = Carbon::today()->toDateTimeString();
         //  Time
         $now = Carbon::now('Africa/Nairobi');
-        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::RESULTS_RECEIVED, 'round_id' => $pt->round_id, 'text' => $message, 'user_id' => $pt->user_id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
+        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::RESULTS_RECEIVED, 'round_id' => $pt->enrolment->round->id, 'text' => $message, 'user_id' => $pt->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
      
         $recipients = NULL;
-        $recipients = User::find($pt->user_id)->value('phone');
+        $recipients = User::find($pt->enrolment->user->id)->value('phone');
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
@@ -152,40 +170,45 @@ class ResultController extends Controller
     public function edit($id)
     {
         $pt = Pt::find($id);
+        $round = $pt->enrolment->round;
         $results = $pt->results;
         $response = [
             'pt' => $pt,
+            'round' => $round,
             'results' => $results
         ];
 
         return response()->json($response);
     }
     /*
-    verify the result after reviewing
+    *   verify the result after reviewing
     */
-   public function verify($id)
+    public function verify(Request $request)
     {
+        $id = $request->pt_id;
         $user_id = Auth::user()->id;
 
         $result = Pt::find($id);
         $result->verified_by = $user_id;
-        $result->panel_status = Pt::CHECKED;
+        $result->panel_status = Pt::VERIFIED;
+        if($request->comment)
+            $result->comment = $request->comment;
         $result->save();
         // Send SMS
-        $round = Round::find($result->round_id)->name;
+        $round = Round::find($result->enrolment->round->id)->description;
         $message = Notification::where('template', Notification::FEEDBACK_RELEASE)->first()->message;
-        $message = replace_between($message, '[', ']', $round);
+        $message = $this->replace_between($message, '[', ']', $round);
         $message = str_replace(' [', ' ', $message);
-        $message = str_replace('] ', ' ', $message);
+        $message = str_replace(']', ' ', $message);
         
         $created = Carbon::today()->toDateTimeString();
         $updated = Carbon::today()->toDateTimeString();
         //  Time
         $now = Carbon::now('Africa/Nairobi');
-        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $result->round_id, 'text' => $message, 'user_id' => $result->user_id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
+        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $result->enrolment->round->id, 'text' => $message, 'user_id' => $result->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
      
         $recipients = NULL;
-        $recipients = User::find($result->user_id)->value('phone');
+        $recipients = User::find($result->enrolment->user->id)->value('phone');
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
@@ -296,4 +319,18 @@ class ResultController extends Controller
     		if(($pos = strpos($field, '_')) !== FALSE)
     		return substr($field, $pos+1);
   	}
+    /**
+     * Replace strings between two characters.
+     *
+     */
+    function replace_between($str, $needle_start, $needle_end, $replacement) 
+    {
+        $pos = strpos($str, $needle_start);
+        $start = $pos === false ? 0 : $pos + strlen($needle_start);
+
+        $pos = strpos($str, $needle_end, $start);
+        $end = $pos === false ? strlen($str) : $pos;
+
+        return substr_replace($str, $replacement, $start, $end - $start);
+    }
 }

@@ -105,13 +105,17 @@ new Vue({
           this.fillUser.phone = user.phone;
           this.fillUser.email = user.email;
           this.fillUser.address = user.address;
+          this.fillUser.role = user.rl;
+          this.fillUser.program = user.program;
+          this.fillUser.uid = user.uid;
+          this.fillUser.address = user.address;
           $("#edit-user").modal('show');
       },
 
       updateUser: function(id){
         var input = this.fillUser;
         this.$http.put('/vueusers/'+id,input).then((response) => {
-            this.changePage(this.pagination.current_page);
+            //this.changePage(this.pagination.current_page); - @TODO
             this.fillUser = {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''};
             $("#edit-user").modal('hide');
             toastr.success('User Updated Successfully.', 'Success Alert', {timeOut: 5000});

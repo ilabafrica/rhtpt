@@ -16,7 +16,7 @@
             <div class="pull-left col-md-6">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.nonperf', 2) !!}
         
-                @permission('create-role')
+                @permission('create-nonperf')
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-nonperf">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
@@ -49,9 +49,13 @@
         <tr v-for="nonperf in nonperfs">
             <td>@{{ nonperf.title }}</td>
             <td>@{{ nonperf.description }}</td>
-            <td>	
+            <td>
+            @permission('update-nonperf')	
                 <button class="btn btn-sm btn-primary" @click.prevent="editNonperf(nonperf)"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteNonperf(nonperf)"><i class="fa fa-trash-o"></i> Delete</button>
+            @endpermission
+            @permission('delete-nonperf')
+                <button class="btn btn-sm btn-danger" @click.prevent="deleteNonperf(nonperf)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission
             </td>
         </tr>
     </table>

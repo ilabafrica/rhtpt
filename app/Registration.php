@@ -17,6 +17,12 @@ class Registration extends Model
   	 */
   	protected $table = 'registrations';
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['user_id', 'uid', 'nonperformance_id', 'comment'];
+    /**
   	 * Relationship with users.
   	 *
   	 */

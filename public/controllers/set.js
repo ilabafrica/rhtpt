@@ -52,8 +52,7 @@ new Vue({
 
   ready : function(){
   		this.getVueSets(this.pagination.current_page);
-        this.loadQuests();
-        this.loadSets();
+      this.loadSets();
   },
 
   methods : {

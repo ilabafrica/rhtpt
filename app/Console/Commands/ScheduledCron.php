@@ -21,6 +21,7 @@ use App\Field;
 use App\Option;
 use App\Enrol;
 use App\SubCounty;
+use App\County;
 
 use App\Http\Controllers\ResultController;
 
@@ -95,20 +96,28 @@ class ScheduledCron extends Command
             $userId = NULL;
             if(!empty($dump->Participant_Full_Names))
             {
-                $user = new User;
-                $user->name = $dump->Participant_Full_Names;
-                $user->email = $dump->NT_Email;
-                $user->password = Hash::make(User::DEFAULT_PASSWORD);
-                $user->address = NULL;
-                $user->gender = User::gender($dump->NTester_gender);
-                $user->phone = "+254$dump->NTMobile_Number";
-                $user->username = '';
-                $user->save();
-                //  Update username
-                $user->username = $user->id;
-                $user->uid = $user->id;
-                $user->save();
-                $userId = $user->id;
+                $usr = User::idByName($dump->Participant_Full_Names);
+                if($usr)
+                {
+                    $userId = $usr;
+                }
+                else
+                {
+                    $user = new User;
+                    $user->name = $dump->Participant_Full_Names;
+                    $user->email = $dump->NT_Email;
+                    $user->password = Hash::make(User::DEFAULT_PASSWORD);
+                    $user->address = NULL;
+                    $user->gender = User::gender($dump->NTester_gender);
+                    $user->phone = "+254$dump->NTMobile_Number";
+                    $user->username = substr(str_replace(' ','',strtolower($dump->Participant_Full_Names)), 0, 5).rand(1,3);
+                    $user->save();
+                    //  Update username
+                    $user->username = $user->id;
+                    $user->uid = $user->id;
+                    $user->save();
+                    $userId = $user->id;
+                }
                 //  Creare role-user
                 $role = Role::idByName('Participant');
                 if($dump->MFL_Code)
@@ -121,13 +130,19 @@ class ScheduledCron extends Command
                         $facility = Facility::idByName($dump->Facility_Name);
                     if(!$facility)
                     {
-                        $fclty = new Facility;
+                        $facility = new Facility;
                         $facility->name = strtoupper($dump->Facility_Name);
                         $sub = SubCounty::idByName($dump->SUBCOUNTY);
                         if(!$sub)
                             $facility->sub_county_id = SubCounty::idByName($dump->SUBCOUNTY);
                         else
-                            $facility->sub_county_id = 1;                        
+                        {
+                            $sb = new SubCounty;
+                            $sb->name = $dump->SUBCOUNTY;
+                            $sb->county_id = County::idByName($dump->COUNTY);
+                            $sb->save();
+                            $facility->sub_county_id = $sb->id;                        
+                        }
                         $facility->save();
                     }
                 }
@@ -135,44 +150,58 @@ class ScheduledCron extends Command
                     $program_id = Program::idByTitle("VCT");
                 else
                     $program_id = Program::idByTitle($dump->NT_Program);
-                DB::table('role_user')->insert(["user_id" => $userId, "role_id" => $role, "tier" => $facility, "program_id" => $program_id]);
-                //  Reasons for non-performance to registration
-                $reg = new Registration;
-                $reg->user_id = $userId;
-                $reg->uid = $dump->ID_No;
-                if(!empty($dump->Transferred_County) || !empty($dump->Transferred_Facility))
+                //  Check if role-user exists
+                $count = DB::table('role_user')->where('user_id', $userId)->where('role_id', $role)->count();
+                if($count == 0)
                 {
-                    $reg->nonperformance_id = Nonperformance::idByTitle('Transferred');
-                    $reg->comment = $dump->Transferred_Facility;
+                    DB::table('role_user')->insert(["user_id" => $userId, "role_id" => $role, "tier" => $facility, "program_id" => $program_id]);
                 }
-                else if(!empty($dump->Tester_Off_Duty))
-                    $reg->nonperformance_id = Nonperformance::idByTitle('Off Duty');
-                else
-                    $reg->nonperformance_id = Nonperformance::idByTitle('Other');
-                $reg->save();
+                //  Reasons for non-performance to registration
+                //  Check if user already registered
+                $regCount = Registration::where('user_id', $userId)->where('uid', $dump->ID_No)->count();
+                if($regCount == 0)
+                {
+                    $reg = new Registration;
+                    $reg->user_id = $userId;
+                    $reg->uid = $dump->ID_No;
+                    if(!empty($dump->Transferred_County) || !empty($dump->Transferred_Facility))
+                    {
+                        $reg->nonperformance_id = Nonperformance::idByTitle('Transferred');
+                        $reg->comment = $dump->Transferred_Facility;
+                    }
+                    else if(!empty($dump->Tester_Off_Duty))
+                        $reg->nonperformance_id = Nonperformance::idByTitle('Off Duty');
+                    else
+                        $reg->nonperformance_id = Nonperformance::idByTitle('Other');
+                    $reg->save();
+                }
             }
             else
             {
-                $userId = User::idByUID($dump->ID_No);
+                //  check if the user with the given uID exists
+                if($dump->ID_No)
+                    $userId = User::idByUID($dump->ID_No);
+                else
+                    $userId = User::idByName($dump->Tester_Name);
             }
             //  Enrol user to the available round
             $round = Round::idByTitle($dump->Round);
             //  Check if record already exists
-            $enrol = null;
+            $enrolment = null;
             if(Enrol::where('user_id', $userId)->where('round_id', $round)->count() != 0)
             {
-                $enrol = Enrol::where('user_id', $userId)->where('round_id', $round)->first();
+                $enrolment = Enrol::where('user_id', $userId)->where('round_id', $round)->first();
             }
             else // Add new enrolment record
             {
-                $enrol = new Enrol;
-                $enrol->user_id = $userId;
-                $enrol->round_id = $round;
-                $enrol->save();
+                $enrolment = new Enrol;
+                $enrolment->user_id = $userId;
+                $enrolment->round_id = $round;
+                $enrolment->save();
             }
             //  Check if record exists
             $pt = null;
-            if($enrolment->pt->count() != 0)
+            if(count($enrolment->pt) != 0)
             {
                 $pt = $enrolment->pt->first();
             }
@@ -180,7 +209,7 @@ class ScheduledCron extends Command
             {
                 //  Save to pt table
                 $pt = new Pt;
-                $pt->enrolment_id = $enrol->id;
+                $pt->enrolment_id = $enrolment->id;
                 $pt->panel_status = Pt::NOT_CHECKED;
                 $pt->comment = $dump->Comments;
                 $pt->save();
@@ -287,8 +316,11 @@ class ScheduledCron extends Command
             }
             if(!empty($dmp))
             {
+                if(Result::where('pt_id', $ptId)->where('field_id', $field_id)->count() == 0)
+                    $result = new Result;
+                else
+                    $result = Result::where('pt_id', $ptId)->where('field_id', $field_id)->first();
                 $fld = Field::find($field_id);
-                $result = new Result;
                 $result->pt_id = $ptId;
                 $result->field_id = $field_id;
                 if (preg_match('/_/', $dmp))
@@ -514,7 +546,7 @@ class ScheduledCron extends Command
             if($pt->enrolment->user->registration)
                 $user = User::where('uid', $user->registration->uid)->first();
             $lot = $user->lot($round);
-            
+
             $res_1 = $lot->panels()->where('panel', 1)->first();
             $res_2 = $lot->panels()->where('panel', 2)->first();
             $res_3 = $lot->panels()->where('panel', 3)->first();

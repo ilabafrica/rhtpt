@@ -176,9 +176,9 @@
                             </li>
                             @endpermission
                             @permission('assign-role')
-                            <li class="{!! Request::segment(1)==strtolower('assign')?strtolower(trans('messages.active')):'' !!}">
+                            <!--<li class="{!! Request::segment(1)==strtolower('assign')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('assign') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.assign-roles') !!}</a>
-                            </li>
+                            </li>-->
                             @endpermission
                         </ul>
                     </li>
@@ -259,6 +259,8 @@
 
         <script type="text/javascript" src="{{ URL::asset('js/script.js') }} "></script>
 
+        <script type="text/javascript" src="{{ URL::asset('js/moment.min.js') }} "></script>
+
         @if(Request::segment(1)==strtolower('event'))
         <script src="{{ asset('controllers/event.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('role'))
@@ -287,7 +289,8 @@
         <script src="{{ asset('controllers/expected.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('shipment'))
         <script src="{{ asset('controllers/shipment.js') }}"></script>
-        @elseif(Request::segment(1)==strtolower('result'))
+        @elseif(Request::segment(1)==strtolower('result'))        
+        <script src="{{ asset('js/jspdf.debug.js') }}"></script>
         <script src="{{ asset('controllers/result.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('permission'))
         <script src="{{ asset('controllers/permission.js') }}"></script>

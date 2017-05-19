@@ -47,8 +47,7 @@ class CreateRegEnrolTables extends Migration
     public function down()
     {
         //  Reverse migrations
-        Schema::dropIfExists('enrolments');
-        Schema::dropIfExists('registration');
+        Schema::dropIfExists('registrations');
         Schema::dropIfExists('nonperformance');
     }
 }

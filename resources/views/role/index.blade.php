@@ -55,9 +55,15 @@
                 <button v-if="role.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>	
+            @permission('update-role')
                 <button v-bind="{ 'disabled': role.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editRole(role)"><i class="fa fa-edit"></i> Edit</button>
-                <button v-if="role.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreRole(role)">Enable</button>
-                <button v-if="role.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteRole(role)">Disable</button>
+            @endpermission
+            @permission('restore-role')
+                <button v-if="role.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreRole(role)"><i class="fa fa-toggle-on"></i> Enable</button>
+            @endpermission
+            @permission('delete-role')
+                <button v-if="role.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteRole(role)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission
             </td>
         </tr>
     </table>

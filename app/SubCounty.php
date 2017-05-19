@@ -34,7 +34,7 @@ class SubCounty extends Model
     }
     public static function idByName($name=NULL)
     {
-        if($code!=NULL)
+        if($name!=NULL)
         {
             try 
             {
@@ -60,5 +60,27 @@ class SubCounty extends Model
         {
             return null;
         }
+    }    
+    /**
+    * Get users for a sub-county
+    *
+    */
+    public function users()
+    {
+        $prole = Role::idByName('Participant');
+        $fls = $this->facilities->lists('id')->toArray();
+        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);
+        return $users;
+    }        
+    /**
+    * Get results for a sub-county
+    *
+    */
+    public function results()
+    {
+        $users = $this->users()->lists('id');
+        $enrolments = Enrol::whereIn('user_id', $users)->lists('id');
+        $results = Pt::whereIn('enrolment_id', $enrolments);
+        return $results;
     }
 }

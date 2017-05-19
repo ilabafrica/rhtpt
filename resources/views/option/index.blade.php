@@ -16,7 +16,7 @@
             <div class="pull-left col-md-6">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.option', 2) !!}
         
-                @permission('create-role')
+                @permission('create-option')
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-option">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
@@ -49,9 +49,13 @@
         <tr v-for="option in options">
             <td>@{{ option.title }}</td>
             <td>@{{ option.description }}</td>
-            <td>	
+            <td>
+            @permission('update-option')	
                 <button class="btn btn-sm btn-primary" @click.prevent="editOption(option)"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteOption(option)"><i class="fa fa-trash-o"></i> Delete</button>
+            @endpermission
+            @permission('delete-option')
+                <button class="btn btn-sm btn-danger" @click.prevent="deleteOption(option)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission
             </td>
         </tr>
     </table>

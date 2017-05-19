@@ -162,6 +162,7 @@ class PtSetupTables extends Migration
       			$table->string('comment')->nullable();
             $table->foreign('pt_id')->references('id')->on('pt');
             $table->foreign('field_id')->references('id')->on('fields');
+            $table->unique(['pt_id', 'field_id']);
             $table->softDeletes();
       			$table->timestamps();
     		});
@@ -177,9 +178,11 @@ class PtSetupTables extends Migration
       //  Reverse migrations
       Schema::dropIfExists('results');
       Schema::dropIfExists('pt');
+      Schema::dropIfExists('enrolments');
       Schema::dropIfExists('shipments');
       Schema::dropIfExists('shippers');
       Schema::dropIfExists('panels');
+      Schema::dropIfExists('lots');
       Schema::dropIfExists('rounds');
       Schema::dropIfExists('materials');
       Schema::dropIfExists('programs');

@@ -16,7 +16,7 @@
             <div class="pull-left col-md-6">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.program', 2) !!}
         
-                @permission('create-role')
+                @permission('create-program')
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-program">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
@@ -54,10 +54,16 @@
                 <button v-if="program.deleted_at==NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
                 <button v-if="program.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
-            <td>	
+            <td>
+            @permission('update-program')	
                 <button v-bind="{ 'disabled': program.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editProgram(program)"><i class="fa fa-edit"></i> Edit</button>
-                <button v-if="program.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreProgram(program)">Enable</button>
-                <button v-if="program.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteProgram(program)">Disable</button>
+            @endpermission
+            @permission('restore-program')
+                <button v-if="program.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreProgram(program)"><i class="fa fa-toggle-on"></i> Enable</button>
+            @endpermission
+            @permission('delete-program')
+                <button v-if="program.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteProgram(program)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission
             </td>
         </tr>
     </table>

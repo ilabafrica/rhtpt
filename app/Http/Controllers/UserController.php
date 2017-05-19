@@ -7,11 +7,14 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Role;
 use App\Facility;
+use App\SubCounty;
+use App\County;
 use App\Program;
 use App\Round;
 
 use DB;
 use Hash;
+use Auth;
 
 class UserController extends Controller
 {
@@ -30,10 +33,34 @@ class UserController extends Controller
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
         $users = User::latest()->withTrashed()->paginate(5);
+        if(Auth::user()->isCountyCoordinator())
+        {
+            $users = County::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+        }
+        else if(Auth::user()->isSubCountyCoordinator())
+        {
+           $users = SubCounty::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+        }
+        else if(Auth::user()->isFacilityInCharge())
+        {
+           $users = Facility::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+        }
         if($request->has('q')) 
         {
             $search = $request->get('q');
             $users = User::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            if(Auth::user()->isCountyCoordinator())
+            {
+                $users = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            }
+            else if(Auth::user()->isSubCountyCoordinator())
+            {
+                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            }
+            else if(Auth::user()->isFacilityInCharge())
+            {
+               $users = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            }
         }
         foreach($users as $user)
         {
@@ -45,6 +72,7 @@ class UserController extends Controller
             $user->facility = '';
             $user->program = '';
             $user->ru()?$user->role = Role::find($user->ru()->role_id)->name:$user->role = '';
+            $user->ru()?$user->rl = $user->ru()->role_id:$user->role = '';
         }
         $response = [
             'pagination' => [
@@ -75,7 +103,8 @@ class UserController extends Controller
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'address' => 'required'
+            'address' => 'required',
+            'username' => 'required'
         ]);
         $request->merge(['password' => Hash::make(User::DEFAULT_PASSWORD)]);
         $create = User::create($request->all());
@@ -124,11 +153,39 @@ class UserController extends Controller
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'address' => 'required'
+            'address' => 'required',
+            'username' => 'required'
         ]);
 
         $edit = User::find($id)->update($request->all());
-
+        if($request->role)
+        {
+            $role = $request->role;
+            $tier = NULL;
+            $program_id = NULL;
+            if($role == Role::idByName("Partner"))
+            {
+                $tier = implode(", ", $request->jimbo);
+            }
+            else if($role == Role::idByName("County Coordinator"))
+            {
+                $tier = $request->county_id;
+            }
+            else if($role == Role::idByName("Sub-County Coordinator"))
+            {
+                $tier = $request->sub_id;
+            }
+            else if($role == Role::idByName("Participant"))
+            {
+                $tier = $request->facility_id;
+                $program_id = $request->program_id;
+            }
+            else if($role == Role::idByName("Facility Incharge"))
+            {
+                $tier = $request->facility_id;
+            }
+            $ru = DB::table('role_user')->insert(["user_id" => $id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
+        }
         return response()->json($edit);
     }
 

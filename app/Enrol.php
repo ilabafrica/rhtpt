@@ -38,6 +38,6 @@ class Enrol extends Model
      */
      public function pt()
      {
-       return $this->hasOne('App\Pt');
+       return $this->hasOne('App\Pt', 'enrolment_id');
      }
 }

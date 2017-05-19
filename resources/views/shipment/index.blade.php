@@ -16,7 +16,7 @@
             <div class="pull-left col-md-6">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.shipment', 2) !!}
         
-                @permission('create-role')
+                @permission('create-shipment')
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-shipment">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
@@ -40,6 +40,28 @@
             </div>
         </div>
     </div>
+    @if(Auth::user()->isSubCountyCoordinator() || Auth::user()->isFacilityInCharge())
+    <table class="table table-bordered">
+        <tr>
+            <th>Round</th>
+            <th>Facility</th>
+            <th>Tracker</th>
+            <th>Panels</th>
+            <th>Picked By</th>
+            <th>Contacts</th>
+            <th>Date Picked</th>
+        </tr>
+        <tr v-for="consignment in consignments">
+            <td>@{{ consignment.rnd }}</td>
+            <td>@{{ consignment.fclty }}</td>
+            <td>@{{ consignment.tracker }}</td>
+            <td>@{{ consignment.total }}</td>
+            <td>@{{ consignment.picked_by }}</td>
+            <td>@{{ consignment.contacts }}</td>
+            <td>@{{ consignment.date_picked }}</td>
+        </tr>
+    </table>
+    @else
     <table class="table table-bordered">
         <tr>
             <th>Round</th>
@@ -61,15 +83,24 @@
                 <button v-if="shipment.date_received!=NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Received</button>
             </td>
             <td>	
+            @permission('receive-shipment')
                 <button v-bind="{ 'disabled': shipment.date_received!=NULL}" id="receipt" class="btn btn-sm btn-asbestos receive" data-toggle="modal" data-target="#receive-shipment" data-fk="@{{shipment.id}}"><i class="fa fa-download"></i> Receive</button>
+            @endpermission
+            @permission('update-shipment')
                 <button v-bind="{ 'disabled': shipment.date_received!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editShipment(shipment)"><i class="fa fa-edit"></i> Edit</button>
+            @endpermission
+            
                 <button v-bind="{ 'disabled': shipment.date_received==NULL}"  id="distribute" data-toggle="modal" data-target="#distribute-shipment" data-fk="@{{shipment.id}}" class="btn btn-sm btn-pomegranate distribute"><i class="fa fa-pie-chart"></i> Distribute</button>
+            
+            @permission('view-distributions')
                 <button v-bind="{ 'disabled': shipment.shipment.cons==0}" class="btn btn-sm btn-midnight-blue" @click.prevent="loadConsignments(shipment)"><i class="fa fa-link"></i> Picks</button>
+            @endpermission
             </td>
         </tr>
     </table>
+    @endif
     <!-- Pagination -->
-    <!--
+    
     <nav>
         <ul class="pagination">
             <li v-if="pagination.current_page > 1" class="page-item">
@@ -91,7 +122,7 @@
             </li>
         </ul>
     </nav>
-     -->
+     
     <!-- Create Shipment Modal -->
     <div class="modal fade" id="create-shipment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -278,14 +309,14 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Tracker ID:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" name="tracker" class="form-control" v-model="newShipment.tracker" />
+                                    <input type="text" name="tracker" class="form-control" v-model="fillShipment.tracker" />
                                     <span v-if="formErrorsUpdate['tracker']" class="error text-danger">@{{ formErrorsUpdate['tracker'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Shipping Method:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control c-select" name="shipping_method" id="shipping_method" v-model="fillShipment.shipping_method" v-on:change="fetchShippers">
+                                    <select class="form-control c-select" name="shipping_agent" id="shipping_agent" v-model="fillShipment.shipping_method" v-on:change="fetchAgents">
                                         <option selected></option>
                                         <option v-for="method in methods" :value="method.name">@{{ method.title }}</option>   
                                     </select>

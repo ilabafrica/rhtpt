@@ -16,7 +16,7 @@
             <div class="pull-left col-md-6">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.shipper', 2) !!}
         
-                @permission('create-role')
+                @permission('create-shipper')
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-shipper">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
@@ -61,9 +61,15 @@
                 <button v-if="shipper.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>	
+            @permission('update-shipper')
                 <button v-bind="{ 'disabled': shipper.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editShipper(shipper)"><i class="fa fa-edit"></i> Edit</button>
-                <button v-if="shipper.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreShipper(shipper)">Enable</button>
-                <button v-if="shipper.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteShipper(shipper)">Disable</button>
+            @endpermission
+            @permission('restore-shipper')
+                <button v-if="shipper.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreShipper(shipper)"><i class="fa fa-toggle-on"></i> Enable</button>
+            @endpermission
+            @permission('delete-shipper')
+                <button v-if="shipper.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteShipper(shipper)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission
             </td>
         </tr>
     </table>

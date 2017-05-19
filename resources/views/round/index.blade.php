@@ -16,7 +16,7 @@
             <div class="pull-left col-md-6">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.pt-round', 2) !!}
         
-                @permission('create-role')
+                @permission('create-round')
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-round">
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
@@ -51,11 +51,17 @@
             <td>@{{ round.description }}</td>
             <td>@{{ round.start_date }}</td>
             <td>@{{ round.end_date }}</td>
-            <td>	
+            <td>
+            @permission('update-round')	
                 <button class="btn btn-sm btn-primary" @click.prevent="editRound(round)"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-trash-o"></i> Delete</button>
+            @endpermission
+            @permission('delete-round')
+                <button class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission
+            @permission('enrol-participants')
                 <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}"><i class="fa fa-send"></i> Enrol Testers</button>
                 <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Enrolments</button>
+            @endpermission
             </td>
         </tr>
     </table>
