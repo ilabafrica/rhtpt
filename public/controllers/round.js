@@ -24,7 +24,8 @@ new Vue({
     participants: [],
     psrch: '',
     enrollments: [],
-    esrch: ''
+    esrch: '',
+    testers: []
   },
 
   computed: {
@@ -177,7 +178,7 @@ new Vue({
 
       loadParticipants: function() {
         this.$http.get('/parts').then((response) => {
-            this.participants = response.data.data;
+            this.participants = response.data.data.data;
         }, (response) => {
             console.log(response);
         });
@@ -195,9 +196,8 @@ new Vue({
 	  },
       loadEnrollments: function(round) {
         this.$http.get('/enrolled/'+round.id).then((response) => {
-            this.enrolments = response.data.data.data;
+            this.testers = response.data.data.data;
             $("#enrolled-participants").modal('show');
-
         }, (response) => {
             console.log(response);
         });

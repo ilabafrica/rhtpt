@@ -153,33 +153,36 @@
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateLot(fillLot.id)">
                         <div class="col-md-12">
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">PT Item:</label>
+                                <label class="col-sm-4 form-control-label" for="title">PT Round:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control c-select" name="item_id" v-model="fillLot.item_id">
+                                    <select class="form-control c-select" name="round_id" v-model="fillLot.round_id">
                                         <option selected></option>
-                                        <option v-for="item in items" :value="item.id">@{{ item.value }}</option>   
+                                        <option  v-for="round in rounds" :value="round.id">@{{ round.value }}</option>   
                                     </select>
-                                    <span v-if="formErrorsUpdate['item_id']" class="error text-danger">@{{ formErrorsUpdate['item_id'] }}</span>
+                                    <span v-if="formErrorsUpdate['round_id']" class="error text-danger">@{{ formErrorsUpdate['round_id'] }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Result:</label>
+                                <label class="col-sm-4 form-control-label" for="title">Lot No.:</label>
                                 <div class="col-sm-8">
-                                    <div class="form-radio form-radio-inline" v-for="option in options">
-                                        <label class="form-radio-label">
-                                            <input type="radio" :value="option.id" v-model="fillLot.result" name="result">
-                                            @{{ option.value }}
+                                    <select class="form-control c-select" name="lot" v-model="fillLot.lot">
+                                        <option selected></option>
+                                        <option v-for="lt in [1,2,3,4,5]" :value="lt">@{{ lt }}</option>   
+                                    </select>
+                                    <span v-if="formErrorsUpdate['lot']" class="error text-danger">@{{ formErrorsUpdate['lot'] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="title">Tester ID:</label>
+                                <div class="col-sm-8">
+                                    <div class="form-checkbox checkbox-inline" v-for="option in 10">
+                                        <label class="form-checkbox-label">
+                                            <input type="checkbox" :value="option" v-model="fillLot.tester_id">
+                                            @{{ option }}
                                         </label>
                                     </div>
-                                    <span v-if="formErrorsUpdate['result']" class="error text-danger">@{{ formErrorsUpdate['result'] }}</span>
+                                    <span v-if="formErrorsUpdate['tester_id']" class="error text-danger">@{{ formErrorsUpdate['tester_id'] }}</span>
                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Tested By:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="tested_by" class="form-control" v-model="fillLot.tested_by" />
-                                    <span v-if="formErrorsUpdate['tested_by']" class="error text-danger">@{{ formErrorsUpdate['tested_by'] }}</span>
-                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">
                                 <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>

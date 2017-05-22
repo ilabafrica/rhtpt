@@ -68,7 +68,7 @@
                 <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             @permission('enrol-participants')
-                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}"><i class="fa fa-send"></i> Enrol Testers</button>
+                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}" @click.prevent="loadParticipants(round)"><i class="fa fa-send"></i> Enrol Testers</button>
                 <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-nephritis" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}"><i class="fa fa-level-up"></i> Upload Sheet</button>
                 <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Enrolled Testers</button>
             @endpermission
@@ -303,7 +303,7 @@
                             <div class="input-group input-group-sm">
                                 <input type="text" class="form-control" placeholder="Search for..." v-model="esrch">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-secondary" type="button" @click="srchEnrolled()" v-if="!loading"><i class="fa fa-search"></i></button>
+                                    <button class="btn btn-secondary" type="button" @click="srchEnrol()" v-if="!loading"><i class="fa fa-search"></i></button>
                                     <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
                                 </span>
                             </div>
@@ -316,15 +316,13 @@
                                     <th>Participant</th>
                                     <th>UID</th>
                                     <th>Facility</th>
-                                    <th>Facility</th>
                                     <th>Program</th>
                                 </tr>
-                                <tr v-for="participant in enrolments">
-                                    <td>@{{ participant.name }}</td>
-                                    <td>@{{ participant.uid }}</td>
-                                    <td>@{{ participant.uid }}</td>
-                                    <td>@{{ participant.facility }}</td>
-                                    <td>@{{ participant.program }}</td>
+                                <tr v-for="enrol in testers">
+                                    <td>@{{ enrol.name }}</td>
+                                    <td>@{{ enrol.uid }}</td>
+                                    <td>@{{ enrol.facility }}</td>
+                                    <td>@{{ enrol.program }}</td>
                                 </tr>
                             </table>
                             <!-- Pagination -->

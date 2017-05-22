@@ -310,7 +310,7 @@ class UserController extends Controller
         {
             foreach($usrs as $user)
             {
-                dd($user->ru());
+                //dd($user->ru());
                 $user->facility = Facility::find($user->ru()->tier)->name;
                 $user->program = Program::find($user->ru()->program_id)->name;
             }
@@ -338,17 +338,17 @@ class UserController extends Controller
     public function enrolled($id)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $usrs = Round::find($id)->enrolments;
+        $ids = Round::find($id)->enrolments->lists('user_id')->toArray();
+        $usrs = User::whereIn('id', $ids)->latest()->paginate(5);
+        //dd($usrs);
         if(count($usrs)>0)
         {
             foreach($usrs as $enrol)
             {
-                $enrol->name = $enrol->user->name;
-                $enrol->uid = $enrol->user->name;
-                $facility = Facility::find($enrol->user->ru()->tier);
+                $facility = Facility::find($enrol->ru()->tier);
                 $enrol->facility = $facility->name;
                 $enrol->mfl = $facility->code;
-                $enrol->program = Program::find($enrol->tier->program_id)->name;
+                $enrol->program = Program::find($enrol->ru()->program_id)->name;
             }
         }
         $response = [

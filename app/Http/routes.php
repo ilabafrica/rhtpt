@@ -347,6 +347,12 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "ShipmentController@consignments"
     ));
 
+    //  Get feedback
+    Route::get("/feedback/{id}", array(
+        "as"   => "feedback.fetch",
+        "uses" => "ResultController@feedback"
+    ));
+
     Route::get('api/search_role',['as'=>'role.search', 'uses'=>'RoleController@index']);
     Route::get('api/search_material',['as'=>'material.search', 'uses'=>'MaterialController@index']);
     Route::get('api/search_option',['as'=>'option.search', 'uses'=>'OptionController@index']);

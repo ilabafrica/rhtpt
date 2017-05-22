@@ -9,6 +9,7 @@ use App\Enrol;
 use App\Program;
 use App\Facility;
 use App\Notification;
+use App\User;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 

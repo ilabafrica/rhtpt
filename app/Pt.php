@@ -22,8 +22,8 @@ class Pt extends Model
   	* Status of result
   	*
   	*/
-  	const SATISFACTORY = 1;
-  	const UNSATISFACTORY = 0;
+  	const SATISFACTORY = 0;
+  	const UNSATISFACTORY = 1;
 
   	/**
   	* The database table used by the model.
@@ -46,5 +46,40 @@ class Pt extends Model
     public function enrolment()
     {
         return $this->belongsTo('App\Enrol');
+    }
+    /**
+    * Check pt outcome
+    *
+    */
+    public function outcome($feedback)
+    {
+        if($feedback == Pt::SATISFACTORY)
+            return 'Satisfactory';
+        else
+            return 'Unsatisfactory';
+    }
+    /**
+    * Get reason for unsatisfaction
+    *
+    */
+    public function unsatisfactory()
+    {
+        //  TODO  - Check more than one reason...
+        if($this->incorrect_results == 1)
+            return 'Incorrect Results';
+        else if($this->incomplete_kit_data == 1)
+            return 'Incomplete Kit Data';
+        else if($this->dev_from_procedure == 1)
+            return 'Deviation from Procedure';
+        else if($this->incomplete_other_information == 1)
+            return 'Incomplete Other Information';
+        else if($this->use_of_expired_kits == 1)
+            return 'Use of Expired Kits';
+        else if($this->invalid_results == 1)
+            return 'Invalid Results';
+        else if($this->wrong_algorithm == 1)
+            return 'Wrong Algorithm';
+        else if($this->incomplete_results == 1)
+            return 'Incomplete Results';
     }
 }

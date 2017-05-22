@@ -14,6 +14,8 @@ use App\Enrol;
 use App\Round;
 use App\County;
 use App\SubCounty;
+use App\Facility;
+use App\Program;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
@@ -332,5 +334,33 @@ class ResultController extends Controller
         $end = $pos === false ? strlen($str) : $pos;
 
         return substr_replace($str, $replacement, $start, $end - $start);
+    }
+    /**
+     * Fetch feedback for the given id
+     *
+     * @param ID of the selected pt -  $id
+     */
+    public function feedback($id)
+    {
+        $pt = Pt::find($id);
+        $usr = User::find($pt->enrolment->user_id);
+        $pt->uid = (string)$usr->uid;
+        $pt->tester = $usr->name;
+        $pt->program = Program::find($usr->ru()->program_id)->name;
+        $facility = Facility::find($usr->ru()->tier);
+        $pt->county = strtoupper($facility->subCounty->county->name);
+        $pt->sub_county = $facility->subCounty->name;
+        $pt->facility = $facility->name;
+        $pt->round = $pt->enrolment->round->name;
+        $pt->verdict = $pt->outcome($pt->feedback);
+        $pt->remark = '';
+        if($pt->feedback == Pt::UNSATISFACTORY)
+            $pt->remark = 'Reason: '.$pt->unsatisfactory();
+        $pt->date_authorized = Carbon::parse($pt->updated_at)->toFormattedDateString();
+        $response = [
+            'data' => $pt
+        ];
+
+        return response()->json($response);
     }
 }
