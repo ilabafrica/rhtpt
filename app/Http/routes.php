@@ -23,6 +23,10 @@ Route::post('password/email', 'Auth\PasswordController@postEmail');
 Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
 Route::post('password/reset', 'Auth\PasswordController@postReset');
 
+Route::get('register', function () {
+    return view('auth.register');
+});
+
 /*Route::get('/', 'DashboardController@manageDash');
 Route::resource('/','DashboardController');
 Route::get("dash/ge", array(
