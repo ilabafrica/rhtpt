@@ -102,6 +102,13 @@
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRole">
                         <div class="col-md-12">
                             <div class="form-group row">
+                                <label class="col-sm-4 form-control-label" for="email">Email</label>
+                                <div class="col-sm-8">
+                                    <input v-validate data-rules="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" placeholder="Email">
+                                    <span v-show="errors.has('email')" class="help is-danger">@{{ errors.first('email') }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Title:</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="name" class="form-control" v-model="newRole.name" />

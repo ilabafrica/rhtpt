@@ -252,6 +252,8 @@
         <!-- Vue JS -->
         <script src="{{ asset('js/vue.min.js') }}"></script>
         <script src="{{ asset('js/vue-resource.min.js') }}"></script>
+        <script src="{{ asset('js/vee-validate.js') }}"></script>
+        
         <!-- Toastr -->
         <script src="{{ asset('js/toastr.min.js') }}"></script>
 
@@ -301,6 +303,8 @@
         <script src="{{ asset('controllers/nonperf.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('lot'))
         <script src="{{ asset('controllers/lot.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('signup'))
+        <script src="{{ asset('controllers/signup.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('report'))
         <script src="{{ asset('js/highcharts.js') }}"></script>
         <script src="{{ asset('js/exporting.js') }}"></script>

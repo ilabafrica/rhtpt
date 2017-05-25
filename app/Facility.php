@@ -34,8 +34,16 @@ class Facility extends Model
 		{
 			try 
 			{
-				$facility = Facility::where('code', $code)->orderBy('code', 'asc')->firstOrFail();
-				return $facility->id;
+				$facility = Facility::where('code', $code)->orderBy('name', 'asc')->count();
+				if($facility > 0)
+				{
+					$facility = Facility::where('code', $code)->orderBy('name', 'asc')->first();
+					return $facility->id;
+				}
+				else
+				{
+					return null;
+				}
 			} 
 			catch (ModelNotFoundException $e) 
 			{

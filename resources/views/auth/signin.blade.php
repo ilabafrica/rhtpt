@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en">
 
 <head>
 	<meta charset="UTF-8">
@@ -16,10 +16,6 @@
 	<link rel="stylesheet" href="{{ asset('harmony/css/font-awesome.min.css') }}">
 	<!-- Sandstone Bootstrap CSS -->
 	<link rel="stylesheet" href="{{ asset('harmony/css/bootstrap.css') }}">
-	<!-- Awesome Bootstrap checkbox -->
-	<link rel="stylesheet" href="{{ asset('harmony/css/awesome-bootstrap-checkbox.css') }}">
-	<!-- Admin Stye -->
-	<link rel="stylesheet" href="{{ asset('harmony/css/style.css') }}">
 	<!-- Custom Font -->
 	<link rel="stylesheet" href="{{ asset('harmony/css/font.css') }}">
 	<!-- Custom Styling -->
@@ -81,9 +77,9 @@
 		</div>
 	</div>
 </body>
-	<!-- Loading Scripts -->
-	<script src="{{ asset('harmony/js/jquery.min.js') }}"></script>
-	<script src="{{ asset('harmony/js/bootstrap-select.min.js') }}"></script>
-	<script src="{{ asset('harmony/js/bootstrap.min.js') }}"></script>
-	<script src="{{ asset('harmony/js/main.js') }}"></script>
+	<!-- Vue JS -->
+	<script src="{{ asset('js/jquery-1.12.3.min.js') }}"></script>
+    <script src="{{ asset('js/vue.min.js') }}"></script>
+    <script src="{{ asset('js/vue-resource.min.js') }}"></script>
+    <script src="{{ asset('js/vee-validate.js') }}"></script>
 </html>

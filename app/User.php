@@ -37,7 +37,12 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     const EIGHT = 8;
     const NINE = 9;
     //	Default password
-	const DEFAULT_PASSWORD = 'secret';
+	  const DEFAULT_PASSWORD = 'secret';
+    //  Tester Designations
+    const NURSE = 1;
+    const LABTECH = 2;
+    const COUNSELLOR = 3;
+    const RCO = 4;
 
     /**
      * The database table used by the model.
@@ -51,7 +56,7 @@ EntrustUserTrait::restore insteadof SoftDeletes;
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password', 'username', 'address', 'phone', 'gender'];
+    protected $fillable = ['name', 'email', 'password', 'username', 'address', 'phone', 'gender', 'designation'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -124,15 +129,15 @@ EntrustUserTrait::restore insteadof SoftDeletes;
 			try 
 			{
 				$count = User::where('uid', $uid)->count();
-                if($count > 0)
-                {
-                    $user = User::where('uid', $uid)->orderBy('uid', 'asc')->first();
-				    return $user->id;
-                }
-                else
-                {
-                    return null;
-                }
+        if($count > 0)
+        {
+            $user = User::where('uid', $uid)->orderBy('uid', 'asc')->first();
+            return $user->id;
+        }
+        else
+        {
+            return null;
+        }
 			} 
 			catch (ModelNotFoundException $e) 
 			{
@@ -238,6 +243,39 @@ EntrustUserTrait::restore insteadof SoftDeletes;
             catch (ModelNotFoundException $e) 
             {
                 Log::error("The user ` $name ` does not exist:  ". $e->getMessage());
+                //TODO: send email?
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+    /**
+    * Return User ID given the email
+    *
+    */
+    public static function idByEmail($email=NULL)
+    {
+        if($email!=NULL)
+        {
+            try 
+            {
+                $count = User::where('email', $email)->count();
+                if($count > 0)
+                {
+                    $user = User::where('email', $email)->orderBy('name', 'asc')->first();
+                    return $user->id;
+                }
+                else
+                {
+                    return null;
+                }
+            } 
+            catch (ModelNotFoundException $e) 
+            {
+                Log::error("The user with email ` $email ` does not exist:  ". $e->getMessage());
                 //TODO: send email?
                 return null;
             }

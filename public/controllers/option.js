@@ -62,16 +62,16 @@ new Vue({
         },
 
         createOption: function(){
-		  var input = this.newOption;
-		  this.$http.post('/vueoptions',input).then((response) => {
-		    this.changePage(this.pagination.current_page);
-			this.newOption = {'title':'','description':''};
-			$("#create-option").modal('hide');
-			toastr.success('Option Created Successfully.', 'Success Alert', {timeOut: 5000});
-		  }, (response) => {
-			this.formErrors = response.data;
-	    });
-	},
+    		  var input = this.newOption;
+    		  this.$http.post('/vueoptions',input).then((response) => {
+    		    this.changePage(this.pagination.current_page);
+    			this.newOption = {'title':'','description':''};
+    			$("#create-option").modal('hide');
+    			toastr.success('Option Created Successfully.', 'Success Alert', {timeOut: 5000});
+    		  }, (response) => {
+    			this.formErrors = response.data;
+    	    });
+    	},
 
       deleteOption: function(option){
         this.$http.delete('/vueoptions/'+option.id).then((response) => {

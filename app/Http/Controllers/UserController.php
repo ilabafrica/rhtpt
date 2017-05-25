@@ -364,4 +364,114 @@ class UserController extends Controller
         ];
         return !empty($usrs) ? response()->json($response) : $error;
     }
+    /**
+     * Function to return list of sexes.
+     *
+     */
+    public function sex()
+    {
+        $sexes = [
+            User::MALE => 'Male',
+            User::FEMALE => 'Female'
+        ];
+        $categories = [];
+        foreach($sexes as $key => $value)
+        {
+            $categories[] = ['title' => $value, 'name' => $key];
+        }
+        return $categories;
+    }
+    /**
+     * Function to return list of designations.
+     *
+     */
+    public function designations()
+    {
+        $designations = [
+            0 => '',
+            User::NURSE => 'Nurse',
+            User::LABTECH => 'Lab Tech.',
+            User::COUNSELLOR => 'Counsellor',
+            User::RCO => 'RCO',
+        ];
+        $categories = [];
+        foreach($designations as $key => $value)
+        {
+            $categories[] = ['title' => $value, 'name' => $key];
+        }
+        return $categories;
+    }
+
+    /**
+     * Function to register new participants
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'gender' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+            'designation' => 'required',
+            'program' => 'required',
+            'county' => 'required',
+            'sub_county' => 'required',
+            'mfl_code' => 'required',
+            'facility' => 'required',
+            'in_charge' => 'required',
+            'in_charge_email' => 'required',
+            'in_charge_phone' => 'required'
+        ]);
+        //  Prepare to save user details
+        //  Check if user exists
+        $userId = User::idByName($request->name);
+        if(!$userId)
+            $userId = User::idByEmail($request->email);
+        if(!$userId)
+        {
+            $user = new User;
+            $user->name = $request->name;
+            $user->gender = $request->gender;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->address = $request->address;
+            $user->designation = $request->designation;   
+            $user->save();
+            $userId = $user->id;
+        }
+        //  Prepare to save facility details
+        $facilityId = Facility::idByCode($request->mfl_code);
+        if(!$facilityId)
+            $facilityId = Facility::idByName($request->facility);
+        if($facilityId)
+            $facility = Facility::find($facilityId);
+        else
+            $facility = new Facility;
+        $facility = new Facility;
+        $facility->code = $request->mfl_code;
+        $facility->name = $request->facility;
+        $facility->in_charge = $request->in_charge;
+        $facility->in_charge_phone = $request->in_charge_phone;
+        $facility->in_charge_email = $request->in_charge_email;
+        //  Get sub-county
+        $sub_county = SubCounty::idByName($request->sub_county);
+        if(!$sub_county)
+        {
+            $sb = new SubCounty;
+            $sb->name = $request->sub_county;
+            $sb->county_id = $request->county;
+            $sb->save();
+            $sub_county = $sb->id;
+        }
+        $facility->sub_county_id = $sub_county;
+        $facility->save();
+        $facilityId = $facility->id;
+        //  Prepare to save role-user details
+        $roleId = Role::idByName('Participant');
+        DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => $request->program]);
+        return response()->json('Registered.');
+    }
 }

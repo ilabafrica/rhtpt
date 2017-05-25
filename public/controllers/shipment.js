@@ -79,7 +79,7 @@ new Vue({
         createShipment: function(){
     		  var input = this.newShipment;
     		  this.$http.post('/vueshipments',input).then((response) => {
-    		    this.changePage(this.pagination.current_page);
+    		  this.changePage(this.pagination.current_page);
     			this.newShipment = {'pt_round':'','county_id':'','date_prepared':'','date_shipped':'','tracker':'','shipping_method':'','panels_shipped':''};
     			$("#create-shipment").modal('hide');
     			toastr.success('Shipment Created Successfully.', 'Success Alert', {timeOut: 5000});

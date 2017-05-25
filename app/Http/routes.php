@@ -23,9 +23,34 @@ Route::post('password/email', 'Auth\PasswordController@postEmail');
 Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
 Route::post('password/reset', 'Auth\PasswordController@postReset');
 
-Route::get('register', function () {
-    return view('auth.register');
+Route::get('signup', function () {
+    return view('auth.signup');
 });
+
+Route::get("/sex", array(
+    "as"   => "sex.fetch",
+    "uses" => "UserController@sex"
+));
+
+Route::get("/cnts", array(
+    "as"   => "cnts.fetch",
+    "uses" => "FacilityController@counties"
+));
+
+Route::get("/progs", array(
+    "as"   => "programs.fetch",
+    "uses" => "ProgramController@programs"
+));
+
+Route::get("/des", array(
+    "as"   => "designations.fetch",
+    "uses" => "UserController@designations"
+));
+
+Route::post("/register", array(
+    "as"   => "self.register",
+    "uses" => "UserController@register"
+));
 
 /*Route::get('/', 'DashboardController@manageDash');
 Route::resource('/','DashboardController');
@@ -167,11 +192,6 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "ExpectedController@options"
     ));
 
-    Route::get("/cnts", array(
-        "as"   => "cnts.fetch",
-        "uses" => "FacilityController@counties"
-    ));
-
     Route::get("/con_subs/{id?}", array(
         "as"   => "cons.subs",
         "uses" => "FacilityController@consignment"
@@ -185,10 +205,6 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/fclts/{id}", array(
         "as"   => "facilities.fetch",
         "uses" => "FacilityController@facilities"
-    ));
-    Route::get("/progs", array(
-        "as"   => "programs.fetch",
-        "uses" => "ProgramController@programs"
     ));
 
     Route::get("/shpprs/{id}", array(

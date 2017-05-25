@@ -52,7 +52,7 @@ new Vue({
 
   ready : function(){
   		this.getVueShippers(this.pagination.current_page);
-        this.loadShipperTypes();
+      this.loadShipperTypes();
   },
 
   methods : {
