@@ -71,7 +71,7 @@
             @permission('delete-result')
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteResult(result)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
-            <button v-if="result.panel_status==3" class="btn btn-sm btn-concrete" @click="printFeedback(result.id)"><i class="fa fa-print"></i> Print</button>
+            <button class="btn btn-sm btn-concrete" @click="printFeedback(result.id)"><i class="fa fa-print"></i> Print</button>
             </td>
         </tr>
     </table>

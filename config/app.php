@@ -147,6 +147,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -162,7 +163,7 @@ return [
         Zizaco\Entrust\EntrustServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Jenssegers\Date\DateServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class
+        Intervention\Image\ImageServiceProvider::class,
 
     ],
 
@@ -219,6 +220,6 @@ return [
         'Carbon'    =>  Jenssegers\Date\Date::class,
         'Image'     =>  Intervention\Image\Facades\Image::class,
         'SoftDeletes' => Illuminate\Database\Eloquent\SoftDeletes::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
-
 ];

@@ -346,8 +346,8 @@ class ResultController extends Controller
         $usr = User::find($pt->enrolment->user_id);
         $pt->uid = (string)$usr->uid;
         $pt->tester = $usr->name;
-        $pt->program = Program::find($usr->ru()->program_id)->name;
-        $facility = Facility::find($usr->ru()->tier);
+        $pt->program = Program::find(1)->name;
+        $facility = Facility::find(1);
         $pt->county = strtoupper($facility->subCounty->county->name);
         $pt->sub_county = $facility->subCounty->name;
         $pt->facility = $facility->name;

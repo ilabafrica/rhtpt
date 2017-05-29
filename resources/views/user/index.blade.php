@@ -13,7 +13,7 @@
     <!-- User Listing -->
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="pull-left col-md-6">
+            <div class="pull-left col-md-8">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.user', 2) !!}
         
                 @permission('create-user')
@@ -26,6 +26,13 @@
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
                     </a>
+                @permission('create-user')
+                    <a class="btn btn-sm btn-concrete" href="/Registration.xlsx">
+                        <i class="fa fa-download"></i>
+                        Worksheet
+                    </a>
+                    <button class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#upload-worksheet"><i class="fa fa-level-up"></i> Upload Worksheet</button>
+                @endpermission
                 </h5>
             </div>
             <div class="col-md-2"></div>
@@ -420,6 +427,35 @@
                             </div>
                         </form>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Upload batch registration worksheet -->
+    <div class="modal fade" id="upload-worksheet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <h4 class="modal-title" id="myModalLabel">Upload Worksheet</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form enctype="multipart/form-data" route="batch.registration" method="POST">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label for="exampleInputFile" class="col-sm-4 col-form-label">Select Worksheet</label>
+                                <div class="col-sm-8">
+                                    <input type="file" id="worksheet" name="worksheet" class="form-control" v-model="batchWorksheet.worksheet">
+                                </div>
+                            </div>
+
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

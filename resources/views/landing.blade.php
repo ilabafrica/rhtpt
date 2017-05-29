@@ -41,9 +41,8 @@
                         <li class="nav-item"><a class="nav-link" href="#">Drilldown</a></li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item"><a class="nav-link" href="" data-target="#myModal" data-toggle="modal"><i class="fa fa-user-circle"></i> About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="" data-target="#myModal" data-toggle="modal"><i class="fa fa-user-circle"></i> About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="" data-target="#myModal" data-toggle="modal"><i class="fa fa-user-circle"></i> About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="" data-target="#myModal" data-toggle="modal"><i class="fa fa-user-circle"></i> Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="" data-target="#myModal" data-toggle="modal"><i class="fa fa-user-circle"></i> Register</a></li>
                     </ul>
                 </div>
             </nav>

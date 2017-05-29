@@ -52,6 +52,10 @@ Route::post("/register", array(
     "uses" => "UserController@register"
 ));
 
+    Route::get('dashboard', function () {
+        return view('landing');
+    });
+
 /*Route::get('/', 'DashboardController@manageDash');
 Route::resource('/','DashboardController');
 Route::get("dash/ge", array(
@@ -371,6 +375,17 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/feedback/{id}", array(
         "as"   => "feedback.fetch",
         "uses" => "ResultController@feedback"
+    ));
+
+    //  Export summary
+    Route::any('/review/summary/{id}/export', array(
+        "as"    =>  "report.summary.export",
+        "uses"  =>  "ReportController@download"
+    ));
+    //  Import Audit Data
+    Route::any('/excel/users', array(
+        "as"    =>  "batch.registration",
+        "uses"  =>  "UserController@batchRegistration"
     ));
 
     Route::get('api/search_role',['as'=>'role.search', 'uses'=>'RoleController@index']);

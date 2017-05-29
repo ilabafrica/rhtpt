@@ -28,6 +28,7 @@ new Vue({
     error: false,
     query: '',
     formTransErrors:{},
+    batchWorksheet:{'worksheet': ''},
   },
 
   computed: {
@@ -140,7 +141,7 @@ new Vue({
       // Populate subcounties from FacilityController
       loadSubcounties: function() {
         let id = $('#county').val();
-            console.log(id);
+            //console.log(id);
         this.$http.get('/subs/'+id).then((response) => { 
             this.subcounties = response.data;
 
@@ -178,6 +179,28 @@ new Vue({
         }, (response) => {
             console.log(response);
         });
+      },
+
+      imageChanged: function(e){
+          console.log(e.target.files[0]);
+          var fileReader = new FileReader();
+          fileReader.readAsDataURL(e.target.files[0]);
+          fileReader.onload = (e) => {
+              this.batchWorksheet.worksheet = e.target.result;
+          }
+      },
+
+      //    Ibatch registration
+      uploadWorkshet: function() {
+          var input = this.batchWorksheet;
+          this.$http.post('/excel/users', input).then((response) => {
+              //this.changePage(this.pagination.current_page); - @TODO
+              this.fillUser = {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''};
+              $("#edit-user").modal('hide');
+              toastr.success('User Updated Successfully.', 'Success Alert', {timeOut: 5000});
+          }, (response) => {
+              this.formErrorsUpdate = response.data;
+          });
       },
 
       search: function() {

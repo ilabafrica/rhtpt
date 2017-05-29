@@ -16,6 +16,8 @@ use App\Libraries\AfricasTalkingGateway as Bulk;
 use Auth;
 use DB;
 use Jenssegers\Date\Date as Carbon;
+use Excel;
+use App;
 
 class RoundController extends Controller
 {
@@ -196,3 +198,4 @@ class RoundController extends Controller
         return response()->json('Enrolled.');
     }
 }
+$excel = App::make('excel');

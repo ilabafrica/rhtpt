@@ -27,10 +27,10 @@
                         {!! trans('messages.back') !!}
                     </a>
                 @permission('enrol-participants')
-                    <button type="button" class="btn btn-sm btn-concrete" data-toggle="modal" data-target="#create-round">
+                    <a class="btn btn-sm btn-concrete" href="/Enrollment.xlsx">
                         <i class="fa fa-download"></i>
-                        Enrolment Template
-                    </button>
+                        Worksheet
+                    </a>
                 @endpermission
                 </h5>
             </div>
@@ -69,7 +69,7 @@
             @endpermission
             @permission('enrol-participants')
                 <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}" @click.prevent="loadParticipants(round)"><i class="fa fa-send"></i> Enrol Testers</button>
-                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-nephritis" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}"><i class="fa fa-level-up"></i> Upload Sheet</button>
+                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-nephritis" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}"><i class="fa fa-level-up"></i> Upload Worksheet</button>
                 <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Enrolled Testers</button>
             @endpermission
             </td>
