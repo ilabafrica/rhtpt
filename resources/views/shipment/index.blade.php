@@ -79,18 +79,18 @@
             <td>@{{ shipment.shppr }}</td>
             <td>@{{ shipment.panels_shipped }}</td>
             <td>
-                <button v-if="shipment.date_received==NULL" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
-                <button v-if="shipment.date_received!=NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Received</button>
+                <button v-if="!shipment.date_received" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
+                <button v-if="shipment.date_received" class="mbtn mbtn-raised mbtn-success mbtn-xs">Received</button>
             </td>
             <td>	
             @permission('receive-shipment')
-                <button v-bind="{ 'disabled': shipment.date_received!=NULL}" id="receipt" class="btn btn-sm btn-asbestos receive" data-toggle="modal" data-target="#receive-shipment" data-fk="@{{shipment.id}}"><i class="fa fa-download"></i> Receive</button>
+                <button v-bind="{ 'disabled': shipment.date_received}" id="receipt" class="btn btn-sm btn-asbestos receive" data-toggle="modal" data-target="#receive-shipment" :data-fk="shipment.id"><i class="fa fa-download"></i> Receive</button>
             @endpermission
             @permission('update-shipment')
-                <button v-bind="{ 'disabled': shipment.date_received!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editShipment(shipment)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': shipment.date_received}" class="btn btn-sm btn-primary" @click.prevent="editShipment(shipment)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             
-                <button v-bind="{ 'disabled': shipment.date_received==NULL}"  id="distribute" data-toggle="modal" data-target="#distribute-shipment" data-fk="@{{shipment.id}}" class="btn btn-sm btn-pomegranate distribute"><i class="fa fa-pie-chart"></i> Distribute</button>
+                <button v-bind="{ 'disabled': !shipment.date_received}"  id="distribute" data-toggle="modal" data-target="#distribute-shipment" :data-fk="shipment.id" class="btn btn-sm btn-pomegranate distribute"><i class="fa fa-pie-chart"></i> Distribute</button>
             
             @permission('view-distributions')
                 <button v-bind="{ 'disabled': shipment.shipment.cons==0}" class="btn btn-sm btn-midnight-blue" @click.prevent="loadConsignments(shipment)"><i class="fa fa-link"></i> Picks</button>
@@ -502,7 +502,7 @@
                         <div class="col-md-4"></div>
                         <div class="col-md-4" style="padding-bottom:10px;">
                             <div class="input-group input-group-sm">
-                                <input type="text" class="form-control" placeholder="Search for..." v-model="psrch">
+                                <input type="text" class="form-control" placeholder="Search for..." v-model="query">
                                 <span class="input-group-btn">
                                     <button class="btn btn-secondary" type="button" @click="srchEnrol()" v-if="!loading"><i class="fa fa-search"></i></button>
                                     <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
