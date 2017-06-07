@@ -54,10 +54,13 @@
             <td></td>
             <td>
             @permission('update-lot')	
-                <button class="btn btn-sm btn-primary" @click.prevent="editLot(lot)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': lot.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editLot(lot)"><i class="fa fa-edit"></i> Edit</button>
+            @endpermission
+            @permission('restore-lot')
+                <button v-if="lot.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreLot(lot)"><i class="fa fa-toggle-on"></i> Enable</button>
             @endpermission
             @permission('delete-lot')
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteLot(lot)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!lot.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteLot(lot)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             </td>
         </tr>
@@ -98,35 +101,35 @@
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createLot">
                         <div class="col-md-12">
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">PT Round:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="round_id" v-model="newLot.round_id">
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('pt round') }" for="round">PT Round:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <select v-validate="'required'" class="form-control c-select" name="pt round" :class="{'input': true, 'is-danger': errors.has('pt round') }" v-model="newLot.round_id">
                                         <option selected></option>
                                         <option  v-for="round in rounds" :value="round.id">@{{ round.value }}</option>   
                                     </select>
-                                    <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
+                                    <span v-show="errors.has('pt round')" class="help is-danger">@{{ errors.first('pt round') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Lot No.:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="lot" v-model="newLot.lot">
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('lot no.') }" for="lot">Lot No.:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <select v-validate="'required'" class="form-control c-select" name="lot no." :class="{'input': true, 'is-danger': errors.has('lot no.') }" v-model="newLot.lot">
                                         <option selected></option>
-                                        <option v-for="lt in [1,2,3,4,5]" :value="lt">@{{ lt }}</option>   
+                                        <option v-for="lt in [1,2,3,4,5]" :value="lt">@{{ lt }}</option>  
                                     </select>
-                                    <span v-if="formErrors['lot']" class="error text-danger">@{{ formErrors['lot'] }}</span>
+                                    <span v-show="errors.has('lot no.')" class="help is-danger">@{{ errors.first('lot no.') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Tester ID:</label>
-                                <div class="col-sm-8">
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('tester id') }" for="tester id">Tester ID:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
                                     <div class="form-checkbox checkbox-inline" v-for="option in [0,1,2,3,4,5,6,7,8,9]">
                                         <label class="form-checkbox-label">
-                                            <input type="checkbox" :value="option" v-model="newLot.tester_id">
+                                            <input v-validate="'required'" type="checkbox" name="tester id" :value="option" :class="{'input': true, 'is-danger': errors.has('tester id') }" v-model="newLot.tester_id">
                                             @{{ option }}
                                         </label>
                                     </div>
-                                    <span v-if="formErrors['tester_id']" class="error text-danger">@{{ formErrors['tester_id'] }}</span>
+                                    <span v-show="errors.has('tester id')" class="help is-danger">@{{ errors.first('tester id') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">
@@ -155,35 +158,35 @@
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateLot(fillLot.id)">
                         <div class="col-md-12">
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">PT Round:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="round_id" v-model="fillLot.round_id">
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('pt round') }" for="round">PT Round:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <select v-validate="'required'" class="form-control c-select" name="pt round" :class="{'input': true, 'is-danger': errors.has('pt round') }" v-model="fillLot.round_id">
                                         <option selected></option>
                                         <option  v-for="round in rounds" :value="round.id">@{{ round.value }}</option>   
                                     </select>
-                                    <span v-if="formErrorsUpdate['round_id']" class="error text-danger">@{{ formErrorsUpdate['round_id'] }}</span>
+                                    <span v-show="errors.has('pt round')" class="help is-danger">@{{ errors.first('pt round') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Lot No.:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="lot" v-model="fillLot.lot">
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('lot no.') }" for="lot">Lot No.:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <select v-validate="'required'" class="form-control c-select" name="lot no." :class="{'input': true, 'is-danger': errors.has('lot no.') }" v-model="fillLot.lot">
                                         <option selected></option>
-                                        <option v-for="lt in [1,2,3,4,5]" :value="lt">@{{ lt }}</option>   
+                                        <option v-for="lt in [1,2,3,4,5]" :value="lt">@{{ lt }}</option>  
                                     </select>
-                                    <span v-if="formErrorsUpdate['lot']" class="error text-danger">@{{ formErrorsUpdate['lot'] }}</span>
+                                    <span v-show="errors.has('lot no.')" class="help is-danger">@{{ errors.first('lot no.') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Tester ID:</label>
-                                <div class="col-sm-8">
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('tester id') }" for="tester id">Tester ID:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
                                     <div class="form-checkbox checkbox-inline" v-for="option in [0,1,2,3,4,5,6,7,8,9]">
                                         <label class="form-checkbox-label">
-                                            <input type="checkbox" :value="option" v-model="fillLot.tester_id" :checked="fillLot.tester_id.includes(option)">
+                                            <input v-validate="'required'" type="checkbox" name="tester id" :value="option" :class="{'input': true, 'is-danger': errors.has('tester id') }" v-model="fillLot.tester_id">
                                             @{{ option }}
                                         </label>
                                     </div>
-                                    <span v-if="formErrorsUpdate['tester_id']" class="error text-danger">@{{ formErrorsUpdate['tester_id'] }}</span>
+                                    <span v-show="errors.has('tester id')" class="help is-danger">@{{ errors.first('tester id') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">

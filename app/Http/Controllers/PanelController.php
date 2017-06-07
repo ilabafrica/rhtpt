@@ -8,6 +8,7 @@ use App\Panel;
 use App\Material;
 use App\Round;
 use App\User;
+use App\Lot;
 
 use Auth;
 
@@ -27,11 +28,12 @@ class PanelController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $panels = Panel::latest()->withTrashed()->paginate(5);
+        $activeLots = Lot::lists('id');
+        $panels = Panel::whereIn('lot_id', $activeLots)->latest()->withTrashed()->paginate(5);
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $panels = Panel::where('pt_id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            $panels = Panel::whereIn('lot_id', $activeLots)->where('pt_id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
         }
         foreach($panels as $panel)
         {
@@ -50,7 +52,6 @@ class PanelController extends Controller
             ],
             'data' => $panels
         ];
-
         return $panels->count() > 0 ? response()->json($response) : $error;
     }
 

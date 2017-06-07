@@ -66,19 +66,19 @@ new Vue({
 
         createRound: function(){
             this.$validator.validateAll().then(() => {
-          		  var input = this.newRound;
-          		  this.$http.post('/vuerounds',input).then((response) => {
-              		  this.changePage(this.pagination.current_page);
+          		var input = this.newRound;
+          		this.$http.post('/vuerounds',input).then((response) => {
+              		    this.changePage(this.pagination.current_page);
               			this.newRound = {'name':'','description':'','start_date':'','end_date':''};
               			$("#create-round").modal('hide');
               			toastr.success('Round Created Successfully.', 'Success Alert', {timeOut: 5000});
-              		  }, (response) => {
+              		}, (response) => {
               			this.formErrors = response.data;
           	    });
             }).catch(() => {
                 toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
             });
-    	  },
+    	},
 
         deleteRound: function(round){
             this.$http.delete('/vuerounds/'+round.id).then((response) => {

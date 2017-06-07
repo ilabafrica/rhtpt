@@ -64,28 +64,32 @@ new Vue({
         },
 
         createLot: function(){
-      		  var input = this.newLot;
-      		  this.$http.post('/vuelots',input).then((response) => {
+            this.$validator.validateAll().then(() => {
+          		var input = this.newLot;
+          		this.$http.post('/vuelots',input).then((response) => {
         		    this.changePage(this.pagination.current_page);
           			this.newLot = {'round_id':'','lot':'','tester_id':[]};
           			$("#create-lot").modal('hide');
           			toastr.success('Result Created Successfully.', 'Success Alert', {timeOut: 5000});
-      		  }, (response) => {
+          		}, (response) => {
       			    this.formErrors = response.data;
-      	    });
+                });
+      	    }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+            });
       	},
 
         deleteLot: function(lot){
             this.$http.delete('/vuelots/'+lot.id).then((response) => {
                 this.changePage(this.pagination.current_page);
-                toastr.success('Result Deleted Successfully.', 'Success Alert', {timeOut: 5000});
+                toastr.success('Lot Disabled Successfully.', 'Success Alert', {timeOut: 5000});
             });
         },
 
         restoreLot: function(lot){
             this.$http.patch('/vuelots/'+lot.id+'/restore').then((response) => {
                 this.changePage(this.pagination.current_page);
-                toastr.success('Result Restored Successfully.', 'Success Alert', {timeOut: 5000});
+                toastr.success('Lot Restored Successfully.', 'Success Alert', {timeOut: 5000});
             });
         },
 
@@ -98,24 +102,27 @@ new Vue({
         },
 
         updateLot: function(id){
-          var input = this.fillLot;
-          this.$http.put('/vuelots/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillLot = {'round_id':'','lot':'','tester_id':[],'id':''};
-                $("#edit-lot").modal('hide');
-                toastr.success('Result Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.fillLot;
+                this.$http.put('/vuelots/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillLot = {'round_id':'','lot':'','tester_id':[],'id':''};
+                    $("#edit-lot").modal('hide');
+                    toastr.success('Result Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
             });
         },
 
         loadRounds: function() {
-          this.$http.get('/rnds').then((response) => {
-              this.rounds = response.data;
-
-          }, (response) => {
-              // console.log(response);
-          });
+            this.$http.get('/rnds').then((response) => {
+                this.rounds = response.data;
+            }, (response) => {
+                  // console.log(response);
+            });
         },
 
         changePage: function (page) {

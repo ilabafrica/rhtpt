@@ -5,26 +5,26 @@ new Vue({
     el: '#manage-panel',
 
     data: {
-      panels: [],
-      pagination: {
-          total: 0, 
-          per_page: 2,
-          from: 1, 
-          to: 0,
-          current_page: 1
+        panels: [],
+        pagination: {
+            total: 0, 
+            per_page: 2,
+            from: 1, 
+            to: 0,
+            current_page: 1
         },
-      offset: 4,
-      formErrors:{},
-      formErrorsUpdate:{},
-      newPanel : {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':''},
-      fillPanel : {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':'','id':''},
-      materials: [],
-      options: [],
-      lots: [],
-      panels: [],
-      loading: false,
-      error: false,
-      query: ''
+        offset: 4,
+        formErrors:{},
+        formErrorsUpdate:{},
+        newPanel : {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':''},
+        fillPanel : {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':'','id':''},
+        materials: [],
+        options: [],
+        lots: [],
+        panels: [],
+        loading: false,
+        error: false,
+        query: ''
     },
 
     computed: {
@@ -53,7 +53,7 @@ new Vue({
     },
 
     mounted : function(){
-    		this.getVuePanels(this.pagination.current_page);
+    	this.getVuePanels(this.pagination.current_page);
         this.loadMaterials();
         this.loadResults();
         this.loadLots();
@@ -69,15 +69,19 @@ new Vue({
         },
 
         createPanel: function(){
-      		  var input = this.newPanel;
-      		  this.$http.post('/vuepanels',input).then((response) => {
+            this.$validator.validateAll().then(() => {
+      		    var input = this.newPanel;
+      		    this.$http.post('/vuepanels',input).then((response) => {
         		    this.changePage(this.pagination.current_page);
           			this.newPanel = {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':''};
           			$("#create-panel").modal('hide');
           			toastr.success('Panel Created Successfully.', 'Success Alert', {timeOut: 5000});
-      		  }, (response) => {
+      		    }, (response) => {
       			    this.formErrors = response.data;
-      	    });
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+            });
       	},
 
         deletePanel: function(panel){
@@ -106,14 +110,18 @@ new Vue({
         },
 
         updatePanel: function(id){
-            var input = this.fillPanel;
-            this.$http.put('/vuepanels/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillPanel = {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':'', 'id':''};
-                $("#edit-panel").modal('hide');
-                toastr.success('Panel Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.fillPanel;
+                this.$http.put('/vuepanels/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillPanel = {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':'', 'id':''};
+                    $("#edit-panel").modal('hide');
+                    toastr.success('Panel Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
             });
         },
 
