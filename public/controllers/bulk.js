@@ -47,7 +47,7 @@ new Vue({
         }
     },
 
-  ready : function(){
+  mounted : function(){
   		this.getVueSettings(this.pagination.current_page);
   },
 
@@ -55,10 +55,10 @@ new Vue({
 
         getVueSettings: function(page){
           this.$http.get('/bulk/key?page='+page).then((response) => {
-            this.$set('code', response.data.data.data[0].code);
-            this.$set('username', response.data.data.data[0].username);
-            this.$set('api_key', response.data.data.data[0].api_key);
-            this.$set('pagination', response.data.pagination);
+            this.code = response.data.data.data[0].code;
+            this.username = response.data.data.data[0].username;
+            this.api_key = response.data.data.data[0].api_key;
+            this.pagination = response.data.pagination;
           });
         },
 

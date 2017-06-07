@@ -300,11 +300,13 @@ class UserController extends Controller
     public function forEnrol(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $usrs = Role::find(Role::idByName('Participant'))->users()->latest()->paginate(5);
+        $role_id = Role::idByName('Participant');
+        $ids = DB::table('role_user')->where('role_id', $role_id)->lists('user_id');
+        $usrs = User::whereIn('id', $ids)->latest()->paginate(5);
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $usrs = Role::find(Role::idByName('Participant'))->users()->where('name', 'LIKE', "%{$search}%")->latest()->paginate(5);
+            $usrs = User::whereIn('id', $ids)->where('name', 'LIKE', "%{$search}%")->latest()->paginate(5);
         }
         if(count($usrs)>0)
         {

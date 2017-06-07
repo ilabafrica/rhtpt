@@ -57,6 +57,7 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->tester_id);
         $this->validate($request, [
             'round_id' => 'required',
             'lot' => 'required',

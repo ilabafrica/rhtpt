@@ -1,5 +1,5 @@
 /**
- * vee-validate v2.0.0-rc.3
+ * vee-validate v2.0.0-rc.5
  * (c) 2017 Abdelrahman Awad
  * @license MIT
  */
@@ -882,6 +882,237 @@ var Rules = {
   url: url
 };
 
+var ErrorBag = function ErrorBag() {
+  this.errors = [];
+};
+
+  /**
+   * Adds an error to the internal array.
+   *
+   * @param {string} field The field name.
+   * @param {string} msg The error message.
+   * @param {String} rule The rule that is responsible for the error.
+   * @param {String} scope The Scope name, optional.
+   */
+ErrorBag.prototype.add = function add (field, msg, rule, scope) {
+    if ( scope === void 0 ) scope = '__global__';
+
+  this.errors.push({ field: field, msg: msg, rule: rule, scope: scope });
+};
+
+  /**
+   * Gets all error messages from the internal array.
+   *
+   * @param {String} scope The Scope name, optional.
+   * @return {Array} errors Array of all error messages.
+   */
+ErrorBag.prototype.all = function all (scope) {
+  if (! scope) {
+    return this.errors.map(function (e) { return e.msg; });
+  }
+
+  return this.errors.filter(function (e) { return e.scope === scope; }).map(function (e) { return e.msg; });
+};
+
+  /**
+   * Checks if there are any errors in the internal array.
+   * @param {String} scope The Scope name, optional.
+   * @return {boolean} result True if there was at least one error, false otherwise.
+   */
+ErrorBag.prototype.any = function any (scope) {
+  if (! scope) {
+    return !! this.errors.length;
+  }
+
+  return !! this.errors.filter(function (e) { return e.scope === scope; }).length;
+};
+
+  /**
+   * Removes all items from the internal array.
+   *
+   * @param {String} scope The Scope name, optional.
+   */
+ErrorBag.prototype.clear = function clear (scope) {
+  if (! scope) {
+    scope = '__global__';
+  }
+
+  this.errors = this.errors.filter(function (e) { return e.scope !== scope; });
+};
+
+  /**
+   * Collects errors into groups or for a specific field.
+   *
+   * @param{string} field The field name.
+   * @param{string} scope The scope name.
+   * @param {Boolean} map If it should map the errors to strings instead of objects.
+   * @return {Array} errors The errors for the specified field.
+   */
+ErrorBag.prototype.collect = function collect (field, scope, map) {
+    if ( map === void 0 ) map = true;
+
+  if (! field) {
+    var collection = {};
+    this.errors.forEach(function (e) {
+      if (! collection[e.field]) {
+        collection[e.field] = [];
+      }
+
+      collection[e.field].push(map ? e.msg : e);
+    });
+
+    return collection;
+  }
+
+  if (! scope) {
+    return this.errors.filter(function (e) { return e.field === field; }).map(function (e) { return (map ? e.msg : e); });
+  }
+
+  return this.errors.filter(function (e) { return e.field === field && e.scope === scope; })
+                    .map(function (e) { return (map ? e.msg : e); });
+};
+  /**
+   * Gets the internal array length.
+   *
+   * @return {Number} length The internal array length.
+   */
+ErrorBag.prototype.count = function count () {
+  return this.errors.length;
+};
+
+  /**
+   * Gets the first error message for a specific field.
+   *
+   * @param{string} field The field name.
+   * @return {string|null} message The error message.
+   */
+ErrorBag.prototype.first = function first (field, scope) {
+    var this$1 = this;
+    if ( scope === void 0 ) scope = '__global__';
+
+  var selector = this._selector(field);
+  var scoped = this._scope(field);
+
+  if (scoped) {
+    var result = this.first(scoped.name, scoped.scope);
+    // if such result exist, return it. otherwise it could be a field.
+    // with dot in its name.
+    if (result) {
+      return result;
+    }
+  }
+
+  if (selector) {
+    return this.firstByRule(selector.name, selector.rule, scope);
+  }
+
+  for (var i = 0; i < this.errors.length; i++) {
+    if (this$1.errors[i].field === field && (this$1.errors[i].scope === scope)) {
+      return this$1.errors[i].msg;
+    }
+  }
+
+  return null;
+};
+
+  /**
+   * Returns the first error rule for the specified field
+   *
+   * @param {string} field The specified field.
+   * @return {string|null} First error rule on the specified field if one is found, otherwise null
+   */
+ErrorBag.prototype.firstRule = function firstRule (field, scope) {
+  var errors = this.collect(field, scope, false);
+
+  return (errors.length && errors[0].rule) || null;
+};
+
+  /**
+   * Checks if the internal array has at least one error for the specified field.
+   *
+   * @param{string} field The specified field.
+   * @return {Boolean} result True if at least one error is found, false otherwise.
+   */
+ErrorBag.prototype.has = function has (field, scope) {
+    if ( scope === void 0 ) scope = '__global__';
+
+  return !! this.first(field, scope);
+};
+
+  /**
+   * Gets the first error message for a specific field and a rule.
+   * @param {String} name The name of the field.
+   * @param {String} rule The name of the rule.
+   * @param {String} scope The name of the scope (optional).
+   */
+ErrorBag.prototype.firstByRule = function firstByRule (name, rule, scope) {
+  var error = this.collect(name, scope, false).filter(function (e) { return e.rule === rule; })[0];
+
+  return (error && error.msg) || null;
+};
+
+  /**
+   * Removes all error messages associated with a specific field.
+   *
+   * @param{string} field The field which messages are to be removed.
+   * @param {String} scope The Scope name, optional.
+   */
+ErrorBag.prototype.remove = function remove (field, scope) {
+  var filter = scope ? (function (e) { return e.field !== field || e.scope !== scope; }) :
+                         (function (e) { return e.field !== field || e.scope !== '__global__'; });
+
+  this.errors = this.errors.filter(filter);
+};
+
+
+  /**
+   * Get the field attributes if there's a rule selector.
+   *
+   * @param{string} field The specified field.
+   * @return {Object|null}
+   */
+ErrorBag.prototype._selector = function _selector (field) {
+  if (field.indexOf(':') > -1) {
+    var ref = field.split(':');
+      var name = ref[0];
+      var rule = ref[1];
+
+    return { name: name, rule: rule };
+  }
+
+  return null;
+};
+
+  /**
+   * Get the field scope if specified using dot notation.
+   *
+   * @param {string} field the specifie field.
+   * @return {Object|null}
+   */
+ErrorBag.prototype._scope = function _scope (field) {
+  if (field.indexOf('.') > -1) {
+    var ref = field.split('.');
+      var scope = ref[0];
+      var name = ref[1];
+
+    return { name: name, scope: scope };
+  }
+
+  return null;
+};
+
+var ValidatorException = (function () {
+  function anonymous(msg) {
+    this.msg = "[vee-validate]: " + msg;
+  }
+
+  anonymous.prototype.toString = function toString () {
+    return this.msg;
+  };
+
+  return anonymous;
+}());
+
 /**
  * Gets the data attribute. the name must be kebab-case.
  */
@@ -931,6 +1162,11 @@ var getPath = function (propPath, target, def) {
  */
 var debounce = function (callback, wait, immediate) {
   if ( wait === void 0 ) wait = 0;
+  if ( immediate === void 0 ) immediate = false;
+
+  if (wait === 0) {
+    return callback;
+  }
 
   var timeout;
 
@@ -945,7 +1181,7 @@ var debounce = function (callback, wait, immediate) {
     var callNow = immediate && !timeout;
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
-    if (callNow) { callback(args); }
+    if (callNow) { callback.apply(void 0, args); }
   };
 };
 
@@ -1103,268 +1339,14 @@ var getRules = function (expression, value, el) {
   return value;
 };
 
-var ErrorBag = function ErrorBag(vm) {
-  if ( vm === void 0 ) vm = null;
-
-  this.errors = [];
-  if (vm && isCallable(vm.$nextTick)) {
-    this.$nextTick = vm.$nextTick.bind(vm);
-  }
-};
-
-/**
- * Tries to call the callback in the next tick handler.
- * @param {Function} callback
- */
-ErrorBag.prototype._tryNextTick = function _tryNextTick (callback) {
-  if (! this.$nextTick) {
-    // Call immediatly if next tick isn't available.
-    callback();
-    return;
+var getInputEventName = function (el) {
+  if (el.tagName === 'SELECT' || ~['radio', 'checkbox', 'file'].indexOf(el.type)) {
+    return 'change';
   }
 
-  this.$nextTick(callback.bind(this));
+  return 'input';
 };
 
-  /**
-   * Adds an error to the internal array.
-   *
-   * @param {string} field The field name.
-   * @param {string} msg The error message.
-   * @param {String} rule The rule that is responsible for the error.
-   * @param {String} scope The Scope name, optional.
-   */
-ErrorBag.prototype.add = function add (field, msg, rule, scope) {
-    var this$1 = this;
-    if ( scope === void 0 ) scope = '__global__';
-
-  this._tryNextTick(function () {
-    this$1.errors.push({ field: field, msg: msg, rule: rule, scope: scope });
-  });
-};
-
-  /**
-   * Gets all error messages from the internal array.
-   *
-   * @param {String} scope The Scope name, optional.
-   * @return {Array} errors Array of all error messages.
-   */
-ErrorBag.prototype.all = function all (scope) {
-  if (! scope) {
-    return this.errors.map(function (e) { return e.msg; });
-  }
-
-  return this.errors.filter(function (e) { return e.scope === scope; }).map(function (e) { return e.msg; });
-};
-
-  /**
-   * Checks if there are any errors in the internal array.
-   * @param {String} scope The Scope name, optional.
-   * @return {boolean} result True if there was at least one error, false otherwise.
-   */
-ErrorBag.prototype.any = function any (scope) {
-  if (! scope) {
-    return !! this.errors.length;
-  }
-
-  return !! this.errors.filter(function (e) { return e.scope === scope; }).length;
-};
-
-  /**
-   * Removes all items from the internal array.
-   *
-   * @param {String} scope The Scope name, optional.
-   */
-ErrorBag.prototype.clear = function clear (scope) {
-    var this$1 = this;
-
-  if (! scope) {
-    scope = '__global__';
-  }
-
-  this._tryNextTick(function () {
-    this$1.errors = this$1.errors.filter(function (e) { return e.scope !== scope; });
-  });
-};
-
-  /**
-   * Collects errors into groups or for a specific field.
-   *
-   * @param{string} field The field name.
-   * @param{string} scope The scope name.
-   * @param {Boolean} map If it should map the errors to strings instead of objects.
-   * @return {Array} errors The errors for the specified field.
-   */
-ErrorBag.prototype.collect = function collect (field, scope, map) {
-    if ( map === void 0 ) map = true;
-
-  if (! field) {
-    var collection = {};
-    this.errors.forEach(function (e) {
-      if (! collection[e.field]) {
-        collection[e.field] = [];
-      }
-
-      collection[e.field].push(map ? e.msg : e);
-    });
-
-    return collection;
-  }
-
-  if (! scope) {
-    return this.errors.filter(function (e) { return e.field === field; }).map(function (e) { return (map ? e.msg : e); });
-  }
-
-  return this.errors.filter(function (e) { return e.field === field && e.scope === scope; })
-                    .map(function (e) { return (map ? e.msg : e); });
-};
-  /**
-   * Gets the internal array length.
-   *
-   * @return {Number} length The internal array length.
-   */
-ErrorBag.prototype.count = function count () {
-  return this.errors.length;
-};
-
-  /**
-   * Gets the first error message for a specific field.
-   *
-   * @param{string} field The field name.
-   * @return {string|null} message The error message.
-   */
-ErrorBag.prototype.first = function first (field, scope) {
-    var this$1 = this;
-    if ( scope === void 0 ) scope = '__global__';
-
-  var selector = this._selector(field);
-  var scoped = this._scope(field);
-
-  if (scoped) {
-    var result = this.first(scoped.name, scoped.scope);
-    // if such result exist, return it. otherwise it could be a field.
-    // with dot in its name.
-    if (result) {
-      return result;
-    }
-  }
-
-  if (selector) {
-    return this.firstByRule(selector.name, selector.rule, scope);
-  }
-
-  for (var i = 0; i < this.errors.length; i++) {
-    if (this$1.errors[i].field === field && (this$1.errors[i].scope === scope)) {
-      return this$1.errors[i].msg;
-    }
-  }
-
-  return null;
-};
-
-  /**
-   * Returns the first error rule for the specified field
-   *
-   * @param {string} field The specified field.
-   * @return {string|null} First error rule on the specified field if one is found, otherwise null
-   */
-ErrorBag.prototype.firstRule = function firstRule (field, scope) {
-  var errors = this.collect(field, scope, false);
-
-  return (errors.length && errors[0].rule) || null;
-};
-
-  /**
-   * Checks if the internal array has at least one error for the specified field.
-   *
-   * @param{string} field The specified field.
-   * @return {Boolean} result True if at least one error is found, false otherwise.
-   */
-ErrorBag.prototype.has = function has (field, scope) {
-    if ( scope === void 0 ) scope = '__global__';
-
-  return !! this.first(field, scope);
-};
-
-  /**
-   * Gets the first error message for a specific field and a rule.
-   * @param {String} name The name of the field.
-   * @param {String} rule The name of the rule.
-   * @param {String} scope The name of the scope (optional).
-   */
-ErrorBag.prototype.firstByRule = function firstByRule (name, rule, scope) {
-  var error = this.collect(name, scope, false).filter(function (e) { return e.rule === rule; })[0];
-
-  return (error && error.msg) || null;
-};
-
-  /**
-   * Removes all error messages associated with a specific field.
-   *
-   * @param{string} field The field which messages are to be removed.
-   * @param {String} scope The Scope name, optional.
-   */
-ErrorBag.prototype.remove = function remove (field, scope) {
-    var this$1 = this;
-
-  var filter = scope ? (function (e) { return e.field !== field || e.scope !== scope; }) :
-                         (function (e) { return e.field !== field || e.scope !== '__global__'; });
-
-  this._tryNextTick(function () {
-    this$1.errors = this$1.errors.filter(filter);
-  });
-};
-
-
-  /**
-   * Get the field attributes if there's a rule selector.
-   *
-   * @param{string} field The specified field.
-   * @return {Object|null}
-   */
-ErrorBag.prototype._selector = function _selector (field) {
-  if (field.indexOf(':') > -1) {
-    var ref = field.split(':');
-      var name = ref[0];
-      var rule = ref[1];
-
-    return { name: name, rule: rule };
-  }
-
-  return null;
-};
-
-  /**
-   * Get the field scope if specified using dot notation.
-   *
-   * @param {string} field the specifie field.
-   * @return {Object|null}
-   */
-ErrorBag.prototype._scope = function _scope (field) {
-  if (field.indexOf('.') > -1) {
-    var ref = field.split('.');
-      var scope = ref[0];
-      var name = ref[1];
-
-    return { name: name, scope: scope };
-  }
-
-  return null;
-};
-
-var ValidatorException = (function () {
-  function anonymous(msg) {
-    this.msg = "[vee-validate]: " + msg;
-  }
-
-  anonymous.prototype.toString = function toString () {
-    return this.msg;
-  };
-
-  return anonymous;
-}());
-
-/* eslint-disable prefer-rest-params */
 var Dictionary = function Dictionary(dictionary) {
   if ( dictionary === void 0 ) dictionary = {};
 
@@ -1382,6 +1364,26 @@ Dictionary.prototype.getMessage = function getMessage (locale, key, fallback) {
   }
 
   return this.dictionary[locale].messages[key];
+};
+
+/**
+ * Gets a specific message for field. fallsback to the rule message.
+ *
+ * @param {String} locale
+ * @param {String} field
+ * @param {String} key
+ */
+Dictionary.prototype.getFieldMessage = function getFieldMessage (locale, field, key) {
+  if (! this.hasLocale(locale)) {
+    return this.getMessage(locale, key);
+  }
+
+  var dict = this.dictionary[locale].custom && this.dictionary[locale].custom[field];
+  if (! dict || ! dict[key]) {
+    return this.getMessage(locale, key);
+  }
+
+  return dict[key];
 };
 
 Dictionary.prototype._getDefaultMessage = function _getDefaultMessage (locale) {
@@ -1654,19 +1656,23 @@ var STRICT_MODE = true;
 var DICTIONARY = new Dictionary({
   en: {
     messages: messages,
-    attributes: {}
+    attributes: {},
+    custom: {}
   }
 });
 
 var Validator = function Validator(validations, options) {
-  if ( options === void 0 ) options = { init: true, vm: null };
+  if ( options === void 0 ) options = { init: true, vm: null, fastExit: true };
 
   this.strictMode = STRICT_MODE;
   this.$scopes = { __global__: {} };
   this._createFields(validations);
-  this.errorBag = new ErrorBag(options.vm);
+  this.errorBag = new ErrorBag();
   this.fieldBag = {};
   this.paused = false;
+  this.fastExit = options.fastExit || false;
+  this.$vm = options.vm;
+
   // Some fields will be later evaluated, because the vm isn't mounted yet
   // so it may register it under an inaccurate scope.
   this.$deferred = [];
@@ -1776,8 +1782,8 @@ Validator._guardExtend = function _guardExtend (name, validator) {
  * @param{object} validations The validations object.
  * @return {Validator} validator A validator object.
  */
-Validator.create = function create (validations, $vm, options) {
-  return new Validator(validations, $vm, options);
+Validator.create = function create (validations, options) {
+  return new Validator(validations, options);
 };
 
 /**
@@ -1989,7 +1995,7 @@ Validator.prototype._normalizeRules = function _normalizeRules (name, checks, sc
  * Checks if a field has a required rule.
  */
 Validator.prototype._isRequired = function _isRequired (field) {
-  return field.validations && field.validations.required;
+  return !! (field.validations && field.validations.required);
 };
 
 /**
@@ -2120,10 +2126,14 @@ Validator.prototype._formatErrorMessage = function _formatErrorMessage (field, r
   var params = this._getLocalizedParams(rule, scope);
   // Defaults to english message.
   if (! this.dictionary.hasLocale(LOCALE)) {
-    return this.dictionary.getMessage('en', rule.name)(name, params, data);
+    var msg$1 = this.dictionary.getFieldMessage('en', field, rule.name);
+
+    return isCallable(msg$1) ? msg$1(name, params, data) : msg$1;
   }
 
-  return this.dictionary.getMessage(LOCALE, rule.name)(name, params, data);
+  var msg = this.dictionary.getFieldMessage(LOCALE, field, rule.name);
+
+  return isCallable(msg) ? msg(name, params, data) : msg;
 };
 
 /**
@@ -2132,8 +2142,7 @@ Validator.prototype._formatErrorMessage = function _formatErrorMessage (field, r
 Validator.prototype._getLocalizedParams = function _getLocalizedParams (rule, scope) {
     if ( scope === void 0 ) scope = '__global__';
 
-  if (~ ['after', 'before', 'confirmed'].indexOf(rule.name) &&
-      rule.params && rule.params[0]) {
+  if (~ ['after', 'before', 'confirmed'].indexOf(rule.name) && rule.params && rule.params[0]) {
     var param = this.$scopes[scope][rule.params[0]];
     if (param && param.name) { return [param.name]; }
     return [this.dictionary.getAttribute(LOCALE, rule.params[0], rule.params[0])];
@@ -2295,6 +2304,10 @@ Validator.prototype.attach = function attach (name, checks, options) {
     field.el = field.listeners.el;
     field.events = {};
     this$1._assignFlags(field);
+    // cache the scope property.
+    if (field.el && isCallable(field.el.setAttribute)) {
+      field.el.setAttribute('data-vv-scope', field.scope);
+    }
 
     if (field.listeners.classes) {
       field.listeners.classes.attach(field);
@@ -2397,6 +2410,21 @@ Validator.prototype.updateField = function updateField (name, checks, options) {
 };
 
 /**
+ * Clears the errors from the errorBag using the next tick if possible.
+ */
+Validator.prototype.clean = function clean () {
+    var this$1 = this;
+
+  if (! this.$vm || ! isCallable(this.$vm.$nextTick)) {
+    return;
+  }
+
+  this.$vm.$nextTick(function () {
+    this$1.errorBag.clear();
+  });
+};
+
+/**
  * Removes a field from the validator.
  *
  * @param{String} name The name of the field.
@@ -2410,7 +2438,10 @@ Validator.prototype.detach = function detach (name, scope) {
     return;
   }
 
-  this.$scopes[scope][name].listeners.detach();
+  if (this.$scopes[scope][name].listeners) {
+    this.$scopes[scope][name].listeners.detach();
+  }
+
   this.errorBag.remove(name, scope);
   delete this.$scopes[scope][name];
 };
@@ -2556,7 +2587,7 @@ Validator.prototype.validate = function validate (name, value, scope, throws) {
       }
 
       // Early exit.
-      if (! result) {
+      if (! result && this$1.fastExit) {
         if (field.events && isCallable(field.events.after)) {
           field.events.after({ valid: false });
         }
@@ -2564,7 +2595,7 @@ Validator.prototype.validate = function validate (name, value, scope, throws) {
       }
 
       if (field.events && isCallable(field.events.after)) {
-        field.events.after({ valid: true });
+        field.events.after({ valid: result });
       }
       return Promise.resolve(result);
     });
@@ -2695,41 +2726,69 @@ Validator.prototype.validateScopes = function validateScopes () {
 
 Object.defineProperties( Validator.prototype, prototypeAccessors );
 
+/**
+ * Checks if a parent validator instance was requested.
+ * @param {Object|Array} injections
+ */
+var validatorRequested = function (injections) {
+  if (! injections) {
+    return false;
+  }
+
+  if (Array.isArray(injections) && ~injections.indexOf('$validator')) {
+    return true;
+  }
+
+  if (isObject(injections) && injections.$validator) {
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * Creates a validator instance.
+ * @param {Vue} vm
+ * @param {Object} options
+ */
+var createValidator = function (vm, options) { return new Validator(null, {
+  init: false,
+  vm: vm,
+  fastExit: options.fastExit
+}); };
+
 var makeMixin = function (Vue, options) {
   var mixin = {};
-
   mixin.provide = function providesValidator() {
     if (this.$validator) {
       return {
-          $validator: this.$validator
+        $validator: this.$validator
       };
     }
+
+    return {};
   };
 
   mixin.beforeCreate = function beforeCreate() {
-    var reactive = false;
-    // if its a root instance, inject anyways, or if it requested an instance.
-    if (options.inject || !this.$parent || this.$options.$validates) {
-      this.$validator = new Validator(null, { init: false, vm: this });
-    } else {
-      var injectionOpts = this.$options.inject;
-      if (! injectionOpts) {
-        return;
-      }
-
-      if (Array.isArray(injectionOpts) && ! ~injectionOpts.indexOf('$validator')) {
-        return;
-      }
-
-      if (isObject(injectionOpts) && ! injectionOpts.$validator) {
-        return;
-      }
-
-      reactive = true;
+    // if its a root instance, inject anyways, or if it requested a new instance.
+    if (this.$options.$validates || !this.$parent) {
+      this.$validator = createValidator(this, options);
     }
 
+    var requested = validatorRequested(this.$options.inject);
 
-    if (! reactive) {
+    // if automatic injection is enabled and no instance was requested.
+    if (! this.$validator && options.inject && !requested) {
+      this.$validator = createValidator(this, options);
+    }
+
+    // don't inject errors or fieldBag as no validator was resolved.
+    if (! requested && ! this.$validator) {
+      return;
+    }
+
+    // There is a validator but it isn't injected, mark as reactive.
+    if (! requested && this.$validator) {
       Vue.util.defineReactive(this.$validator, 'errorBag', this.$validator.errorBag);
       Vue.util.defineReactive(this.$validator, 'fieldBag', this.$validator.fieldBag);
     }
@@ -2796,6 +2855,8 @@ ClassListener.prototype.reset = function reset () {
  * Syncs the automatic classes.
  */
 ClassListener.prototype.sync = function sync () {
+  this.addInteractionListeners();
+
   if (! this.enabled) { return; }
 
   this.toggle(this.classNames.dirty, this.field.flags.dirty);
@@ -2804,6 +2865,65 @@ ClassListener.prototype.sync = function sync () {
   this.toggle(this.classNames.invalid, this.field.flags.invalid);
   this.toggle(this.classNames.touched, this.field.flags.touched);
   this.toggle(this.classNames.untouched, this.field.flags.untouched);
+};
+
+ClassListener.prototype.addFocusListener = function addFocusListener () {
+    var this$1 = this;
+
+  // listen for focus event.
+  this.listeners.focus = function () {
+    this$1.remove(this$1.classNames.untouched);
+    this$1.add(this$1.classNames.touched);
+    this$1.field.flags.touched = true;
+    this$1.field.flags.untouched = false;
+
+    if (this$1.component) { return; }
+
+    // only needed once.
+    this$1.el.removeEventListener('focus', this$1.listeners.focus);
+    this$1.listeners.focus = null;
+  };
+
+  if (this.component) {
+    this.component.$once('focus', this.listeners.focus);
+  } else {
+    this.el.addEventListener('focus', this.listeners.focus);
+  }
+};
+
+ClassListener.prototype.addInputListener = function addInputListener () {
+    var this$1 = this;
+
+  // listen for input.
+  var event = getInputEventName(this.el);
+  this.listeners.input = function () {
+    this$1.remove(this$1.classNames.pristine);
+    this$1.add(this$1.classNames.dirty);
+    this$1.field.flags.dirty = true;
+    this$1.field.flags.pristine = false;
+
+    if (this$1.component) { return; }
+
+    // only needed once.
+    this$1.el.removeEventListener(event, this$1.listeners.input);
+    this$1.listeners.input = null;
+  };
+
+  if (this.component) {
+    this.component.$once('input', this.listeners.input);
+  } else {
+    this.el.addEventListener(event, this.listeners.input);
+  }
+};
+
+ClassListener.prototype.addInteractionListeners = function addInteractionListeners () {
+  if (! this.listeners.focus) {
+    this.addFocusListener();
+  }
+
+  if (! this.listeners.input) {
+    this.addInputListener();
+  }
 };
 
 /**
@@ -2817,25 +2937,7 @@ ClassListener.prototype.attach = function attach (field) {
   this.add(this.classNames.pristine);
   this.add(this.classNames.untouched);
 
-  // listen for focus event.
-  this.listeners.focus = function () {
-    this$1.remove(this$1.classNames.untouched);
-    this$1.add(this$1.classNames.touched);
-    // only needed once.
-    this$1.el.removeEventListener('focus', this$1.listeners.focus);
-    this$1.field.flags.touched = true;
-    this$1.field.flags.untouched = false;
-  };
-
-  // listen for input.
-  this.listeners.input = function () {
-    this$1.remove(this$1.classNames.pristine);
-    this$1.add(this$1.classNames.dirty);
-    // only needed once.
-    this$1.el.removeEventListener('input', this$1.listeners.input);
-    this$1.field.flags.dirty = true;
-    this$1.field.flags.pristine = false;
-  };
+  this.addInteractionListeners();
 
   this.listeners.after = function (e) {
     this$1.remove(e.valid ? this$1.classNames.invalid : this$1.classNames.valid);
@@ -2844,14 +2946,6 @@ ClassListener.prototype.attach = function attach (field) {
     this$1.field.flags.invalid = ! e.valid;
     this$1.field.flags.pending = false;
   };
-
-  if (this.component) {
-    this.component.$on('input', this.listeners.input);
-    this.component.$on('focus', this.listeners.focus);
-  } else {
-    this.el.addEventListener('focus', this.listeners.focus);
-    this.el.addEventListener('input', this.listeners.input);
-  }
 
   this.validator.on('after', this.field.name, this.field.scope, this.listeners.after);
 };
@@ -2918,7 +3012,8 @@ var config = {
   enableAutoClasses: false,
   classNames: {},
   events: 'input|blur',
-  inject: true
+  inject: true,
+  fastExit: true
 };
 
 var ListenerGenerator = function ListenerGenerator(el, binding, vnode, options) {
@@ -3245,6 +3340,13 @@ ListenerGenerator.prototype._resolveValueGetter = function _resolveValueGetter (
     };
   }
 
+  if (this.model) {
+    return {
+      context: function () { return this$1.vm; },
+      getter: function (context) { return getPath(this$1.model, context); }
+    };
+  }
+
   switch (this.el.type) {
   case 'checkbox': return {
     context: function () { return document.querySelectorAll(("input[name=\"" + (this$1.el.name) + "\"]:checked")); },
@@ -3388,7 +3490,7 @@ ListenerGenerator.prototype.detach = function detach () {
 var listenersInstances = [];
 
 var makeDirective = function (options) { return ({
-  inserted: function inserted(el, binding, vnode) {
+  bind: function bind(el, binding, vnode) {
     if (! vnode.context.$validator) {
       var name = vnode.context.$options._componentTag;
       // eslint-disable-next-line
@@ -3499,7 +3601,7 @@ var index = {
   Validator: Validator,
   ErrorBag: ErrorBag,
   Rules: Rules,
-  version: '2.0.0-rc.3'
+  version: '2.0.0-rc.5'
 };
 
 return index;

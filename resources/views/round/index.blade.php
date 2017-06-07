@@ -59,18 +59,18 @@
             <td>@{{ round.end_date }}</td>
             <td>
             @permission('update-round')	
-                <button v-bind="{ 'disabled': round.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editRound(round)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': round.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editRound(round)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-round')
-                <button v-if="round.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreRound(round)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <button v-if="round.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreRound(round)"><i class="fa fa-toggle-on"></i> Enable</button>
             @endpermission
             @permission('delete-round')
-                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!round.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             @permission('enrol-participants')
-                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}" @click.prevent="loadParticipants(round)"><i class="fa fa-send"></i> Enrol Testers</button>
-                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-nephritis" id="enrol" data-toggle="modal" data-target="#enrol-participants" data-fk="@{{round.id}}"><i class="fa fa-level-up"></i> Upload Worksheet</button>
-                <button v-if="round.deleted_at==NULL" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Enrolled Testers</button>
+                <button v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id" @click.prevent="loadParticipants(1)"><i class="fa fa-send"></i> Enrol Testers</button>
+                <button v-if="!round.deleted_at" class="btn btn-sm btn-nephritis" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id"><i class="fa fa-level-up"></i> Upload Worksheet</button>
+                <button v-if="!round.deleted_at" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Enrolled Testers</button>
             @endpermission
             </td>
         </tr>
@@ -111,15 +111,15 @@
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRound">
                         <div class="col-md-12">
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="name" class="form-control" v-model="newRound.name" />
-                                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Title:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newRound.name" />
+                                    <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Description:</label>
+                                <label class="col-sm-4 form-control-label" for="description">Description:</label>
                                 <div class="col-sm-8">
                                     <textarea name="description" class="form-control" v-model="newRound.description"></textarea>
                                     <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
@@ -127,18 +127,18 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Start Date:</label>
-                                <div class="col-sm-8">
-                                    <input type="date" name="start_date" class="form-control" v-model="newRound.start_date" />
-                                    <span v-if="formErrors['start_date']" class="error text-danger">@{{ formErrors['start_date'] }}</span>
+                                <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('start date') }" for="start date">Start Date:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('start date') }" name="start date" type="date" placeholder="" v-model="newRound.start_date" />
+                                    <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">End Date:</label>
-                                <div class="col-sm-8">
-                                    <input type="date" name="end_date" class="form-control" v-model="newRound.end_date" />
-                                    <span v-if="formErrors['end_date']" class="error text-danger">@{{ formErrors['end_date'] }}</span>
+                                <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('end date') }" for="end date">End Date:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('end date') }" name="end date" type="date" placeholder="" v-model="newRound.end_date" />
+                                    <span v-show="errors.has('end date')" class="help is-danger">@{{ errors.first('end date') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">
@@ -165,35 +165,36 @@
                 <div class="row">
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateRound(fillRound.id)">
                         <div class="col-md-12">
+                            
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="name" class="form-control" v-model="fillRound.name" />
-                                    <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="title">Title:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="fillRound.name" />
+                                    <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Description:</label>
+                                <label class="col-sm-4 form-control-label" for="description">Description:</label>
                                 <div class="col-sm-8">
                                     <textarea name="description" class="form-control" v-model="fillRound.description"></textarea>
-                                    <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
+                                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Start Date:</label>
-                                <div class="col-sm-8">
-                                    <input type="date" name="start_date" class="form-control" v-model="fillRound.start_date" />
-                                    <span v-if="formErrorsUpdate['start_date']" class="error text-danger">@{{ formErrorsUpdate['start_date'] }}</span>
+                                <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('start date') }" for="start date">Start Date:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('start date') }" name="start date" type="date" placeholder="" v-model="fillRound.start_date" />
+                                    <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">End Date:</label>
-                                <div class="col-sm-8">
-                                    <input type="date" name="end_date" class="form-control" v-model="fillRound.end_date" />
-                                    <span v-if="formErrorsUpdate['end_date']" class="error text-danger">@{{ formErrorsUpdate['end_date'] }}</span>
+                                <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('end date') }" for="end date">End Date:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('end date') }" name="end date" type="date" placeholder="" v-model="fillRound.end_date" />
+                                    <span v-show="errors.has('end date')" class="help is-danger">@{{ errors.first('end date') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -223,9 +224,9 @@
                         <div class="col-md-4"></div>
                         <div class="col-md-4" style="padding-bottom:10px;">
                             <div class="input-group input-group-sm">
-                                <input type="text" class="form-control" placeholder="Search for..." v-model="psrch">
+                                <input type="text" class="form-control" placeholder="Search for..." v-model="srchParticipant">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-secondary" type="button" @click="srchEnrol()" v-if="!loading"><i class="fa fa-search"></i></button>
+                                    <button class="btn btn-secondary" type="button" @click="srchEnrol" v-if="!loading"><i class="fa fa-search"></i></button>
                                     <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
                                 </span>
                             </div>

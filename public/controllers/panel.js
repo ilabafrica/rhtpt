@@ -2,32 +2,32 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = $("#token").attr("value");
 
 new Vue({
 
-  el: '#manage-panel',
+    el: '#manage-panel',
 
-  data: {
-    panels: [],
-    pagination: {
-        total: 0, 
-        per_page: 2,
-        from: 1, 
-        to: 0,
-        current_page: 1
-      },
-    offset: 4,
-    formErrors:{},
-    formErrorsUpdate:{},
-    newPanel : {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':''},
-    fillPanel : {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':'','id':''},
-    materials: [],
-    options: [],
-    lots: [],
-    panels: [],
-    loading: false,
-    error: false,
-    query: ''
-  },
+    data: {
+      panels: [],
+      pagination: {
+          total: 0, 
+          per_page: 2,
+          from: 1, 
+          to: 0,
+          current_page: 1
+        },
+      offset: 4,
+      formErrors:{},
+      formErrorsUpdate:{},
+      newPanel : {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':''},
+      fillPanel : {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':'','id':''},
+      materials: [],
+      options: [],
+      lots: [],
+      panels: [],
+      loading: false,
+      error: false,
+      query: ''
+    },
 
-  computed: {
+    computed: {
         isActived: function () {
             return this.pagination.current_page;
         },
@@ -52,132 +52,127 @@ new Vue({
         }
     },
 
-  ready : function(){
-  		this.getVuePanels(this.pagination.current_page);
+    mounted : function(){
+    		this.getVuePanels(this.pagination.current_page);
         this.loadMaterials();
         this.loadResults();
         this.loadLots();
-  },
+    },
 
-  methods : {
+    methods : {
 
         getVuePanels: function(page){
-          this.$http.get('/vuepanels?page='+page).then((response) => {
-            this.$set('panels', response.data.data.data);
-            this.$set('pagination', response.data.pagination);
-          });
+            this.$http.get('/vuepanels?page='+page).then((response) => {
+                this.panels = response.data.data.data;
+                this.pagination = response.data.pagination;
+            });
         },
 
         createPanel: function(){
-		  var input = this.newPanel;
-		  this.$http.post('/vuepanels',input).then((response) => {
-		    this.changePage(this.pagination.current_page);
-			this.newPanel = {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':''};
-			$("#create-panel").modal('hide');
-			toastr.success('Panel Created Successfully.', 'Success Alert', {timeOut: 5000});
-		  }, (response) => {
-			this.formErrors = response.data;
-	    });
-	},
+      		  var input = this.newPanel;
+      		  this.$http.post('/vuepanels',input).then((response) => {
+        		    this.changePage(this.pagination.current_page);
+          			this.newPanel = {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':''};
+          			$("#create-panel").modal('hide');
+          			toastr.success('Panel Created Successfully.', 'Success Alert', {timeOut: 5000});
+      		  }, (response) => {
+      			    this.formErrors = response.data;
+      	    });
+      	},
 
-      deletePanel: function(panel){
-        this.$http.delete('/vuepanels/'+panel.id).then((response) => {
-            this.changePage(this.pagination.current_page);
-            toastr.success('Panel Deleted Successfully.', 'Success Alert', {timeOut: 5000});
-        });
-      },
+        deletePanel: function(panel){
+            this.$http.delete('/vuepanels/'+panel.id).then((response) => {
+                this.changePage(this.pagination.current_page);
+                toastr.success('Panel Deleted Successfully.', 'Success Alert', {timeOut: 5000});
+            });
+        },
 
-      restorePanel: function(panel){
-        this.$http.patch('/vuepanels/'+panel.id+'/restore').then((response) => {
-            this.changePage(this.pagination.current_page);
-            toastr.success('Panel Restored Successfully.', 'Success Alert', {timeOut: 5000});
-        });
-      },
+        restorePanel: function(panel){
+            this.$http.patch('/vuepanels/'+panel.id+'/restore').then((response) => {
+                this.changePage(this.pagination.current_page);
+                toastr.success('Panel Restored Successfully.', 'Success Alert', {timeOut: 5000});
+            });
+        },
 
-      editPanel: function(panel){
-          this.fillPanel.id = panel.id;
-          this.fillPanel.lot_id = panel.lot_id;
-          this.fillPanel.panel = panel.panel;
-          this.fillPanel.material_id = panel.material_id;
-          this.fillPanel.prepared_by = panel.prepared_by;
-          this.fillPanel.result = panel.result;
-          this.fillPanel.tested_by = panel.tested_by;
-          $("#edit-panel").modal('show');
-      },
+        editPanel: function(panel){
+            this.fillPanel.id = panel.id;
+            this.fillPanel.lot_id = panel.lot_id;
+            this.fillPanel.panel = panel.panel;
+            this.fillPanel.material_id = panel.material_id;
+            this.fillPanel.prepared_by = panel.prepared_by;
+            this.fillPanel.result = panel.result;
+            this.fillPanel.tested_by = panel.tested_by;
+            $("#edit-panel").modal('show');
+        },
 
-      updatePanel: function(id){
-        var input = this.fillPanel;
-        this.$http.put('/vuepanels/'+id,input).then((response) => {
-            this.changePage(this.pagination.current_page);
-            this.fillPanel = {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':'', 'id':''};
-            $("#edit-panel").modal('hide');
-            toastr.success('Panel Updated Successfully.', 'Success Alert', {timeOut: 5000});
-          }, (response) => {
-              this.formErrorsUpdate = response.data;
-          });
-      },
+        updatePanel: function(id){
+            var input = this.fillPanel;
+            this.$http.put('/vuepanels/'+id,input).then((response) => {
+                this.changePage(this.pagination.current_page);
+                this.fillPanel = {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':'', 'id':''};
+                $("#edit-panel").modal('hide');
+                toastr.success('Panel Updated Successfully.', 'Success Alert', {timeOut: 5000});
+            }, (response) => {
+                this.formErrorsUpdate = response.data;
+            });
+        },
 
-      changePage: function (page) {
-          this.pagination.current_page = page;
-          this.getVuePanels(page);
-      },
+        changePage: function (page) {
+            this.pagination.current_page = page;
+            this.getVuePanels(page);
+        },
 
-      loadMaterials: function() {
-        this.$http.get('/mat').then((response) => {
-            this.materials = response.data;
+        loadMaterials: function() {
+            this.$http.get('/mat').then((response) => {
+                this.materials = response.data;
+            }, (response) => {
+                console.log(response);
+            });
+        },
 
-        }, (response) => {
-            console.log(response);
-        });
-      },
+        loadLots: function() {
+            this.$http.get('/lots').then((response) => {
+                this.lots = response.data;
+            }, (response) => {
+                console.log(response);
+            });
+        },
 
-      loadLots: function() {
-        this.$http.get('/lots').then((response) => {
-            this.lots = response.data;
+        loadResults: function() {
+            this.$http.get('/rslts').then((response) => {
+                this.options = response.data;
+            }, (response) => {
+                console.log(response);
+            });
+        },
 
-        }, (response) => {
-            console.log(response);
-        });
-      },
+        search: function() {
+            // Clear the error message.
+            this.error = '';
+            // Empty the Panels array so we can fill it with the new Panels.
+            this.panels = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
 
-      loadResults: function() {
-        this.$http.get('/rslts').then((response) => {
-            this.options = response.data;
-
-        }, (response) => {
-            console.log(response);
-        });
-      },
-
-      search: function() {
-        // Clear the error message.
-        this.error = '';
-        // Empty the Panels array so we can fill it with the new Panels.
-        this.panels = [];
-        // Set the loading property to true, this will display the "Searching..." button.
-        this.loading = true;
-
-        // Making a get request to our API and passing the query to it.
-        this.$http.get('/api/search_panel?q=' + this.query).then((response) => {
-            // If there was an error set the error message, if not fill the Panels array.
-            if(response.data.error)
-            {
-                this.error = response.data.error;
-                toastr.error(this.error, 'Search Notification', {timeOut: 5000});
-            }
-            else
-            {
-                this.panels = response.data.data.data;
-                this.pagination = response.data.data.pagination;
-                toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
-            }
-            // The request is finished, change the loading to false again.
-            this.loading = false;
-            // Clear the query.
-            this.query = '';
-        });
+            // Making a get request to our API and passing the query to it.
+            this.$http.get('/api/search_panel?q=' + this.query).then((response) => {
+                // If there was an error set the error message, if not fill the Panels array.
+                if(response.data.error)
+                {
+                    this.error = response.data.error;
+                    toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                }
+                else
+                {
+                    this.panels = response.data.data.data;
+                    this.pagination = response.data.data.pagination;
+                    toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                }
+                // The request is finished, change the loading to false again.
+                this.loading = false;
+                // Clear the query.
+                this.query = '';
+            });
+        }
     }
-
-  }
-
 });

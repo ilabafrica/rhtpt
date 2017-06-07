@@ -45,8 +45,8 @@
             <th>Lot</th>
             <th>PT Sample ID</th>
             <th>Expected Result</th>
-            <th>Prepared By</th>
-            <th>Tested By</th>
+            <th>Characterized By</th>
+            <th>Verified By</th>
             <th>Action</th>
         </tr>
         <tr v-for="panel in panels">
@@ -132,7 +132,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Prepared By:</label>
+                                <label class="col-sm-4 form-control-label" for="title">Characterized By:</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="prepared_by" class="form-control" v-model="newPanel.prepared_by" />
                                     <span v-if="formErrors['prepared_by']" class="error text-danger">@{{ formErrors['prepared_by'] }}</span>
@@ -151,7 +151,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Tested By:</label>
+                                <label class="col-sm-4 form-control-label" for="title">Verified By:</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="tested_by" class="form-control" v-model="newPanel.tested_by" />
                                     <span v-if="formErrors['tested_by']" class="error text-danger">@{{ formErrors['tested_by'] }}</span>
@@ -215,7 +215,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Prepared By:</label>
+                                <label class="col-sm-4 form-control-label" for="title">Characterized By:</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="prepared_by" class="form-control" v-model="fillPanel.prepared_by" />
                                     <span v-if="formErrorsUpdate['prepared_by']" class="error text-danger">@{{ formErrorsUpdate['prepared_by'] }}</span>
@@ -234,7 +234,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Tested By:</label>
+                                <label class="col-sm-4 form-control-label" for="title">Verified By:</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="tested_by" class="form-control" v-model="fillPanel.tested_by" />
                                     <span v-if="formErrorsUpdate['tested_by']" class="error text-danger">@{{ formErrorsUpdate['tested_by'] }}</span>

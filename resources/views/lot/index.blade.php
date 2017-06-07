@@ -32,7 +32,7 @@
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" placeholder="Search for..." v-model="query">
                     <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="button" @click="search()" v-if="!loading"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-secondary" type="button" @click="search" v-if="!loading"><i class="fa fa-search"></i></button>
                         <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
                     </span>
                 </div>
@@ -44,12 +44,14 @@
             <th>Round</th>
             <th>Lot</th>
             <th>Tester IDs</th>
+            <th>Total Participants</th>
             <th>Action</th>
         </tr>
         <tr v-for="lot in lots">
             <td>@{{ lot.rnd }}</td>
             <td>@{{ lot.lot }}</td>
             <td>@{{ lot.tester_id }}</td>
+            <td></td>
             <td>
             @permission('update-lot')	
                 <button class="btn btn-sm btn-primary" @click.prevent="editLot(lot)"><i class="fa fa-edit"></i> Edit</button>
@@ -118,7 +120,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Tester ID:</label>
                                 <div class="col-sm-8">
-                                    <div class="form-checkbox checkbox-inline" v-for="option in 10">
+                                    <div class="form-checkbox checkbox-inline" v-for="option in [0,1,2,3,4,5,6,7,8,9]">
                                         <label class="form-checkbox-label">
                                             <input type="checkbox" :value="option" v-model="newLot.tester_id">
                                             @{{ option }}
@@ -175,9 +177,9 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Tester ID:</label>
                                 <div class="col-sm-8">
-                                    <div class="form-checkbox checkbox-inline" v-for="option in 10">
+                                    <div class="form-checkbox checkbox-inline" v-for="option in [0,1,2,3,4,5,6,7,8,9]">
                                         <label class="form-checkbox-label">
-                                            <input type="checkbox" :value="option" v-model="fillLot.tester_id">
+                                            <input type="checkbox" :value="option" v-model="fillLot.tester_id" :checked="fillLot.tester_id.includes(option)">
                                             @{{ option }}
                                         </label>
                                     </div>

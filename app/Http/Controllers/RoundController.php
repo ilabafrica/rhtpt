@@ -65,12 +65,6 @@ class RoundController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
-        ]);
         $request->request->add(['user_id' => Auth::user()->id]);
 
         $create = Round::create($request->all());
@@ -87,12 +81,6 @@ class RoundController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
-        ]);
         $request->request->add(['user_id' => Auth::user()->id]);
 
         $edit = Round::find($id)->update($request->all());

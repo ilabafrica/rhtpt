@@ -250,9 +250,13 @@
         <!-- Custom JQuery -->
         <script src="{{ asset('js/custom.js') }}"></script>
         <!-- Vue JS -->
-        <script src="{{ asset('js/vue.min.js') }}"></script>
+        <script src="{{ asset('js/vue.js') }}"></script>
         <script src="{{ asset('js/vue-resource.min.js') }}"></script>
         <script src="{{ asset('js/vee-validate.js') }}"></script>
+
+          <script>
+            Vue.use(VeeValidate); // good to go. 
+          </script>
         
         <!-- Toastr -->
         <script src="{{ asset('js/toastr.min.js') }}"></script>
