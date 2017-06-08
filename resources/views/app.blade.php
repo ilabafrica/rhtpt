@@ -254,9 +254,9 @@
         <script src="{{ asset('js/vue-resource.min.js') }}"></script>
         <script src="{{ asset('js/vee-validate.js') }}"></script>
 
-          <script>
+        <script>
             Vue.use(VeeValidate); // good to go. 
-          </script>
+        </script>
         
         <!-- Toastr -->
         <script src="{{ asset('js/toastr.min.js') }}"></script>

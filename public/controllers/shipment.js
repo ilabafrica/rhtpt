@@ -78,14 +78,18 @@ new Vue({
         },
 
         createShipment: function(){
-            var input = this.newShipment;
-            this.$http.post('/vueshipments',input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.newShipment = {'pt_round':'','county_id':'','date_prepared':'','date_shipped':'','tracker':'','shipping_method':'','panels_shipped':''};
-                $("#create-shipment").modal('hide');
-                toastr.success('Shipment Created Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrors = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.newShipment;
+                this.$http.post('/vueshipments',input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.newShipment = {'pt_round':'','county_id':'','date_prepared':'','date_shipped':'','tracker':'','shipping_method':'','panels_shipped':''};
+                    $("#create-shipment").modal('hide');
+                    toastr.success('Shipment Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrors = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
             });
         },
 
@@ -117,14 +121,18 @@ new Vue({
         },
 
         updateShipment: function(id){
-            var input = this.fillShipment;
-            this.$http.put('/vueshipments/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillShipment = {'pt_round':'','county_id':'','date_prepared':'','date_shipped':'','tracker':'','shipping_method':'','panels_shipped':'','id':''};
-                $("#edit-shipment").modal('hide');
-                toastr.success('Shipment Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.fillShipment;
+                this.$http.put('/vueshipments/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillShipment = {'pt_round':'','county_id':'','date_prepared':'','date_shipped':'','tracker':'','shipping_method':'','panels_shipped':'','id':''};
+                    $("#edit-shipment").modal('hide');
+                    toastr.success('Shipment Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
             });
         },
 
