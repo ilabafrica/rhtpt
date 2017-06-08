@@ -1,7 +1,4 @@
 Vue.http.headers.common['X-CSRF-TOKEN'] = $("#token").attr("value");
-Vue.filter('ISODate', function (date) {
-    return moment(date).format('dd/MM/yyyy');
-})
 
 new Vue({
 
@@ -75,15 +72,20 @@ new Vue({
         },
 
         createResult: function(){
-      		  let myForm = document.getElementById('test_results');
-            let formData = new FormData(myForm);
-      		  this.$http.post('/vueresults', formData).then((response) => {
-    		    this.changePage(this.pagination.current_page);
-      			$("#create-result").modal('hide');
-      			    toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
-      		  }, (response) => {
-      			    this.formErrors = response.data;
-      	    });
+            this.$validator.validateAll().then(() => {
+          		let myForm = document.getElementById('test_results');
+                let formData = new FormData(myForm);
+          		this.$http.post('/vueresults', formData).then((response) => {
+        		    this.changePage(this.pagination.current_page);
+          			$("#create-result").modal('hide');
+          			 toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
+          		}, (response) => {
+          			    this.formErrors = response.data;
+          	    });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
+            });
       	},
 
         deleteResult: function(result){
@@ -119,14 +121,19 @@ new Vue({
         },
 
         updateResult: function(id){
-            var input = this.fillResult;
-            this.$http.put('/vueresults/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillResult = {'name':'','display_name':'','description':'','id':''};
-                $("#edit-result").modal('hide');
-                toastr.success('Result Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.fillResult;
+                this.$http.put('/vueresults/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillResult = {'name':'','display_name':'','description':'','id':''};
+                    $("#edit-result").modal('hide');
+                    toastr.success('Result Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
