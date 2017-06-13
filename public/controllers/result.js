@@ -2,36 +2,36 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = $("#token").attr("value");
 
 new Vue({
 
-  el: '#manage-result',
+    el: '#manage-result',
 
-  data: {
-    results: [],
-    pagination: {
-        total: 0, 
-        per_page: 2,
-        from: 1, 
-        to: 0,
-        current_page: 1
-      },
-    offset: 4,
-    formErrors:{},
-    formErrorsUpdate:{},
-    newResult : {'round_id':'','field_id[]':'','response[]':'','comment[]':''},
-    fillResult : {'round_id':'','field_id[]':'','response[]':'','comment[]':'','id':''},
-    fillVerifiedResult: {},
-    form: [],
-    sets: [],
-    rounds: [],
-    frmData: {},
-    viewFormData:{},
-    loading: false,
-    error: false,
-    query: '',
-    other: '',
-    dt: []
-  },
+    data: {
+        results: [],
+        pagination: {
+            total: 0, 
+            per_page: 2,
+            from: 1, 
+            to: 0,
+            current_page: 1
+        },
+        offset: 4,
+        formErrors:{},
+        formErrorsUpdate:{},
+        newResult : {'round_id':'','field_id[]':'','response[]':'','comment[]':''},
+        fillResult : {'round_id':'','field_id[]':'','response[]':'','comment[]':'','id':''},
+        fillVerifiedResult: {},
+        form: [],
+        sets: [],
+        rounds: [],
+        frmData: {},
+        viewFormData:{},
+        loading: false,
+        error: false,
+        query: '',
+        other: '',
+        dt: []
+    },
 
-  computed: {
+    computed: {
         isActived: function () {
             return this.pagination.current_page;
         },
@@ -56,18 +56,18 @@ new Vue({
         }
     },
 
-  ready : function(){
-	this.getVueResults(this.pagination.current_page);
-    this.loadRounds();
-    this.getForm();
-    this.getSets();
-  },
+    mounted : function(){
+    	this.getVueResults(this.pagination.current_page);
+        this.loadRounds();
+        this.getForm();
+        this.getSets();
+    },
 
-  methods : {
+    methods : {
         getVueResults: function(page){
             this.$http.get('/vueresults?page='+page).then((response) => {
-                this.$set('results', response.data.data.data);
-                this.$set('pagination', response.data.pagination);
+                this.results = response.data.data.data;
+                this.pagination = response.data.pagination;
             });
         },
 
@@ -78,9 +78,9 @@ new Vue({
           		this.$http.post('/vueresults', formData).then((response) => {
         		    this.changePage(this.pagination.current_page);
           			$("#create-result").modal('hide');
-          			 toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
+          			toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
           		}, (response) => {
-          			    this.formErrors = response.data;
+      			    this.formErrors = response.data;
           	    });
             }).catch(() => {
                 toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
@@ -106,8 +106,8 @@ new Vue({
             //    Fetch the result using the id
             let id = result.id;
             this.$http.get('/pt/'+id).then((response) => {
-                  this.frmData = response.data;
-              });
+                this.frmData = response.data;
+            });
             $("#edit-result").modal('show');
         },
 
@@ -115,8 +115,8 @@ new Vue({
             //    Fetch the result using the id
             let id = result.id;
             this.$http.get('/pt/'+id).then((response) => {
-                  this.viewFormData = response.data;
-              });
+                this.viewFormData = response.data;
+            });
             $("#view-result").modal('show');
         },
 
@@ -155,27 +155,24 @@ new Vue({
         getForm: function(){
             this.$http.get('/form').then((response) => {
                 this.form = response.data.sets;
-
             }, (response) => {
-                console.log(response.data.sets);
+                // console.log(response.data.sets);
             });
         },
 
         getSets: function(){
             this.$http.get('/frmSets').then((response) => {
                 this.sets = response.data.sets;
-
             }, (response) => {
-                console.log(response.data.sets);
+                // console.log(response.data.sets);
             });
         },
 
         loadRounds: function() {
             this.$http.get('/rnds').then((response) => {
                 this.rounds = response.data;
-
             }, (response) => {
-                console.log(response);
+                // console.log(response);
             });
         },
 
@@ -257,34 +254,34 @@ new Vue({
             return moment(date);
         },
 
-      search: function() {
-        // Clear the error message.
-        this.error = '';
-        // Empty the results array so we can fill it with the new results.
-        this.results = [];
-        // Set the loading property to true, this will display the "Searching..." button.
-        this.loading = true;
+        search: function() {
+            // Clear the error message.
+            this.error = '';
+            // Empty the results array so we can fill it with the new results.
+            this.results = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
 
-        // Making a get request to our API and passing the query to it.
-        this.$http.get('/api/search_result?q=' + this.query).then((response) => {
-            // If there was an error set the error message, if not fill the results array.
-            if(response.data.error)
-            {
-                this.error = response.data.error;
-                toastr.error(this.error, 'Search Notification', {timeOut: 5000});
-            }
-            else
-            {
-                this.results = response.data.data.data;
-                this.pagination = response.data.data.pagination;
-                toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
-            }
-            // The request is finished, change the loading to false again.
-            this.loading = false;
-            // Clear the query.
-            this.query = '';
-        });
-      }
+            // Making a get request to our API and passing the query to it.
+            this.$http.get('/api/search_result?q=' + this.query).then((response) => {
+                // If there was an error set the error message, if not fill the results array.
+                if(response.data.error)
+                {
+                    this.error = response.data.error;
+                    toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                }
+                else
+                {
+                    this.results = response.data.data.data;
+                    this.pagination = response.data.data.pagination;
+                    toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                }
+                // The request is finished, change the loading to false again.
+                this.loading = false;
+                // Clear the query.
+                this.query = '';
+            });
+        }
     },
 });
 

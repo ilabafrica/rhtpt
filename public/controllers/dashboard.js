@@ -2,45 +2,45 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = $("#token").attr("value");
 
 new Vue({
 
-  el: '#manage-dashboard',
+    el: '#manage-dashboard',
 
-  data: {
-    egender: [],
-    percentiles: [],
-    uns: [],
-    talliesChart: null,
-    percentilesChart: null,
-    unsChart: null,
-    from: '',
-    to: '',
-    rounds: [],
-    loading: false,
-    error: false,
-    query: ''
-  },
-
-  computed: {
+    data: {
+        egender: [],
+        percentiles: [],
+        uns: [],
+        talliesChart: null,
+        percentilesChart: null,
+        unsChart: null,
+        from: '',
+        to: '',
+        rounds: [],
+        loading: false,
+        error: false,
+        query: ''
     },
 
-  ready : function(){
+    computed: {
+    },
+
+    mounted : function(){
         this.getGender();
         this.getProgram();
         //this.getVueReports();
         //this.getTallies();
         //this.getPercentiles();
         //this.getUnperfs();
-  		//this.getTallies(this.from, this.to);
+    		//this.getTallies(this.from, this.to);
         //this.getPercentiles(this.from, this.to);
         //this.getUns(this.from, this.to);
-  },
+    },
 
-  methods : {
+    methods : {
         getVueReports: function(page){
-          this.$http.get('/vuereports').then((response) => {
-            this.$set('tallies', response.data.summaries);
-            this.$set('percentiles', response.data.percentiles);
-            this.$set('uns', response.data.unsperf);
-          });
+            this.$http.get('/vuereports').then((response) => {
+                this.tallies = response.data.summaries;
+                this.percentiles = response.data.percentiles;
+                this.uns = response.data.unsperf;
+            });
         },
 
         getGender: function()
@@ -142,6 +142,5 @@ new Vue({
                 //console.log(response);
             });
         },
-  }
-
+    }
 });

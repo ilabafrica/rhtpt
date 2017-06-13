@@ -23,7 +23,7 @@ new Vue({
     {
     },
 
-    ready : function()
+    mounted : function()
     {
         this.loadRounds();
         this.getVueReports();
@@ -32,12 +32,12 @@ new Vue({
     methods : {
         getVueReports: function(page){
           this.$http.get('/vuereports').then((response) => {
-            this.$set('tallies', response.data.summaries);
-            this.$set('percentiles', response.data.percentiles);
-            this.$set('uns', response.data.unsperf);
-            this.$set('talliesChart', response.data.summariesChart);
-            this.$set('percentilesChart', response.data.percentilesChart);
-            this.$set('unsChart', response.data.unsPerfChart);
+            this.tallies = response.data.summaries;
+            this.percentiles = response.data.percentiles;
+            this.uns = response.data.unsperf;
+            this.talliesChart = response.data.summariesChart;
+            this.percentilesChart = response.data.percentilesChart;
+            this.unsChart = response.data.unsPerfChart;
             this.getTallies(this.talliesChart);
             this.getPercentiles(this.percentilesChart);
             this.getUnperfs(this.unsChart);

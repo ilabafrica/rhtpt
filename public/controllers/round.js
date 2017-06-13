@@ -193,7 +193,7 @@ new Vue({
         },
 
         enrolParticipants: function(){
-    		    let myForm = document.getElementById('partFrm');
+		    let myForm = document.getElementById('partFrm');
             let formData = new FormData(myForm);
             this.$http.post('/enrol', formData).then((response) => {
                 this.changePage(this.pagination.current_page);

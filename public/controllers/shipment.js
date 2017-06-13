@@ -12,7 +12,7 @@ new Vue({
             from: 1, 
             to: 0,
             current_page: 1
-          },
+        },
         offset: 4,
         formErrors: {},
         formErrorsUpdate: {},

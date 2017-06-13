@@ -134,7 +134,7 @@ new Vue({
             this.$http.get('/mat').then((response) => {
                 this.materials = response.data;
             }, (response) => {
-                console.log(response);
+                // console.log(response);
             });
         },
 
@@ -142,7 +142,7 @@ new Vue({
             this.$http.get('/lots').then((response) => {
                 this.lots = response.data;
             }, (response) => {
-                console.log(response);
+                // console.log(response);
             });
         },
 
@@ -150,7 +150,7 @@ new Vue({
             this.$http.get('/rslts').then((response) => {
                 this.options = response.data;
             }, (response) => {
-                console.log(response);
+                // console.log(response);
             });
         },
 

@@ -50,7 +50,7 @@ new Vue({
     },
 
     mounted : function(){
-    		this.getVueLots(this.pagination.current_page);
+		this.getVueLots(this.pagination.current_page);
         this.loadRounds();
     },
 
