@@ -99,70 +99,66 @@
     <!-- Create Shipper Modal -->
     <div class="modal fade" id="create-shipper" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Create Shipper</h4>
-            </div>
-            <div class="modal-body">
-
-                <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createShipper" class="form-horizontal">
-
-                        <div class="col-md-12">
-				            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Name:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="name" class="form-control" v-model="newShipper.name" />
-                                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
-                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Shipper Type:</label>
-                                <div class="col-sm-8">
-
-                                    <div class="form-radio form-radio-inline" v-for="option in options">
-                                        <label class="form-radio-label">
-                                            <input type="radio" :value="option.name" v-model="newShipper.shipper_type">
-                                            @{{ option.title }}
-                                        </label>
-                                    </div>
-                                    
-                                    <span v-if="formErrors['shipper_type']" class="error text-danger">@{{ formErrors['shipper_type'] }}</span>
-                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Contact Person:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="contact" class="form-control" v-model="newShipper.contact" />
-                                    <span v-if="formErrors['contact']" class="error text-danger">@{{ formErrors['contact'] }}</span>
-                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Contact Phone:</label>
-                                <div class="col-sm-8">
-                                    <input type="number" name="phone" class="form-control" v-model="newShipper.phone" />
-                                    <span v-if="formErrors['phone']" class="error text-danger">@{{ formErrors['phone'] }}</span>
-                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Contact Email:</label>
-                                <div class="col-sm-8">
-                                    <input type="email" name="email" class="form-control" v-model="newShipper.email" />
-                                    <span v-if="formErrors['email']" class="error text-danger">@{{ formErrors['email'] }}</span>
-                                 </div>
-                            </div>
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
-
-                    </form>
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Create Shipper</h4>
                 </div>
-            
+                <div class="modal-body">
+
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createShipper" class="form-horizontal">
+
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Name:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newShipper.name" />
+                                        <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('shipper type') }" for="shipper type">Shipper Type:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <div class="form-radio form-radio-inline" v-for="option in options">
+                                            <label class="form-radio-label">
+                                                <input v-validate="'required'" type="radio" name="shipper type"  :value="option.name" :class="{'input': true, 'is-danger': errors.has('shipper type') }" v-model="newShipper.shipper_type">
+                                                @{{ option.title }}
+                                            </label>
+                                        </div>
+                                        <span v-show="errors.has('tester id')" class="help is-danger">@{{ errors.first('tester id') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('contact') }" for="contact">Contact Person:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('contact') }" name="contact" type="text" placeholder="" v-model="newShipper.contact" />
+                                        <span v-show="errors.has('contact')" class="help is-danger">@{{ errors.first('contact') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone') }" for="phone">Contact Phone:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone') }" name="phone" type="text" placeholder="" v-model="newShipper.phone" />
+                                        <span v-show="errors.has('phone')" class="help is-danger">@{{ errors.first('phone') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('email') }" for="email">Contact Email:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" placeholder="" v-model="newShipper.email" />
+                                        <span v-show="errors.has('email')" class="help is-danger">@{{ errors.first('email') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>            
+                </div>
             </div>
-        </div>
         </div>
     </div>
 
@@ -177,48 +173,45 @@
                 <div class="modal-body">
 
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateShipper(fillShipper.id)">
-
-                        
+                        <div class="form-group row">
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Name:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="name" class="form-control" v-model="fillShipper.name" />
-                                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Name:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="fillShipper.name" />
+                                    <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Shipper Type:</label>
-                                <div class="col-sm-8">
-
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('shipper type') }" for="shipper type">Shipper Type:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
                                     <div class="form-radio form-radio-inline" v-for="option in options">
                                         <label class="form-radio-label">
-                                            <input type="radio" :value="option.name" v-model="fillShipper.shipper_type">
+                                            <input v-validate="'required'" type="radio" name="shipper type"  :value="option.name" :class="{'input': true, 'is-danger': errors.has('shipper type') }" v-model="fillShipper.shipper_type">
                                             @{{ option.title }}
                                         </label>
                                     </div>
-                                    
-                                    <span v-if="formErrors['shipper_type']" class="error text-danger">@{{ formErrors['shipper_type'] }}</span>
+                                    <span v-show="errors.has('tester id')" class="help is-danger">@{{ errors.first('tester id') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Contact Person:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="contact" class="form-control" v-model="fillShipper.contact" />
-                                    <span v-if="formErrors['contact']" class="error text-danger">@{{ formErrors['contact'] }}</span>
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('contact') }" for="contact">Contact Person:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('contact') }" name="contact" type="text" placeholder="" v-model="fillShipper.contact" />
+                                    <span v-show="errors.has('contact')" class="help is-danger">@{{ errors.first('contact') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Contact Phone:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="phone" class="form-control" v-model="fillShipper.phone" />
-                                    <span v-if="formErrors['phone']" class="error text-danger">@{{ formErrors['phone'] }}</span>
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone') }" for="phone">Contact Phone:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone') }" name="phone" type="text" placeholder="" v-model="fillShipper.phone" />
+                                    <span v-show="errors.has('phone')" class="help is-danger">@{{ errors.first('phone') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Contact Email:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="email" class="form-control" v-model="fillShipper.email" />
-                                    <span v-if="formErrors['email']" class="error text-danger">@{{ formErrors['email'] }}</span>
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('email') }" for="email">Contact Email:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" placeholder="" v-model="fillShipper.email" />
+                                    <span v-show="errors.has('email')" class="help is-danger">@{{ errors.first('email') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">
@@ -231,6 +224,5 @@
             </div>
         </div>
     </div>
-
 </div>
 @endsection

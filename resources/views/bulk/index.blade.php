@@ -43,50 +43,47 @@
     <!-- Edit Settings Modal -->
     <div class="modal fade" id="edit-settings" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Edit Bulk SMS Settings</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateSettings()">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Edit Bulk SMS Settings</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateSettings()">
 
-                        <div class="col-md-12">
-				            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Code:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="code" class="form-control" v-model="fillSettings.code" />
-                                    <span v-if="formErrors['code']" class="error text-danger">@{{ formErrors['code'] }}</span>
-                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Username:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="username" class="form-control" v-model="fillSettings.username" />
-                                    <span v-if="formErrors['username']" class="error text-danger">@{{ formErrors['username'] }}</span>
-                                 </div>
-                            </div>
-				            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">API Key:</label>
-                                <div class="col-sm-8">
-                                    <textarea name="api_key" class="form-control" v-model="fillSettings.api_key"></textarea>
-                                    <span v-if="formErrors['api_key']" class="error text-danger">@{{ formErrors['api_key'] }}</span>
+                            <div class="col-md-12">
+    				            <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Code:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="code" class="form-control" v-model="fillSettings.code" />
+                                        <span v-if="formErrors['code']" class="error text-danger">@{{ formErrors['code'] }}</span>
+                                     </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Username:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="username" class="form-control" v-model="fillSettings.username" />
+                                        <span v-if="formErrors['username']" class="error text-danger">@{{ formErrors['username'] }}</span>
+                                     </div>
+                                </div>
+    				            <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">API Key:</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="api_key" class="form-control" v-model="fillSettings.api_key"></textarea>
+                                        <span v-if="formErrors['api_key']" class="error text-danger">@{{ formErrors['api_key'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
-
-                    </form>
+                        </form>
+                    </div>            
                 </div>
-            
             </div>
         </div>
-        </div>
     </div>
-
 </div>
 @endsection

@@ -96,10 +96,10 @@
 
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Title:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="title" class="form-control" v-model="newOption.title" />
-                                        <span v-if="formErrors['title']" class="error text-danger">@{{ formErrors['title'] }}</span>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="newOption.title" />
+                                        <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -135,13 +135,12 @@
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateOption(fillOption.id)">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Title:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="title" class="form-control" v-model="fillOption.title" />
-                                        <span v-if="formErrorsUpdate['title']" class="error text-danger">@{{ formErrorsUpdate['title'] }}</span>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="fillOption.title" />
+                                        <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
                                     </div>
                                 </div>
-
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">Description:</label>
                                     <div class="col-sm-8">
@@ -160,6 +159,5 @@
             </div>
         </div>
     </div>
-
 </div>
 @endsection

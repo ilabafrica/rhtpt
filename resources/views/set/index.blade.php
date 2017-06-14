@@ -90,123 +90,101 @@
     <!-- Create Set Modal -->
     <div class="modal fade" id="create-set" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Create Field Set</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createSet">
-
-                        <div class="col-md-12">
-				            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="title" class="form-control" v-model="newSet.title" />
-                                    <span v-if="formErrors['title']" class="error text-danger">@{{ formErrors['title'] }}</span>
-                                 </div>
-                            </div>
-				            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Description:</label>
-                                <div class="col-sm-8">
-                                    <textarea name="description" class="form-control" v-model="newSet.description"></textarea>
-                                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Order:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="order" v-model="newSet.order">
-                                        <option selected></option>
-                                        <option v-for="ordr in ordrs" :value="ordr.id">@{{ ordr.value }}</option>
-                                    </select>
-                                    <span v-if="formErrors['order']" class="error text-danger">@{{ formErrors['order'] }}</span>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Questionnaire:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="questionnaire_id" v-model="newSet.material_id">
-                                        <option selected></option>
-                                        <option v-for="questionnaire in questionnaires" :value="questionnaire.id">@{{ questionnaire.value }}</option>
-                                    </select>
-                                    <span v-if="formErrors['questionnaire_id']" class="error text-danger">@{{ formErrors['questionnaire_id'] }}</span>
-                                </div>
-                            </div>
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
-
-                    </form>
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Create Field Set</h4>
                 </div>
-            
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createSet">
+
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="newSet.title" />
+                                        <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
+                                    </div>
+                                </div>
+    				            <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Description:</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="description" class="form-control" v-model="newSet.description"></textarea>
+                                        <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('order') }" for="order">Order:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <select v-validate="'required'" class="form-control c-select" name="order" :class="{'input': true, 'is-danger': errors.has('order') }" v-model="newSet.order">
+                                            <option selected></option>
+                                            <option v-for="ordr in ordrs" :value="ordr.id">@{{ ordr.value }}</option>
+                                        </select>
+                                        <span v-show="errors.has('order')" class="help is-danger">@{{ errors.first('order') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                
+                </div>
             </div>
-        </div>
         </div>
     </div>
 
     <!-- Edit Set Modal -->
     <div class="modal fade" id="edit-set" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Edit Set</h4>
-            </div>
-            <div class="row">
-                <div class="modal-body">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Edit Set</h4>
+                </div>
+                <div class="row">
+                    <div class="modal-body">
 
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateSet(fillSet.id)">
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="title" class="form-control" v-model="fillSet.title" />
-                                    <span v-if="formErrorsUpdate['title']" class="error text-danger">@{{ formErrorsUpdate['title'] }}</span>
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateSet(fillSet.id)">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="fillSet.title" />
+                                        <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Description:</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="description" class="form-control" v-model="fillSet.description"></textarea>
+                                        <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('order') }" for="order">Order:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <select v-validate="'required'" class="form-control c-select" name="order" :class="{'input': true, 'is-danger': errors.has('order') }" v-model="fillSet.order">
+                                            <option selected></option>
+                                            <option v-for="ordr in ordrs" :value="ordr.id">@{{ ordr.value }}</option>
+                                        </select>
+                                        <span v-show="errors.has('order')" class="help is-danger">@{{ errors.first('order') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Description:</label>
-                                <div class="col-sm-8">
-                                    <textarea name="description" class="form-control" v-model="fillSet.description"></textarea>
-                                    <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Order:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="order" v-model="fillSet.order">
-                                        <option selected></option>
-                                        <option v-for="ordr in ordrs" :value="ordr.id">@{{ ordr.value }}</option>
-                                    </select>
-                                    <span v-if="formErrorsUpdate['order']" class="error text-danger">@{{ formErrorsUpdate['order'] }}</span>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Questionnaire:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="questionnaire_id" v-model="fillSet.questionnaire_id">
-                                        <option selected></option>
-                                        <option v-for="questionnaire in questionnaires" :value="questionnaire.id">@{{ questionnaire.value }}</option>
-                                    </select>
-                                    <span v-if="formErrorsUpdate['questionnaire_id']" class="error text-danger">@{{ formErrorsUpdate['questionnaire_id'] }}</span>
-                                </div>
-                            </div>
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        </div>
     </div>
-
 </div>
 @endsection

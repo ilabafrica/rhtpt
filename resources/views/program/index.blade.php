@@ -93,83 +93,79 @@
     <!-- Create Program Modal -->
     <div class="modal fade" id="create-program" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Create Program</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createProgram">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Create Program</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createProgram">
 
-                        <div class="col-md-12">
-				            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="name" class="form-control" v-model="newProgram.name" />
-                                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
-                                 </div>
-                            </div>
-				            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Description:</label>
-                                <div class="col-sm-8">
-                                    <textarea name="description" class="form-control" v-model="newProgram.description"></textarea>
-                                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="newProgram.name" />
+                                        <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
+                                    </div>
+                                </div>
+    				            <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Description:</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="description" class="form-control" v-model="newProgram.description"></textarea>
+                                        <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
-
-                    </form>
+                        </form>
+                    </div>            
                 </div>
-            
             </div>
-        </div>
         </div>
     </div>
 
     <!-- Edit Program Modal -->
     <div class="modal fade" id="edit-program" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Edit Program</h4>
-            </div>
-            <div class="row">
-                <div class="modal-body">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Edit Program</h4>
+                </div>
+                <div class="row">
+                    <div class="modal-body">
 
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateProgram(fillProgram.id)">
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="name" class="form-control" v-model="fillProgram.name" />
-                                    <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateProgram(fillProgram.id)">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="fillProgram.name" />
+                                        <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Description:</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="description" class="form-control" v-model="fillProgram.description"></textarea>
+                                        <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Description:</label>
-                                <div class="col-sm-8">
-                                    <textarea name="description" class="form-control" v-model="fillProgram.description"></textarea>
-                                    <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
-                                </div>
-                            </div>
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        </div>
     </div>
-
 </div>
 @endsection

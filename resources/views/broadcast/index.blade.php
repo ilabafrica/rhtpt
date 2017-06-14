@@ -86,93 +86,92 @@
     <!-- Compose SMS Modal -->
     <div class="modal fade" id="compose-sms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Compose SMS</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="broadcastSMS">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Compose SMS</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="broadcastSMS">
 
-                        <div class="col-md-12">
-				            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Round ID:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="round_id" v-model="newSMS.round_id">
-                                        <option selected></option>
-                                        <option v-for="round in rounds" :value="round.id">@{{ round.value }}</option>   
-                                    </select>
-                                    <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
-                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Notification:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="notification_id" v-model="newSMS.notification_id" @change="loadTemplate">
-                                        <option selected></option>
-                                        <option v-for="notification in notifications" :value="notification.id">@{{ notification.value }}</option>   
-                                    </select>
-                                    <span v-if="formErrors['notification_id']" class="error text-danger">@{{ formErrors['notification_id'] }}</span>
-                                 </div>
-                            </div>
-				            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Description:</label>
-                                <div class="col-sm-8">
-                                    <textarea name="text" value="" class="form-control" v-model="newSMS.text" rows="4" id="text"></textarea>
-                                    <span v-if="formErrors['text']" class="error text-danger">@{{ formErrors['text'] }}</span>
-                                </div>
-                            </div>
-                            <div v-if="newSMS.notification_id === 1" class="shhde">
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">County:</label>
+                            <div class="col-md-12">
+    				            <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Round ID:</label>
                                     <div class="col-sm-8">
-                                        <div class="form-checkbox form-checkbox-inline" v-for="county in counties">
-                                            <label class="form-checkbox-label">
-                                                <input type="checkbox" class="form-checkbox-input" :value="county.id" name="county[]" v-model="newSMS.county">
-                                                @{{ county.value }}
-                                            </label>
-                                        </div>
-                                        <span v-if="formErrors['county']" class="error text-danger">@{{ formErrors['county'] }}</span>
+                                        <select class="form-control c-select" name="round_id" v-model="newSMS.round_id">
+                                            <option selected></option>
+                                            <option v-for="round in rounds" :value="round.id">@{{ round.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
+                                     </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Notification:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="notification_id" v-model="newSMS.notification_id" @change="loadTemplate">
+                                            <option selected></option>
+                                            <option v-for="notification in notifications" :value="notification.id">@{{ notification.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrors['notification_id']" class="error text-danger">@{{ formErrors['notification_id'] }}</span>
+                                     </div>
+                                </div>
+    				            <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Description:</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="text" value="" class="form-control" v-model="newSMS.text" rows="4" id="text"></textarea>
+                                        <span v-if="formErrors['text']" class="error text-danger">@{{ formErrors['text'] }}</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div v-if="newSMS.notification_id === 2 || newSMS.notification_id === 3" class="shhde">
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Participant:</label>
-                                    <div class="col-sm-8">
-                                        <div class="input-group input-group-md">
-                                            <input type="text" class="form-control" placeholder="Search for..." v-model="srch">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-secondary" type="button" @click="find()" v-if="!loading"><i class="fa fa-search"></i></button>
-                                                <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
-                                            </span>
-                                        </div>
-                                        <br />
-                                        <div class="card card-block" v-if="users.length > 0">
-                                            <div class="form-checkbox form-checkbox-inline" v-for="user in users">
+                                <div v-if="newSMS.notification_id === 1" class="shhde">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 form-control-label" for="title">County:</label>
+                                        <div class="col-sm-8">
+                                            <div class="form-checkbox form-checkbox-inline" v-for="county in counties">
                                                 <label class="form-checkbox-label">
-                                                    <input type="radio" :value="user.id" name="usrs" v-model="newSMS.usrs">
-                                                    @{{ user.name+' ('+user.uid+' - '+user.phone+')' }}
+                                                    <input type="checkbox" class="form-checkbox-input" :value="county.id" name="county[]" v-model="newSMS.county">
+                                                    @{{ county.value }}
                                                 </label>
+                                            </div>
+                                            <span v-if="formErrors['county']" class="error text-danger">@{{ formErrors['county'] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="newSMS.notification_id === 2 || newSMS.notification_id === 3" class="shhde">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 form-control-label" for="title">Participant:</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group input-group-md">
+                                                <input type="text" class="form-control" placeholder="Search for..." v-model="srch">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-secondary" type="button" @click="find()" v-if="!loading"><i class="fa fa-search"></i></button>
+                                                    <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                                                </span>
+                                            </div>
+                                            <br />
+                                            <div class="card card-block" v-if="users.length > 0">
+                                                <div class="form-checkbox form-checkbox-inline" v-for="user in users">
+                                                    <label class="form-checkbox-label">
+                                                        <input type="radio" :value="user.id" name="usrs" v-model="newSMS.usrs">
+                                                        @{{ user.name+' ('+user.uid+' - '+user.phone+')' }}
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
                             </div>
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
 
-                    </form>
+                        </form>
+                    </div>
+                
                 </div>
-            
             </div>
         </div>
-        </div>
     </div>
-
 </div>
 @endsection

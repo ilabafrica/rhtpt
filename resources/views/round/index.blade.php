@@ -101,112 +101,112 @@
     <!-- Create Round Modal -->
     <div class="modal fade" id="create-round" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Create Round</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRound">
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Title:</label>
-                                <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newRound.name" />
-                                    <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Create Round</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRound">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Title:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newRound.name" />
+                                        <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="description">Description:</label>
-                                <div class="col-sm-8">
-                                    <textarea name="description" class="form-control" v-model="newRound.description"></textarea>
-                                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="description">Description:</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="description" class="form-control" v-model="newRound.description"></textarea>
+                                        <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('start date') }" for="start date">Start Date:</label>
-                                <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('start date') }" name="start date" type="date" placeholder="" v-model="newRound.start_date" />
-                                    <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('start date') }" for="start date">Start Date:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('start date') }" name="start date" type="date" placeholder="" v-model="newRound.start_date" />
+                                        <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('end date') }" for="end date">End Date:</label>
-                                <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('end date') }" name="end date" type="date" placeholder="" v-model="newRound.end_date" />
-                                    <span v-show="errors.has('end date')" class="help is-danger">@{{ errors.first('end date') }}</span>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('end date') }" for="end date">End Date:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('end date') }" name="end date" type="date" placeholder="" v-model="newRound.end_date" />
+                                        <span v-show="errors.has('end date')" class="help is-danger">@{{ errors.first('end date') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 
     <!-- Edit Round Modal -->
     <div class="modal fade" id="edit-round" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Edit Round</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateRound(fillRound.id)">
-                        <div class="col-md-12">
-                            
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="title">Title:</label>
-                                <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="fillRound.name" />
-                                    <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Edit Round</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateRound(fillRound.id)">
+                            <div class="col-md-12">
+                                
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="title">Title:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="fillRound.name" />
+                                        <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="description">Description:</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="description" class="form-control" v-model="fillRound.description"></textarea>
+                                        <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('start date') }" for="start date">Start Date:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('start date') }" name="start date" type="date" placeholder="" v-model="fillRound.start_date" />
+                                        <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('end date') }" for="end date">End Date:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('end date') }" name="end date" type="date" placeholder="" v-model="fillRound.end_date" />
+                                        <span v-show="errors.has('end date')" class="help is-danger">@{{ errors.first('end date') }}</span>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="description">Description:</label>
-                                <div class="col-sm-8">
-                                    <textarea name="description" class="form-control" v-model="fillRound.description"></textarea>
-                                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
-                                </div>
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('start date') }" for="start date">Start Date:</label>
-                                <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('start date') }" name="start date" type="date" placeholder="" v-model="fillRound.start_date" />
-                                    <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('end date') }" for="end date">End Date:</label>
-                                <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('end date') }" name="end date" type="date" placeholder="" v-model="fillRound.end_date" />
-                                    <span v-show="errors.has('end date')" class="help is-danger">@{{ errors.first('end date') }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row col-sm-offset-4 col-sm-8">
-                            <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                            <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                        </div>
-
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 
@@ -358,6 +358,5 @@
             </div>
         </div>
     </div>
-
 </div>
 @endsection

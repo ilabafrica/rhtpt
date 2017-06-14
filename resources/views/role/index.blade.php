@@ -92,55 +92,45 @@
     <!-- Create Role Modal -->
     <div id="create-role" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Create Role</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRole">
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="email">Email</label>
-                                <div class="col-sm-8">
-                                    <input v-validate data-rules="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" placeholder="Email">
-                                    <span v-show="errors.has('email')" class="help is-danger">@{{ errors.first('email') }}</span>
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Create Role</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRole">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Title:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newRole.name" />
+                                        <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('display name') }" for="display name">Display Name:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('display name') }" name="display name" type="text" placeholder="" v-model="newRole.display_name" />
+                                        <span v-show="errors.has('display name')" class="help is-danger">@{{ errors.first('display name') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Description:</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="description" class="form-control" v-model="newRole.description"></textarea>
+                                        <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="name" class="form-control" v-model="newRole.name" />
-                                    <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Display Name:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="display_name" class="form-control" v-model="newRole.display_name" />
-                                    <span v-if="formErrors['display_name']" class="error text-danger">@{{ formErrors['display_name'] }}</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Description:</label>
-                                <div class="col-sm-8">
-                                    <textarea name="description" class="form-control" v-model="newRole.description"></textarea>
-                                    <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 
@@ -157,21 +147,19 @@
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateRole(fillRole.id)">
                         <div class="col-md-12">
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Title:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="name" class="form-control" v-model="fillRole.name" />
-                                    <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Title:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="fillRole.name" />
+                                    <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
                                 </div>
                             </div>
-
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Display Name:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="display_name" class="form-control" v-model="newRole.display_name" />
-                                    <span v-if="formErrors['display_name']" class="error text-danger">@{{ formErrors['display_name'] }}</span>
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('display name') }" for="display name">Display Name:</label>
+                                <div class="col-sm-8" :class="{ 'control': true }">
+                                    <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('display name') }" name="display name" type="text" placeholder="" v-model="fillRole.display_name" />
+                                    <span v-show="errors.has('display name')" class="help is-danger">@{{ errors.first('display name') }}</span>
                                 </div>
                             </div>
-
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label" for="title">Description:</label>
                                 <div class="col-sm-8">

@@ -83,110 +83,107 @@
     <!-- Create Expected Modal -->
     <div class="modal fade" id="create-expected" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel">Create Expected</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createExpected">
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">PT Item:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="item_id" v-model="newExpected.item_id">
-                                        <option selected></option>
-                                        <option v-for="item in items" :value="item.id">@{{ item.value }}</option>   
-                                    </select>
-                                    <span v-if="formErrors['item_id']" class="error text-danger">@{{ formErrors['item_id'] }}</span>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Result:</label>
-                                <div class="col-sm-8">
-                                    <div class="form-radio form-radio-inline" v-for="option in options">
-                                        <label class="form-radio-label">
-                                            <input type="radio" :value="option.id" v-model="newExpected.result" name="result">
-                                            @{{ option.value }}
-                                        </label>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Create Expected</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createExpected">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">PT Item:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="item_id" v-model="newExpected.item_id">
+                                            <option selected></option>
+                                            <option v-for="item in items" :value="item.id">@{{ item.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrors['item_id']" class="error text-danger">@{{ formErrors['item_id'] }}</span>
                                     </div>
-                                    <span v-if="formErrors['result']" class="error text-danger">@{{ formErrors['result'] }}</span>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Result:</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-radio form-radio-inline" v-for="option in options">
+                                            <label class="form-radio-label">
+                                                <input type="radio" :value="option.id" v-model="newExpected.result" name="result">
+                                                @{{ option.value }}
+                                            </label>
+                                        </div>
+                                        <span v-if="formErrors['result']" class="error text-danger">@{{ formErrors['result'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Tested By:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="tested_by" class="form-control" v-model="newExpected.tested_by" />
+                                        <span v-if="formErrors['tested_by']" class="error text-danger">@{{ formErrors['tested_by'] }}</span>
+                                     </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Tested By:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="tested_by" class="form-control" v-model="newExpected.tested_by" />
-                                    <span v-if="formErrors['tested_by']" class="error text-danger">@{{ formErrors['tested_by'] }}</span>
-                                 </div>
-                            </div>
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
-
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 
     <!-- Edit Expected Modal -->
     <div class="modal fade" id="edit-expected" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Edit Expected</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateExpected(fillExpected.id)">
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">PT Item:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control c-select" name="item_id" v-model="fillExpected.item_id">
-                                        <option selected></option>
-                                        <option v-for="item in items" :value="item.id">@{{ item.value }}</option>   
-                                    </select>
-                                    <span v-if="formErrorsUpdate['item_id']" class="error text-danger">@{{ formErrorsUpdate['item_id'] }}</span>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Result:</label>
-                                <div class="col-sm-8">
-                                    <div class="form-radio form-radio-inline" v-for="option in options">
-                                        <label class="form-radio-label">
-                                            <input type="radio" :value="option.id" v-model="fillExpected.result" name="result">
-                                            @{{ option.value }}
-                                        </label>
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Edit Expected</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateExpected(fillExpected.id)">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">PT Item:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="item_id" v-model="fillExpected.item_id">
+                                            <option selected></option>
+                                            <option v-for="item in items" :value="item.id">@{{ item.value }}</option>   
+                                        </select>
+                                        <span v-if="formErrorsUpdate['item_id']" class="error text-danger">@{{ formErrorsUpdate['item_id'] }}</span>
                                     </div>
-                                    <span v-if="formErrorsUpdate['result']" class="error text-danger">@{{ formErrorsUpdate['result'] }}</span>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Result:</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-radio form-radio-inline" v-for="option in options">
+                                            <label class="form-radio-label">
+                                                <input type="radio" :value="option.id" v-model="fillExpected.result" name="result">
+                                                @{{ option.value }}
+                                            </label>
+                                        </div>
+                                        <span v-if="formErrorsUpdate['result']" class="error text-danger">@{{ formErrorsUpdate['result'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Tested By:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="tested_by" class="form-control" v-model="fillExpected.tested_by" />
+                                        <span v-if="formErrorsUpdate['tested_by']" class="error text-danger">@{{ formErrorsUpdate['tested_by'] }}</span>
+                                     </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 form-control-label" for="title">Tested By:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" name="tested_by" class="form-control" v-model="fillExpected.tested_by" />
-                                    <span v-if="formErrorsUpdate['tested_by']" class="error text-danger">@{{ formErrorsUpdate['tested_by'] }}</span>
-                                 </div>
-                            </div>
-                            <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                            </div>
-                        </div>
-
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        </div>
     </div>
-
 </div>
 @endsection

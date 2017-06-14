@@ -18,8 +18,8 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        newSet : {'title':'','description':'','order':'','questionnaire_id':''},
-        fillSet : {'title':'','description':'','order':'','questionnaire_id':'','id':''},
+        newSet : {'title':'','description':'','order':''},
+        fillSet : {'title':'','description':'','order':'','id':''},
         loading: false,
         error: false,
         query: ''
@@ -68,7 +68,7 @@ new Vue({
             var input = this.newSet;
             this.$http.post('/vuesets',input).then((response) => {
                 this.changePage(this.pagination.current_page);
-                this.newSet = {'title':'','description':'','order':'','questionnaire_id':''};
+                this.newSet = {'title':'','description':'','order':''};
                 $("#create-set").modal('hide');
                 toastr.success('Field Set Created Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
@@ -103,7 +103,7 @@ new Vue({
             var input = this.fillSet;
             this.$http.put('/vuesets/'+id,input).then((response) => {
                 this.changePage(this.pagination.current_page);
-                this.fillSet = {'title':'','description':'','order':'','questionnaire_id':'','id':''};
+                this.fillSet = {'title':'','description':'','order':'','id':''};
                 $("#edit-set").modal('hide');
                 toastr.success('Field Set Updated Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
