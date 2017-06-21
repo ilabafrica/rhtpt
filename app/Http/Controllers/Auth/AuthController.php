@@ -94,4 +94,30 @@ class AuthController extends Controller
         return redirect()->to('login')
                 ->with('warning', "Your token is invalid.");
     }
+    /**
+     * Check for user phone verification code
+     *
+     * @param  array  $data
+     * @return User
+     */
+    public function phoneVerification($token)
+    {
+        $check = User::where('sms_code', $token)->first();
+
+        if(!is_null($check)){
+            $user = User::find($check->id);
+
+            if($user->phone_verified == 1){
+                return redirect()->to('login')
+                    ->with('success', "Your phone number is already verified.");                
+            }
+
+            $user->update(['phone_verified' => 1]);
+
+            return redirect()->to('login')
+                ->with('success', "Phone number successfully verified.");
+        }
+        return redirect()->to('login')
+                ->with('warning', "Your token is invalid.");
+    }
 }

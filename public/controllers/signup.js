@@ -28,6 +28,7 @@ new Vue({
                     this.newParticipant = {'name':'','gender':'','email':'','phone':'','address':'','program':'','designation':'','county':'','sub_county':'','mfl_code':'','facility':'','in_charge':'','in_charge_email':'','in_charge_phone':''};
                     this.$http.get('/signup');
                     toastr.success('Registered Successfully.', 'Success Alert', {timeOut: 5000});
+                    $("#verify-phone").modal('show');
                 }, (response) => {
                     this.formErrors = response.data;
                 });
@@ -73,6 +74,15 @@ new Vue({
                 this.designations = response.data;
             }, (response) => {
                 // console.log(response);
+            });
+        },
+
+        verifyPhone: function(){
+            let myForm = document.getElementById('verify_phone');
+            let formData = new FormData(myForm);
+            this.$http.post('/user/token', formData).then((response) => {
+                $("#verify-phone").modal('hide');
+                toastr.success('Phone Verified Successfully.', 'Success Alert', {timeOut: 5000});
             });
         },
     }

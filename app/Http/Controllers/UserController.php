@@ -15,6 +15,7 @@ use App\Round;
 use DB;
 use Hash;
 use Auth;
+use Mail;
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
 class UserController extends Controller
@@ -490,13 +491,14 @@ class UserController extends Controller
             echo "Encountered an error while sending: ".$e->getMessage();
         }
         //  Do Email verification for email address
-        $user->email_verification_code = str_random(30);
+        /*$user->email_verification_code = str_random(30);
         $user->save();
+        $usr = $user->toArray();
 
-        Mail::send('emails.activation', $user, function($message) use ($user) {
-            $message->to($user->email);
+        Mail::send('auth.verification', $usr, function($message) use ($usr) {
+            $message->to($usr['email']);
             $message->subject('National HIV PT - Email Verification Code');
-        });
+        });*/
 
         return response()->json('Registered.');        
     }

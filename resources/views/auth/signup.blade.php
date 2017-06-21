@@ -184,6 +184,37 @@
 			</div>
 		</div>
 	</div>
+
+    <!-- Verify Phone -->
+    <div class="modal fade" id="verify-phone" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Option</h4>
+                </div>
+                <div class="row">
+                    <div class="modal-body">
+
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyPhone">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('code') }" for="title">Code:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('code') }" name="code" type="text" placeholder=""/>
+                                        <span v-show="errors.has('code')" class="help is-danger">@{{ errors.first('code') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button class="btn btn-sm btn-danger"><i class='fa fa-plus-circle'></i> Verify</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 	<!-- Core JS -->
 	<script src="{{ asset('js/jquery-1.12.3.min.js') }}"></script>
