@@ -32,7 +32,9 @@
                 <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <a class="navbar-brand" href="#">Navbar</a>
+                <a class="navbar-brand" href="#">
+                    <img src="{{ '../'.Config::get('cms.brand') }}" width="30" height="30" alt="">
+                </a>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item active"><a class="nav-link" href="#">Summary <span class="sr-only">(current)</span></a></li>
@@ -292,20 +294,20 @@
               data: [7,12,16,32,64]
           }]
       });
-      var json = [{
-    "key": "Apples",
-    "value": "4"
-}, {
-    "key": "Pears",
-    "value": "7"
-}, {
-    "key": "Bananas",
-    "value": "9"
-}];
-var processed_json = new Array();
-$.map(json, function(obj, i) {
-    processed_json.push([obj.key, parseInt(obj.value)]);
-});
-console.log(json);
+        var json = [{
+            "key": "Apples",
+            "value": "4"
+        }, {
+            "key": "Pears",
+            "value": "7"
+        }, {
+            "key": "Bananas",
+            "value": "9"
+        }];
+        var processed_json = new Array();
+        $.map(json, function(obj, i) {
+            processed_json.push([obj.key, parseInt(obj.value)]);
+        });
+        console.log(json);
     </script>
 </html>

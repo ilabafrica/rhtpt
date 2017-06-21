@@ -27,6 +27,9 @@ Route::get('signup', function () {
     return view('auth.signup');
 });
 
+Route::get('user/activation/{token}', 'Auth\AuthController@emailVerification');
+Route::get('user/token/', 'Auth\AuthController@phoneVerification');
+
 Route::get("/sex", array(
     "as"   => "sex.fetch",
     "uses" => "UserController@sex"
@@ -52,9 +55,9 @@ Route::post("/register", array(
     "uses" => "UserController@register"
 ));
 
-    Route::get('dashboard', function () {
-        return view('landing');
-    });
+Route::get('dashboard', function () {
+    return view('landing');
+});
 
 /*Route::get('/', 'DashboardController@manageDash');
 Route::resource('/','DashboardController');
@@ -386,6 +389,11 @@ Route::group(['middleware' => 'auth'], function()
     Route::any('/excel/users', array(
         "as"    =>  "batch.registration",
         "uses"  =>  "UserController@batchRegistration"
+    ));
+    //  Get durations
+    Route::get('/duration', array(
+        "as"    =>  "round.durations",
+        "uses"  =>  "RoundController@durations"
     ));
 
     Route::get('api/search_role',['as'=>'role.search', 'uses'=>'RoleController@index']);

@@ -15,6 +15,7 @@ use App\Round;
 use DB;
 use Hash;
 use Auth;
+use App\Libraries\AfricasTalkingGateway as Bulk;
 
 class UserController extends Controller
 {
@@ -412,21 +413,6 @@ class UserController extends Controller
      */
     public function register(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'gender' => 'required',
-            'phone' => 'required',
-            'email' => 'required',
-            'designation' => 'required',
-            'program' => 'required',
-            'county' => 'required',
-            'sub_county' => 'required',
-            'mfl_code' => 'required',
-            'facility' => 'required',
-            'in_charge' => 'required',
-            'in_charge_email' => 'required',
-            'in_charge_phone' => 'required'
-        ]);
         //  Prepare to save user details
         //  Check if user exists
         $userId = User::idByName($request->name);
@@ -440,7 +426,8 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->address = $request->address;
-            $user->designation = $request->designation;   
+            $user->designation = $request->designation;
+            $user->username = $request->name;   
             $user->save();
             $userId = $user->id;
         }
@@ -474,7 +461,44 @@ class UserController extends Controller
         //  Prepare to save role-user details
         $roleId = Role::idByName('Participant');
         DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => $request->program]);
-        return response()->json('Registered.');
+        /*
+        *  Do SMS Verification for phone number
+        */
+        //  Bulk-sms settings
+        $api = DB::table('bulk_sms_settings')->first();
+        $username   = $api->username;
+        $apikey     = $api->api_key;
+        //  Remove beginning 0 and append +254
+        $phone = ltrim($user->phone, '0');
+        $recipient = "+254".$phone;
+        // Generate code and store it in the database then send to participant
+        $token = mt_rand(100000, 999999);
+        $user->sms_code = $token;
+        $user->save();
+        $message    = "Your Verification Code is: ".$token;
+        // Create a new instance of our awesome gateway class
+        $gateway    = new Bulk($username, $apikey);
+        try 
+        { 
+            // Specified sender-id
+            $from = $api->code;
+            // Send message
+            $result = $gateway->sendMessage($recipient, $message);
+        }
+        catch ( AfricasTalkingGatewayException $e )
+        {
+            echo "Encountered an error while sending: ".$e->getMessage();
+        }
+        //  Do Email verification for email address
+        $user->email_verification_code = str_random(30);
+        $user->save();
+
+        Mail::send('emails.activation', $user, function($message) use ($user) {
+            $message->to($user->email);
+            $message->subject('National HIV PT - Email Verification Code');
+        });
+
+        return response()->json('Registered.');        
     }
     /**
      * Import the data in the worksheet

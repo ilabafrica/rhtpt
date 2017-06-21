@@ -51,18 +51,18 @@
             <td>@{{ program.name }}</td>
             <td>@{{ program.description }}</td>
             <td>
-                <button v-if="program.deleted_at==NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
-                <button v-if="program.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
+                <button v-if="!program.deleted_at" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
+                <button v-if="program.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>
             @permission('update-program')	
-                <button v-bind="{ 'disabled': program.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editProgram(program)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': program.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editProgram(program)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-program')
-                <button v-if="program.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreProgram(program)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <button v-if="program.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreProgram(program)"><i class="fa fa-toggle-on"></i> Enable</button>
             @endpermission
             @permission('delete-program')
-                <button v-if="program.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteProgram(program)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!program.deleted_at" class="btn btn-sm btn-alizarin" @click.prevent="deleteProgram(program)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             </td>
         </tr>
@@ -118,7 +118,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
@@ -157,7 +157,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>

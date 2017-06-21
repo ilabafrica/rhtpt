@@ -185,5 +185,51 @@ class RoundController extends Controller
         }
         return response()->json('Enrolled.');
     }
+    /**
+     * Function to return possible durations of rounds.
+     *
+     */
+    public function durations()
+    {
+        $response = [];
+        $data = [
+                    Round::ONE => "1 Month", 
+                    Round::TWO => "2 Months", 
+                    Round::THREE => "3 Months", 
+                    Round::FOUR => "4 Months", 
+                    Round::FIVE => "5 Months", 
+                    Round::SIX => "6 Months",
+                    Round::SEVEN => "7 Months", 
+                    Round::EIGHT => "8 Months"
+                ];
+        foreach($data as $key => $value)
+        {
+            $response[] = ['id' => $key, 'value' => $value];
+        }
+        return $response;
+    }
+    /**
+     * Function to enrol participants using excel sheet uploaded
+     *
+     */
+    public function importUserList()
+    {
+        //  Handle the import
+        //  Get the results
+        //  Import a user provided file
+        /*$file = Input::file('excel');
+        $ext = $file->getClientOriginalExtension();
+        $excel = uniqid().'.'.$ext;
+        $filename = $file->move('uploads/', $excel);
+        //  Convert file to csv
+        Excel::load('/public/uploads/'.$excel, function($reader) use(){
+            // Getting all results
+            $results = $reader->get();
+            dd($results);
+            //  user details
+            //  facility details
+            //  round details
+        });*/
+    }
 }
 $excel = App::make('excel');

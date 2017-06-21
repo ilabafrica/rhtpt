@@ -11,7 +11,8 @@
         "zizaco/entrust": "5.2.x-dev",
         "jenssegers/date": "~3.0",
         "intervention/image": "^2.3",
-        "maatwebsite/excel": "~2.1.0"
+        "maatwebsite/excel": "~2.1.0",
+        "authy/php": "2.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

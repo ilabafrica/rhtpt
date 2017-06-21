@@ -49,12 +49,14 @@
     <table class="table table-bordered">
         <tr>
             <th>Title</th>
+            <th>Duration</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Action</th>
         </tr>
         <tr v-for="round in rounds">
             <td>@{{ round.description }}</td>
+            <td></td>
             <td>@{{ round.start_date }}</td>
             <td>@{{ round.end_date }}</td>
             <td>
@@ -68,9 +70,9 @@
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             @permission('enrol-participants')
-                <button v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id" @click.prevent="loadParticipants(1)"><i class="fa fa-send"></i> Enrol Testers</button>
+                <button v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id" @click.prevent="loadParticipants(1)"><i class="fa fa-send"></i> Enrol</button>
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-nephritis" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id"><i class="fa fa-level-up"></i> Upload Worksheet</button>
-                <button v-if="!round.deleted_at" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Enrolled Testers</button>
+                <button v-if="!round.deleted_at" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Summary</button>
             @endpermission
             </td>
         </tr>
@@ -133,6 +135,16 @@
                                         <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('duration') }" for="tester id">Duration:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <select v-validate="'required'" class="form-control c-select" name="duration" :class="{'input': true, 'is-danger': errors.has('duration') }" v-model="newRound.duration">
+                                            <option selected></option>
+                                            <option  v-for="dur in durations" :value="dur.id">@{{ dur.value }}</option>   
+                                        </select>
+                                        <span v-show="errors.has('duration')" class="help is-danger">@{{ errors.first('duration') }}</span>
+                                    </div>
+                                </div>
 
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('end date') }" for="end date">End Date:</label>
@@ -142,7 +154,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
@@ -189,6 +201,16 @@
                                         <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('duration') }" for="tester id">Duration:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <select v-validate="'required'" class="form-control c-select" name="duration" :class="{'input': true, 'is-danger': errors.has('duration') }" v-model="fillRound.duration">
+                                            <option selected></option>
+                                            <option  v-for="dur in durations" :value="dur.id">@{{ dur.value }}</option>   
+                                        </select>
+                                        <span v-show="errors.has('duration')" class="help is-danger">@{{ errors.first('duration') }}</span>
+                                    </div>
+                                </div>
 
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('end date') }" for="end date">End Date:</label>
@@ -199,7 +221,7 @@
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                 <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>
 

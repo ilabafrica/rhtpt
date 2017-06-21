@@ -50,4 +50,16 @@ class Round extends Model
 			return null;
 		}
 	}
+    /**
+  	 * Constants for durations
+  	 *
+  	 */
+  	const ONE = 1;
+  	const TWO = 2;
+  	const THREE = 3;
+    const FOUR = 4;
+  	const FIVE = 5;
+  	const SIX = 6;
+  	const SEVEN = 7;
+  	const EIGHT = 8;
 }

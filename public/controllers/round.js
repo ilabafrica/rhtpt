@@ -15,8 +15,8 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        newRound : {'name':'','description':'','start_date':'','end_date':''},
-        fillRound : {'name':'','description':'','start_date':'','end_date':'','id':''},
+        newRound : {'name':'','description':'','start_date':'','duration':'','end_date':''},
+        fillRound : {'name':'','description':'','start_date':'','duration':'','end_date':'','id':''},
         loading: false,
         error: false,
         query: '',
@@ -24,7 +24,8 @@ new Vue({
         srchParticipant: '',
         enrollments: [],
         esrch: '',
-        testers: []
+        testers: [],
+        durations: []
     },
 
     computed: {
@@ -54,6 +55,7 @@ new Vue({
 
     mounted : function(){
     	this.getVueRounds(this.pagination.current_page);
+        this.getDurations();
     },
 
     methods : {
@@ -69,7 +71,7 @@ new Vue({
                 var input = this.newRound;
           		this.$http.post('/vuerounds',input).then((response) => {
           		    this.changePage(this.pagination.current_page);
-          			this.newRound = {'name':'','description':'','start_date':'','end_date':''};
+          			this.newRound = {'name':'','description':'','start_date':'','duration':'','end_date':''};
           			$("#create-round").modal('hide');
           			toastr.success('Round Created Successfully.', 'Success Alert', {timeOut: 5000});
                     this.errors.clear();
@@ -108,7 +110,7 @@ new Vue({
                 var input = this.fillRound;
                 this.$http.put('/vuerounds/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);
-                    this.fillRound = {'name':'','description':'','start_date':'','end_date':'','id':''};
+                    this.fillRound = {'name':'','description':'','start_date':'','duration':'','end_date':'','id':''};
                     $("#edit-round").modal('hide');
                     toastr.success('Round Updated Successfully.', 'Success Alert', {timeOut: 5000});
                     this.errors.clear();
@@ -210,6 +212,14 @@ new Vue({
                 $("#enrolled-participants").modal('show');
             }, (response) => {
                 //  console.log(response);
+            });
+        },
+
+        getDurations: function() {
+            this.$http.get('/duration').then((response) => {
+                this.durations = response.data;
+            }, (response) => {
+                // console.log(response);
             });
         },
     }

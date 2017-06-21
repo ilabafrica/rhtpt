@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use DB;
+use Mail;
+use App\User;
 
 class AuthController extends Controller
 {
@@ -65,5 +67,31 @@ class AuthController extends Controller
     }
     public function getLogin(){
         return view('auth/signin');
+    }
+    /**
+     * Check for user Activation Code
+     *
+     * @param  array  $data
+     * @return User
+     */
+    public function emailVerification($token)
+    {
+        $check = User::where('email_verification_code', $token)->first();
+
+        if(!is_null($check)){
+            $user = User::find($check->id);
+
+            if($user->email_verified == 1){
+                return redirect()->to('login')
+                    ->with('success', "Your email is already verified.");                
+            }
+
+            $user->update(['email_verified' => 1]);
+
+            return redirect()->to('login')
+                ->with('success', "Email successfully verified.");
+        }
+        return redirect()->to('login')
+                ->with('warning', "Your token is invalid.");
     }
 }

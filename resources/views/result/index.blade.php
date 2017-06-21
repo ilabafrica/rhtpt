@@ -70,8 +70,10 @@
             @endpermission
             @permission('delete-result')
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteResult(result)"><i class="fa fa-power-off"></i> Disable</button>
+            @endpermission            
+            @permission('print-result')
+            <button v-if="result.panel_status==3" class="btn btn-sm btn-concrete" @click="printFeedback(result.id)"><i class="fa fa-print"></i> Print</button>
             @endpermission
-            <button class="btn btn-sm btn-concrete" @click="printFeedback(result.id)"><i class="fa fa-print"></i> Print</button>
             </td>
         </tr>
     </table>
@@ -123,57 +125,57 @@
                                 <div v-for="frm in form">
                                     <p class="text-primary">@{{ frm.title }}</p>
                                     <hr>
-                                    <div v-for="fld in frm.fields">
+                                    <div v-for="item in frm.fields">
                                         <div class="form-group row">
-                                            <label class="col-sm-5 form-control-label" for="title">@{{ fld.title }}:</label>
+                                            <label class="col-sm-5 form-control-label" for="title">@{{ item.title }}:</label>
                                             <div class="col-sm-7">
-                                                <div v-if="fld.tag == 1">
-                                                    <div class="form-checkbox checkbox-inline" v-for="option in fld.options">
+                                                <div v-if="item.tag == 1">
+                                                    <div class="form-checkbox checkbox-inline" v-for="option in item.options">
                                                         <label class="form-checkbox-label">
-                                                            <input type="checkbox" :value="option.id" name="field_@{{fld.id}}">
+                                                            <input type="checkbox" :value="option.id" :name="'field_'+item.id">
                                                             @{{ option.title }}
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <div v-if="fld.tag == 2">
-                                                    <input type="date" name="field_@{{fld.id}}" class="form-control" />
+                                                <div v-if="item.tag == 2">
+                                                    <input type="date" :name="'field_'+item.id" class="form-control" />
                                                 </div>
-                                                <div v-if="fld.tag == 3">
-                                                    <input type="email" name="field_@{{fld.id}}" class="form-control" />
+                                                <div v-if="item.tag == 3">
+                                                    <input type="email" :name="'field_'+item.id" class="form-control" />
                                                 </div>
-                                                <div v-if="fld.tag == 4">
-                                                    <input type="text" name="field_@{{fld.id}}" class="form-control" />
+                                                <div v-if="item.tag == 4">
+                                                    <input type="text" :name="'field_'+item.id" class="form-control" />
                                                 </div>
-                                                <div v-if="fld.tag == 5">
-                                                    <div class="form-radio radio-inline" v-for="option in fld.options">
+                                                <div v-if="item.tag == 5">
+                                                    <div class="form-radio radio-inline" v-for="option in item.options">
                                                         <label class="form-radio-label">
-                                                            <input type="radio" :value="option.id" name="field_@{{fld.id}}" @change="remark('.toggle_@{{fld.id}}', this)">
+                                                            <input type="radio" :value="option.id" :name="'field_'+item.id" />
                                                             @{{ option.title }}
                                                         </label>
                                                     </div>
+                                                    <!-- <input type="text" :name="'comment_'+item.id" class="form-control" /> -->
                                                 </div>
-                                                <div v-if="fld.tag == 6">
-                                                    <select class="form-control c-select" name="field_@{{fld.id}}">
+                                                <div v-if="item.tag == 6">
+                                                    <select class="form-control c-select" :name="'field_'+item.id">
                                                         <option selected></option>
-                                                        <option v-for="option in fld.options" :value="option.id">@{{ round.title }}</option>   
+                                                        <option v-for="option in item.options" :value="option.id">@{{ round.title }}</option>   
                                                     </select>
                                                 </div>
-                                                <div v-if="fld.tag == 7">
-                                                    <textarea name="field_@{{fld.id}}" class="form-control"></textarea>
+                                                <div v-if="item.tag == 7">
+                                                    <textarea :name="'field_'+item.id" class="form-control"></textarea>
                                                 </div>
-                                                <span v-if="formErrorsUpdate['comment']" class="error text-danger">@{{ formErrorsUpdate['comment'] }}</span>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group row toggle_@{{fld.id}}" style="display:none;">
-                                        <label class="col-sm-5 form-control-label text-danger font-weight-bold" for="title">Please Specify:</label>
-                                        <div class="col-sm-7">
-                                            <textarea name="field_@{{fld.id}}" class="form-control" v-model="formInputs.field_@{{fld.id}}"></textarea>
+                                        <div class="form-group row" :class="'toggle_'+item.id" style="display:none;">
+                                            <label class="col-sm-5 form-control-label text-danger font-weight-bold" for="title">Please Specify:</label>
+                                            <div class="col-sm-7">
+                                                <textarea :name="'field_'+item.id" class="form-control"></textarea>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-5 col-sm-7">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
@@ -201,67 +203,60 @@
                                     <div class="col-sm-7">
                                         <select class="form-control c-select" name="round_id">
                                             <option selected></option>
-                                            <option v-for="round in rounds" v-bind="{ 'selected': round.id==frmData.round.id}" :value="round.id">@{{ round.value }}</option>   
+                                            <option v-for="round in rounds" v-if="frmData.round" v-bind="{ 'selected': round.id==frmData.round.id}" :value="round.id">@{{ round.value }}</option>   
                                         </select>
-                                        <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
                                     </div>
                                 </div>
                                 <div v-for="frm in form">
                                     <p class="text-primary">@{{ frm.title }}</p>
                                     <hr>
-                                    <div v-for="fld in frm.fields">
-                                        <div v-for="dt in frmData.results">
-                                            <div class="form-group row" v-if="dt.field_id==fld.id">
-                                                <label class="col-sm-5 form-control-label" for="title">@{{ fld.title }}:</label>
+                                    <div v-for="item in frm.fields">
+                                        <div v-if="frmData" v-for="dt in frmData.results">
+                                            <div class="form-group row" v-if="dt.field_id==item.id">
+                                                <label class="col-sm-5 form-control-label" for="title">@{{ item.title }}:</label>
                                                 <div class="col-sm-7">
-                                                    <div v-if="fld.tag == 1">
-                                                        <div class="form-checkbox form-checkbox-inline" v-for="option in fld.options">
+                                                    <div v-if="item.tag == 1">
+                                                        <div class="form-checkbox form-checkbox-inline" v-for="option in item.options">
                                                             <label class="form-checkbox-label">
-                                                                <input type="checkbox" :value="option.id" name="field_@{{fld.id}}">
+                                                                <input type="checkbox" :value="option.id" :name="'field_'+item.id">
                                                                 @{{ option.title }}
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div v-if="fld.tag == 2">
-                                                        <input type="date" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}" />
+                                                    <div v-if="item.tag == 2">
+                                                        <input type="date" :name="'field_'+item.id" class="form-control" :value="dt.response" />
                                                     </div>
-                                                    <div v-if="fld.tag == 3">
-                                                        <input type="email" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}" />
+                                                    <div v-if="item.tag == 3">
+                                                        <input type="email" :name="'field_'+item.id" class="form-control" :value="dt.response" />
                                                     </div>
-                                                    <div v-if="fld.tag == 4">
-                                                        <input type="text" name="field_@{{fld.id}}" class="form-control" value="@{{dt.response}}" />
+                                                    <div v-if="item.tag == 4">
+                                                        <input type="text" :name="'field_'+item.id" class="form-control" :value="dt.response" />
                                                     </div>
-                                                    <div v-if="fld.tag == 5">
-                                                        <div class="form-radio form-radio-inline" v-for="option in fld.options">
+                                                    <div v-if="item.tag == 5">
+                                                        <div class="form-radio form-radio-inline" v-for="option in item.options">
                                                             <label class="form-radio-label">
-                                                                <input type="radio" @click="specToggle('togglable'@{{fld.id}}, @{{fld.id}})" v-bind="{ 'checked': option.id==dt.response}" :value="option.id" name="field_@{{fld.id}}">
+                                                                <input type="radio" @click="specToggle()" v-bind="{ 'checked': option.id==dt.response}" :value="option.id" :name="'field_'+item.id">
                                                                 @{{ option.title }}
                                                             </label>
                                                         </div>
+                                                        <input v-if="dt.response==4" type="text" :name="'comment_'+item.id" class="form-control" :value="dt.comment" />
                                                     </div>
-                                                    <div v-if="fld.tag == 6">
-                                                        <select class="form-control c-select" name="field_@{{fld.id}}">
+                                                    <div v-if="item.tag == 6">
+                                                        <select class="form-control c-select" :name="'field_'+item.id">
                                                             <option selected></option>
-                                                            <option v-for="option in fld.options" v-bind="{ 'selected': option.id==dt.response}" :value="option.id">@{{ round.title }}</option>   
+                                                            <option v-for="option in item.options" v-bind="{ 'selected': option.id==dt.response}" :value="option.id">@{{ round.title }}</option>   
                                                         </select>
                                                     </div>
-                                                    <div v-if="fld.tag == 7">
-                                                        <textarea v-if="dt.field_id==fld.id" name="field_@{{fld.id}}" class="form-control">@{{dt.response}}</textarea>
+                                                    <div v-if="item.tag == 7">
+                                                        <textarea v-if="dt.field_id==item.id" :name="'field_'+item.id" class="form-control">@{{dt.response}}</textarea>
                                                     </div>
-                                                </div>
-                                                <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
-                                            </div>
-                                            <div class="form-group row togglable@{{fld.id}}" v-if="fld.tag == 6" style="display:none;">
-                                                <label class="col-sm-5 form-control-label text-danger font-weight-bold" for="title">Please Specify:</label>
-                                                <div class="col-sm-7">
-                                                    <textarea name="comment_@{{fld.id}}" class="form-control"></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-5 col-sm-7">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
@@ -271,7 +266,7 @@
             </div>
         </div>
     </div>
-      <!-- View Test Results Modal -->
+    <!-- View Test Results Modal -->
     <div class="modal fade" id="view-result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -282,7 +277,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-group row">
+                            <div class="form-group row" v-if="viewFormData.round">
                                 <label class="col-sm-5 form-control-label" for="title"><b>PT Round:</b></label>
                                 <div class="col-sm-7">
                                     <div  v-for="round in rounds">
@@ -294,24 +289,24 @@
                             <div v-for="frm in sets">
                                 <p class="text-primary"><b>@{{ frm.title }}</b></p>
                                 <hr>
-                                <div v-for="dt in viewFormData.results">
-                                    <div v-for="fld in frm.fields">
-                                        <div class="form-group row" v-if="dt.field_id==fld.id">
-                                            <label class="col-sm-5 form-control-label" for="title"><b>@{{ fld.title }}:</b></label>
+                                <div v-if="viewFormData.results" v-for="dt in viewFormData.results">
+                                    <div v-for="item in frm.fields">
+                                        <div class="form-group row" v-if="dt.field_id==item.id">
+                                            <label class="col-sm-5 form-control-label" for="title"><b>@{{ item.title }}:</b></label>
                                             <div class="col-sm-7">
-                                                <div v-if="fld.tag == 1">
-                                                    <div class="form-checkbox form-checkbox-inline" v-for="option in fld.options">
+                                                <div v-if="item.tag == 1">
+                                                    <div class="form-checkbox form-checkbox-inline" v-for="option in item.options">
                                                         <label class="form-checkbox-label">
                                                             @{{ option.title }}
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <div v-if="fld.tag == 2 ||fld.tag == 3||fld.tag == 4||fld.tag == 7">
-                                                    <label class="form-label" v-if="dt.field_id==fld.id">@{{dt.response}}</label>
+                                                <div v-if="item.tag == 2 ||item.tag == 3||item.tag == 4||item.tag == 7">
+                                                    <label class="form-label" v-if="dt.field_id==item.id">@{{dt.response}}</label>
                                                 </div>
                                                 
-                                                <div v-if="fld.tag == 5||fld.tag == 6">
-                                                    <div v-if="dt.field_id==fld.id"  v-for="option in fld.options">
+                                                <div v-if="item.tag == 5||item.tag == 6">
+                                                    <div v-if="dt.field_id==item.id"  v-for="option in item.options">
                                                         <label class="form-label" v-if="option.id==dt.response" >@{{ option.title }}<span v-if="dt.response == 4">@{{ '-'+dt.comment}}</span></label>
                                                     </div>
                                                 </div>                                 
@@ -321,17 +316,19 @@
                                 </div>
                             </div>
                             <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyResult" id="verify_test_results">
-                                <input type="hidden" class="form-control" name="pt_id" value="@{{viewFormData.pt.id}}"/>
-                                <div class="form-group row" v-if="viewFormData.pt.panel_status!=3">
-                                    <label class="col-sm-5 form-control-label" for="title"><b>Verification Comment:</b></label>
-                                    <div class="col-sm-7">
-                                        <textarea name="comment" class="form-control"> @{{dt.response}}</textarea>
+                                <div v-if="viewFormData.pt">
+                                    <input type="hidden" class="form-control" name="pt_id" :value="viewFormData.pt.id"/>
+                                    <div class="form-group row" v-if="viewFormData.pt.panel_status!=3">
+                                        <label class="col-sm-5 form-control-label" for="title"><b>Verification Comment:</b></label>
+                                        <div class="col-sm-7">
+                                            <textarea name="comment" class="form-control"> @{{dt.response}}</textarea>
+                                        </div>
                                     </div>
-                                </div>
-                                <hr v-if="viewFormData.pt.panel_status!=3">
-                                <div class="form-group row col-sm-offset-5 col-sm-7">
-                                    <button v-if="viewFormData.pt.panel_status!=3" type="submit" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
-                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                    <hr v-if="viewFormData.pt.panel_status!=3">
+                                    <div class="form-group row col-sm-offset-5 col-sm-7">
+                                        <button v-if="viewFormData.pt.panel_status!=3" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
+                                        <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                    </div>
                                 </div>
                             </form>
                         </div>

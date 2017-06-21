@@ -8,6 +8,7 @@ use App\Option;
 use App\Facility;
 
 use DB;
+use Excel;
 
 class ReportController extends Controller
 {
@@ -167,3 +168,4 @@ class ReportController extends Controller
         return response()->json($response);
     }
 }
+$excel = App::make('excel');

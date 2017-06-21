@@ -28,7 +28,8 @@ new Vue({
         error: false,
         query: '',
         other: '',
-        dt: []
+        dt: [],
+        toggle: {}
     },
 
     computed: {
@@ -282,6 +283,8 @@ new Vue({
                 this.query = '';
             });
         }
+        //  toggle other
+
     },
 });
 

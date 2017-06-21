@@ -22,12 +22,18 @@ new Vue({
 
     methods : {
         createParticipant: function(){
-            var input = this.newParticipant;
-            this.$http.post('/register',input).then((response) => {
-                this.newParticipant = {'name':'','gender':'','email':'','phone':'','address':'','program':'','designation':'','county':'','sub_county':'','mfl_code':'','facility':'','in_charge':'','in_charge_email':'','in_charge_phone':''};
-                toastr.success('Registered Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrors = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.newParticipant;
+                this.$http.post('/register', input).then((response) => {
+                    this.newParticipant = {'name':'','gender':'','email':'','phone':'','address':'','program':'','designation':'','county':'','sub_county':'','mfl_code':'','facility':'','in_charge':'','in_charge_email':'','in_charge_phone':''};
+                    this.$http.get('/signup');
+                    toastr.success('Registered Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrors = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
