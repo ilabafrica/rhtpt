@@ -151,7 +151,7 @@ new Vue({
                 else
                 {
                     this.sets = response.data.data.data;
-                    this.pagination = response.data.data.pagination;
+                    this.pagination = response.data.pagination;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
                 // The request is finished, change the loading to false again.

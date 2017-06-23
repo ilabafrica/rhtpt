@@ -53,13 +53,13 @@
             <td>@{{ set.ordr }}</td>
             <td>
             @permission('update-set')	
-                <button v-bind="{ 'disabled': set.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editSet(set)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': set.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editSet(set)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-set')
-                <button v-if="set.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreSet(set)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <button v-if="set.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreSet(set)"><i class="fa fa-toggle-on"></i> Enable</button>
             @endpermission
             @permission('delete-set')
-                <button v-if="set.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteSet(set)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!set.deleted_at" class="btn btn-sm btn-alizarin" @click.prevent="deleteSet(set)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             </td>
         </tr>
@@ -111,7 +111,6 @@
                                     <label class="col-sm-4 form-control-label" for="title">Description:</label>
                                     <div class="col-sm-8">
                                         <textarea name="description" class="form-control" v-model="newSet.description"></textarea>
-                                        <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -162,7 +161,6 @@
                                     <label class="col-sm-4 form-control-label" for="title">Description:</label>
                                     <div class="col-sm-8">
                                         <textarea name="description" class="form-control" v-model="fillSet.description"></textarea>
-                                        <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
