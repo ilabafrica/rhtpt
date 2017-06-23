@@ -61,14 +61,19 @@ new Vue({
         },
 
         createProgram: function(){
-            var input = this.newProgram;
-            this.$http.post('/vueprograms',input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.newProgram = {'name':'','description':''};
-                $("#create-program").modal('hide');
-                toastr.success('Program Created Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrors = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.newProgram;
+                this.$http.post('/vueprograms',input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.newProgram = {'name':'','description':''};
+                    $("#create-program").modal('hide');
+                    toastr.success('Program Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrors = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -94,14 +99,19 @@ new Vue({
         },
 
         updateProgram: function(id){
-            var input = this.fillProgram;
-            this.$http.put('/vueprograms/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillProgram = {'name':'','description':'','id':''};
-                $("#edit-program").modal('hide');
-                toastr.success('Program Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.fillProgram;
+                this.$http.put('/vueprograms/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillProgram = {'name':'','description':'','id':''};
+                    $("#edit-program").modal('hide');
+                    toastr.success('Program Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -129,7 +139,7 @@ new Vue({
                 else
                 {
                     this.programs = response.data.data.data;
-                    this.pagination = response.data.data.pagination;
+                    this.pagination = response.data.pagination;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
                 // The request is finished, change the loading to false again.

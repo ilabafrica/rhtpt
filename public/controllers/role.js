@@ -65,14 +65,19 @@ new Vue({
         },
 
         createRole: function(){
-            var input = this.newRole;
-            this.$http.post('/vueroles',input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.newRole = {'name':'','description':''};
-                $("#create-role").modal('hide');
-                toastr.success('Role Created Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrors = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.newRole;
+                this.$http.post('/vueroles',input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.newRole = {'name':'','description':''};
+                    $("#create-role").modal('hide');
+                    toastr.success('Role Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrors = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -99,14 +104,19 @@ new Vue({
         },
 
         updateRole: function(id){
-            var input = this.fillRole;
-            this.$http.put('/vueroles/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillRole = {'name':'','display_name':'','description':'','id':''};
-                $("#edit-role").modal('hide');
-                toastr.success('Role Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.fillRole;
+                this.$http.put('/vueroles/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillRole = {'name':'','display_name':'','description':'','id':''};
+                    $("#edit-role").modal('hide');
+                    toastr.success('Role Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 

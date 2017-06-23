@@ -65,14 +65,19 @@ new Vue({
         },
 
         createShipper: function(){
-            var input = this.newShipper;
-            this.$http.post('/vueshippers',input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.newShipper = {'name':'','shipper_type':'','contact':'','phone':'','email':''};
-                $("#create-shipper").modal('hide');
-                toastr.success('Shipper Created Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrors = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.newShipper;
+                this.$http.post('/vueshippers',input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.newShipper = {'name':'','shipper_type':'','contact':'','phone':'','email':''};
+                    $("#create-shipper").modal('hide');
+                    toastr.success('Shipper Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrors = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -101,14 +106,19 @@ new Vue({
         },
 
         updateShipper: function(id){
-            var input = this.fillShipper;
-            this.$http.put('/vueshippers/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillShipper = {'name':'','shipper_type':'','contact':'','phone':'','email':'','id':''};
-                $("#edit-shipper").modal('hide');
-                toastr.success('Shipper Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.fillShipper;
+                this.$http.put('/vueshippers/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillShipper = {'name':'','shipper_type':'','contact':'','phone':'','email':'','id':''};
+                    $("#edit-shipper").modal('hide');
+                    toastr.success('Shipper Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -144,7 +154,7 @@ new Vue({
                 else
                 {
                     this.shippers = response.data.data.data;
-                    this.pagination = response.data.data.pagination;
+                    this.pagination = response.data.pagination;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
                 // The request is finished, change the loading to false again.

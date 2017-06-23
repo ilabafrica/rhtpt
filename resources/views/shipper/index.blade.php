@@ -57,18 +57,18 @@
             <td>@{{ shipper.phone }}</td>
             <td>@{{ shipper.email }}</td>
             <td>
-                <button v-if="shipper.deleted_at==NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
-                <button v-if="shipper.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
+                <button v-if="!shipper.deleted_at" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
+                <button v-if="shipper.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>	
             @permission('update-shipper')
-                <button v-bind="{ 'disabled': shipper.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editShipper(shipper)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': shipper.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editShipper(shipper)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-shipper')
-                <button v-if="shipper.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreShipper(shipper)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <button v-if="shipper.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreShipper(shipper)"><i class="fa fa-toggle-on"></i> Enable</button>
             @endpermission
             @permission('delete-shipper')
-                <button v-if="shipper.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteShipper(shipper)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!shipper.deleted_at" class="btn btn-sm btn-alizarin" @click.prevent="deleteShipper(shipper)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             </td>
         </tr>
@@ -151,7 +151,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
@@ -215,7 +215,7 @@
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                 <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>
                         <br />
