@@ -64,14 +64,18 @@ new Vue({
         },
 
         createMaterial: function(){
-            var input = this.newMaterial;
-            this.$http.post('/vuematerials',input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.newMaterial = {'batch':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepared_by':''};
-                $("#create-material").modal('hide');
-                toastr.success('Material Created Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrors = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.newMaterial;
+                this.$http.post('/vuematerials',input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.newMaterial = {'batch':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepared_by':''};
+                    $("#create-material").modal('hide');
+                    toastr.success('Material Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrors = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
             });
         },
 
@@ -102,14 +106,18 @@ new Vue({
         },
 
         updateMaterial: function(id){
-            var input = this.fillMaterial;
-            this.$http.put('/vuematerials/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillMaterial = {'batch':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepare_by':'','id':''};
-                $("#edit-material").modal('hide');
-                toastr.success('Material Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.fillMaterial;
+                this.$http.put('/vuematerials/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillMaterial = {'batch':'','date_prepared':'','expiry_date':'','material_type':'','original_source':'','date_collected':'','prepare_by':'','id':''};
+                    $("#edit-material").modal('hide');
+                    toastr.success('Material Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
             });
         },
 
