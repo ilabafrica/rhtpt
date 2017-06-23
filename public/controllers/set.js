@@ -65,14 +65,19 @@ new Vue({
         },
 
         createSet: function(){
-            var input = this.newSet;
-            this.$http.post('/vuesets',input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.newSet = {'title':'','description':'','order':''};
-                $("#create-set").modal('hide');
-                toastr.success('Field Set Created Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrors = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.newSet;
+                this.$http.post('/vuesets',input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.newSet = {'title':'','description':'','order':''};
+                    $("#create-set").modal('hide');
+                    toastr.success('Field Set Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrors = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -100,14 +105,19 @@ new Vue({
         },
 
         updateSet: function(id){
-            var input = this.fillSet;
-            this.$http.put('/vuesets/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillSet = {'title':'','description':'','order':'','id':''};
-                $("#edit-set").modal('hide');
-                toastr.success('Field Set Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.fillSet;
+                this.$http.put('/vuesets/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillSet = {'title':'','description':'','order':'','id':''};
+                    $("#edit-set").modal('hide');
+                    toastr.success('Field Set Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 

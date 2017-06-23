@@ -48,7 +48,7 @@
             <th>Order</th>
             <th>Action</th>
         </tr>
-        <tr v-for="field in fields">
+        <tr v-for="field in attributes">
             <td>@{{ field.uid }}</td>
             <td>@{{ field.title }}</td>
             <td>@{{ field.tg }}</td>
@@ -57,9 +57,9 @@
             @permission('update-field')
                 <button class="btn btn-sm btn-primary" @click.prevent="editField(field)" disabled><i class="fa fa-edit"></i> Edit</button>
             @endpermission
-                <button v-if="field.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreField(field)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <button v-if="field.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreField(field)"><i class="fa fa-toggle-on"></i> Enable</button>
             @permission('delete-field')
-                <button v-if="field.deleted_at==NULL" class="btn btn-sm btn-danger" @click.prevent="deleteField(field)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!field.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteField(field)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             </td>
         </tr>
@@ -160,7 +160,7 @@
                                 </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
@@ -245,7 +245,7 @@
                                 </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>

@@ -5,7 +5,7 @@ new Vue({
     el: '#manage-field',
 
     data: {
-        fields: [],
+        attributes: [],
         tags: [],
         sets: [],
         flds: [],
@@ -64,20 +64,25 @@ new Vue({
 
         getVueFields: function(page){
             this.$http.get('/vuefields?page='+page).then((response) => {
-                this.fields = response.data.data.data;
+                this.attributes = response.data.data.data;
                 this.pagination = response.data.pagination;
             });
         },
 
         createField: function(){
-            let myForm = document.getElementById('test_results');
-            let formData = new FormData(myForm);
-            this.$http.post('/vuefields',formData).then((response) => {
-                this.changePage(this.pagination.current_page);
-                $("#create-field").modal('hide');
-                toastr.success('Field Created Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrors = response.data;
+            this.$validator.validateAll().then(() => {
+                let myForm = document.getElementById('test_results');
+                let formData = new FormData(myForm);
+                this.$http.post('/vuefields',formData).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    $("#create-field").modal('hide');
+                    toastr.success('Field Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrors = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -105,14 +110,19 @@ new Vue({
         },
 
         updateField: function(id){
-            var input = this.fillField;
-            this.$http.put('/vuefields/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillField = {'uid':'','title':'', 'order':'', 'tag':'', 'field_set_id':'', 'opts[]':'','id':''};
-                $("#edit-field").modal('hide');
-                toastr.success('Field Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.fillField;
+                this.$http.put('/vuefields/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillField = {'uid':'','title':'', 'order':'', 'tag':'', 'field_set_id':'', 'opts[]':'','id':''};
+                    $("#edit-field").modal('hide');
+                    toastr.success('Field Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -157,7 +167,7 @@ new Vue({
             // Clear the error message.
             this.error = '';
             // Empty the fields array so we can fill it with the new fields.
-            this.fields = [];
+            this.attributes = [];
             // Set the loading property to true, this will display the "Searching..." button.
             this.loading = true;
 
@@ -171,8 +181,8 @@ new Vue({
                 }
                 else
                 {
-                    this.fields = response.data.data.data;
-                    this.pagination = response.data.data.pagination;
+                    this.attributes = response.data.data.data;
+                    this.pagination = response.data.pagination;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
                 // The request is finished, change the loading to false again.
