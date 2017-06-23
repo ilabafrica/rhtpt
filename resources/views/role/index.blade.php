@@ -47,22 +47,22 @@
             <th>Status</th>
             <th>Action</th>
         </tr>
-        <tr v-for="role in roles" v-bind:class="{ 'text-muted': role.deleted_at!=NULL}">
+        <tr v-for="role in roles" v-bind:class="{ 'text-muted': role.deleted_at}">
             <td>@{{ role.name }}</td>
             <td>@{{ role.description }}</td>
             <td>
-                <button v-if="role.deleted_at==NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
-                <button v-if="role.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
+                <button v-if="!role.deleted_at" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
+                <button v-if="role.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>	
             @permission('update-role')
-                <button v-bind="{ 'disabled': role.deleted_at!=NULL}" class="btn btn-sm btn-primary" @click.prevent="editRole(role)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': role.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editRole(role)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-role')
-                <button v-if="role.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreRole(role)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <button v-if="role.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreRole(role)"><i class="fa fa-toggle-on"></i> Enable</button>
             @endpermission
             @permission('delete-role')
-                <button v-if="role.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteRole(role)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!role.deleted_at" class="btn btn-sm btn-alizarin" @click.prevent="deleteRole(role)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             </td>
         </tr>
@@ -119,11 +119,10 @@
                                     <label class="col-sm-4 form-control-label" for="title">Description:</label>
                                     <div class="col-sm-8">
                                         <textarea name="description" class="form-control" v-model="newRole.description"></textarea>
-                                        <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
@@ -164,12 +163,11 @@
                                 <label class="col-sm-4 form-control-label" for="title">Description:</label>
                                 <div class="col-sm-8">
                                     <textarea name="description" class="form-control" v-model="fillRole.description"></textarea>
-                                    <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
                                 </div>
                             </div>
 
                             <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                 <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>
                         </div>

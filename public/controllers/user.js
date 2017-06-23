@@ -29,6 +29,8 @@ new Vue({
         query: '',
         formTransErrors:{},
         batchWorksheet:{'worksheet': ''},
+        someUser : {'facility_id':'','program_id':'','sub_county_id':'','county_id':'','facility':'','program':'','sub_county':'','county':'','in_charge':'', 'id':''},
+        jimbo: [],
     },
 
     computed: {
@@ -133,6 +135,7 @@ new Vue({
         loadCounties: function() {
             this.$http.get('/cnts').then((response) => {
                 this.counties = response.data;
+                this.jimbo = response.data;
             }, (response) => {
                 // console.log(response);
             });
@@ -211,7 +214,7 @@ new Vue({
                 else
                 {
                     this.users = response.data.data.data;
-                    this.pagination = response.data.data.pagination;
+                    this.pagination = response.data.pagination;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
                 // The request is finished, change the loading to false again.
@@ -220,6 +223,7 @@ new Vue({
                 this.query = '';
             });
         },
+
         loadCounties: function() {
             this.$http.get('/cnts').then((response) => {
                 this.counties = response.data;
@@ -263,6 +267,49 @@ new Vue({
             }, (response) => {
                 this.formTransErrors = response.data;
             });
-        }
+        },
+
+        registered: function() {
+            // Clear the error message.
+            this.error = '';
+            // Empty the users array so we can fill it with the new users.
+            this.users = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
+
+            // Making a get request to our API and passing the query to it.
+            this.$http.get('/api/search_user?filter=' + 'self').then((response) => {
+                // If there was an error set the error message, if not fill the users array.
+                if(response.data.error)
+                {
+                    this.error = response.data.error;
+                    toastr.error(this.error, 'Error Notification', {timeOut: 5000});
+                }
+                else
+                {
+                    this.users = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                    toastr.success('The results below were obtained.', 'Filter Notification', {timeOut: 5000});
+                }
+                // The request is finished, change the loading to false again.
+                this.loading = false;
+            });
+        },
+
+        openUser: function(user){
+            $("#approve-user").modal('show');
+        },
+
+        approveUser: function(id){
+            var input = this.someUser;
+            this.$http.put('/approve/'+id, input).then((response) => {
+                this.changePage(this.pagination.current_page);
+                this.someUser = {'facility_id':'','program_id':'','sub_county_id':'','county_id':'','facility':'','program':'','sub_county':'','county':'','in_charge':'', 'id':''};
+                $("#approve-user").modal('hide');
+                toastr.success('User Approved Successfully.', 'Success Alert', {timeOut: 5000});
+            }, (response) => {
+                // 
+            });
+        },
     }
 });

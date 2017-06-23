@@ -13,11 +13,11 @@
 	<title>{!! Config::get('cms.name') !!}</title>
 
 	<!-- Font awesome -->
-	<link rel="stylesheet" href="{{ asset('harmony/css/font-awesome.min.css') }}">
-	<!-- Sandstone Bootstrap CSS -->
-	<link rel="stylesheet" href="{{ asset('harmony/css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/font-awesome.css') }}">
+	<!-- Bootstrap core CSS -->
+        <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
 	<!-- Custom Font -->
-	<link rel="stylesheet" href="{{ asset('harmony/css/font.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/font.css') }}">
 	<!-- Custom Styling -->
 	<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 </head>

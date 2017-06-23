@@ -157,7 +157,7 @@
                     </li>
                     @endpermission
                     @permission('user-management')
-                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('user'), strtolower('role'), strtolower('permission'), strtolower('assign')])?' '.strtolower(trans('messages.active')):'' !!}">
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('user'), strtolower('role'), strtolower('permission'), strtolower('assign'), strtolower('self')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-users"></i> {!! trans('messages.user-management') !!}</a>
                         <ul class="list-unstyled">
                             @permission('read-user')

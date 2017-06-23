@@ -33,6 +33,7 @@
                     </a>
                     <button class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#upload-worksheet"><i class="fa fa-level-up"></i> Upload Worksheet</button>
                 @endpermission
+                	<button class="btn btn-sm btn-registered" @click="registered"><i class="fa fa-address-card"></i> Self</button>
                 </h5>
             </div>
             <div class="col-md-2"></div>
@@ -65,22 +66,23 @@
             <td>@{{ user.username }}</td>
             <td>@{{ user.role }}</td>
             <td>
-                <button v-if="user.deleted_at==NULL" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
-                <button v-if="user.deleted_at!=NULL" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
+                <button v-if="!user.deleted_at" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
+                <button v-if="user.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>
             @permission('update-user')	
-                <button v-bind="{ 'disabled': user.deleted_at!=NULL}" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': user.deleted_at }" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-user') 
-                <button v-if="user.deleted_at!=NULL" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <button v-if="user.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)"><i class="fa fa-toggle-on"></i> Enable</button>
             @endpermission
             @permission('delete-user') 
-                <button v-if="user.deleted_at==NULL" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!user.deleted_at" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             @permission('transfer-user') 
-                <button v-if="user.uid!=NULL" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
+                <button v-if="user.uid" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
             @endpermission
+            	<button v-if="user.sms_code" v-if="!user.deleted_at" class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
             </td>
         </tr>
     </table>
@@ -244,8 +246,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel">Edit User</h4>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+	                <h4 class="modal-title" id="myModalLabel">Edit User</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -255,7 +257,6 @@
                                     <label class="col-sm-4 form-control-label" for="title">Name:</label>
                                     <div class="col-sm-8">
                                         <input type="text" name="name" class="form-control" v-model="fillUser.name"/>
-                                        <span v-if="formErrorsUpdate['name']" class="error text-danger">@{{ formErrorsUpdate['name'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -344,7 +345,7 @@
                                 <div class="form-group row" v-if="fillUser.role == 2">
                                     <label class="col-sm-4 form-control-label" for="title">Program:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control c-select" name="program_id" v-model="fillUser.program_id">
+                                        <select class="form-control c-select" name="program_id" v-model="fillUser.program">
                                             <option selected></option>
                                             <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
                                         </select>
@@ -387,7 +388,7 @@
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs()">
                                             <option selected></option>
-                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
+                                            <option v-for="county in jimbo" :value="county.id">@{{ county.value }}</option>   
                                         </select>
                                     </div>
                                 </div>
@@ -426,6 +427,21 @@
                                 </div>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Approve user for authorization -->
+    <div class="modal fade" id="approve-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Approve Participant</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">@{{user.name}}
                     </div>
                 </div>
             </div>

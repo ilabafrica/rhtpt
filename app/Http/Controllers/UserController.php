@@ -17,6 +17,8 @@ use Hash;
 use Auth;
 use Mail;
 use App\Libraries\AfricasTalkingGateway as Bulk;
+//  Carbon - for use with dates
+use Jenssegers\Date\Date as Carbon;
 
 class UserController extends Controller
 {
@@ -64,15 +66,43 @@ class UserController extends Controller
                $users = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
             }
         }
+        if($request->has('filter')) 
+        {
+            $search = $request->get('q');
+            $users = User::whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+            if(Auth::user()->isCountyCoordinator())
+            {
+                $users = County::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+            }
+            else if(Auth::user()->isSubCountyCoordinator())
+            {
+                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+            }
+            else if(Auth::user()->isFacilityInCharge())
+            {
+               $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+            }
+        }
         foreach($users as $user)
         {
-            if(!empty($user->uid) && count($user->tier)>0)
+            if((!empty($user->uid) || $user->ru()->tier))
             {
-                $user->facility = $user->tier->tier;
-                $user->program = $user->tier->program_id;
+                $facility = Facility::find($user->ru()->tier);
+                $user->facility = $user->ru()->tier;
+                $user->program = $user->ru()->program_id;
+                $user->sub_county = $facility->subCounty->id;
+                $user->county = $facility->subCounty->county->id;
+
+                $user->fac = $facility->name;
+                $user->prog = Program::find($user->ru()->program_id)->name;
+                $user->sub = $facility->subCounty->name;
+                $user->kaunti = $facility->subCounty->county->name;
             }
-            $user->facility = '';
-            $user->program = '';
+            else
+            {
+                $user->facility = '';
+                $user->program = '';
+            }
             $user->ru()?$user->role = Role::find($user->ru()->role_id)->name:$user->role = '';
             $user->ru()?$user->rl = $user->ru()->role_id:$user->role = '';
         }
@@ -414,6 +444,7 @@ class UserController extends Controller
      */
     public function register(Request $request)
     {
+        $now = Carbon::now('Africa/Nairobi');
         //  Prepare to save user details
         //  Check if user exists
         $userId = User::idByName($request->name);
@@ -428,7 +459,8 @@ class UserController extends Controller
             $user->phone = $request->phone;
             $user->address = $request->address;
             $user->designation = $request->designation;
-            $user->username = $request->name;   
+            $user->username = $request->name;
+            $user->deleted_at = $now;
             $user->save();
             $userId = $user->id;
         }
