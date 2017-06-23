@@ -56,13 +56,6 @@ class SetController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
-            'order' => 'required',
-            'questionnaire_id' => 'required',
-        ]);
-
         $create = Set::create($request->all());
 
         return response()->json($create);
@@ -77,13 +70,6 @@ class SetController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
-            'order' => 'required',
-            'questionnaire_id' => 'required',
-        ]);
-
         $edit = Set::find($id)->update($request->all());
 
         return response()->json($edit);
