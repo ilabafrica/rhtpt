@@ -13,7 +13,7 @@
     <!-- Facility Listing -->
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="pull-left col-md-6">
+            <div class="pull-left col-md-8">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.facility', 2) !!}
         
                 @permission('create-facility')
@@ -26,6 +26,12 @@
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
                     </a>
+                    <a class="btn btn-sm btn-concrete" href="/Facilities.xlsx">
+                        <i class="fa fa-download"></i>
+                        Worksheet
+                    </a>
+
+                    <button class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#upload-worksheet"><i class="fa fa-level-up"></i> Upload Worksheet</button>
                 </h5>
             </div>
             <div class="col-md-2"></div>

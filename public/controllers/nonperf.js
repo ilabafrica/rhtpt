@@ -62,14 +62,19 @@ new Vue({
         },
 
         createNonperf: function(){
-            var input = this.newNonperf;
-            this.$http.post('/vuenonperfs',input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.newNonperf = {'title':'','description':''};
-                $("#create-nonperf").modal('hide');
-                toastr.success('Non-performance reason Created Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrors = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.newNonperf;
+                this.$http.post('/vuenonperfs',input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.newNonperf = {'title':'','description':''};
+                    $("#create-nonperf").modal('hide');
+                    toastr.success('Non-performance reason Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrors = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -95,14 +100,19 @@ new Vue({
         },
 
         updateNonperf: function(id){
-            var input = this.fillNonperf;
-            this.$http.put('/vuenonperfs/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillNonperf = {'title':'','description':'','id':''};
-                $("#edit-nonperf").modal('hide');
-                toastr.success('Non-performance reason Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+            this.$validator.validateAll().then(() => {
+                var input = this.fillNonperf;
+                this.$http.put('/vuenonperfs/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillNonperf = {'title':'','description':'','id':''};
+                    $("#edit-nonperf").modal('hide');
+                    toastr.success('Non-performance reason Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -130,7 +140,7 @@ new Vue({
                 else
                 {
                     this.nonperfs = response.data.data.data;
-                    this.pagination = response.data.data.pagination;
+                    this.pagination = response.data.pagination;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
                 // The request is finished, change the loading to false again.
