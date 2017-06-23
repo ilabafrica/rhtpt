@@ -52,11 +52,6 @@ class ProgramController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
-        ]);
-
         $create = Program::create($request->all());
 
         return response()->json($create);
@@ -71,11 +66,6 @@ class ProgramController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
-        ]);
-
         $edit = Program::find($id)->update($request->all());
 
         return response()->json($edit);

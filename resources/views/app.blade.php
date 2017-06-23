@@ -150,9 +150,9 @@
                             <li class="{!! Request::segment(1)==strtolower('settings')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('settings') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.settings') !!}</a>
                             </li>
-                            <li class="{!! Request::segment(2)==strtolower('broadcast')?strtolower(trans('messages.active')):'' !!}">
+                            <!-- <li class="{!! Request::segment(2)==strtolower('broadcast')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('broadcast') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.broadcast') !!}</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </li>
                     @endpermission
