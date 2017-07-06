@@ -285,4 +285,12 @@ EntrustUserTrait::restore insteadof SoftDeletes;
             return null;
         }
     }
+    /**
+    * Pt relationship
+    *
+    */
+    public function pt()
+    {
+        return $this->hasMany('App\Pt');
+    }
 }

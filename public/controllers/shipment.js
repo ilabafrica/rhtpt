@@ -77,7 +77,7 @@ new Vue({
             });
         },
 
-        createShipment: function(){
+        saveShipment: function(){
             this.$validator.validateAll().then(() => {
                 var input = this.newShipment;
                 this.$http.post('/vueshipments',input).then((response) => {
@@ -271,9 +271,9 @@ $('#receive-shipment').on('show.bs.modal', function(e)
     var id = $(e.relatedTarget).data('fk');
     // console.log(id);
     //  Populate the hidden field
-    //$( "#shipment-id" ).val(id);
-    $( "#shipment-id" ).attr('value', id);
-    $( "#shipment-id" ).trigger('change');
+    $( "#shipment-id" ).val(id);
+    // $( "#shipment-id" ).attr('value', id);
+    // $( "#shipment-id" ).trigger('change');
     console.log($("#shipment-id").val());
 });
 //  Triggered when modal is about to be shown

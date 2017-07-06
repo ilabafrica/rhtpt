@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Role;
@@ -516,23 +517,23 @@ class UserController extends Controller
             // Specified sender-id
             $from = $api->code;
             // Send message
-            $result = $gateway->sendMessage($recipient, $message);
+            // $result = $gateway->sendMessage($recipient, $message);
         }
         catch ( AfricasTalkingGatewayException $e )
         {
             echo "Encountered an error while sending: ".$e->getMessage();
         }
         //  Do Email verification for email address
-        /*$user->email_verification_code = str_random(30);
+        $user->email_verification_code = Str::random(60);
         $user->save();
         $usr = $user->toArray();
 
         Mail::send('auth.verification', $usr, function($message) use ($usr) {
             $message->to($usr['email']);
             $message->subject('National HIV PT - Email Verification Code');
-        });*/
+        });
 
-        return response()->json('Registered.');        
+        return response()->json(['phone' => $user->phone]);        
     }
     /**
      * Import the data in the worksheet
@@ -540,455 +541,197 @@ class UserController extends Controller
      */
     public function batchRegistration(Request $request)
     {
+        $id = Round::find($request->id)->name;
+        $exploded = explode(',', $request->excel);
+        $decoded = base64_decode($exploded[1]);
+        if(str_contains($exploded[0], 'sheet'))
+            $extension = 'xlsx';
+        else
+            $extension = 'xls';
+        $fileName = uniqid().'.'.$extension;
+        $county = County::find(1)->name;    // Remember to change this
+        $folder = '/batch/'.$id.'/registration/'.$county.'/';
+        $path = File::makeDirectory(public_path().$folder, 0777, true);
+        file_put_contents(public_path().$folder.$fileName, $decoded);
+        $ext = 'csv';
+        $fName = uniqid().'.'.$ext;
+        file_put_contents(public_path().$folder.$fName, $decoded);
+        // dd();
         //  Handle the import
-        //  Get the data
+        //  Get the results
         //  Import a user provided file
-        $file = $request->worksheet;
-        $ext = $file->getClientOriginalExtension();
-        $excel = uniqid().'.'.$ext;
-        $filename = $file->move('uploads/', $excel);
-        dd();
-        /*//  Convert file to csv
-        Excel::load('/public/uploads/'.$excel, function($reader) use(){
-            $worksheet = $reader->get()[0];
-            //  Initialize variables
-            $labName = $reader->first()[0]->value;
-            $lab_id = Lab::labIdName($labName);
-            $review = Review::where('lab_id', $lab_id)->where('audit_type_id', $audit_type_id)->first();
-            //  Check if review exists
-            if(!$review){
-                //  Create new review
-                $review = new Review;
-                $review->lab_id = $lab_id;
-                $review->audit_type_id = $audit_type_id;
-                $review->status = Review::INCOMPLETE;
-                $review->user_id = Auth::user()->id;
-                $review->update_user_id = Auth::user()->id;
-                try{
-                    $review->save();
-                    //$url = Session::get('SOURCE_URL');
-                }
-                catch(QueryException $e){
-                    Log::error($e);
-                }
-            }
-            //  Get review id
-            $review_id = $review->id;
-            $reader->each(function($sheet) use($review_id, $laboratory_profile, $staffing_summary, $organizational_structure, $slmta_information, $assessment, $scores, $summary, $action_plan){
-                $review = Review::find(1);
-                $sheetTitle = $sheet->getTitle();
-                if($sheetTitle == Lang::choice('messages.lab-info', 2)){
-                    $counter = count($sheet);
-                    $head = NULL;
-                    $head_personal_telephone = NULL;
-                    $head_work_telephone = NULL;
-                    //  Check if Lab Info exists for the review
-                    $lab_profile = $review->laboratory;
-                    if(!count($lab_profile)){
-                        $lab_profile = new ReviewLabProfile;
-                        $lab_profile->review_id = $review_id;
-                        $lab_profile->created_at = date('Y-m-d H:i:s');
-                        $lab_profile->save();
+        //  Convert file to csv
+        Excel::load('/public/batch/'.$id.'/registration/'.$county.'/'.$fileName, function($reader) use($fileName){
+            // Getting all results
+            $reader->each(function($sheet){
+                $sheetTitle = $sheet->getTitle();                
+                $counter = count($sheet);
+                for($i=0; $i<$counter; $i++)
+                {
+                    //  Facility details
+                    $county = NULL;
+                    $subCounty = NULL;
+                    $facility = NULL;
+                    $mfl = NULL;
+                    //  Participant details
+                    $tname = NULL;
+                    $tgender = NULL;
+                    $tphone = NULL;
+                    $temail = NULL;
+                    $taddress = NULL;
+                    $tdes = NULL;
+                    $tprog = NULL;
+                    $incharge = NULL;
+                    $iphone = NULL;
+                    $iemail = NULL;
+                    foreach($sheet[$i] as $key => $value)
+                    {
+                        if(strcmp($key, "County") === 0)
+                            $county = $value;
+                        if(strcmp($key, "Sub County") === 0)
+                            $subCounty = $value;
+                        if(strcmp($key, "Facility") === 0)
+                            $facility = $value;
+                        if(strcmp($key, "MFL Code") === 0)
+                            $mfl = $value;
+                        if(strcmp($key, "Tester Name") === 0)
+                            $tname = $value;
+                        if(strcmp($key, "Gender") === 0)
+                            $tgender = $value;
+                        if(strcmp($key, "Tester Mobile Number") === 0)
+                            $tphone = $value;
+                        if(strcmp($key, "Tester Email") === 0)
+                            $temail = $value;
+                        if(strcmp($key, "Tester Address") === 0)
+                            $taddress = $value;
+                        if(strcmp($key, "Designation") === 0)
+                            $tdes = $value;
+                        if(strcmp($key, "Program") === 0)
+                            $tprog = $value;
+                        if(strcmp($key, "In Charge") === 0)
+                            $incharge = $value;
+                        if(strcmp($key, "In Charge Email") === 0)
+                            $iemail = $value;
+                        if(strcmp($key, "In Charge Phone") === 0)
+                            $iphone = $value;
                     }
-                    for($i=0;$i<$counter;$i++){
-                        //  Save Laboratory Profile         
-                        if($sheet[$i]->field == Lang::choice('messages.lab-head', 1)){
-                            $lab_profile->head = $sheet[$i]->value;
-                        }
-                        if($sheet[$i]->field == Lang::choice('messages.lab-head-telephone-personal', 1)){
-                            $lab_profile->head_personal_telephone = $sheet[$i]->value;
-                        }
-                        if($sheet[$i]->field == Lang::choice('messages.lab-head-telephone-work', 1)){
-                            $lab_profile->head_work_telephone = $sheet[$i]->value;
-                        }
+                    //  Check if Facility exits. If not create one.
+                    $fclty = Facility::find(Facility::idByCode((int)$mfl));
+                    if(!$fclty)
+                    {
+                        $fclty = new Facility;
+                        $fclty->name = $facility;
                     }
-                    $lab_profile->updated_at = date('Y-m-d H:is:s');
-                    $lab_profile->save();
-                }
-                //  Staffing Summary
-                else if($sheetTitle == Lang::choice('messages.staffing-summary', 1)){
-                    //  Initialize counter
-                    $counter = count($staffing_summary);
-                    //dd($counter);
-                    //  Variables
-                    $degree = NULL;
-                    $degree_adequate = NULL;
-                    $diploma = NULL;
-                    $diploma_adequate = NULL;
-                    $certificate = NULL;
-                    $certificate_adequate = NULL;
-                    $microscopist = NULL;
-                    $microscopist_adequate = NULL;
-                    $data_clerk = NULL;
-                    $data_clerk_adequate = NULL;
-                    $phlebotomist = NULL;
-                    $phlebotomist_adequate = NULL;
-                    $cleaner = NULL;
-                    $cleaner_adequate = NULL;
-                    $cleaner_dedicated = NULL;
-                    $cleaner_trained = NULL;
-                    $driver = NULL;
-                    $driver_adequate = NULL;
-                    $driver_dedicated = NULL;
-                    $driver_trained = NULL;
-                    $other_staff = NULL;
-                    $other_staff_adequate = NULL;
-                    //  Check lab profile
-                    $lab_profile = $review->laboratory;
-                    if(!count($lab_profile)){
-                        $lab_profile = new ReviewLabProfile;
-                        $lab_profile->review_id = $review_id;
-                        $lab_profile->created_at = date('Y-m-d H:i:s');
-                        $lab_profile->save();
+                    $fclty->sub_county_id = SubCounty::idByName($subCounty);
+                    if(!$fclty->sub_county_id)
+                    {
+                        $sb = new SubCounty;
+                        $sb->name = $subCounty;
+                        $sb->county_id = County::idByName($county);
+                        $sb->save();
+                        $fclty->sub_county_id = $sb->id;
                     }
-                    //  Begin saving
-                    for($i=0;$i<$counter;$i++){
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.degree', 1)){
-                            $lab_profile->degree_staff = $staffing_summary[$i]->employees;
-                            $lab_profile->degree_staff_adequate = Answer::adequate($staffing_summary[$i]->adequate);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.diploma', 1)){
-                            $lab_profile->diploma_staff = $staffing_summary[$i]->employees;
-                            $lab_profile->diploma_staff_adequate = Answer::adequate($staffing_summary[$i]->adequate);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.certificate', 1)){
-                            $lab_profile->certificate_staff = $staffing_summary[$i]->employees;
-                            $lab_profile->certificate_staff_adequate = Answer::adequate($staffing_summary[$i]->adequate);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.microscopist', 1)){
-                            $lab_profile->microscopist = $staffing_summary[$i]->employees;
-                            $lab_profile->microscopist_adequate = Answer::adequate($staffing_summary[$i]->adequate);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.data-clerk', 1)){
-                            $lab_profile->data_clerk = $staffing_summary[$i]->employees;
-                            $lab_profile->data_clerk_adequate = Answer::adequate($staffing_summary[$i]->adequate);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.phlebotomist', 1)){
-                            $lab_profile->phlebotomist = $staffing_summary[$i]->employees;
-                            $lab_profile->phlebotomist_adequate = Answer::adequate($staffing_summary[$i]->adequate);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.cleaner', 1)){
-                            $lab_profile->cleaner = $staffing_summary[$i]->employees;
-                            $lab_profile->cleaner_adequate = Answer::adequate($staffing_summary[$i]->adequate);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.cleaner-dedicated', 1)){
-                            $lab_profile->cleaner_dedicated = Answer::adequate($staffing_summary[$i]->employees);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.cleaner-trained', 1)){
-                            $lab_profile->cleaner_trained = Answer::adequate($staffing_summary[$i]->employees);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.driver', 1)){
-                            $lab_profile->driver = $staffing_summary[$i]->employees;
-                            $lab_profile->driver_adequate = Answer::adequate($staffing_summary[$i]->adequate);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.driver-dedicated', 1)){
-                            $lab_profile->driver_dedicated = Answer::adequate($staffing_summary[$i]->employees);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.driver-trained', 1)){
-                            $lab_profile->driver_trained = Answer::adequate($staffing_summary[$i]->employees);
-                        }
-                        if($staffing_summary[$i]->profession == Lang::choice('messages.other', 1)){
-                            $lab_profile->other_staff = $staffing_summary[$i]->employees;
-                            $lab_profile->other_staff_adequate = Answer::adequate($staffing_summary[$i]->adequate);
-                        }
+                    $fclty->in_charge = $incharge;
+                    $fclty->in_charge_phone = $iphone;
+                    $fclty->in_charge_email = $iemail;
+                    $fclty->save();
+                    //  Save new user
+                    $user = new User;
+                    $user->name = $tname;
+                    if(strcmp($tgender, "Male") === 0)
+                        $user->gender = User::MALE;
+                    else
+                        $user->gender = User::FEMALE;
+                    $user->email = $temail;
+                    $user->phone = $tphone;
+                    $user->address = $taddress;
+                    $user->designation = $tdes;
+                    $user->save();
+                    //  Insert into role-user
+                    $userId = $user->id;
+                    $roleId = Role::idByName('Participant');
+                    $programId = Program::idByName($tprog);
+                    DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $fclty->id, 'program_id' => $programId]);
+                    //  Send SMS verification code
+                    $api = DB::table('bulk_sms_settings')->first();
+                    $username   = $api->username;
+                    $apikey     = $api->api_key;
+                    //  Remove beginning 0 and append +254
+                    $phone = ltrim($user->phone, '0');
+                    $recipient = "+254".$phone;
+                    // Generate code and store it in the database then send to participant
+                    $token = mt_rand(100000, 999999);
+                    $user->sms_code = $token;
+                    $user->save();
+                    $message    = "Your Verification Code is: ".$token;
+                    // Create a new instance of our awesome gateway class
+                    $gateway    = new Bulk($username, $apikey);
+                    try 
+                    { 
+                        // Specified sender-id
+                        $from = $api->code;
+                        // Send message
+                        // $result = $gateway->sendMessage($recipient, $message);
                     }
-                    $lab_profile->updated_at = date('Y-m-d H:i:s');
-                    $lab_profile->save();
-                }
-                //  Organizational structure
-                else if($sheetTitle == Lang::choice('messages.org-structure', 2)){
-                    $counter = count($organizational_structure);
-                    //  Declare variables
-                    $sufficient_space = NULL;
-                    $equipment = NULL;
-                    $supplies = NULL;
-                    $personnel = NULL;
-                    $infrastructure = NULL;
-                    $other = NULL;
-                    $other_description = NULL;
-                    //  Check lab profile
-                    $lab_profile = $review->laboratory;
-                    if(!count($lab_profile)){
-                        $lab_profile = new ReviewLabProfile;
-                        $lab_profile->review_id = $review_id;
-                        $lab_profile->created_at = date('Y-m-d H:i:s');
-                        $lab_profile->save();
+                    catch ( AfricasTalkingGatewayException $e )
+                    {
+                        echo "Encountered an error while sending: ".$e->getMessage();
                     }
-                    //  Begin saving
-                    for($i=0;$i<$counter;$i++){
-                        if($organizational_structure[$i]->field == Lang::choice('messages.sufficient-space', 1)){
-                            $lab_profile->sufficient_space = Answer::adequate($organizational_structure[$i]->value);
-                        }
-                        if($organizational_structure[$i]->field == Lang::choice('messages.equipment', 1)){
-                            $lab_profile->equipment = Answer::adequate($organizational_structure[$i]->value);
-                        }
-                        if($organizational_structure[$i]->field == Lang::choice('messages.supplies', 1)){
-                            $lab_profile->supplies = Answer::adequate($organizational_structure[$i]->value);
-                        }
-                        if($organizational_structure[$i]->field == Lang::choice('messages.personnel', 1)){
-                            $lab_profile->personnel = Answer::adequate($organizational_structure[$i]->value);
-                        }
-                        if($organizational_structure[$i]->field == Lang::choice('messages.infrastructure', 1)){
-                            $lab_profile->infrastructure = Answer::adequate($organizational_structure[$i]->value);
-                        }
-                        if(strpos($organizational_structure[$i]->field, Lang::choice('messages.other-specify', 1)) !== FALSE){
-                            $lab_profile->other = Answer::adequate($organizational_structure[$i]->value);
-                            if(($pos = strpos($organizational_structure[$i]->field, ':')) !== FALSE)
-                                $other_description = substr($organizational_structure[$i]->field, $pos+2);
-                            $lab_profile->other_description = trim($other_description);
-                        }
-                    }
-                    $lab_profile->updated_at = date('Y-m-d H:i:s');
-                    $lab_profile->save();
-                }
-                //  SLMTA Information
-                else if($sheetTitle == Lang::choice('messages.slmta-info', 2)){
-                    $counter = count($slmta_information);
-                    //  Variables declaration
-                    $official_slmta = NULL;
-                    $assessment_id = NULL;
-                    $tests_before_slmta = NULL;
-                    $tests_this_year = NULL;
-                    $cohort_id = NULL;
-                    $baseline_audit_date = NULL;
-                    $slmta_workshop_date = NULL;
-                    $exit_audit_date = NULL;
-                    $baseline_score = NULL;
-                    $baseline_stars_obtained = NULL;
-                    $exit_score = NULL;
-                    $exit_stars_obtained = NULL;
-                    $last_audit_date = NULL;
-                    $last_audit_score = NULL;
-                    $prior_audit_status = NULL;
-                    $audit_start_date = NULL;
-                    $audit_end_date = NULL;
-                    $array = array();
-                    $assessors = array();
-                    //  Check SLMTA Info
-                    //  Check if SLMTA Info exists for the review
-                    $slmta = $review->slmta;
-                    if(!count($slmta)>0)
-                        $slmta = new ReviewSlmtaInfo;
-                    //  Begin saving
-                    for($i=0;$i<$counter;$i++){
-                        if($slmta_information[$i]->field == Lang::choice('messages.slmta-audit-type', 1)){
-                            $slmta->assessment_id = Assessment::idByName($slmta_information[$i]->value);
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.official-slmta', 1)){
-                            $slmta->official_slmta = Answer::adequate($slmta_information[$i]->value);
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.audit-start-date', 1)){
-                            $slmta->audit_start_date = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.audit-end-date', 1)){
-                            $slmta->audit_end_date = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.tests-before-slmta', 1)){
-                            $slmta->tests_before_slmta = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.tests-this-year', 1)){
-                            $slmta->tests_this_year = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.cohort-id', 1)){
-                            $slmta->cohort_id = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.baseline-audit-date', 1)){
-                            $slmta->baseline_audit_date = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.slmta-workshop-date', 1)){
-                            $slmta->slmta_workshop_date = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.exit-audit-date', 1)){
-                            $slmta->exit_audit_date = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.baseline-score', 1)){
-                            $slmta->baseline_score = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.baseline-stars', 1)){
-                            $slmta->baseline_stars = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.exit-score', 1)){
-                            $slmta->exit_score = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.exit-stars', 1)){
-                            $slmta->exit_stars = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.last-audit-date', 1)){
-                            $slmta->last_audit_date = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.last-audit-score', 1)){
-                            $slmta->last_audit_score = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.prior-audit-status', 1)){
-                            $slmta->prior_audit_status = $slmta_information[$i]->value;
-                        }
-                        if($slmta_information[$i]->field == Lang::choice('messages.names-affiliations-of-auditors', 1)){
-                            foreach(explode(',', $slmta_information[$i]->value) as $assessor){
-                                $assessors = array_push($assessors, User::userIdName($assessor));
-                            }
-                        }
-                    }
-                    Review::find($review_id)->setAssessors([$assessors]);
-                    $slmta->created_at = date('Y-m-d H:i:s');
-                    $slmta->updated_at = date('Y-m-d H:i:s');
-                    $slmta->save();
-                }
-                //  Summary of Audit Findings
-                else if($sheetTitle == 'Summary of Assessment Findings'){
-                    $counter = count($summary);
-                    $commendations = NULL;
-                    $challenges = NULL;
-                    $recommendations = NULL;
-                    $array = array();
-                    $review = Review::find($review_id);
-                    //  Update review data
-                    for($i=0; $i<$counter; $i++){
-                        if($summary[$i]->field == Lang::choice('messages.commendations', 1)){
-                            $review->summary_commendations = $summary[$i]->value;
-                        }
-                        if($summary[$i]->field == Lang::choice('messages.challenges', 1)){
-                            $review->summary_challenges = $summary[$i]->value;
-                        }
-                        if($summary[$i]->field == Lang::choice('messages.recommendations', 1)){
-                            $review->recommendations = $summary[$i]->value;
-                        }
-                    }
-                    $review->updated_at = date('Y-m-d H:i:s');
-                    $review->save();
-                }
-                //  Action Plan
-                else if($sheetTitle == 'Action Plan'){
-                    $counter = count($summary);
-                    $array = array();
-                    if($counter>0){
-                        for($i=0; $i<$counter; $i++){
-                            $plans = Review::find($review_id)->plans->where('action', $summary[$i]->action)->where('responsible_person', $summary[$i]->incharge)->where('timeline', $summary[$i]->timeline)->first();
-                            if(count($plans==0)){
-                                if($summary[$i]->action!=NULL || $summary[$i]->incharge!=NULL || $summary[$i]->timeline!=NULL){
-                                    $plan = new ReviewActPlan;
-                                    $plan->review_id = $review_id;
-                                    $plan->action = $summary[$i]->action;
-                                    $plan->responsible_person = $summary[$i]->incharge;
-                                    $plan->timeline = $summary[$i]->timeline;
-                                    $plan->created_at = date('Y-m-d H:i:s');
-                                    $plan->updated_at = date('Y-m-d H:i:s');
-                                    $plan->save();
-                                }
-                            }
-                            else{
-                                $plan = ReviewActPlan::find($plans->id);
-                                $plan->review_id = $review_id;
-                                $plan->action = $summary[$i]->action;
-                                $plan->responsible_person = $summary[$i]->incharge;
-                                $plan->timeline = $summary[$i]->timeline;
-                                $plan->updated_at = date('Y-m-d H:i:s');
-                                $plan->save();
-                            }
-                        }
-                    }
-                }
-                //  Assessment data
-                else if($sheetTitle == 'Assessment Details'){
-                    $counter = count($assessment);
-                    if($counter>0){
-                        for($i=0; $i<$counter; $i++){
-                            $rq = ReviewQuestion::where('review_id', $review_id)->where('question_id', $assessment[$i]->question)->first();
-                            if(!$rq){
-                                //  Create review-question
-                                $rq = new ReviewQuestion;
-                                $rq->review_id = $review_id;
-                                $rq->question_id = $scores[$i]->question;
-                                $rq->created_at = date('Y-m-d H:i:s');
-                                $rq->updated_at = date('Y-m-d H:i:s');
-                                $rq->save();
-                            }
-                            $rqa = $rq->qa;
-                            $rqn = $rq->qn;
-                            $question = Question::find((int)$assessment[$i]->question);
-                            if(count($question->children)>0){
-                                continue;
-                            }
-                            else{
-                                if(!$rqa){
-                                    //  Create review-question-answer
-                                    $rqa = new ReviewQAnswer;
-                                    $rqa->review_question_id = $rq->id;
-                                    $rqa->answer = Answer::idByName($assessment[$i]->response);
-                                    $rqa->created_at = date('Y-m-d H:i:s');
-                                    $rqa->updated_at = date('Y-m-d H:i:s');
-                                    $rqa->save();
-                                }
-                                else{
-                                    //  Update review-question-answer
-                                    $rqa = ReviewQAnswer::find($rqa->id);
-                                    $rqa->review_question_id = $rq->id;
-                                    $rqa->answer = Answer::idByName($assessment[$i]->response);
-                                    $rqa->updated_at = date('Y-m-d H:i:s');
-                                    $rqa->save();
-                                }
-                            }
-                            if(!$rqn){
-                                //  Create review-note
-                                $rn = new ReviewNote;
-                                $rn->review_question_id = $rq->id;
-                                $rn->note = $assessment[$i]->notes;
-                                $rn->non_compliance = Answer::adequate($assessment[$i]->compliance);
-                                $rn->created_at = date('Y-m-d H:i:s');
-                                $rn->updated_at = date('Y-m-d H:i:s');
-                                $rn->save();
-                            }
-                            else{
-                                //  Update review-notes
-                                $rn = ReviewNote::find($rqn->id);
-                                $rn->review_question_id = $rq->id;
-                                $rn->note = $assessment[$i]->notes;
-                                $rn->non_compliance = Answer::adequate($assessment[$i]->compliance);
-                                $rn->updated_at = date('Y-m-d H:i:s');
-                                $rn->save();
-                            }
-                        }
-                    }
-                }
-                //  Question Scores
-                else if($sheetTitle == 'Scores'){
-                    $counter = count($scores);
-                    if($counter>0){
-                        for($i=0; $i<$counter; $i++){
-                            $rq = ReviewQuestion::where('review_id', $review_id)->where('question_id', $scores[$i]->question)->first();
-                            if(!$rq){
-                                //  Create review-question
-                                $rq = new ReviewQuestion;
-                                $rq->review_id = $review_id;
-                                $rq->question_id = $scores[$i]->question;
-                                $rq->created_at = date('Y-m-d H:i:s');
-                                $rq->updated_at = date('Y-m-d H:i:s');
-                                $rq->save();
-                            }
-                            $rqs = $rq->qs;
-                            if(!$rqs){
-                                //  Create review-question-score
-                                $rqs = new ReviewQScore;
-                                $rqs->review_question_id = $rq->id;
-                                $rqs->audited_score = $scores[$i]->points;
-                                $rqs->created_at = date('Y-m-d H:i:s');
-                                $rqs->updated_at = date('Y-m-d H:i:s');
-                                $rqs->save();
-                            }
-                            else{
-                                //  Update review-question-score
-                                $rqs = ReviewQScore::find($rqs->id);
-                                $rqs->review_question_id = $rq->id;
-                                $rqs->audited_score = $scores[$i]->points;
-                                $rqs->updated_at = date('Y-m-d H:i:s');
-                                $rqs->save();
-                            }
-                        }
-                    }
+                    //  Send email verification code
                 }
             });
-        });*/
-        return redirect('/home')->with('message', Lang::choice('messages.success-import', 1));/*
-        else
-            return redirect()->back()->with('message', Lang::choice('messages.failure-import', 1));;*/
+        });
+    }
+    /**
+     * Check for user phone verification code
+     *
+     * @param  array  $data
+     * @return User
+     */
+    public function phoneVerification(Request $request)
+    {
+        $token = $request->code;
+        // dd($token);
+        $check = User::where("sms_code", $token)->withTrashed()->first();
+        
+        if(!is_null($check)){
+            $user = User::withTrashed()->find($check->id);
+
+            if($user->phone_verified == 1){
+                return response()->json(["info" => "Your phone number is already verified."]);
+            }
+
+            $user->phone_verified = 1;
+            $user->save();
+
+            return response()->json(["success" => "Phone number successfully verified. Your ID will be sent to you shortly."]);
+        }
+        return response()->json(["warning" => "Your token is invalid."]);
+    }
+    /**
+     * Check for user Activation Code
+     *
+     * @param  array  $data
+     * @return User
+     */
+    public function emailVerification($token)
+    {
+        $check = User::where('email_verification_code', $token)->first();
+
+        if(!is_null($check)){
+            $user = User::find($check->id);
+
+            if($user->email_verified == 1){
+                return redirect()->to('login')
+                    ->with('success', "Your email is already verified.");                
+            }
+
+            $user->update(['email_verified' => 1]);
+
+            return redirect()->to('login')
+                ->with('success', "Email successfully verified.");
+        }
+        return redirect()->to('login')
+                ->with('warning', "Your token is invalid.");
     }
 }

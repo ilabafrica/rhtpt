@@ -14,17 +14,13 @@
 	<title>{!! Config::get('cms.name') !!}</title>
 
 	<!-- Font awesome -->
-	<link rel="stylesheet" href="{{ asset('harmony/css/font-awesome.min.css') }}">
-	<!-- Sandstone Bootstrap CSS -->
-	<link rel="stylesheet" href="{{ asset('harmony/css/bootstrap.css') }}">
-	<!-- Awesome Bootstrap checkbox -->
-	<link rel="stylesheet" href="{{ asset('harmony/css/awesome-bootstrap-checkbox.css') }}">
-	<!-- Admin Stye -->
-	<link rel="stylesheet" href="{{ asset('harmony/css/style.css') }}">
-	<!-- Custom Font -->
-	<link rel="stylesheet" href="{{ asset('harmony/css/font.css') }}">
-	<!-- Custom Styling -->
-	<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.css') }}">
+    <!-- Bootstrap core CSS -->
+        <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+    <!-- Custom Font -->
+    <link rel="stylesheet" href="{{ asset('css/font.css') }}">
+    <!-- Custom Styling -->
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 	<!-- Toastr Styling -->
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet">
 </head>

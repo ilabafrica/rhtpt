@@ -27,8 +27,12 @@ Route::get('signup', function () {
     return view('auth.signup');
 });
 
+Route::get('2fa', function () {
+    return view('auth.2fa');
+});
+
 Route::get('user/activation/{token}', 'Auth\AuthController@emailVerification');
-Route::get('user/token/', 'Auth\AuthController@phoneVerification');
+Route::post('/token', 'UserController@phoneVerification');
 
 Route::get("/sex", array(
     "as"   => "sex.fetch",
@@ -394,6 +398,11 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('/duration', array(
         "as"    =>  "round.durations",
         "uses"  =>  "RoundController@durations"
+    ));
+    //  Batch enrolment
+    Route::post("/batch/enrol", array(
+        "as"   => "batch.enrolment",
+        "uses" => "RoundController@batchEnrolment"
     ));
 
     Route::get('api/search_role',['as'=>'role.search', 'uses'=>'RoleController@index']);

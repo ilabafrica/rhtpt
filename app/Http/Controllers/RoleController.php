@@ -53,11 +53,6 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
-        ]);
-
         $create = Role::create($request->all());
 
         return response()->json($create);
@@ -72,11 +67,6 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required',
-        ]);
-
         $edit = Role::find($id)->update($request->all());
 
         return response()->json($edit);

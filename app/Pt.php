@@ -82,4 +82,12 @@ class Pt extends Model
         else if($this->incomplete_results == 1)
             return 'Incomplete Results';
     }
+    /**
+    * User relationship
+    *
+    */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

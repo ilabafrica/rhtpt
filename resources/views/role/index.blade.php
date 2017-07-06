@@ -104,14 +104,14 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Title:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newRole.name" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newRole.name" />
                                         <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('display name') }" for="display name">Display Name:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('display name') }" name="display name" type="text" placeholder="" v-model="newRole.display_name" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('display name') }" name="display name" type="text" placeholder="" v-model="newRole.display_name" />
                                         <span v-show="errors.has('display name')" class="help is-danger">@{{ errors.first('display name') }}</span>
                                     </div>
                                 </div>
@@ -148,14 +148,14 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Title:</label>
                                 <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="fillRole.name" />
+                                    <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="fillRole.name" />
                                     <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('display name') }" for="display name">Display Name:</label>
                                 <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('display name') }" name="display name" type="text" placeholder="" v-model="fillRole.display_name" />
+                                    <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('display name') }" name="display name" type="text" placeholder="" v-model="fillRole.display_name" />
                                     <span v-show="errors.has('display name')" class="help is-danger">@{{ errors.first('display name') }}</span>
                                 </div>
                             </div>

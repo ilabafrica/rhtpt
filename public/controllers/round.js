@@ -25,7 +25,8 @@ new Vue({
         enrollments: [],
         esrch: '',
         testers: [],
-        durations: []
+        durations: [],
+        uploadify: {id: '', excel: ''}
     },
 
     computed: {
@@ -221,6 +222,36 @@ new Vue({
             }, (response) => {
                 // console.log(response);
             });
+        },
+
+        uploadSheet: function(round){
+            this.uploadify.id = round.id;
+            $("#batch-enrolment").modal('show');
+        },
+
+        batchEnrol(){
+            // this.$validator.validateAll().then(() => {
+                var input = this.uploadify;
+                this.$http.post('/batch/enrol', input).then((response) => {
+                    this.uploadify = {'id':'','excel':''};
+                    $("#batch-enrolment").modal('hide');
+                    toastr.success('Round Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                    this.errors.clear();
+                }, (response) => {
+                    // 
+                });
+            /*}).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+            });*/
+        },
+
+        fileChanged(e){
+            console.log(e.target.files[0]);
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(e.target.files[0]);
+            fileReader.onload = (e) => {
+                this.uploadify.excel = e.target.result;
+            }
         },
     }
 });

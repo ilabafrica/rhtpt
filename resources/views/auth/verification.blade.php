@@ -1,3 +1,7 @@
-Hi, {{ $usr['name'] }}
+<h1>Email Verification</h1>
 
-Please active your account : {{ url('user/activation', $usr['email_verification_code'])}}
+Dear {!! $name !!}
+
+<p>Click on the link below to verify your email address.</p>
+
+{{ url('/email/verify/' . $verification_code) }}

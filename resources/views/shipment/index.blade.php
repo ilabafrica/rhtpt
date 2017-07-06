@@ -133,12 +133,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createShipment">
+                        <form method="POST" enctype="multipart/form-data" id="save_shipment" v-on:submit.prevent="saveShipment">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('pt round') }" for="round">PT Round:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="pt round" :class="{'input': true, 'is-danger': errors.has('pt round') }" v-model="newShipment.round_id">
+                                        <select v-validate="'required'" class="form-control c-select" id="rid" name="pt round" :class="{'input': true, 'is-danger': errors.has('pt round') }" v-model="newShipment.round_id">
                                             <option selected></option>
                                             <option  v-for="round in rounds" :value="round.id">@{{ round.value }}</option>   
                                         </select>
@@ -148,60 +148,38 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('county') }" for="round">County:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="county" :class="{'input': true, 'is-danger': errors.has('county') }" v-model="newShipment.county_id">
+                                        <select v-validate="'required'" class="form-control c-select" name="county" :class="{'input': true, 'is-danger': errors.has('county') }" id="jimbo" v-model="newShipment.county_id">
                                             <option selected></option>
                                             <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>
                                         </select>
                                         <span v-show="errors.has('county')" class="help is-danger">@{{ errors.first('county') }}</span>
                                     </div>
                                 </div>
-                                <!--
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control c-select" name="sub_id" id="sub_id" v-model="newShipment.sub_id" v-on:change="fetchFacilities">
-                                            <option selected></option>
-                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
-                                        </select>
-                                        <span v-if="formErrors['sub_id']" class="error text-danger">@{{ formErrors['sub_id'] }}</span>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Facility:</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control c-select" name="facility_id" v-model="newShipment.facility_id">
-                                            <option selected></option>
-                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
-                                        </select>
-                                        <span v-if="formErrors['facility_id']" class="error text-danger">@{{ formErrors['facility_id'] }}</span>
-                                    </div>
-                                </div> 
-                                -->
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('date prepared') }" for="date prepared">Date Prepared:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('date prepared') }" name="date prepared" type="date" placeholder="" v-model="newShipment.date_prepared" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('date prepared') }" id="prep" name="date prepared" type="date" placeholder="" v-model="newShipment.date_prepared" />
                                         <span v-show="errors.has('date prepared')" class="help is-danger">@{{ errors.first('date prepared') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('date shipped') }" for="date shipped">Date Shipped:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('date shipped') }" name="date shipped" type="date" placeholder="" v-model="newShipment.date_shipped" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('date shipped') }" id="shppd" name="date shipped" type="date" placeholder="" v-model="newShipment.date_shipped" />
                                         <span v-show="errors.has('date shipped')" class="help is-danger">@{{ errors.first('date shipped') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('tracker') }" for="tracker">Tracker ID:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_num'" class="form-control" :class="{'input': true, 'is-danger': errors.has('panels shipped') }" name="tracker" type="text" placeholder="" v-model="newShipment.tracker" />
+                                        <input v-validate="'required|alpha_num'" class="form-control" :class="{'input': true, 'is-danger': errors.has('tracker') }" id="trckr" name="tracker" type="text" placeholder="" v-model="newShipment.tracker" />
                                         <span v-show="errors.has('tracker')" class="help is-danger">@{{ errors.first('tracker') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('shipping method') }" for="shipping method">Shipping Method:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" id="shipping_method" name="shipping method" :class="{'input': true, 'is-danger': errors.has('shipping method') }" v-model="newShipment.shipping_method" v-on:change="fetchShippers">
+                                        <select v-validate="'required'" class="form-control c-select" id="shipping_method" name="shipping method" :class="{'input': true, 'is-danger': errors.has('shipping method') }" v-model="newShipment.shipping_method" id="mthd" v-on:change="fetchShippers">
                                             <option selected></option>
                                             <option v-for="method in methods" :value="method.name">@{{ method.title }}</option>
                                         </select>
@@ -211,7 +189,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('shipper') }" for="shipper">Shipper:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="shipper" :class="{'input': true, 'is-danger': errors.has('shipper') }" v-model="newShipment.shipper_id">
+                                        <select v-validate="'required'" class="form-control c-select" name="shipper" :class="{'input': true, 'is-danger': errors.has('shipper') }" id="shppr" v-model="newShipment.shipper_id">
                                             <option selected></option>
                                             <option v-for="shipper in shippers" :value="shipper.id">@{{ shipper.value }}</option>
                                         </select>
@@ -221,7 +199,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('panels shipped') }" for="panels shipped">Panels Shipped:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('panels shipped') }" name="panels shipped" type="number" placeholder="" v-model="newShipment.panels_shipped" />
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('panels shipped') }" id="pnls" name="panels shipped" type="number" placeholder="" v-model="newShipment.panels_shipped" />
                                         <span v-show="errors.has('panels shipped')" class="help is-danger">@{{ errors.first('panels shipped') }}</span>
                                     </div>
                                 </div>
@@ -247,7 +225,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateShipment(fillShipment.id)">
+                        <form method="POST" enctype="multipart/form-data" id="update_shipment" v-on:submit.prevent="updateShipment(fillShipment.id)">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('pt round') }" for="round">PT Round:</label>
@@ -269,28 +247,6 @@
                                         <span v-show="errors.has('county')" class="help is-danger">@{{ errors.first('county') }}</span>
                                     </div>
                                 </div>
-                                <!--
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control c-select" name="sub_id" id="sub_id" v-model="newShipment.sub_id" v-on:change="fetchFacilities">
-                                            <option selected></option>
-                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
-                                        </select>
-                                        <span v-if="formErrors['sub_id']" class="error text-danger">@{{ formErrors['sub_id'] }}</span>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Facility:</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control c-select" name="facility_id" v-model="newShipment.facility_id">
-                                            <option selected></option>
-                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
-                                        </select>
-                                        <span v-if="formErrors['facility_id']" class="error text-danger">@{{ formErrors['facility_id'] }}</span>
-                                    </div>
-                                </div> 
-                                -->
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('date prepared') }" for="date prepared">Date Prepared:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
@@ -308,14 +264,14 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('tracker') }" for="tracker">Tracker ID:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_num'" class="form-control" :class="{'input': true, 'is-danger': errors.has('panels shipped') }" name="tracker" type="text" placeholder="" v-model="fillShipment.tracker" />
+                                        <input v-validate="'required|alpha_num'" class="form-control" :class="{'input': true, 'is-danger': errors.has('tracker') }" name="tracker" type="text" placeholder="" v-model="fillShipment.tracker" />
                                         <span v-show="errors.has('tracker')" class="help is-danger">@{{ errors.first('tracker') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('shipping method') }" for="shipping method">Shipping Method:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" id="shipping_method" name="shipping method" :class="{'input': true, 'is-danger': errors.has('shipping method') }" v-model="fillShipment.shipping_method" v-on:change="fetchShippers">
+                                        <select v-validate="'required'" class="form-control c-select" id="shipping_agent" name="shipping method" :class="{'input': true, 'is-danger': errors.has('shipping method') }" v-model="fillShipment.shipping_method" v-on:change="fetchAgents">
                                             <option selected></option>
                                             <option v-for="method in methods" :value="method.name">@{{ method.title }}</option>
                                         </select>
@@ -362,30 +318,28 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="receiveShipment()" id="frm">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="receiveShipment" id="frm">
                             <div class="col-md-12">
-                                <input type="hidden" class="form-control" name="shipment_id" id="shipment-id" v-model="newReceipt.shipment_id" value=""/>
+                                <input class="form-control" name="shipment_id" id="shipment-id" v-model="newReceipt.shipment_id" value=""/>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Date Received:</label>
-                                    <div class="col-sm-8">
-                                        <input type="date" name="date_received" class="form-control" v-model="newReceipt.date_received" />
-                                        <span v-if="formReceiptErrors['date_received']" class="error text-danger">@{{ formReceiptErrors['date_received'] }}</span>
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('date received') }" for="date received">Date Received:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('date received') }" name="date received" type="date" placeholder="" v-model="newReceipt.date_received" />
+                                        <span v-show="errors.has('date received')" class="help is-danger">@{{ errors.first('date received') }}</span>
                                     </div>
                                 </div>
-
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Panels Received:</label>
-                                    <div class="col-sm-8">
-                                        <input type="number" name="panels_received" class="form-control" v-model="newReceipt.panels_received" />
-                                        <span v-if="formReceiptErrors['panels_received']" class="error text-danger">@{{ formReceiptErrors['panels_received'] }}</span>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('panels received') }" for="panels received">Panels Received:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('panels received') }" name="panels received" type="number" placeholder="" v-model="newReceipt.panels_received" />
+                                        <span v-show="errors.has('panels received')" class="help is-danger">@{{ errors.first('panels received') }}</span>
                                     </div>
                                 </div>
-
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Received By:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="receiver" class="form-control" v-model="newReceipt.receiver" />
-                                        <span v-if="formReceiptErrors['receiver']" class="error text-danger">@{{ formReceiptErrors['receiver'] }}</span>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('receiver') }" for="receiver">Received By:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('receiver') }" name="receiver" type="text" placeholder="" v-model="newReceipt.tracker" />
+                                        <span v-show="errors.has('receiver')" class="help is-danger">@{{ errors.first('receiver') }}</span>
                                     </div>
                                 </div>
 
@@ -393,12 +347,11 @@
                                     <label class="col-sm-4 form-control-label" for="title">Condition:</label>
                                     <div class="col-sm-8">
                                         <textarea name="condition" class="form-control" v-model="newReceipt.condition"></textarea>
-                                        <span v-if="formReceiptErrors['condition']" class="error text-danger">@{{ formReceiptErrors['condition'] }}</span>
                                     </div>
                                 </div>
 
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>
@@ -420,7 +373,7 @@
                     <div class="row">
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="distributeShipment()" id="frm">
                             <div class="col-md-12">
-                                <input type="hidden" class="form-control" name="shipment_id" id="shpmnt-id" v-model="newConsignment.shipment_id" value=""/>
+                                <input type="hidden" class="form-control" name="shpmnt_id" id="shpmnt-id" v-model="newConsignment.shipment_id" value=""/>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
                                     <div class="col-sm-8">
@@ -476,7 +429,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
-                                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </div>

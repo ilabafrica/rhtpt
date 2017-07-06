@@ -52,6 +52,10 @@ class ResultController extends Controller
         {
            $results = Facility::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate(5);
         }
+        else if(Auth::user()->isParticipant())
+        {
+           $results = Auth::user()->pt()->latest()->withTrashed()->paginate(5);
+        }
         if($request->has('q')) 
         {
             $search = $request->get('q');

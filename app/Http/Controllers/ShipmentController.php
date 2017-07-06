@@ -91,15 +91,6 @@ class ShipmentController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'round_id' => 'required',
-            'date_prepared' => 'required',
-            'date_shipped' => 'required',
-            'shipping_method' => 'required',
-            'shipper_id' => 'required',
-            'county_id' => 'required',
-            'panels_shipped' => 'required',
-        ]);
         $request->request->add(['user_id' => Auth::user()->id]);
 
         $create = Shipment::create($request->all());
@@ -116,15 +107,6 @@ class ShipmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'round_id' => 'required',
-            'date_prepared' => 'required',
-            'date_shipped' => 'required',
-            'shipping_method' => 'required',
-            'shipper_id' => 'required',
-            'county_id' => 'required',
-            'panels_shipped' => 'required',
-        ]);
         $request->request->add(['user_id' => Auth::user()->id]);
 
         $edit = Shipment::find($id);
@@ -171,13 +153,8 @@ class ShipmentController extends Controller
      */
     public function receive(Request $request)
     {
-        $this->validate($request, [
-            'date_received' => 'required',
-            'panels_received' => 'required',
-            'condition' => 'required',
-            'receiver' => 'required'
-        ]);
         $edit = Shipment::find((int)$request->shipment_id);
+        dd($request->all());
         $edit->date_received = $request->date_received;
         $edit->panels_received = $request->panels_received;
         $edit->condition = $request->condition;
@@ -194,14 +171,6 @@ class ShipmentController extends Controller
      */
     public function distribute(Request $request)
     {
-        $this->validate($request, [
-            'facility_id' => 'required',
-            'total' => 'required',
-            'date_picked' => 'required',
-            'picked_by' => 'required',
-            'contacts' => 'required'
-        ]);
-
         $create = Consignment::create($request->all());
 
         return response()->json($create);

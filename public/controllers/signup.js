@@ -11,6 +11,10 @@ new Vue({
         programs: [],
         counties: [],
         designations: [],
+        verification: {'code': ''},
+        warning: '',
+        info: '',
+        success: '',
     },
 
     mounted : function(){
@@ -26,9 +30,9 @@ new Vue({
                 var input = this.newParticipant;
                 this.$http.post('/register', input).then((response) => {
                     this.newParticipant = {'name':'','gender':'','email':'','phone':'','address':'','program':'','designation':'','county':'','sub_county':'','mfl_code':'','facility':'','in_charge':'','in_charge_email':'','in_charge_phone':''};
-                    this.$http.get('/signup');
+                    this.phone = response.data.phone;
+                    //location.href = '/2fa';
                     toastr.success('Registered Successfully.', 'Success Alert', {timeOut: 5000});
-                    $("#verify-phone").modal('show');
                 }, (response) => {
                     this.formErrors = response.data;
                 });
@@ -78,11 +82,23 @@ new Vue({
         },
 
         verifyPhone: function(){
-            let myForm = document.getElementById('verify_phone');
-            let formData = new FormData(myForm);
-            this.$http.post('/user/token', formData).then((response) => {
-                $("#verify-phone").modal('hide');
-                toastr.success('Phone Verified Successfully.', 'Success Alert', {timeOut: 5000});
+            var input = this.verification;
+            this.$http.post('/token', input).then((response) => {
+                if(response.data.warning)
+                {
+                    this.warning = response.data.warning;
+                    toastr.warning(this.warning, 'Notification', {timeOut: 5000});
+                }
+                else if(response.data.info)
+                {
+                    this.info = response.data.info;
+                    toastr.info(this.warning, 'Notification', {timeOut: 5000});
+                }
+                else if(response.data.success)
+                {
+                    this.success = response.data.success;
+                    toastr.success(this.success, 'Success Alert', {timeOut: 7000});
+                }
             });
         },
     }
