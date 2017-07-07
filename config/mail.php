@@ -56,7 +56,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'neersols@gmail.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'xxx@gmail.com'),
         'name' => env('MAIL_FROM_NAME', 'Kenya Rapid HIV PT'),
     ],
 
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME', 'Neersols'),
+    'username' => env('MAIL_USERNAME', 'Kenya RHTPT'),
 
-    'password' => env('MAIL_PASSWORD', 'K1tsa0%&!@'),
+    'password' => env('MAIL_PASSWORD', 'xxxxxxxxx'),
 
     /*
     |--------------------------------------------------------------------------
