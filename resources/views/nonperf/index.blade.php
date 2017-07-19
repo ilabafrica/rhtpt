@@ -92,7 +92,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createNonperf">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createNonperf('create_nonperf')" data-vv-validate="create_nonperf">
 
                             <div class="col-md-12">
                                 <div class="form-group row">
@@ -132,7 +132,7 @@
                 <div class="row">
                     <div class="modal-body">
 
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateNonperf(fillNonperf.id)">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateNonperf(fillNonperf.id, 'update_nonperf')" data-vv-validate="update_nonperf">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>

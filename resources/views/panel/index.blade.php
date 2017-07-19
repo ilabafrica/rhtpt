@@ -98,7 +98,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createPanel">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createPanel('create_panel')" data-vv-validate="create_panel">
 
                             <div class="col-md-12">
                                 <div class="form-group row">
@@ -179,7 +179,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updatePanel(fillPanel.id)">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updatePanel(fillPanel.id, 'update_panel')" data-vv-validate="update_panel">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('lot') }" for="lot">Lot:</label>

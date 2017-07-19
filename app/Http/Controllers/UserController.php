@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+set_time_limit(0);
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Notifications\Notification;
@@ -21,6 +21,9 @@ use Mail;
 use App\Libraries\AfricasTalkingGateway as Bulk;
 //  Carbon - for use with dates
 use Jenssegers\Date\Date as Carbon;
+use Excel;
+use App;
+use File;
 
 class UserController extends Controller
 {
@@ -87,7 +90,7 @@ class UserController extends Controller
         }
         foreach($users as $user)
         {
-            if((!empty($user->uid) || $user->ru()->tier))
+            if((!empty($user->uid) || !empty($user->ru()->tier)))
             {
                 $facility = Facility::find($user->ru()->tier);
                 $user->facility = $user->ru()->tier;
@@ -105,8 +108,8 @@ class UserController extends Controller
                 $user->facility = '';
                 $user->program = '';
             }
-            $user->ru()?$user->role = Role::find($user->ru()->role_id)->name:$user->role = '';
-            $user->ru()?$user->rl = $user->ru()->role_id:$user->role = '';
+            !empty($user->ru())?$user->role = $user->ru()->role_id:$user->role = '';
+            !empty($user->ru())?$user->rl = Role::find($user->ru()->role_id)->name:$user->rl = '';
         }
         $response = [
             'pagination' => [
@@ -336,6 +339,7 @@ class UserController extends Controller
         $error = ['error' => 'No results found, please try with different keywords.'];
         $role_id = Role::idByName('Participant');
         $ids = DB::table('role_user')->where('role_id', $role_id)->pluck('user_id');
+        dd($ids);
         $usrs = User::whereIn('id', $ids)->whereNotNull('uid')->latest()->paginate(5);
         if($request->has('q')) 
         {
@@ -474,7 +478,6 @@ class UserController extends Controller
             $facility = Facility::find($facilityId);
         else
             $facility = new Facility;
-        $facility = new Facility;
         $facility->code = $request->mfl_code;
         $facility->name = $request->facility;
         $facility->in_charge = $request->in_charge;
@@ -541,10 +544,9 @@ class UserController extends Controller
      * Import the data in the worksheet
      *
      */
-    public function batchRegistration(Request $request)
+    public function importUserList(Request $request)
     {
-        $id = Round::find($request->id)->name;
-        $exploded = explode(',', $request->excel);
+        $exploded = explode(',', $request->list);
         $decoded = base64_decode($exploded[1]);
         if(str_contains($exploded[0], 'sheet'))
             $extension = 'xlsx';
@@ -552,137 +554,249 @@ class UserController extends Controller
             $extension = 'xls';
         $fileName = uniqid().'.'.$extension;
         $county = County::find(1)->name;    // Remember to change this
-        $folder = '/batch/'.$id.'/registration/'.$county.'/';
-        $path = File::makeDirectory(public_path().$folder, 0777, true);
+        $folder = '/uploads/participants/';
+        if(!is_dir(public_path().$folder))
+            File::makeDirectory(public_path().$folder, 0777, true);
         file_put_contents(public_path().$folder.$fileName, $decoded);
-        $ext = 'csv';
-        $fName = uniqid().'.'.$ext;
-        file_put_contents(public_path().$folder.$fName, $decoded);
         // dd();
         //  Handle the import
         //  Get the results
         //  Import a user provided file
         //  Convert file to csv
-        Excel::load('/public/batch/'.$id.'/registration/'.$county.'/'.$fileName, function($reader) use($fileName){
-            // Getting all results
-            $reader->each(function($sheet){
-                $sheetTitle = $sheet->getTitle();                
-                $counter = count($sheet);
-                for($i=0; $i<$counter; $i++)
+        $data = Excel::load('public/uploads/participants/'.$fileName, function($reader) {})->get();
+
+        if(!empty($data) && $data->count())
+        {
+            foreach ($data->toArray() as $key => $value) 
+            {
+                foreach($value as $harvey => $specter)
                 {
-                    //  Facility details
-                    $county = NULL;
-                    $subCounty = NULL;
-                    $facility = NULL;
-                    $mfl = NULL;
-                    //  Participant details
-                    $tname = NULL;
-                    $tgender = NULL;
-                    $tphone = NULL;
-                    $temail = NULL;
-                    $taddress = NULL;
-                    $tdes = NULL;
-                    $tprog = NULL;
-                    $incharge = NULL;
-                    $iphone = NULL;
-                    $iemail = NULL;
-                    foreach($sheet[$i] as $key => $value)
+                    if(!empty($specter))
                     {
-                        if(strcmp($key, "County") === 0)
-                            $county = $value;
-                        if(strcmp($key, "Sub County") === 0)
-                            $subCounty = $value;
-                        if(strcmp($key, "Facility") === 0)
-                            $facility = $value;
-                        if(strcmp($key, "MFL Code") === 0)
-                            $mfl = $value;
-                        if(strcmp($key, "Tester Name") === 0)
-                            $tname = $value;
-                        if(strcmp($key, "Gender") === 0)
-                            $tgender = $value;
-                        if(strcmp($key, "Tester Mobile Number") === 0)
-                            $tphone = $value;
-                        if(strcmp($key, "Tester Email") === 0)
-                            $temail = $value;
-                        if(strcmp($key, "Tester Address") === 0)
-                            $taddress = $value;
-                        if(strcmp($key, "Designation") === 0)
-                            $tdes = $value;
-                        if(strcmp($key, "Program") === 0)
-                            $tprog = $value;
-                        if(strcmp($key, "In Charge") === 0)
-                            $incharge = $value;
-                        if(strcmp($key, "In Charge Email") === 0)
-                            $iemail = $value;
-                        if(strcmp($key, "In Charge Phone") === 0)
-                            $iphone = $value;
+                        $tname = NULL;
+                        $tuid = NULL;
+                        $tprogram = NULL;
+                        $tphone = NULL;
+                        $tfacility = NULL;
+                        $temail = NULL;
+                        foreach ($specter as $mike => $ross) 
+                        {
+                            if(strcmp($mike, "tester_name") === 0)
+                                $tname = $ross;
+                            if(strcmp($mike, "id_no") === 0)
+                                $tuid = $ross;
+                            if(strcmp($mike, "program") === 0)
+                                $tprogram = $ross;
+                            if(strcmp($mike, "testerphone") === 0)
+                                $tphone = $ross;
+                            if(strcmp($mike, "facility_name") === 0)
+                                $tfacility = $ross;
+                            if(strcmp($mike, "email") === 0)
+                                $temail = $ross;
+                        }
+                        if($tphone)
+                        {
+                            $tphone = ltrim($tphone, '0');
+                            $tphone = "+254".$tphone;
+                            $tphone = trim($tphone);
+                        }
+                        $facility_id = Facility::idByName(trim($tfacility));
+                        $program_id = Program::idByName(trim($tprogram));
+                        $role_id = Role::idByName('Participant');
+                        //  Prepare to save participant details
+                        $tester_id = User::idByUID(trim($tuid));
+                        if(!$tester_id)
+                            $tester = new User;
+                        else
+                            $tester = User::find($tester_id);
+                        $$tester->name = $tname;
+                        $tester->gender = User::MALE;
+                        $tester->email = $temail;
+                        $tester->phone = $tphone;
+                        $tester->designation = User::NURSE;
+                        $tester->username = $tuid;
+                        $tester->save();
+                        //  prepare to save role-user
+                        $ru = DB::table('role_user')->where('user_id', $tester->id)->where('role_id', $role_id)->count();
+                        if($ru == 0)
+                        {
+                            DB::table('role_user')->insert(["user_id" => $tester->id, "role_id" => $role_id, "tier" => $facility_id, "program_id" => $program_id]);
+                        }
                     }
-                    //  Check if Facility exits. If not create one.
-                    $fclty = Facility::find(Facility::idByCode((int)$mfl));
-                    if(!$fclty)
-                    {
-                        $fclty = new Facility;
-                        $fclty->name = $facility;
-                    }
-                    $fclty->sub_county_id = SubCounty::idByName($subCounty);
-                    if(!$fclty->sub_county_id)
-                    {
-                        $sb = new SubCounty;
-                        $sb->name = $subCounty;
-                        $sb->county_id = County::idByName($county);
-                        $sb->save();
-                        $fclty->sub_county_id = $sb->id;
-                    }
-                    $fclty->in_charge = $incharge;
-                    $fclty->in_charge_phone = $iphone;
-                    $fclty->in_charge_email = $iemail;
-                    $fclty->save();
-                    //  Save new user
-                    $user = new User;
-                    $user->name = $tname;
-                    if(strcmp($tgender, "Male") === 0)
-                        $user->gender = User::MALE;
-                    else
-                        $user->gender = User::FEMALE;
-                    $user->email = $temail;
-                    $user->phone = $tphone;
-                    $user->address = $taddress;
-                    $user->designation = $tdes;
-                    $user->save();
-                    //  Insert into role-user
-                    $userId = $user->id;
-                    $roleId = Role::idByName('Participant');
-                    $programId = Program::idByName($tprog);
-                    DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $fclty->id, 'program_id' => $programId]);
-                    //  Send SMS verification code
-                    $api = DB::table('bulk_sms_settings')->first();
-                    $username   = $api->username;
-                    $apikey     = $api->api_key;
-                    //  Remove beginning 0 and append +254
-                    $phone = ltrim($user->phone, '0');
-                    $recipient = "+254".$phone;
-                    // Generate code and store it in the database then send to participant
-                    $token = mt_rand(100000, 999999);
-                    $user->sms_code = $token;
-                    $user->save();
-                    $message    = "Your Verification Code is: ".$token;
-                    // Create a new instance of our awesome gateway class
-                    $gateway    = new Bulk($username, $apikey);
-                    try 
-                    { 
-                        // Specified sender-id
-                        $from = $api->code;
-                        // Send message
-                        // $result = $gateway->sendMessage($recipient, $message);
-                    }
-                    catch ( AfricasTalkingGatewayException $e )
-                    {
-                        echo "Encountered an error while sending: ".$e->getMessage();
-                    }
-                    //  Send email verification code
                 }
-            });
-        });
+            }
+        }
+    }
+    /**
+     * Batch registration
+     *
+     */
+    public function batchRegistration(Request $request)
+    {
+        $exploded = explode(',', $request->excel);
+        $decoded = base64_decode($exploded[1]);
+        if(str_contains($exploded[0], 'sheet'))
+            $extension = 'xlsx';
+        else
+            $extension = 'xls';
+        $fileName = uniqid().'.'.$extension;
+        $county = 0;
+        if(Auth::user()->isCountyCoordinator())
+        {
+            $county = County::find(Auth::user()->ru()->tier)->name;
+            $folder = '/batch/registration/'.$county.'/';
+        }
+        else
+            $folder = '/batch/registration/nphls/';
+        if(!is_dir(public_path().$folder))
+            File::makeDirectory(public_path().$folder, 0777, true);
+        file_put_contents(public_path().$folder.$fileName, $decoded);
+        // dd();
+        //  Handle the import
+        //  Get the results
+        //  Import a user provided file
+        //  Convert file to csv
+        if(Auth::user()->isCountyCoordinator())
+            $data = Excel::load('public/batch/registration/'.$county.'/'.$fileName, function($reader) {$reader->ignoreEmpty();})->get();
+        else
+            $data = Excel::load('public/batch/registration/nphls/'.$fileName, function($reader) {$reader->ignoreEmpty();})->get();
+        if(!empty($data) && $data->count())
+        {
+
+            foreach ($data->toArray() as $key => $value) 
+            {
+                foreach($value as $harvey => $specter)
+                {
+                    if(!empty($specter))
+                    {
+                        $county = NULL;
+                        $sub_county = NULL;
+                        $facility = NULL;
+                        $mfl = NULL;
+                        $tfname = NULL;
+                        $tsname = NULL;
+                        $toname = NULL;
+                        $tgender = NULL;
+                        $tphone = NULL;
+                        $temail = NULL;
+                        $taddress = NULL;
+                        $tdes = NULL;
+                        $tprog = NULL;
+                        $incharge = NULL;
+                        $iphone = NULL;
+                        $iemail = NULL;
+                        foreach ($specter as $mike => $ross) 
+                        {
+                            if(strcmp($mike, "county") === 0)
+                                $county = $ross;
+                            if(strcmp($mike, "sub_county") === 0)
+                                $sub_county = $ross;
+                            if(strcmp($mike, "facility") === 0)
+                                $facility = $ross;
+                            if(strcmp($mike, "mfl_code") === 0)
+                                $mfl = $ross;
+                            if(strcmp($mike, "tester_first_name") === 0)
+                                $tfname = $ross;
+                            if(strcmp($mike, "tester_surname") === 0)
+                                $tsname = $ross;
+                            if(strcmp($mike, "tester_other_name") === 0)
+                                $toname = $ross;
+                            if(strcmp($mike, "gender") === 0)
+                                $tgender = $ross;
+                            if(strcmp($mike, "tester_mobile_number") === 0)
+                                $tphone = $ross;
+                            if(strcmp($mike, "tester_email") === 0)
+                                $temail = $ross;
+                            if(strcmp($mike, "tester_address") === 0)
+                                $taddress = $ross;
+                            if(strcmp($mike, "designation") === 0)
+                                $tdes = $ross;
+                            if(strcmp($mike, "program") === 0)
+                                $tprog = $ross;
+                            if(strcmp($mike, "in_charge") === 0)
+                                $incharge = $ross;
+                            if(strcmp($mike, "in_charge_email") === 0)
+                                $iemail = $ross;
+                            if(strcmp($mike, "in_charge_phone") === 0)
+                                $iphone = $ross;
+                        }
+                        //  clean phone
+                        if($tphone)
+                        {
+                            $tphone = ltrim($tphone, '0');
+                            $tphone = "+254".$tphone;
+                            $tphone = trim($tphone);
+                        }
+                        //  process gender
+                        if(strcmp($tgender, "Male") === 0)
+                            $tgender = User::MALE;
+                        else
+                            $tgender = User::FEMALE;
+                        //  process designation
+                        if(strcmp($tdes, "Nurse") === 0)
+                            $tdes = User::NURSE;
+                        else if(strcmp($tdes, "Lab Tech.") === 0)
+                            $tdes = User::LABTECH;
+                        else if(strcmp($tdes, "Counsellor") === 0)
+                            $tdes = User::COUNSELLOR;
+                        else if(strcmp($tdes, "RCO") === 0)
+                            $tdes = User::RCO;
+
+                        //  process user details only if the name exists
+                        if($tfname)
+                        {
+                            $userId = User::idByName($tsname." ".$tfname." ".$toname);
+                            if(!$userId)
+                                $userId = User::idByEmail($temail);
+                            if(!$userId)
+                            {
+                                $user = new User;
+                                $user->name = $tsname." ".$tfname." ".$toname;
+                                $user->gender = $tgender;
+                                $user->email = $temail;
+                                $user->phone = $tphone;
+                                $user->address = $taddress;
+                                $user->username = uniqid();
+                                $user->save();
+                                $user->username = $user->id;
+                                $user->save();
+                                $userId = $user->id;
+                            }
+                            //  Prepare to save facility details
+                            $facilityId = Facility::idByCode($mfl);
+                            if(!$facilityId)
+                                $facilityId = Facility::idByName(trim($facility));
+                            if($facilityId)
+                                $fc = Facility::find($facilityId);
+                            else
+                                $fc = new Facility;
+                            $fc->code = $mfl;
+                            $fc->name = $facility;
+                            $fc->in_charge = $incharge;
+                            $fc->in_charge_phone = $iphone;
+                            $fc->in_charge_email = $iemail;
+                            //  Get sub-county
+                            $sub_county_id = SubCounty::idByName($sub_county);
+                            if(!$sub_county_id)
+                            {
+                                $sb = new SubCounty;
+                                $sb->name = $sub_county;
+                                $sb->county_id = County::idByName($county);
+                                $sb->save();
+                                $sub_county_id = $sb->id;
+                            }
+                            $fc->sub_county_id = $sub_county_id;
+                            $fc->save();
+                            $facilityId = $fc->id;
+                            //  Prepare to save role-user details
+                            $roleId = Role::idByName('Participant');
+                            DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => Program::idByTitle($tprog), "designation" => $tdes]);
+                            //  send email and sms for registration
+                        }
+                    }
+                }
+            }
+        }
     }
     /**
      * Check for user phone verification code
@@ -737,3 +851,4 @@ class UserController extends Controller
                 ->with('warning', "Your token is invalid.");
     }
 }
+$excel = App::make('excel');

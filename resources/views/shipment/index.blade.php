@@ -133,7 +133,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" id="save_shipment" v-on:submit.prevent="saveShipment">
+                        <form method="POST" enctype="multipart/form-data" id="save_shipment" v-on:submit.prevent="saveShipment('create_shipment')" data-vv-validate="create_shipment">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('pt round') }" for="round">PT Round:</label>
@@ -225,7 +225,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" id="update_shipment" v-on:submit.prevent="updateShipment(fillShipment.id)">
+                        <form method="POST" enctype="multipart/form-data" id="update_shipment" v-on:submit.prevent="updateShipment(fillShipment.id, 'update_shpmnt')" data-vv-validate="update_shpmnt">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('pt round') }" for="round">PT Round:</label>
@@ -318,7 +318,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="receiveShipment" id="frm">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="receiveShipment('receive_shipment')" id="frm" data-vv-validate="receive_shipment">
                             <div class="col-md-12">
                                 <input class="form-control" type="hidden" name="shipment_id" id="shipment-id" v-model="newReceipt.shipment_id" value=""/>
                                 <div class="form-group row">
@@ -371,7 +371,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="distributeShipment()" id="frm">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="distributeShipment('distribute_shipment')" id="frm" data-vv-validate="distribute_shipment">
                             <div class="col-md-12">
                                 <input type="hidden" class="form-control" name="shpmnt_id" id="shpmnt-id" v-model="newConsignment.shipment_id" value=""/>
                                 <div class="form-group row">

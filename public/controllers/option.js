@@ -61,8 +61,8 @@ new Vue({
             });
         },
 
-        createOption: function(){
-            this.$validator.validateAll().then(() => {
+        createOption: function(scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.newOption;
                 this.$http.post('/vueoptions',input).then((response) => {
                     this.changePage(this.pagination.current_page);
@@ -99,8 +99,8 @@ new Vue({
             $("#edit-option").modal('show');
         },
 
-        updateOption: function(id){
-            this.$validator.validateAll().then(() => {
+        updateOption: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillOption;
                 this.$http.put('/vueoptions/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

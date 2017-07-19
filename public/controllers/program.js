@@ -60,8 +60,8 @@ new Vue({
             });
         },
 
-        createProgram: function(){
-            this.$validator.validateAll().then(() => {
+        createProgram: function(scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.newProgram;
                 this.$http.post('/vueprograms',input).then((response) => {
                     this.changePage(this.pagination.current_page);
@@ -98,8 +98,8 @@ new Vue({
             $("#edit-program").modal('show');
         },
 
-        updateProgram: function(id){
-            this.$validator.validateAll().then(() => {
+        updateProgram: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillProgram;
                 this.$http.put('/vueprograms/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

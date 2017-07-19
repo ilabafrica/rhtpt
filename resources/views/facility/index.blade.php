@@ -26,10 +26,10 @@
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
                     </a>
-                    <a class="btn btn-sm btn-concrete" href="/Facilities.xlsx">
+                    <!-- <a class="btn btn-sm btn-concrete" href="/Facilities.xlsx" disabled>
                         <i class="fa fa-download"></i>
                         Worksheet
-                    </a>
+                    </a> -->
 
                     <button class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#upload-worksheet"><i class="fa fa-level-up"></i> Upload Worksheet</button>
                 </h5>
@@ -93,5 +93,36 @@
             </li>
         </ul>
     </nav>
+    <!-- Upload worksheet -->
+    <div id="upload-worksheet" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Upload Faciliies from Excel</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="batchImport" id="btch">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('excel file') }" for="excel file">File:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input type="file" v-validate="'required|ext:xlsx,xls'" class="form-control-file" :class="{'input': true, 'is-danger': errors.has('excel file') }" name="excel file" @change="fileChanged">
+                                        <span v-show="errors.has('excel file')" class="help is-danger">@{{ errors.first('excel file') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

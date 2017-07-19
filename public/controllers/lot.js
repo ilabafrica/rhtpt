@@ -63,8 +63,8 @@ new Vue({
             });
         },
 
-        createLot: function(){
-            this.$validator.validateAll().then(() => {
+        createLot: function(scope){
+            this.$validator.validateAll(scope).then(() => {
           		var input = this.newLot;
           		this.$http.post('/vuelots',input).then((response) => {
         		    this.changePage(this.pagination.current_page);
@@ -101,8 +101,8 @@ new Vue({
             $("#edit-lot").modal('show');
         },
 
-        updateLot: function(id){
-            this.$validator.validateAll().then(() => {
+        updateLot: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillLot;
                 this.$http.put('/vuelots/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

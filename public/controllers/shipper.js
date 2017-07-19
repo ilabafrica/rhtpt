@@ -64,8 +64,8 @@ new Vue({
             });
         },
 
-        createShipper: function(){
-            this.$validator.validateAll().then(() => {
+        createShipper: function(scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.newShipper;
                 this.$http.post('/vueshippers',input).then((response) => {
                     this.changePage(this.pagination.current_page);
@@ -105,8 +105,8 @@ new Vue({
             $("#edit-shipper").modal('show');
         },
 
-        updateShipper: function(id){
-            this.$validator.validateAll().then(() => {
+        updateShipper: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillShipper;
                 this.$http.put('/vueshippers/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

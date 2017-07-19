@@ -61,8 +61,8 @@ new Vue({
             });
         },
 
-        createNonperf: function(){
-            this.$validator.validateAll().then(() => {
+        createNonperf: function(scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.newNonperf;
                 this.$http.post('/vuenonperfs',input).then((response) => {
                     this.changePage(this.pagination.current_page);
@@ -99,8 +99,8 @@ new Vue({
             $("#edit-nonperf").modal('show');
         },
 
-        updateNonperf: function(id){
-            this.$validator.validateAll().then(() => {
+        updateNonperf: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillNonperf;
                 this.$http.put('/vuenonperfs/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

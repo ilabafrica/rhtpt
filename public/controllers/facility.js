@@ -20,7 +20,8 @@ new Vue({
         fillFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''},
         loading: false,
         error: false,
-        query: ''
+        query: '',
+        uploadify: {excel: ''}
     },
 
     computed: {
@@ -113,7 +114,8 @@ new Vue({
             this.getVueFacilitys(page);
         },
 
-        search: function() {
+        search: function() 
+        {
             // Clear the error message.
             this.error = '';
             // Empty the facilitys array so we can fill it with the new facilitys.
@@ -140,6 +142,32 @@ new Vue({
                 // Clear the query.
                 this.query = '';
             });
-        }
+        },        
+
+        batchImport()
+        {
+            // this.$validator.validateAll().then(() => {
+                var input = this.uploadify;
+                this.$http.post('/batch/facilities', input).then((response) => {
+                    this.uploadify = {'excel':''};
+                    $("#upload-worksheet").modal('hide');
+                    toastr.success('Facilities Loaded Successfully.', 'Success Alert', {timeOut: 5000});
+                    this.errors.clear();
+                }, (response) => {
+                    // 
+                });
+            /*}).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+            });*/
+        },
+
+        fileChanged(e){
+            console.log(e.target.files[0]);
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(e.target.files[0]);
+            fileReader.onload = (e) => {
+                this.uploadify.excel = e.target.result;
+            }
+        },
     }
 });

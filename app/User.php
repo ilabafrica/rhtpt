@@ -102,8 +102,8 @@ EntrustUserTrait::restore insteadof SoftDeletes;
 	  */
   	public function ru()
   	{
-          $res = DB::table('role_user')->where('user_id', $this->id)->first();
-          return $res;
+        $res = DB::table('role_user')->where('user_id', $this->id)->first();
+        return $res;
   	}
     /**
   	 * Return tester-id-range

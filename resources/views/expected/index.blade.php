@@ -90,7 +90,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createExpected">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createExpected('create_expected')" data-vv-validate="create_expected">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">PT Item:</label>
@@ -143,7 +143,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateExpected(fillExpected.id)">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateExpected(fillExpected.id, 'update_expected')" data-vv-validate="update_expected">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">PT Item:</label>

@@ -100,7 +100,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createMaterial">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createMaterial('create_material')" data-vv-validate="create_material">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('batch no.') }" for="batch no.">Batch No:</label>
@@ -178,7 +178,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateMaterial(fillMaterial.id)">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateMaterial(fillMaterial.id, 'update_material')" data-vv-validate="update_material">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('batch no.') }" for="batch no.">Batch No:</label>

@@ -62,7 +62,7 @@ class County extends Model
         {
             try 
             {
-                $count = SubCounty::where('name', $name)->orderBy('name', 'asc')->count();
+                $count = County::where('name', $name)->orderBy('name', 'asc')->count();
                 if($count > 0)
                 {
                     $county = County::where('name', $name)->orderBy('name', 'asc')->first();

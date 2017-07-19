@@ -64,8 +64,8 @@ new Vue({
             });
         },
 
-        createSet: function(){
-            this.$validator.validateAll().then(() => {
+        createSet: function(scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.newSet;
                 this.$http.post('/vuesets',input).then((response) => {
                     this.changePage(this.pagination.current_page);
@@ -104,8 +104,8 @@ new Vue({
             $("#edit-set").modal('show');
         },
 
-        updateSet: function(id){
-            this.$validator.validateAll().then(() => {
+        updateSet: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillSet;
                 this.$http.put('/vuesets/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

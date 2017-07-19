@@ -57,15 +57,6 @@ class MaterialController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'batch' => 'required',
-            'date_prepared' => 'required',
-            'expiry_date' => 'required',
-            'material_type' => 'required',
-            'original_source' => 'required',
-            'date_collected' => 'required',
-            'prepared_by' => 'required',
-        ]);
         $request->request->add(['user_id' => Auth::user()->id]);
 
         $create = Material::create($request->all());
@@ -82,15 +73,6 @@ class MaterialController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'batch' => 'required',
-            'date_prepared' => 'required',
-            'expiry_date' => 'required',
-            'material_type' => 'required',
-            'original_source' => 'required',
-            'date_collected' => 'required',
-            'prepared_by' => 'required',
-        ]);
         $request->request->add(['user_id' => Auth::user()->id]);
 
         $edit = Material::find($id)->update($request->all());

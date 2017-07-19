@@ -28,9 +28,12 @@ new Vue({
         error: false,
         query: '',
         formTransErrors:{},
-        batchWorksheet:{'worksheet': ''},
+        uploadify: {id: '', excel: ''},
         someUser : {'facility_id':'','program_id':'','sub_county_id':'','county_id':'','facility':'','program':'','sub_county':'','county':'','in_charge':'', 'id':''},
         jimbo: [],
+        sexes: [],
+        uploadify: {excel: ''},
+        upload: {list: ''}
     },
 
     computed: {
@@ -63,6 +66,7 @@ new Vue({
         this.loadPrograms();
         this.loadCounties();
         this.loadRoles();
+        this.loadSexes();
     },
 
     methods : {
@@ -74,22 +78,27 @@ new Vue({
             });
         },
 
-        createUser: function(){
-            var input = this.newUser;
-            this.$http.post('/vueusers',input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.newUser = {'name':'', 'username': '','gender':'', 'phone':'', 'email':'', 'address':''};
-                $("#create-user").modal('hide');
-                toastr.success('User Created Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrors = response.data;
+        createUser: function(scope){
+            this.$validator.validateAll(scope).then(() => {
+                var input = this.newUser;
+                this.$http.post('/vueusers',input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.newUser = {'name':'', 'username': '','gender':'', 'phone':'', 'email':'', 'address':''};
+                    $("#create-user").modal('hide');
+                    toastr.success('User Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrors = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
-        deleteUser: function(facility){
-            this.$http.delete('/vueusers/'+facility.id).then((response) => {
+        deleteUser: function(user){
+            this.$http.delete('/vueusers/'+user.id).then((response) => {
                 this.changePage(this.pagination.current_page);
-                toastr.success('Facility Deleted Successfully.', 'Success Alert', {timeOut: 5000});
+                toastr.success('User Deleted Successfully.', 'Success Alert', {timeOut: 5000});
             });
         },
 
@@ -108,22 +117,28 @@ new Vue({
             this.fillUser.phone = user.phone;
             this.fillUser.email = user.email;
             this.fillUser.address = user.address;
-            this.fillUser.role = user.rl;
+            this.fillUser.rl = user.rl;
+            this.fillUser.role = user.role;
             this.fillUser.program = user.program;
             this.fillUser.uid = user.uid;
             this.fillUser.address = user.address;
             $("#edit-user").modal('show');
         },
 
-        updateUser: function(id){
-            var input = this.fillUser;
-            this.$http.put('/vueusers/'+id,input).then((response) => {
-                //this.changePage(this.pagination.current_page); - @TODO
-                this.fillUser = {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''};
-                $("#edit-user").modal('hide');
-                toastr.success('User Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+        updateUser: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
+                var input = this.fillUser;
+                this.$http.put('/vueusers/'+id,input).then((response) => {
+                    //this.changePage(this.pagination.current_page); - @TODO
+                    this.fillUser = {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''};
+                    $("#edit-user").modal('hide');
+                    toastr.success('User Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -175,24 +190,66 @@ new Vue({
             });
         },
 
-        imageChanged: function(e){
+        loadSexes: function() {
+            this.$http.get('/sex').then((response) => {
+                this.sexes = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        uploadSheet: function(){
+            $("#batch-registration").modal('show');
+            console.log("Live on raw.");
+        },
+
+        batchReg(){
+            // this.$validator.validateAll().then(() => {
+                var input = this.uploadify;
+                this.$http.post('/batch/register', input).then((response) => {
+                    this.uploadify = {'excel':''};
+                    $("#batch-registration").modal('hide');
+                    toastr.success('Data Uploaded Successfully.', 'Success Alert', {timeOut: 5000});
+                    this.errors.clear();
+                }, (response) => {
+                    // 
+                });
+            /*}).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+            });*/
+        },
+
+        fileChanged(e){
+            console.log(e.target.files[0]);
             var fileReader = new FileReader();
             fileReader.readAsDataURL(e.target.files[0]);
             fileReader.onload = (e) => {
-                this.batchWorksheet.worksheet = e.target.result;
+                this.uploadify.excel = e.target.result;
             }
         },
-        //    Ibatch registration
-        uploadWorkshet: function() {
-            var input = this.batchWorksheet;
-            this.$http.post('/excel/users', input).then((response) => {
-                //this.changePage(this.pagination.current_page); - @TODO
-                this.fillUser = {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''};
-                $("#edit-user").modal('hide');
-                toastr.success('User Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+
+        importUsers(scope){
+            this.$validator.validateAll(scope).then(() => {
+                var input = this.upload;
+                this.$http.post('/import/users', input).then((response) => {
+                    this.upload = {'list':''};
+                    $("#import-users-list").modal('hide');
+                    toastr.success('Data Uploaded Successfully.', 'Success Alert', {timeOut: 5000});
+                    this.errors.clear();
+                }, (response) => {
+                    // 
+                });
+            }).catch(() => {
+                toastr.error('Please upload a file.', 'Validation Failed', {timeOut: 5000});
             });
+        },
+        listChanged(e){
+            console.log(e.target.files[0]);
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(e.target.files[0]);
+            fileReader.onload = (e) => {
+                this.upload.list = e.target.result;
+            }
         },
 
         search: function() {

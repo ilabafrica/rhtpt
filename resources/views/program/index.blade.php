@@ -100,7 +100,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createProgram">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createProgram('create_program')" data-vv-validate="create_program">
 
                             <div class="col-md-12">
                                 <div class="form-group row">
@@ -139,7 +139,7 @@
                 <div class="row">
                     <div class="modal-body">
 
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateProgram(fillProgram.id)">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateProgram(fillProgram.id, 'update_program')" data-vv-validate="update_program">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>

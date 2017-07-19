@@ -92,7 +92,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createOption">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createOption('create_option')" data-vv-scope="create_option">
 
                             <div class="col-md-12">
                                 <div class="form-group row">
@@ -131,7 +131,7 @@
                 <div class="row">
                     <div class="modal-body">
 
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateOption(fillOption.id)">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateOption(fillOption.id, 'update_option')" data-vv-scope="update_option">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>

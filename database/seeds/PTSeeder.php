@@ -18,7 +18,7 @@ use App\Nonperformance;
 //	Carbon - for use with dates
 use Jenssegers\Date\Date as Carbon;
 
-class PTSeeder extends Seeder
+class PTSeeder extends DatabaseSeeder
 {
     public function run()
     {
@@ -222,7 +222,7 @@ class PTSeeder extends Seeder
             array("name" => "Nyandarua"),
             array("name" => "Nyeri"),
             array("name" => "Kirinyaga"),
-            array("name" => "Murang\'a"),
+            array("name" => "Murang'a"),
             array("name" => "Kiambu"),
             array("name" => "Turkana"),
             array("name" => "West Pokot"),

@@ -97,7 +97,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createField" id="create_field">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createField('create_field')" data-vv-validate="create_field">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
@@ -182,7 +182,7 @@
                 <div class="row">
                     <div class="modal-body">
 
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateField" id="update_field">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateField('update_field')" data-vv-validate=update_field">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>

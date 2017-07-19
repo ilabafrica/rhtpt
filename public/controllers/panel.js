@@ -68,8 +68,8 @@ new Vue({
             });
         },
 
-        createPanel: function(){
-            this.$validator.validateAll().then(() => {
+        createPanel: function(scope){
+            this.$validator.validateAll(scope).then(() => {
       		    var input = this.newPanel;
       		    this.$http.post('/vuepanels',input).then((response) => {
         		    this.changePage(this.pagination.current_page);
@@ -109,8 +109,8 @@ new Vue({
             $("#edit-panel").modal('show');
         },
 
-        updatePanel: function(id){
-            this.$validator.validateAll().then(() => {
+        updatePanel: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillPanel;
                 this.$http.put('/vuepanels/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

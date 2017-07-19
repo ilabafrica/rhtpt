@@ -63,8 +63,8 @@ new Vue({
             });
         },
 
-        createMaterial: function(){
-            this.$validator.validateAll().then(() => {
+        createMaterial: function(scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.newMaterial;
                 this.$http.post('/vuematerials',input).then((response) => {
                     this.changePage(this.pagination.current_page);
@@ -105,8 +105,8 @@ new Vue({
             $("#edit-material").modal('show');
         },
 
-        updateMaterial: function(id){
-            this.$validator.validateAll().then(() => {
+        updateMaterial: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillMaterial;
                 this.$http.put('/vuematerials/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

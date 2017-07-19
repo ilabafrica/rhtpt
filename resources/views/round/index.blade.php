@@ -49,14 +49,12 @@
     <table class="table table-bordered">
         <tr>
             <th>Title</th>
-            <th>Duration</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Action</th>
         </tr>
         <tr v-for="round in rounds">
             <td>@{{ round.description }}</td>
-            <td></td>
             <td>@{{ round.start_date }}</td>
             <td>@{{ round.end_date }}</td>
             <td>
@@ -110,7 +108,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRound">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRound('create_round')" id="create_round">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Title:</label>
@@ -133,16 +131,6 @@
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('start date') }" name="start date" type="date" placeholder="" v-model="newRound.start_date" />
                                         <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('duration') }" for="tester id">Duration:</label>
-                                    <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="duration" :class="{'input': true, 'is-danger': errors.has('duration') }" v-model="newRound.duration">
-                                            <option selected></option>
-                                            <option  v-for="dur in durations" :value="dur.id">@{{ dur.value }}</option>   
-                                        </select>
-                                        <span v-show="errors.has('duration')" class="help is-danger">@{{ errors.first('duration') }}</span>
                                     </div>
                                 </div>
 
@@ -175,7 +163,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateRound(fillRound.id)">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateRound(fillRound.id, 'update_round')" data-vv-validate="update_round">
                             <div class="col-md-12">
                                 
                                 <div class="form-group row">
@@ -201,17 +189,6 @@
                                         <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('duration') }" for="tester id">Duration:</label>
-                                    <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="duration" :class="{'input': true, 'is-danger': errors.has('duration') }" v-model="fillRound.duration">
-                                            <option selected></option>
-                                            <option  v-for="dur in durations" :value="dur.id">@{{ dur.value }}</option>   
-                                        </select>
-                                        <span v-show="errors.has('duration')" class="help is-danger">@{{ errors.first('duration') }}</span>
-                                    </div>
-                                </div>
-
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('end date') }" for="end date">End Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">

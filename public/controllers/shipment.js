@@ -77,8 +77,8 @@ new Vue({
             });
         },
 
-        saveShipment: function(){
-            this.$validator.validateAll().then(() => {
+        saveShipment: function(scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.newShipment;
                 this.$http.post('/vueshipments',input).then((response) => {
                     this.changePage(this.pagination.current_page);
@@ -120,8 +120,8 @@ new Vue({
             $("#edit-shipment").modal('show');
         },
 
-        updateShipment: function(id){
-            this.$validator.validateAll().then(() => {
+        updateShipment: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillShipment;
                 this.$http.put('/vueshipments/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

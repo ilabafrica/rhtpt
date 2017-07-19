@@ -52,11 +52,6 @@ class OptionController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'title' => 'required',
-            'description' => 'required',
-        ]);
-
         $create = Option::create($request->all());
 
         return response()->json($create);
@@ -71,11 +66,6 @@ class OptionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'title' => 'required',
-            'description' => 'required',
-        ]);
-
         $edit = Option::find($id)->update($request->all());
 
         return response()->json($edit);

@@ -10,6 +10,11 @@ use App\Facility;
 use Input;
 
 use Auth;
+use DB;
+use Jenssegers\Date\Date as Carbon;
+use Excel;
+use App;
+use File;
 
 class FacilityController extends Controller
 {
@@ -230,4 +235,86 @@ class FacilityController extends Controller
             return response()->json();
         }
     }
+
+    /**
+     * Function to import facilities using excel sheet uploaded
+     *
+     */
+    public function batchImport(Request $request)
+    {
+        $exploded = explode(',', $request->excel);
+        $decoded = base64_decode($exploded[1]);
+        if(str_contains($exploded[0], 'sheet'))
+            $extension = 'xlsx';
+        else
+            $extension = 'xls';
+        $fileName = uniqid().'.'.$extension;
+        $county = County::find(1)->name;    // Remember to change this
+        $folder = '/uploads/facilities/';
+        if(!is_dir(public_path().$folder))
+            File::makeDirectory(public_path().$folder, 0777, true);
+        file_put_contents(public_path().$folder.$fileName, $decoded);
+        // dd();
+        //  Handle the import
+        //  Get the results
+        //  Import a user provided file
+        //  Convert file to csv
+        $data = Excel::load('public/uploads/facilities/'.$fileName, function($reader) {})->get();
+
+        if(!empty($data) && $data->count())
+        {
+
+            foreach ($data->toArray() as $key => $value) 
+            {
+                if(!empty($value))
+                {
+                    $code = NULL;
+                    $name = NULL;
+                    $sub_county = NULL;
+                    $county = NULL;
+                    foreach ($value as $mike => $ross) 
+                    {
+                        if(strcmp($mike, "mfl_code") === 0)
+                            $code = $ross;
+                        if(strcmp($mike, "facility_name") === 0)
+                            $name = $ross;
+                        if(strcmp($mike, "subcounty") === 0)
+                            $sub_county = $ross;
+                        if(strcmp($mike, "county") === 0)
+                            $county = $ross;
+                    }
+                    if(strcmp($county, "MURANGA") === 0)
+                        $county = "Murang'a";
+                    if(strcmp($county, "HOMABAY") === 0)
+                        $county = "Homa Bay";
+                    if(!$code)
+                        $code = "N/A";
+                    $county_id = County::idByName(trim($county));
+                    //  Prepare to save facility details
+                    $facilityId = Facility::idByCode($code);
+                    if(!$facilityId)
+                        $facilityId = Facility::idByName(trim($name));
+                    if($facilityId)
+                        $facility = Facility::find($facilityId);
+                    else
+                        $facility = new Facility;
+                    $facility->code = $code;
+                    $facility->name = $name;
+                    //  Get sub-county
+                    $sub_county_id = SubCounty::idByName(trim($sub_county));
+                    if(!$sub_county_id)
+                    {
+                        $subCounty = new SubCounty;
+                        $subCounty->name = $sub_county;
+                        $subCounty->county_id = $county_id;
+                        $subCounty->save();
+                        $sub_county_id = $subCounty->id;
+                    }
+                    $facility->sub_county_id = $sub_county_id;
+                    $facility->save();
+                }
+            }
+        }
+    }
 }
+$excel = App::make('excel');

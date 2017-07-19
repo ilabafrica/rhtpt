@@ -64,8 +64,8 @@ new Vue({
             });
         },
 
-        createRole: function(){
-            this.$validator.validateAll().then(() => {
+        createRole: function(scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.newRole;
                 this.$http.post('/vueroles',input).then((response) => {
                     this.changePage(this.pagination.current_page);
@@ -103,8 +103,8 @@ new Vue({
             $("#edit-role").modal('show');
         },
 
-        updateRole: function(id){
-            this.$validator.validateAll().then(() => {
+        updateRole: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillRole;
                 this.$http.put('/vueroles/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

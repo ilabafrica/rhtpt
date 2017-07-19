@@ -15,8 +15,7 @@ class UpdateUsersTable extends Migration
         //  add verification columns
         Schema::table('users', function(Blueprint $table)
         {
-            // $table->tinyInteger('designation')->nullable()->after('uid');
-            $table->string('sms_code')->nullable()->after('designation');
+            $table->string('sms_code')->nullable()->after('uid');
             $table->boolean('phone_verified')->default(false)->after('sms_code');
             $table->string('email_verification_code')->nullable()->after('phone_verified');
             $table->boolean('email_verified')->default(false)->after('email_verification_code');
@@ -35,8 +34,7 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('email_verified');
             $table->dropColumn('email_verification_code');
             $table->dropColumn('phone_verified');
-            $table->dropColumn('africas_talking_code');
-            $table->dropColumn('designation');
+            $table->dropColumn('sms_code');
         });
     }
 }

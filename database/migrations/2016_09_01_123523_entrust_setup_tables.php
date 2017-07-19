@@ -28,6 +28,8 @@ class EntrustSetupTables extends Migration
             $table->integer('role_id')->unsigned();
             $table->string('tier', 25)->nullable();
             $table->integer('program_id')->nullable();
+            $table->tinyInteger('designation')->nullable();
+            
 
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');

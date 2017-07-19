@@ -18,7 +18,7 @@ class CreateBulkSmsTables extends Migration
             $table->string('code')->nullable();
             $table->string('username')->nullable();
             $table->string('api_key', 100)->nullable();
-            $table->unique('code', 'username', 'api_key');
+            $table->unique(['code', 'username', 'api_key']);
             $table->softDeletes();
             $table->timestamps();
         });

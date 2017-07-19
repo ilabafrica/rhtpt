@@ -67,12 +67,12 @@ new Vue({
             });
         },
 
-        createRound: function(){
-            this.$validator.validateAll().then(() => {
+        createRound: function(scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.newRound;
           		this.$http.post('/vuerounds',input).then((response) => {
           		    this.changePage(this.pagination.current_page);
-          			this.newRound = {'name':'','description':'','start_date':'','duration':'','end_date':''};
+          			this.newRound = {'name':'','description':'','start_date':'','end_date':''};
           			$("#create-round").modal('hide');
           			toastr.success('Round Created Successfully.', 'Success Alert', {timeOut: 5000});
                     this.errors.clear();
@@ -106,8 +106,8 @@ new Vue({
             $("#edit-round").modal('show');
         },
 
-        updateRound: function(id){
-            this.$validator.validateAll().then(() => {
+        updateRound: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillRound;
                 this.$http.put('/vuerounds/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

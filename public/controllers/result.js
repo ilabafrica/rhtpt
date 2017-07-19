@@ -72,8 +72,8 @@ new Vue({
             });
         },
 
-        createResult: function(){
-            this.$validator.validateAll().then(() => {
+        createResult: function(scope){
+            this.$validator.validateAll(scope).then(() => {
           		let myForm = document.getElementById('test_results');
                 let formData = new FormData(myForm);
           		this.$http.post('/vueresults', formData).then((response) => {
@@ -121,8 +121,8 @@ new Vue({
             $("#view-result").modal('show');
         },
 
-        updateResult: function(id){
-            this.$validator.validateAll().then(() => {
+        updateResult: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
                 var input = this.fillResult;
                 this.$http.put('/vueresults/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);

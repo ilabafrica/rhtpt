@@ -383,11 +383,6 @@ Route::group(['middleware' => 'auth'], function()
         "as"    =>  "report.summary.export",
         "uses"  =>  "ReportController@download"
     ));
-    //  Import Audit Data
-    Route::any('/excel/users', array(
-        "as"    =>  "batch.registration",
-        "uses"  =>  "UserController@batchRegistration"
-    ));
     //  Get durations
     Route::get('/duration', array(
         "as"    =>  "round.durations",
@@ -397,6 +392,23 @@ Route::group(['middleware' => 'auth'], function()
     Route::post("/batch/enrol", array(
         "as"   => "batch.enrolment",
         "uses" => "RoundController@batchEnrolment"
+    ));
+    //  Batch registration
+    Route::post('/batch/register', array(
+        "as"    =>  "batch.registration",
+        "uses"  =>  "UserController@batchRegistration"
+    ));
+
+    //  Batch facility import
+    Route::post('/batch/facilities', array(
+        "as"    =>  "batch.import",
+        "uses"  =>  "FacilityController@batchImport"
+    ));
+
+    //  import users list
+    Route::post('/import/users', array(
+        "as"    =>  "import.users",
+        "uses"  =>  "UserController@importUserList"
     ));
 
     Route::get('api/search_role',['as'=>'role.search', 'uses'=>'RoleController@index']);
