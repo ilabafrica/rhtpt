@@ -291,11 +291,9 @@ class FacilityController extends Controller
                         $code = "N/A";
                     $county_id = County::idByName(trim($county));
                     //  Prepare to save facility details
-                    $facilityId = Facility::idByCode($code);
-                    if(!$facilityId)
-                        $facilityId = Facility::idByName(trim($name));
-                    if($facilityId)
-                        $facility = Facility::find($facilityId);
+                    $facilityCount = Facility::where('name', trim($name))->where('code', trim($code))->count();
+                    if($facilityCount > 0)
+                        $facility = Facility::where('name', trim($name))->where('code', trim($code))->first();
                     else
                         $facility = new Facility;
                     $facility->code = $code;

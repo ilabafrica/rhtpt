@@ -569,59 +569,63 @@ class UserController extends Controller
         {
             foreach ($data->toArray() as $key => $value) 
             {
-                foreach($value as $harvey => $specter)
+                if(!empty($value))
                 {
-                    if(!empty($specter))
+                    $tname = NULL;
+                    $tuid = NULL;
+                    $tprogram = NULL;
+                    $tphone = NULL;
+                    $tfacility = NULL;
+                    $temail = NULL;
+                    foreach ($value as $mike => $ross) 
                     {
-                        $tname = NULL;
-                        $tuid = NULL;
-                        $tprogram = NULL;
-                        $tphone = NULL;
-                        $tfacility = NULL;
-                        $temail = NULL;
-                        foreach ($specter as $mike => $ross) 
-                        {
-                            if(strcmp($mike, "tester_name") === 0)
-                                $tname = $ross;
-                            if(strcmp($mike, "id_no") === 0)
-                                $tuid = $ross;
-                            if(strcmp($mike, "program") === 0)
-                                $tprogram = $ross;
-                            if(strcmp($mike, "testerphone") === 0)
-                                $tphone = $ross;
-                            if(strcmp($mike, "facility_name") === 0)
-                                $tfacility = $ross;
-                            if(strcmp($mike, "email") === 0)
-                                $temail = $ross;
-                        }
-                        if($tphone)
-                        {
-                            $tphone = ltrim($tphone, '0');
-                            $tphone = "+254".$tphone;
-                            $tphone = trim($tphone);
-                        }
-                        $facility_id = Facility::idByName(trim($tfacility));
-                        $program_id = Program::idByName(trim($tprogram));
-                        $role_id = Role::idByName('Participant');
-                        //  Prepare to save participant details
-                        $tester_id = User::idByUID(trim($tuid));
-                        if(!$tester_id)
-                            $tester = new User;
-                        else
-                            $tester = User::find($tester_id);
-                        $$tester->name = $tname;
-                        $tester->gender = User::MALE;
-                        $tester->email = $temail;
-                        $tester->phone = $tphone;
-                        $tester->designation = User::NURSE;
-                        $tester->username = $tuid;
-                        $tester->save();
-                        //  prepare to save role-user
-                        $ru = DB::table('role_user')->where('user_id', $tester->id)->where('role_id', $role_id)->count();
-                        if($ru == 0)
-                        {
-                            DB::table('role_user')->insert(["user_id" => $tester->id, "role_id" => $role_id, "tier" => $facility_id, "program_id" => $program_id]);
-                        }
+                        if(strcmp($mike, "tester_name") === 0)
+                            $tname = $ross;
+                        if(strcmp($mike, "id_no") === 0)
+                            $tuid = $ross;
+                        if(strcmp($mike, "program") === 0)
+                            $tprogram = $ross;
+                        if(strcmp($mike, "testerphone") === 0)
+                            $tphone = $ross;
+                        if(strcmp($mike, "facility_name") === 0)
+                            $tfacility = $ross;
+                        if(strcmp($mike, "email") === 0)
+                            $temail = $ross;
+                    }
+                    if(!empty($tphone))
+                    {
+                        $tphone = ltrim($tphone, '0');
+                        $tphone = "+254".$tphone;
+                        $tphone = trim($tphone);
+                    }
+                    if(!$tuid)
+                        $tuid = uniqid();
+                    $facility_id = Facility::idByName(trim($tfacility));
+                    $program_id = Program::idByTitle(trim($tprogram));
+                    $role_id = Role::idByName('Participant');
+                    //  Prepare to save participant details
+                    $tester_id = User::idByUID(trim($tuid));
+                    if(!$tester_id)
+                    {
+                        $tester = new User;
+                        $tester->password = User::DEFAULT_PASSWORD;
+                    }
+                    else
+                        $tester = User::find($tester_id);
+                    $tester->name = $tname;
+                    $tester->gender = User::MALE;
+                    $tester->email = $temail;
+                    $tester->phone = $tphone;
+                    $tester->username = $tuid;
+                    $tester->save();
+                    $tester->username = $tester->id;
+                    $tester->uid = $tester->id;
+                    $tester->save();
+                    //  prepare to save role-user
+                    $ru = DB::table('role_user')->where('user_id', $tester->id)->where('role_id', $role_id)->count();
+                    if($ru == 0)
+                    {
+                        DB::table('role_user')->insert(["user_id" => $tester->id, "role_id" => $role_id, "tier" => $facility_id, "program_id" => $program_id]);
                     }
                 }
             }
@@ -721,7 +725,7 @@ class UserController extends Controller
                                 $iphone = $ross;
                         }
                         //  clean phone
-                        if($tphone)
+                        if(!empty($tphone))
                         {
                             $tphone = ltrim($tphone, '0');
                             $tphone = "+254".$tphone;
@@ -759,6 +763,7 @@ class UserController extends Controller
                                 $user->username = uniqid();
                                 $user->save();
                                 $user->username = $user->id;
+                                $user->password = User::DEFAULT_PASSWORD;
                                 $user->save();
                                 $userId = $user->id;
                             }

@@ -51,7 +51,7 @@
             <td>@{{ lot.rnd }}</td>
             <td>@{{ lot.lot }}</td>
             <td>@{{ lot.tester_id }}</td>
-            <td></td>
+            <td>@{{ lot.totalParts }}</td>
             <td>
             @permission('update-lot')	
                 <button v-bind="{ 'disabled': lot.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editLot(lot)"><i class="fa fa-edit"></i> Edit</button>

@@ -33,6 +33,7 @@ class LotController extends Controller
         foreach($lots as $lot)
         {
             $lot->rnd = $lot->round->name;
+            $lot->totalParts = $lot->participants();
         }
         $response = [
             'pagination' => [
@@ -57,12 +58,6 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->tester_id);
-        $this->validate($request, [
-            'round_id' => 'required',
-            'lot' => 'required',
-            'tester_id' => 'required',
-        ]);
         $lot = new Lot;
         $lot->round_id = $request->round_id;
         $lot->lot = $request->lot;
@@ -82,11 +77,6 @@ class LotController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'round_id' => 'required',
-            'lot' => 'required',
-            'tester_id' => 'required',
-        ]);
         $request->request->add(['user_id' => Auth::user()->id]);
 
         $edit = Lot::find($id)->update($request->all());

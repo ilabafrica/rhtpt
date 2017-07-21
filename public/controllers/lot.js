@@ -70,7 +70,7 @@ new Vue({
         		    this.changePage(this.pagination.current_page);
           			this.newLot = {'round_id':'','lot':'','tester_id':[]};
           			$("#create-lot").modal('hide');
-          			toastr.success('Result Created Successfully.', 'Success Alert', {timeOut: 5000});
+          			toastr.success('Lot Created Successfully.', 'Success Alert', {timeOut: 5000});
           		}, (response) => {
       			    this.formErrors = response.data;
                 });
@@ -108,7 +108,7 @@ new Vue({
                     this.changePage(this.pagination.current_page);
                     this.fillLot = {'round_id':'','lot':'','tester_id':[],'id':''};
                     $("#edit-lot").modal('hide');
-                    toastr.success('Result Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                    toastr.success('Lot Updated Successfully.', 'Success Alert', {timeOut: 5000});
                 }, (response) => {
                     this.formErrorsUpdate = response.data;
                 });

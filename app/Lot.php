@@ -66,4 +66,20 @@ class Lot extends Model
           else if($this->lot == Lot::FIVE)
               return "Lot 5";
      }
+    /**
+     * Function to return total participants in a lot
+     *
+     */
+     public function participants()
+     {
+          $exploded = explode(", ", $this->tester_id);
+          $counter = count($exploded);
+          $total = 0;
+          for($i = 0; $i < $counter; $i++)
+          {
+              $count = Enrol::where('user_id', 'LIKE', '%'.$exploded[$i])->where('round_id', $this->round_id)->count();
+              $total += $count;
+          }
+          return $total;
+     }
 }
