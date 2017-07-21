@@ -107,13 +107,13 @@
                 <div class="modal-body">
 
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createShipper" class="form-horizontal">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createShipper('create_shipper')" class="form-horizontal" data-vv-valdate="create_shipper">
 
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Name:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newShipper.name" />
+                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newShipper.name" />
                                         <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
                                     </div>
                                 </div>
@@ -132,21 +132,21 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('contact') }" for="contact">Contact Person:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('contact') }" name="contact" type="text" placeholder="" v-model="newShipper.contact" />
+                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('contact') }" name="contact" type="text" placeholder="" v-model="newShipper.contact" />
                                         <span v-show="errors.has('contact')" class="help is-danger">@{{ errors.first('contact') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone') }" for="phone">Contact Phone:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone') }" name="phone" type="text" placeholder="" v-model="newShipper.phone" />
+                                        <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone') }" name="phone" type="text" placeholder="" v-model="newShipper.phone" />
                                         <span v-show="errors.has('phone')" class="help is-danger">@{{ errors.first('phone') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('email') }" for="email">Contact Email:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" placeholder="" v-model="newShipper.email" />
+                                        <input v-validate="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" placeholder="" v-model="newShipper.email" />
                                         <span v-show="errors.has('email')" class="help is-danger">@{{ errors.first('email') }}</span>
                                     </div>
                                 </div>
@@ -167,17 +167,17 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel">Edit Shipper</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Shipper</h4>
                 </div>
                 <div class="modal-body">
 
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateShipper(fillShipper.id)">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateShipper(fillShipper.id, 'update_shipper')" data-vv-validate="update_shipper">
                         <div class="form-group row">
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Name:</label>
                                 <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="fillShipper.name" />
+                                    <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="fillShipper.name" />
                                     <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
                                 </div>
                             </div>
@@ -196,21 +196,21 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('contact') }" for="contact">Contact Person:</label>
                                 <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('contact') }" name="contact" type="text" placeholder="" v-model="fillShipper.contact" />
+                                    <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('contact') }" name="contact" type="text" placeholder="" v-model="fillShipper.contact" />
                                     <span v-show="errors.has('contact')" class="help is-danger">@{{ errors.first('contact') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone') }" for="phone">Contact Phone:</label>
                                 <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone') }" name="phone" type="text" placeholder="" v-model="fillShipper.phone" />
+                                    <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone') }" name="phone" type="text" placeholder="" v-model="fillShipper.phone" />
                                     <span v-show="errors.has('phone')" class="help is-danger">@{{ errors.first('phone') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('email') }" for="email">Contact Email:</label>
                                 <div class="col-sm-8" :class="{ 'control': true }">
-                                    <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" placeholder="" v-model="fillShipper.email" />
+                                    <input v-validate="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" placeholder="" v-model="fillShipper.email" />
                                     <span v-show="errors.has('email')" class="help is-danger">@{{ errors.first('email') }}</span>
                                 </div>
                             </div>

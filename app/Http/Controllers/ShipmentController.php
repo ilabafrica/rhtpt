@@ -155,8 +155,9 @@ class ShipmentController extends Controller
      */
     public function receive(Request $request)
     {
-        $edit = Shipment::find((int)$request->shipment_id);
         dd($request->all());
+        $edit = Shipment::find((int)$request->shipment_id);
+        
         $edit->date_received = $request->date_received;
         $edit->panels_received = $request->panels_received;
         $edit->condition = $request->condition;
