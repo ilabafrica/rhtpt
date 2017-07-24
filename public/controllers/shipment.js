@@ -32,7 +32,7 @@ new Vue({
         query: '',
         consignments: [],
         formReceiptErrors: {},
-        uploadify: {shipment: ''}
+        fillConsignment : {'shipment_id':'','facility_id':'','tracker':'','total':'','date_picked':'','picked_by':'','contacts':''},
     },
 
     computed: {
@@ -215,7 +215,7 @@ new Vue({
 
         distributeShipment: function(){
             var input = this.newConsignment;
-            this.$http.post('/distribute',input).then((response) => {
+            this.$http.post('/distribute', input).then((response) => {
                 this.changePage(this.pagination.current_page);
                 this.newConsignment = {'shipment_id':'','facility_id':'','tracker':'','total':'','date_picked':'','picked_by':'','contacts':''};
                 $("#distribute-shipment").modal('hide');
@@ -272,30 +272,33 @@ new Vue({
             this.newConsignment.shipment_id = id;
             $("#distribute-shipment").modal('show');
         },
+
+        editConsignment: function(consignment){
+            this.fillConsignment.shipment_id = consignment.shipment_id;
+            this.fillConsignment.id = consignment.id;
+            this.fillConsignment.facility_id = consignment.facility_id;
+            this.fillConsignment.tracker = consignment.tracker;
+            this.fillConsignment.total = consignment.total;
+            this.fillConsignment.date_picked = consignment.date_picked;
+            this.fillConsignment.picked_by = consignment.picked_by;
+            this.fillConsignment.contacts = consignment.contacts;
+            $("#edit-consignment").modal('show');
+        },
+
+        updateConsignment: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
+                var input = this.fillConsignment;
+                this.$http.put('/vueshipments/'+id, input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillConsignment = {'shipment_id':'','facility_id':'','tracker':'','total':'','date_picked':'','picked_by':'','contacts':''},
+                    $("#edit-consignment").modal('hide');
+                    toastr.success('Consignment Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+            });
+        },
     }
-});
-//  Normal js
-//  Triggered when modal is about to be shown
-$('#receive-shipment').on('show.bs.modal', function(e) 
-{
-    //  Get shipment-id of the clicked element
-    var id = $(e.relatedTarget).data('fk');
-    // console.log(id);
-    //  Populate the hidden field
-    $( "#shipment-id" ).val(id);
-    // $( "#shipment-id" ).attr('value', id);
-    $( "#shipment-id" ).trigger('change');
-    console.log($("#shipment-id").val());
-});
-//  Triggered when modal is about to be shown
-$('#distribute-shipment').on('show.bs.modal', function(e) 
-{
-    //  Get shipment-id of the clicked element
-    var id = $(e.relatedTarget).data('fk');
-    // console.log(id);
-    //  Populate the hidden field
-    //$( "#shipment-id" ).val(id);
-    $( "#shpmnt-id" ).attr('value', id);
-    $( "#shpmnt-id" ).trigger('change');
-    console.log($("#shipment-id").val());
 });

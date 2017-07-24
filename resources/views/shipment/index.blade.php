@@ -92,9 +92,11 @@
             
                 <button v-bind="{ 'disabled': !shipment.date_received}"  id="distribute" class="btn btn-sm btn-pomegranate distribute" @click.prevent="distribute(shipment.id)"><i class="fa fa-pie-chart"></i> Distribute</button>
             
+            
             @permission('view-distributions')
                 <button v-bind="{ 'disabled': shipment.shipment.cons==0}" class="btn btn-sm btn-midnight-blue" @click.prevent="loadConsignments(shipment)"><i class="fa fa-link"></i> Picks</button>
             @endpermission
+            
             </td>
         </tr>
     </table>
@@ -377,34 +379,32 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control c-select" name="sub_id" id="sub_id" v-model="newConsignment.sub_id" v-on:change="fetchFacilities">
+                                        <select class="form-control c-select" name="sub_id" id="sub_id" v-model="newConsignment.sub_id" @change="fetchFacilities">
                                             <option selected></option>
                                             <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Facility:</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control c-select" name="facility_id" v-model="newConsignment.facility_id">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('facility_id') }" for="facility_id">Facility:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <select v-validate="'required'" class="form-control c-select" :class="{'input': true, 'is-danger': errors.has('sub county') }" name="facility_id" v-model="newConsignment.facility_id">
                                             <option selected></option>
                                             <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
                                         </select>
-                                        <span v-if="formConsignmentErrors['facility_id']" class="error text-danger">@{{ formConsignmentErrors['facility_id'] }}</span>
+                                        <span v-show="errors.has('facility_id')" class="help is-danger">@{{ errors.first('facility_id') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">Tracker ID:</label>
                                     <div class="col-sm-8">
                                         <input type="text" name="tracker" class="form-control" v-model="newConsignment.tracker" />
-                                        <span v-if="formConsignmentErrors['tracker']" class="error text-danger">@{{ formConsignmentErrors['tracker'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">Total Panels:</label>
                                     <div class="col-sm-8">
                                         <input type="number" name="total" class="form-control" v-model="newConsignment.total" />
-                                        <span v-if="formConsignmentErrors['total']" class="error text-danger">@{{ formConsignmentErrors['total'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -486,6 +486,82 @@
                                 </tr>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Consignment Modal -->
+    <div class="modal fade" id="edit-consignment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Edit Consignment</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateConsignment(fillConsignment.id, 'update_consignment')" data-vv-validate="update_consignment">
+                            <div class="col-md-12">
+                                <input type="hidden" class="form-control" name="shpmnt_id" id="shpmnt-id" v-model="newConsignment.shipment_id" value=""/>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="sub_id" id="sub_id" v-model="fillConsignment.sub_id" @change="fetchFacilities">
+                                            <option selected></option>
+                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Facility:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="facility_id" v-model="fillConsignment.facility_id">
+                                            <option selected></option>
+                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Tracker ID:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="tracker" class="form-control" v-model="fillConsignment.tracker" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Total Panels:</label>
+                                    <div class="col-sm-8">
+                                        <input type="number" name="total" class="form-control" v-model="fillConsignment.total" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Date Picked:</label>
+                                    <div class="col-sm-8">
+                                        <input type="date" name="date_picked" class="form-control" v-model="fillConsignment.date_picked" />
+                                        <span v-if="formConsignmentErrors['date_picked']" class="error text-danger">@{{ formConsignmentErrors['date_picked'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Picked By:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="picked_by" class="form-control" v-model="fillConsignment.picked_by" />
+                                        <span v-if="formConsignmentErrors['picked_by']" class="error text-danger">@{{ formConsignmentErrors['picked_by'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Picker Phone:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="contacts" class="form-control" v-model="fillConsignment.contacts" />
+                                        <span v-if="formConsignmentErrors['contacts']" class="error text-danger">@{{ formConsignmentErrors['contacts'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-sm-offset-4 col-sm-8">
+                                    <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -232,7 +232,15 @@ class FacilityController extends Controller
         }
         else
         {
-            return response()->json();
+            $id = Auth::user()->ru()->tier;
+            $subs = County::find(1)->subCounties->pluck('name', 'id');
+            $categories = [];
+            foreach($subs as $key => $value)
+            {
+                $categories[] = ['id' => $key, 'value' => $value];
+            }
+            return $categories;
+            // return response()->json();
         }
     }
 
