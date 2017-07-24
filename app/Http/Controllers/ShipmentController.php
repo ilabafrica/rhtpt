@@ -155,7 +155,7 @@ class ShipmentController extends Controller
      */
     public function receive(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $edit = Shipment::find((int)$request->shipment_id);
         
         $edit->date_received = $request->date_received;
@@ -174,6 +174,7 @@ class ShipmentController extends Controller
      */
     public function distribute(Request $request)
     {
+        // dd($request->all());
         $create = Consignment::create($request->all());
 
         return response()->json($create);

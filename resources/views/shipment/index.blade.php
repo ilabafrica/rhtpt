@@ -84,13 +84,13 @@
             </td>
             <td>	
             @permission('receive-shipment')
-                <button v-bind="{ 'disabled': shipment.date_received}" id="receipt" class="btn btn-sm btn-asbestos receive" data-toggle="modal" data-target="#receive-shipment" :data-fk="shipment.id"><i class="fa fa-download"></i> Receive</button>
+                <button v-bind="{ 'disabled': shipment.date_received}" id="receipt" class="btn btn-sm btn-asbestos receive" @click.prevent="receive(shipment.id)"><i class="fa fa-download"></i> Receive</button>
             @endpermission
             @permission('update-shipment')
                 <button v-bind="{ 'disabled': shipment.date_received}" class="btn btn-sm btn-primary" @click.prevent="editShipment(shipment)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             
-                <button v-bind="{ 'disabled': !shipment.date_received}"  id="distribute" data-toggle="modal" data-target="#distribute-shipment" :data-fk="shipment.id" class="btn btn-sm btn-pomegranate distribute"><i class="fa fa-pie-chart"></i> Distribute</button>
+                <button v-bind="{ 'disabled': !shipment.date_received}"  id="distribute" class="btn btn-sm btn-pomegranate distribute" @click.prevent="distribute(shipment.id)"><i class="fa fa-pie-chart"></i> Distribute</button>
             
             @permission('view-distributions')
                 <button v-bind="{ 'disabled': shipment.shipment.cons==0}" class="btn btn-sm btn-midnight-blue" @click.prevent="loadConsignments(shipment)"><i class="fa fa-link"></i> Picks</button>
@@ -338,7 +338,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('receiver') }" for="receiver">Received By:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('receiver') }" name="receiver" type="text" placeholder="" v-model="newReceipt.tracker" />
+                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('receiver') }" name="receiver" type="text" placeholder="" v-model="newReceipt.receiver" />
                                         <span v-show="errors.has('receiver')" class="help is-danger">@{{ errors.first('receiver') }}</span>
                                     </div>
                                 </div>

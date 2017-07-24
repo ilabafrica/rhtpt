@@ -32,6 +32,7 @@ new Vue({
         query: '',
         consignments: [],
         formReceiptErrors: {},
+        uploadify: {shipment: ''}
     },
 
     computed: {
@@ -260,7 +261,17 @@ new Vue({
                 // Clear the query.
                 this.query = '';
             });
-        }
+        },
+
+        receive: function(id){
+            this.newReceipt.shipment_id = id;
+            $("#receive-shipment").modal('show');
+        },
+
+        distribute: function(id){
+            this.newConsignment.shipment_id = id;
+            $("#distribute-shipment").modal('show');
+        },
     }
 });
 //  Normal js
@@ -273,7 +284,7 @@ $('#receive-shipment').on('show.bs.modal', function(e)
     //  Populate the hidden field
     $( "#shipment-id" ).val(id);
     // $( "#shipment-id" ).attr('value', id);
-    // $( "#shipment-id" ).trigger('change');
+    $( "#shipment-id" ).trigger('change');
     console.log($("#shipment-id").val());
 });
 //  Triggered when modal is about to be shown
