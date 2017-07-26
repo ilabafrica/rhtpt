@@ -186,7 +186,7 @@ new Vue({
             });
         },
 
-        loadParticipants: function() {
+        loadParticipants: function(page) {
             this.$http.get('/parts').then((response) => {
                 this.participants = response.data.data.data;
                 this.pagination = response.data.pagination;
