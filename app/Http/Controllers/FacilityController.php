@@ -232,6 +232,7 @@ class FacilityController extends Controller
         }
         else
         {
+            //  remember to remove this shitty block
             $id = Auth::user()->ru()->tier;
             $subs = County::find(1)->subCounties->pluck('name', 'id');
             $categories = [];

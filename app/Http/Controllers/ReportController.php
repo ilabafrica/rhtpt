@@ -9,6 +9,7 @@ use App\Facility;
 
 use DB;
 use Excel;
+use App;
 
 class ReportController extends Controller
 {

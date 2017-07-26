@@ -339,7 +339,6 @@ class UserController extends Controller
         $error = ['error' => 'No results found, please try with different keywords.'];
         $role_id = Role::idByName('Participant');
         $ids = DB::table('role_user')->where('role_id', $role_id)->pluck('user_id');
-        dd($ids);
         $usrs = User::whereIn('id', $ids)->whereNotNull('uid')->latest()->paginate(5);
         if($request->has('q')) 
         {
@@ -581,7 +580,7 @@ class UserController extends Controller
                     {
                         if(strcmp($mike, "tester_name") === 0)
                             $tname = $ross;
-                        if(strcmp($mike, "id_no") === 0)
+                        if(strcmp($mike, "bar_code") === 0)
                             $tuid = $ross;
                         if(strcmp($mike, "program") === 0)
                             $tprogram = $ross;
@@ -592,7 +591,7 @@ class UserController extends Controller
                         if(strcmp($mike, "email") === 0)
                             $temail = $ross;
                     }
-                    if(!empty($tphone))
+                    if(count($tphone) != 0)
                     {
                         $tphone = ltrim($tphone, '0');
                         $tphone = "+254".$tphone;
@@ -604,22 +603,22 @@ class UserController extends Controller
                     $program_id = Program::idByTitle(trim($tprogram));
                     $role_id = Role::idByName('Participant');
                     //  Prepare to save participant details
-                    $tester_id = User::idByUID(trim($tuid));
-                    if(!$tester_id)
-                    {
-                        $tester = new User;
-                        $tester->password = User::DEFAULT_PASSWORD;
-                    }
+                    //$tester_id = User::idByName($tname);
+                    /*if(!$tester_id)
+                        $tester_id = User::idByEmail($temail);*/
+                    // if(!$tester_id)
+                    // {
+                    $tester = new User;
+                    $tester->password = Hash::make(User::DEFAULT_PASSWORD);
+                    /*}
                     else
-                        $tester = User::find($tester_id);
+                        $tester = User::find($tester_id);*/
                     $tester->name = $tname;
                     $tester->gender = User::MALE;
                     $tester->email = $temail;
                     $tester->phone = $tphone;
                     $tester->username = $tuid;
-                    $tester->save();
-                    $tester->username = $tester->id;
-                    $tester->uid = $tester->id;
+                    $tester->uid = $tuid;
                     $tester->save();
                     //  prepare to save role-user
                     $ru = DB::table('role_user')->where('user_id', $tester->id)->where('role_id', $role_id)->count();
