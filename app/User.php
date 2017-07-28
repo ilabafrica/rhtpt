@@ -299,4 +299,19 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     {
         return url('/email/verify/' . $this->verification_code);
     }
+    /**
+    * Return user designation
+    *
+    */
+    public function designation($des)
+    {
+        if($des == User::NURSE)
+            return "Nurse";
+        else if($des == User::LABTECH)
+            return "Lab Tech.";
+        else if($des == User::COUNSELLOR)
+            return "Counsellor";
+        else if($des == User::RCO)
+            return "RCO";
+    }
 }

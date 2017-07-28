@@ -9,23 +9,26 @@
         </ol>
     </div>
 </div>
-<div class="" id="manage-user">
+<div class="" id="manage-participant">
     <!-- User Listing -->
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left col-md-9">
-                <h5><i class="fa fa-book"></i> {!! trans_choice('messages.user', 2) !!}
-        
-                @permission('create-user')
-                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-user" >
-                        <i class="fa fa-plus-circle"></i>
-                        {!! trans('messages.add') !!}
-                    </button>
-                @endpermission
+                <h5><i class="fa fa-book"></i> {!! trans_choice('messages.user', 2) !!}        
+                
                     <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
                     </a>
+                @permission('create-user')
+                    <a class="btn btn-sm btn-concrete" href="/Registration.xlsx">
+                        <i class="fa fa-download"></i>
+                        Worksheet
+                    </a>
+                    <button class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#batch-registration"><i class="fa fa-level-up"></i> Batch Reg.</button>
+                    <button class="btn btn-sm btn-nephritis" id="import" data-toggle="modal" data-target="#import-user-list"><i class="fa fa-level-down"></i> Import Users</button>
+                @endpermission
+                	<button class="btn btn-sm btn-registered" @click="registered"><i class="fa fa-address-card"></i> Self</button>
                 </h5>
             </div>
             <div class="col-md-3">

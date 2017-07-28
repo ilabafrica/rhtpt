@@ -186,7 +186,7 @@ new Vue({
             });
         },
 
-        loadParticipants: function(page) {
+        /*loadParticipants: function() {
             this.$http.get('/parts').then((response) => {
                 this.participants = response.data.data.data;
                 this.pagination = response.data.pagination;
@@ -194,7 +194,7 @@ new Vue({
                 // 
             });
         },
-
+*/
         enrolParticipants: function(){
 		    let myForm = document.getElementById('partFrm');
             let formData = new FormData(myForm);
@@ -245,7 +245,8 @@ new Vue({
             });*/
         },
 
-        fileChanged(e){
+        fileChanged(e)
+        {
             console.log(e.target.files[0]);
             var fileReader = new FileReader();
             fileReader.readAsDataURL(e.target.files[0]);
@@ -253,18 +254,15 @@ new Vue({
                 this.uploadify.excel = e.target.result;
             }
         },
+
+        downloadTesters(round) 
+        {
+        	let id = round.id;
+            this.$http.get('/download/'+id).then((response) => {
+                toastr.success('File Downloaded Successfully.', 'Success Alert', {timeOut: 5000});
+            }, (response) => {
+                // 
+            });
+        },
     }
-});
-//  Normal js
-//  Triggered when modal is about to be shown
-$('#enrol-participants').on('show.bs.modal', function(e) 
-{
-    //  Get round-id of the clicked element
-    let id = $(e.relatedTarget).data('fk');
-    // console.log(id);
-    //  Populate the hidden field
-    //  $( "#shipment-id" ).val(id);
-    $( "#round-id" ).attr('value', id);
-    $( "#round-id" ).trigger('change');
-    //console.log($("#round-id").val());
 });

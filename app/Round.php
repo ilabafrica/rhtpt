@@ -31,24 +31,24 @@ class Round extends Model
 	*/
 	public static function idByTitle($title=NULL)
 	{
-		if($title!=NULL)
-		{
-			try 
-			{
-				$round = Round::where('name', $title)->orderBy('name', 'asc')->firstOrFail();
-				return $round->id;
-			} 
-			catch (ModelNotFoundException $e) 
-			{
-				Log::error("The round ` $title ` does not exist:  ". $e->getMessage());
-				//TODO: send email?
-				return null;
-			}
-		}
-		else
-		{
-			return null;
-		}
+  		if($title!=NULL)
+  		{
+    			try 
+    			{
+      				$round = Round::where('name', $title)->orderBy('name', 'asc')->firstOrFail();
+      				return $round->id;
+    			} 
+    			catch (ModelNotFoundException $e) 
+    			{
+      				Log::error("The round ` $title ` does not exist:  ". $e->getMessage());
+      				//TODO: send email?
+      				return null;
+    			}
+  		}
+  		else
+  		{
+  			 return null;
+  		}
 	}
     /**
   	 * Constants for durations
@@ -62,4 +62,9 @@ class Round extends Model
   	const SIX = 6;
   	const SEVEN = 7;
   	const EIGHT = 8;
+    /**
+     * Function to check if round has enrolments
+     *
+     */
+
 }

@@ -411,6 +411,15 @@ Route::group(['middleware' => 'auth'], function()
         "uses"  =>  "UserController@importUserList"
     ));
 
+    Route::get("/download/{id}", array(
+        "as"   => "testers.download",
+        "uses" => "RoundController@testerSummary"
+    ));
+
+    Route::get('participant', 'ParticipantController@manageParticipant');
+    Route::resource('vueparticipants','ParticipantController');
+    Route::any('vueparticipants/{id}/restore','ParticipantController@restore');
+
     Route::get('api/search_role',['as'=>'role.search', 'uses'=>'RoleController@index']);
     Route::get('api/search_material',['as'=>'material.search', 'uses'=>'MaterialController@index']);
     Route::get('api/search_option',['as'=>'option.search', 'uses'=>'OptionController@index']);
@@ -425,7 +434,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_field',['as'=>'field.search', 'uses'=>'FieldController@index']);
     Route::get('api/search_facility',['as'=>'facility.search', 'uses'=>'FacilityController@index']);
     Route::get('api/search_expected',['as'=>'expected.search', 'uses'=>'ExpectedController@index']);
-    Route::get('api/search_participant',['as'=>'participant.search', 'uses'=>'UserController@participant']);
+    Route::get('api/search_participant',['as'=>'participant.search', 'uses'=>'ParticipantController@index']);
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
     Route::get('api/search_parts',['as'=>'participants.search', 'uses'=>'UserController@forEnrol']);
 });

@@ -157,12 +157,15 @@
                     </li>
                     @endpermission
                     @permission('user-management')
-                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('user'), strtolower('role'), strtolower('permission'), strtolower('assign'), strtolower('self')])?' '.strtolower(trans('messages.active')):'' !!}">
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('user'), strtolower('role'), strtolower('permission'), strtolower('assign'), strtolower('self'), strtolower('participant')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-users"></i> {!! trans('messages.user-management') !!}</a>
                         <ul class="list-unstyled">
                             @permission('read-user')
                             <li class="{!! Request::segment(1)==strtolower('user')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('user') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.user', 2) !!}</a>
+                            </li>
+                            <li class="{!! Request::segment(1)==strtolower('participant')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('participant') !!}"><i class="fa fa-bookmark"></i> {!! 'Participants' !!}</a>
                             </li>
                             @endpermission
                             @permission('read-role')
@@ -290,6 +293,8 @@
         <script src="{{ asset('controllers/facility.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('user'))
         <script src="{{ asset('controllers/user.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('participant'))
+        <script src="{{ asset('controllers/participant.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('material'))
         <script src="{{ asset('controllers/material.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('panel'))

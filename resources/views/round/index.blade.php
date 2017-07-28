@@ -27,7 +27,7 @@
                         {!! trans('messages.back') !!}
                     </a>
                 @permission('enrol-participants')
-                    <a class="btn btn-sm btn-concrete" href="/Enrollment.xlsx">
+                    <a style="display: none;" class="btn btn-sm btn-concrete" href="/Enrollment.xlsx">
                         <i class="fa fa-download"></i>
                         Worksheet
                     </a>
@@ -68,9 +68,9 @@
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             @permission('enrol-participants')
-                <button v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id" @click.prevent="loadParticipants(1)"><i class="fa fa-send"></i> Enrol</button>
+                <button v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" style="display:none;" :data-fk="round.id" @click.prevent="loadParticipants(1)"><i class="fa fa-send"></i> Enrol</button>
+                <a v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" :href="'/download/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i> Summary Workbook</a>
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
-                <button v-if="!round.deleted_at" class="btn btn-sm btn-amethyst"  id="enrolled" @click.prevent="loadEnrollments(round)"><i class="fa fa-folder-open"></i> Summary</button>
             @endpermission
             </td>
         </tr>

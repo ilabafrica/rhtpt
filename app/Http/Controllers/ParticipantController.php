@@ -25,12 +25,12 @@ use Excel;
 use App;
 use File;
 
-class UserController extends Controller
+class ParticipantController extends Controller
 {
 
-    public function manageUser()
+    public function manageParticipant()
     {
-        return view('user.index');
+        return view('participant.index');
     }
 
     /**
@@ -41,7 +41,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $users = User::whereNull('uid')->latest()->withTrashed()->paginate(5);
+        $users = User::whereNotNull('uid')->latest()->withTrashed()->paginate(5);
         if(Auth::user()->isCountyCoordinator())
         {
             $users = County::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
