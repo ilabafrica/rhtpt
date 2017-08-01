@@ -183,7 +183,7 @@ class ResultController extends Controller
             'round' => $round,
             'results' => $results
         ];
-
+        dd($response);
         return response()->json($response);
     }
     /*

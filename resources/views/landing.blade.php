@@ -38,13 +38,13 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item active"><a class="nav-link" href="#">Summary <span class="sr-only">(current)</span></a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Performance</a></li>
+                        <li style="display: none;" class="nav-item"><a class="nav-link" href="#">Performance</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Trends</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Drilldown</a></li>
+                        <li style="display: none;" class="nav-item"><a class="nav-link" href="#">Drilldown</a></li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item"><a class="nav-link" href="" data-target="#myModal" data-toggle="modal"><i class="fa fa-user-circle"></i> Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="" data-target="#myModal" data-toggle="modal"><i class="fa fa-user-circle"></i> Register</a></li>
+                        <li class="nav-item"><a href="{{ 'login' }}" class="nav-link" href="" data-target="#myModal" data-toggle="modal"><i class="fa fa-user-circle"></i> Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ 'signup' }}" data-target="#myModal" data-toggle="modal"><i class="fa fa-user-circle"></i> Register</a></li>
                     </ul>
                 </div>
             </nav>
@@ -57,7 +57,7 @@
                                 <div class="rotate">
                                     <i class="fa fa-user fa-5x"></i>
                                 </div>
-                                <h6 class="text-uppercase">Programs</h6>
+                                <h6 class="text-uppercase">Participants</h6>
                                 <h1 class="display-1">134</h1>
                             </div>
                         </div>
@@ -119,46 +119,30 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <div class="card">
                             <div class="card-block">
                                 <div id="gContainer" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <div class="card">
                             <div class="card-block">
                                 <div id="pContainer" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="card">
-                            <div class="card-block">
-                                <div id="sContainer" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="row" style="padding-top:10px;">
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <div class="card">
                             <div class="card-block">
                                 <div id="fContainer" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="card">
-                            <div class="card-block">
-                                <h3 class="card-title">Special title treatment</h3>
-                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <div class="card">
                             <div class="card-block">
                                 <h3 class="card-title">Special title treatment</h3>
