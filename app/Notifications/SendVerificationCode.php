@@ -45,7 +45,7 @@ class SendVerificationCode extends Notification
         return (new MailMessage)
             ->line('You have been registered with the Kenya National Rapid HIV Proficiency Testing Program. Please click on the button below to verify your email address.')
             ->subject('Email Verification')
-            ->action('Verify Email', url('/email/verify/' . $this->user->verification_code))
+            ->action('Verify Email', url('/email/verify/' . $this->user->email_verification_code))
             ->line('Thank you for using our application!');
     }
 

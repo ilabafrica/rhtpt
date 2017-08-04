@@ -98,10 +98,13 @@ class ParticipantController extends Controller
                 $user->sub_county = $facility->subCounty->id;
                 $user->county = $facility->subCounty->county->id;
 
+                $user->mfl = $facility->code;
                 $user->fac = $facility->name;
                 $user->prog = Program::find($user->ru()->program_id)->name;
                 $user->sub = $facility->subCounty->name;
                 $user->kaunti = $facility->subCounty->county->name;
+                $user->des = $user->designation($user->ru()->designation);
+                $user->gndr = $user->sex($user->gender);
             }
             else
             {
@@ -221,6 +224,7 @@ class ParticipantController extends Controller
             {
                 $tier = $request->facility_id;
             }
+            DB::table('role_user')->where('user_id', $id)->where('role_id', $role)->delete();
             $ru = DB::table('role_user')->insert(["user_id" => $id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
         }
         return response()->json($edit);
@@ -246,7 +250,7 @@ class ParticipantController extends Controller
      */
     public function restore($id) 
     {
-        $user = User::withTrashed()->find($id)->restore();
+        $user = User::withTrashed()->where('id', $id)->restore();
         return response()->json(['done']);
     }
     /**
@@ -853,6 +857,42 @@ class ParticipantController extends Controller
         }
         return redirect()->to('login')
                 ->with('warning', "Your token is invalid.");
+    }
+    /**
+     *   Function to approve participant
+     */
+    public function approve(Request $request)
+    {
+        $userId = $request->id;
+        $user = User::withTrashed()->where('id', $userId);
+        //  Assign UID and restore
+        $user->restore();
+        $user = User::find($userId);
+        $max = $user->id;
+        $user->uid = $max;
+        $user->username = $max;
+        $user->save();
+        //  Bulk-sms settings
+        $api = DB::table('bulk_sms_settings')->first();
+        $username   = $api->username;
+        $apikey     = $api->api_key;
+        //  Remove beginning 0 and append +254
+        $phone = ltrim($user->phone, '0');
+        $recipient = "+254".$phone;
+        $message    = "Dear ".$user->name.", your PT request is approved. Your Unique ID is ".$user->uid." and the default password is 'secret'";
+        // Create a new instance of our awesome gateway class
+        $gateway    = new Bulk($username, $apikey);
+        try 
+        { 
+            // Specified sender-id
+            $from = $api->code;
+            // Send message
+            $result = $gateway->sendMessage($recipient, $message);
+        }
+        catch ( AfricasTalkingGatewayException $e )
+        {
+            echo "Encountered an error while sending: ".$e->getMessage();
+        }  
     }
 }
 $excel = App::make('excel');

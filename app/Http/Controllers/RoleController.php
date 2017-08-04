@@ -106,4 +106,15 @@ class RoleController extends Controller
         }
         return $response;
     }
+    //  Fetch roles for user-assignment
+    public function usrRoles()
+    {
+        $roles = Role::where('id', '!=', Role::idByName("Participant"))->pluck('name', 'id');
+        $response = [];
+        foreach($roles as $key => $value)
+        {
+            $response[] = ['id' => $key, 'value' => $value];
+        }
+        return $response;
+    }
 }

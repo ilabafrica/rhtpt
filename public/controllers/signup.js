@@ -31,8 +31,9 @@ new Vue({
                 this.$http.post('/register', input).then((response) => {
                     this.newParticipant = {'name':'','gender':'','email':'','phone':'','address':'','program':'','designation':'','county':'','sub_county':'','mfl_code':'','facility':'','in_charge':'','in_charge_email':'','in_charge_phone':''};
                     this.phone = response.data.phone;
-                    location.href = '/2fa';
+                    // location.href = '/2fa';
                     toastr.success('Registered Successfully.', 'Success Alert', {timeOut: 5000});
+                    window.location.replace("/2fa");
                 }, (response) => {
                 });
             }).catch(() => {
@@ -97,6 +98,7 @@ new Vue({
                 {
                     this.success = response.data.success;
                     toastr.success(this.success, 'Success Alert', {timeOut: 7000});
+                    window.location.replace("/login");
                 }
             });
         },

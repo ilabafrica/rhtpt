@@ -49,9 +49,9 @@ class PermissionController extends Controller
      *
      * @return Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        $arrayPermissionRoleMapping = Input::get('permissionRoles');
+        $arrayPermissionRoleMapping = $request->permissionRoles;
         $permissions = Permission::all();
         $roles = Role::all();
         foreach ($permissions as $permission) 

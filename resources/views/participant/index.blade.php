@@ -76,7 +76,7 @@
             @permission('transfer-user') 
                 <button style="display: none;" v-if="user.uid" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
             @endpermission
-            	<button v-if="user.sms_code" v-if="!user.deleted_at" class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
+            	<button v-if="user.email_verified==1" v-if="user.phone_verified==1" v-if="user.deleted_at" class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
             </td>
         </tr>
     </table>
@@ -265,7 +265,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone number') }" for="phone number">Phone Number:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone number') }" name="phone number" type="text" v-model="fillUser.phone"/>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone number') }" name="phone number" type="text" v-model="fillUser.phone"/>
                                         <span v-show="errors.has('phone number')" class="help is-danger">@{{ errors.first('phone number') }}</span>
                                     </div>
                                 </div>
@@ -284,26 +284,18 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('gender') }" for="tester id">Role:</label>
+                                    <label class="col-sm-4 form-control-label" for="role">Role:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="role in roles">
                                             <label class="form-radio-label">
-                                                <input v-validate="'required'" type="radio" :value="role.id" v-model="fillUser.role" name="role" :class="{'input': true, 'is-danger': errors.has('gender') }">
+                                                <input v-validate="'required'" type="radio" :value="role.id" v-model="fillUser.role" name="role" disabled>
                                                 @{{ role.value }}
                                             </label>
                                         </div>
                                         <span v-show="errors.has('role')" class="help is-danger">@{{ errors.first('role') }}</span>
                                     </div>
                                 </div>
-                                <div class="form-group row" v-if="newUser.role == 3">
-                                    <label class="col-sm-4 form-control-label" for="title">Counties:</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" name="jimbo" multiple v-model="fillUser.jimbo">
-                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option> 
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row" v-if="fillUser.role == 4 || fillUser.role == 6 || fillUser.role == 7">
+                                <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">County:</label>
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs()" v-model="fillUser.county_id">
@@ -312,7 +304,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group row" v-if="fillUser.role == 6 || fillUser.role == 7">
+                                <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="sub_id" id="sub_id" @change="fetchFacilities" v-model="fillUser.sub_id">
@@ -321,7 +313,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group row" v-if="newUser.role == 6">
+                                <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">Facility:</label>
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="facility_id" v-model="fillUser.facility_id">
@@ -330,7 +322,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group row" v-if="newUser.role == 2">
+                                <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">Program:</label>
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="program_id" v-model="fillUser.program_id">
@@ -339,12 +331,11 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div v-if="newUser.role != 2">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 form-control-label" for="title">Username:</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" name="username" class="form-control" v-model="fillUser.username" />
-                                        </div>
+                                
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Unique ID:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="username" class="form-control" v-model="fillUser.username" />
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
@@ -414,6 +405,75 @@
                             </div>
                         </form>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Approve user for authorization -->
+    <div class="modal fade" id="approve-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Approve Participant</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="approveUser(someUser.id)">
+                        <div class="row">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Name</strong></td>
+                                        <td>@{{someUser.name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Gender</strong></td>
+                                        <td>@{{someUser.gender}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Phone</strong></td>
+                                        <td>@{{someUser.phone}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Email</strong></td>
+                                        <td>@{{someUser.email}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Address</strong></td>
+                                        <td>@{{someUser.address}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>County</strong></td>
+                                        <td>@{{someUser.county}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Sub-County</strong></td>
+                                        <td>@{{someUser.sub_county}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>MFL</strong></td>
+                                        <td>@{{someUser.mfl}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Facility</strong></td>
+                                        <td>@{{someUser.facility}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Program</strong></td>
+                                        <td>@{{someUser.program}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Designation</strong></td>
+                                        <td>@{{someUser.designation}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="form-group row col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Confirm</button>
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

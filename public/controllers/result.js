@@ -107,6 +107,7 @@ new Vue({
             //    Fetch the result using the id
             let id = result.id;
             this.$http.get('/pt/'+id).then((response) => {
+                console.log(response.data);
                 this.frmData = response.data;
             });
             $("#edit-result").modal('show');

@@ -183,7 +183,7 @@ new Vue({
         },
         //    Populate roles from RoleController
         loadRoles: function() {
-            this.$http.get('/priv').then((response) => { 
+            this.$http.get('/privs').then((response) => { 
                 this.roles = response.data;
             }, (response) => {
                 // console.log(response);
