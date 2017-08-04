@@ -108,7 +108,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRound('create_round')" id="create_round">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRound('create_round')" id="create_round" data-vv-scope ='create_round'>
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Title:</label>
