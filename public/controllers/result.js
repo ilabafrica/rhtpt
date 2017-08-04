@@ -74,12 +74,21 @@ new Vue({
 
         createResult: function(scope){
             this.$validator.validateAll(scope).then(() => {
+                var input = this.newLot;
           		let myForm = document.getElementById('test_results');
                 let formData = new FormData(myForm);
           		this.$http.post('/vueresults', formData).then((response) => {
+                    if(response.data == 'error')
+                {
+                    this.error = response.data;
+                    toastr.error(this.error, 'Select a valid PT Round', {timeOut: 5000});
+                }
+                else
+                {
         		    this.changePage(this.pagination.current_page);
           			$("#create-result").modal('hide');
           			toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
+                }
           		}, (response) => {
       			    this.formErrors = response.data;
           	    });

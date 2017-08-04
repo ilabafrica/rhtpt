@@ -104,6 +104,8 @@ class RegisterController extends Controller
         if(!$userId)
             $userId = User::idByEmail($request->email);
         if(!$userId)
+            $userId = User::idByUsername($request->username);
+        if(!$userId)
         {
             $user = new User;
             $user->name = $request->name;

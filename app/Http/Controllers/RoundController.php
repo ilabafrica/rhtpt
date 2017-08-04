@@ -381,67 +381,14 @@ class RoundController extends Controller
                 $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
                 $testers = Enrol::where('round_id', $rId)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
                 $testers = implode(",", $testers);
-                $data = DB::select("SELECT u.name AS 'TESTER NAME', u.uid AS 'TESTER UNIQUE ID', u.phone AS 'TESTER PHONE', u.email AS 'TESTER EMAIL', p.name AS 'PROGRAM', ru.designation AS 'DESIGNATION', f.name AS 'FACILITY', f.code AS 'MFL CODE', f.in_charge AS 'IN CHARGE', f.in_charge_phone AS 'IN CHARGE PHONE', f.in_charge_email AS 'IN CHARGE EMAIL' FROM users u, facilities f, role_user ru, programs p WHERE u.id = ru.user_id AND ru.tier = f.id AND ru.program_id = p.id AND u.id IN (".$testers.") ORDER BY u.uid ASC;");
+
                 $summary = [];
-                foreach($data as $key => $value)
-                {
-                    $tname = NULL;
-                    $tuid = NULL;
-                    $tname = NULL;
-                    $tphone = NULL;
-                    $temail = NULL;
-                    $tprog = NULL;
-                    $tdes = NULL;
-                    $facility = NULL;
-                    $mfl = NULL;
-                    $icharge = NULL;
-                    $iphone = NULL;
-                    $iemail = NULL;
-                    foreach($value as $mike => $ross)
-                    {
-                        if(strcasecmp("TESTER NAME", $mike) == 0)
-                            $tname = $ross;
-                        if(strcasecmp("TESTER UNIQUE ID", $mike) == 0)
-                            $tuid = $ross;
-                        if(strcasecmp("TESTER PHONE", $mike) == 0)
-                            $tphone = $ross;
-                        if(strcasecmp("TESTER EMAIL", $mike) == 0)
-                            $temail = $ross;
-                        if(strcasecmp("PROGRAM", $mike) == 0)
-                            $tprog = $ross;
-                        if(strcasecmp("DESIGNATION", $mike) == 0)
-                            $tdes = User::designation($ross);
-                        if(strcasecmp("FACILITY", $mike) == 0)
-                            $facility = $ross;
-                        if(strcasecmp("MFL CODE", $mike) == 0)
-                            $mfl = $ross;
-                        if(strcasecmp("IN CHARGE", $mike) == 0)
-                            $icharge = $ross;
-                        if(strcasecmp("IN CHARGE PHONE", $mike) == 0)
-                            $iphone = $ross;
-                        if(strcasecmp("IN CHARGE EMAIL", $mike) == 0)
-                            $iemail = $ross;
-                    }
-                    $summary[] = ['TESTER NAME' => $tname, 'TESTER UNIQUE ID' => $tuid, 'TESTER PHONE' => $tphone, 'TESTER EMAIL' => $temail, 'PROGRAM' => $tprog, 'DESIGNATION' => $tdes, 'FACILITY' => $facility, 'MFL CODE' => $mfl, 'IN CHARGE' => $icharge, 'IN CHARGE PHONE' => $iphone, 'IN CHARGE EMAIL' => $iemail];                   
-                }
-                $excel->sheet($sheetTitle, function($sheet) use ($summary) {
-                    $sheet->fromArray($summary);
-                });
-            }
-            else
-            {
-                $counties = County::all();
-                foreach($counties as $county)
-                {
-                    $sheetTitle = $county->name;
-                    $fIds = $county->facilities()->pluck('id');
-                    $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
-                    $testers = Enrol::where('round_id', $roundId)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
-                    $testers = implode(",", $testers);
-                    $data = DB::select("SELECT u.name AS 'TESTER NAME', u.uid AS 'TESTER UNIQUE ID', u.phone AS 'TESTER PHONE', u.email AS 'TESTER EMAIL', p.name AS 'PROGRAM', ru.designation AS 'DESIGNATION', f.name AS 'FACILITY', f.code AS 'MFL CODE', f.in_charge AS 'IN CHARGE', f.in_charge_phone AS 'IN CHARGE PHONE', f.in_charge_email AS 'IN CHARGE EMAIL' FROM users u, facilities f, role_user ru WHERE u.id = ru.user_id AND ru.tier = f.id AND u.id IN (".$testers.") ORDER BY u.uid ASC;");
-                    // dd($data);
-                    //  create assotiative array
-                    $summary = [];
+
+                if (empty($testers)) {
+                   $summary[] = ['TESTER NAME' => '', 'TESTER UNIQUE ID' => '', 'TESTER PHONE' => '', 'TESTER EMAIL' => '', 'PROGRAM' => '', 'DESIGNATION' => '', 'FACILITY' => '', 'MFL CODE' => '', 'IN CHARGE' => '', 'IN CHARGE PHONE' => '', 'IN CHARGE EMAIL' => '']; 
+                }else{
+                    $data = DB::select("SELECT u.name AS 'TESTER NAME', u.uid AS 'TESTER UNIQUE ID', u.phone AS 'TESTER PHONE', u.email AS 'TESTER EMAIL', p.name AS 'PROGRAM', ru.designation AS 'DESIGNATION', f.name AS 'FACILITY', f.code AS 'MFL CODE', f.in_charge AS 'IN CHARGE', f.in_charge_phone AS 'IN CHARGE PHONE', f.in_charge_email AS 'IN CHARGE EMAIL' FROM users u, facilities f, role_user ru, programs p WHERE u.id = ru.user_id AND ru.tier = f.id AND ru.program_id = p.id AND u.id IN (".$testers.") ORDER BY u.uid ASC;");
+                    
                     foreach($data as $key => $value)
                     {
                         $tname = NULL;
@@ -482,6 +429,72 @@ class RoundController extends Controller
                                 $iemail = $ross;
                         }
                         $summary[] = ['TESTER NAME' => $tname, 'TESTER UNIQUE ID' => $tuid, 'TESTER PHONE' => $tphone, 'TESTER EMAIL' => $temail, 'PROGRAM' => $tprog, 'DESIGNATION' => $tdes, 'FACILITY' => $facility, 'MFL CODE' => $mfl, 'IN CHARGE' => $icharge, 'IN CHARGE PHONE' => $iphone, 'IN CHARGE EMAIL' => $iemail];                   
+                    }
+                }
+                $excel->sheet($sheetTitle, function($sheet) use ($summary) {
+                    $sheet->fromArray($summary);
+                });
+            }
+            else
+            {
+                $counties = County::all();
+                foreach($counties as $county)
+                {
+                    $sheetTitle = $county->name;
+                    $fIds = $county->facilities()->pluck('id');
+                    $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
+                    $testers = Enrol::where('round_id', $roundId)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
+               
+                    $testers = implode(",", $testers);
+
+                    if (empty($testers)) {
+                       $summary[] = ['TESTER NAME' => '', 'TESTER UNIQUE ID' => '', 'TESTER PHONE' => '', 'TESTER EMAIL' => '', 'PROGRAM' => '', 'DESIGNATION' => '', 'FACILITY' => '', 'MFL CODE' => '', 'IN CHARGE' => '', 'IN CHARGE PHONE' => '', 'IN CHARGE EMAIL' => '']; 
+                    }else{
+                        $data = DB::select("SELECT u.name AS 'TESTER NAME', u.uid AS 'TESTER UNIQUE ID', u.phone AS 'TESTER PHONE', u.email AS 'TESTER EMAIL', p.name AS 'PROGRAM', ru.designation AS 'DESIGNATION', f.name AS 'FACILITY', f.code AS 'MFL CODE', f.in_charge AS 'IN CHARGE', f.in_charge_phone AS 'IN CHARGE PHONE', f.in_charge_email AS 'IN CHARGE EMAIL' FROM users u, facilities f, role_user ru WHERE u.id = ru.user_id AND ru.tier = f.id AND u.id IN (".$testers.") ORDER BY u.uid ASC;");
+                        // dd($data);
+                        //  create assotiative array
+                        $summary = [];
+                        foreach($data as $key => $value)
+                        {
+                            $tname = NULL;
+                            $tuid = NULL;
+                            $tname = NULL;
+                            $tphone = NULL;
+                            $temail = NULL;
+                            $tprog = NULL;
+                            $tdes = NULL;
+                            $facility = NULL;
+                            $mfl = NULL;
+                            $icharge = NULL;
+                            $iphone = NULL;
+                            $iemail = NULL;
+                            foreach($value as $mike => $ross)
+                            {
+                                if(strcasecmp("TESTER NAME", $mike) == 0)
+                                    $tname = $ross;
+                                if(strcasecmp("TESTER UNIQUE ID", $mike) == 0)
+                                    $tuid = $ross;
+                                if(strcasecmp("TESTER PHONE", $mike) == 0)
+                                    $tphone = $ross;
+                                if(strcasecmp("TESTER EMAIL", $mike) == 0)
+                                    $temail = $ross;
+                                if(strcasecmp("PROGRAM", $mike) == 0)
+                                    $tprog = $ross;
+                                if(strcasecmp("DESIGNATION", $mike) == 0)
+                                    $tdes = User::designation($ross);
+                                if(strcasecmp("FACILITY", $mike) == 0)
+                                    $facility = $ross;
+                                if(strcasecmp("MFL CODE", $mike) == 0)
+                                    $mfl = $ross;
+                                if(strcasecmp("IN CHARGE", $mike) == 0)
+                                    $icharge = $ross;
+                                if(strcasecmp("IN CHARGE PHONE", $mike) == 0)
+                                    $iphone = $ross;
+                                if(strcasecmp("IN CHARGE EMAIL", $mike) == 0)
+                                    $iemail = $ross;
+                            }
+                            $summary[] = ['TESTER NAME' => $tname, 'TESTER UNIQUE ID' => $tuid, 'TESTER PHONE' => $tphone, 'TESTER EMAIL' => $temail, 'PROGRAM' => $tprog, 'DESIGNATION' => $tdes, 'FACILITY' => $facility, 'MFL CODE' => $mfl, 'IN CHARGE' => $icharge, 'IN CHARGE PHONE' => $iphone, 'IN CHARGE EMAIL' => $iemail];                   
+                        }
                     }
                     $excel->sheet($sheetTitle, function($sheet) use ($summary) {
                         $sheet->fromArray($summary);

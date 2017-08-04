@@ -288,6 +288,39 @@ EntrustUserTrait::restore insteadof SoftDeletes;
         }
     }
     /**
+    * Return User ID given the email
+    *
+    */
+    public static function idByUsername($username=NULL)
+    {
+        if($username!=NULL)
+        {
+            try 
+            {
+                $count = User::where('username', $username)->count();
+                if($count > 0)
+                {
+                    $user = User::where('username', $username)->orderBy('name', 'asc')->first();
+                    return $user->id;
+                }
+                else
+                {
+                    return null;
+                }
+            } 
+            catch (ModelNotFoundException $e) 
+            {
+                Log::error("The user with username ` $username ` does not exist:  ". $e->getMessage());
+                //TODO: send username?
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+    /**
     * Pt relationship
     *
     */

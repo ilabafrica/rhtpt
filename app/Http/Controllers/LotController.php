@@ -57,13 +57,22 @@ class LotController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $lot = new Lot;
-        $lot->round_id = $request->round_id;
-        $lot->lot = $request->lot;
-        $lot->tester_id = implode(", ", $request->tester_id);
-        $lot->user_id = Auth::user()->id;
-        $lot->save();
+    {   
+        // dd($request->round_id);
+
+        if ($request->round_id =="") {
+
+            return response()->json(['error']);
+            
+        } else
+        {
+            $lot = new Lot;
+            $lot->round_id = $request->round_id;
+            $lot->lot = $request->lot;
+            $lot->tester_id = implode(", ", $request->tester_id);
+            $lot->user_id = Auth::user()->id;
+            $lot->save();
+        }
 
         return response()->json($lot);
     }

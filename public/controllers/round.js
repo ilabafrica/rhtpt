@@ -68,6 +68,7 @@ new Vue({
         },
 
         createRound: function(scope){
+            
             this.$validator.validateAll(scope).then(() => {
                 var input = this.newRound;
           		this.$http.post('/vuerounds',input).then((response) => {

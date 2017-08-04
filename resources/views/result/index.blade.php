@@ -110,7 +110,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createResult('create_result')" data-vv-validate="create_result" id="test_results">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createResult('create_result')" data-vv-validate="create_result" id="test_results" data-vv-scope="create_result">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-5 form-control-label" for="title">PT Round:</label>

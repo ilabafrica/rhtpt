@@ -98,7 +98,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createPanel('create_panel')" data-vv-validate="create_panel">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createPanel('create_panel')" data-vv-validate="create_panel" data-vv-scope="create_panel">
 
                             <div class="col-md-12">
                                 <div class="form-group row">

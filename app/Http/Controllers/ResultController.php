@@ -88,6 +88,13 @@ class ResultController extends Controller
      */
     public function store(Request $request)
     {
+        // Check if round has been selected
+        if ($request->get('round_id') =="") {
+
+            return response()->json(['error']);
+            
+        } else
+        {
          //	Save pt first then proceed to save form fields
         $round_id = $request->get('round_id');
         $enrolment = Enrol::where('user_id', Auth::user()->id)->where('round_id', $round_id)->first();
@@ -165,6 +172,8 @@ class ResultController extends Controller
             }
         }
         return response()->json('Saved.');
+
+    }
     }
 
     /**
