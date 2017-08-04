@@ -19,12 +19,16 @@ Route::get('signup', function () {
     return view('auth.signup');
 });
 
-Route::get('2fa', function () {
+Route::get('/2fa', function () {
     return view('auth.2fa');
 });
 
+Route::get('/verified', function () {
+    return view('auth.verified');
+});
+
 Route::get('/email/verify/resend', 'Auth\RegisterController@resend');
-Route::get('/email/verify/{code}', 'Auth\RegisterController@verify');
+Route::get('/email/verify/{code}', 'UserController@emailVerification');
 
 Route::post('/token', 'UserController@phoneVerification');
 
@@ -358,6 +362,10 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "roles.fetch",
         "uses" => "RoleController@roles"
     ));
+    Route::get("/privs", array(
+        "as"   => "privs.fetch",
+        "uses" => "RoleController@usrRoles"
+    ));
     Route::get('report', 'ReportController@manageReport');
     Route::resource('vuereports','ReportController');
 
@@ -414,6 +422,11 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/download/{id}", array(
         "as"   => "testers.download",
         "uses" => "RoundController@testerSummary"
+    ));
+
+    Route::any("/approve/{id}", array(
+        "as"   => "approve.participant",
+        "uses" => "ParticipantController@approve"
     ));
 
     Route::get('participant', 'ParticipantController@manageParticipant');

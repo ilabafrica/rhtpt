@@ -98,8 +98,9 @@ class ResultController extends Controller
          //	Save pt first then proceed to save form fields
         $round_id = $request->get('round_id');
         $enrolment = Enrol::where('user_id', Auth::user()->id)->where('round_id', $round_id)->first();
+    
         $pt = new Pt;
-        $pt->enrolment_id = 1;//$enrolment->id;
+        $pt->enrolment_id = $enrolment->id;
         $pt->panel_status = Pt::NOT_CHECKED;
         $pt->save();
         //	Proceed to form-fields
@@ -192,7 +193,7 @@ class ResultController extends Controller
             'round' => $round,
             'results' => $results
         ];
-        dd($response);
+        // dd($response);
         return response()->json($response);
     }
     /*
@@ -264,7 +265,7 @@ class ResultController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
+        /*$this->validate($request, [
             'round_id' => 'required',
             'date_prepared' => 'required',
             'date_shipped' => 'required',
@@ -272,12 +273,37 @@ class ResultController extends Controller
             'shipper_id' => 'required',
             'facility_id' => 'required',
             'panels_shipped' => 'required',
-        ]);
-        $request->request->add(['user_id' => Auth::user()->id]);
+        ]);*/
+        $pt = Pt::find($id);
+    
+        //  Proceed to form-fields
+        foreach ($request->all() as $key => $value)
+        {
+            if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
+                continue;
+            else if(stripos($key, 'field') !==FALSE)
+            {
+                $fieldId = $this->strip($key);
+                if(is_array($value))
+                  $value = implode(', ', $value);
+                $result = new Result;
+                $result->pt_id = $pt->id;
+                $result->field_id = $fieldId;
+                $result->response = $value;
+                $result->save();
+            }
+            else if(stripos($key, 'comment') !==FALSE)
+            {
+                if($value)
+                {
+                    $result = Result::where('field_id', $key)->first();
+                    $result->comment = $value;
+                    $result->save();
+                }
+            }
+        }    
 
-        $edit = Shipment::find($id)->update($request->all());
-
-        return response()->json($edit);
+        return response()->json(["Done"]);
     }
 
     /**

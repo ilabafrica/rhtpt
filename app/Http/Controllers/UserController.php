@@ -41,73 +41,38 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $users = User::whereNull('uid')->latest()->withTrashed()->paginate(5);
+        $users = User::whereNull('uid')->whereNull('sms_code')->latest()->paginate(5);
         if(Auth::user()->isCountyCoordinator())
         {
-            $users = County::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+            $users = County::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $users = SubCounty::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+           $users = SubCounty::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $users = Facility::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+           $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
         }
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $users = User::where('name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            $users = User::where('name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
             if(Auth::user()->isCountyCoordinator())
             {
-                $users = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+                $users = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
             }
             else if(Auth::user()->isSubCountyCoordinator())
             {
-                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
             }
             else if(Auth::user()->isFacilityInCharge())
             {
-               $users = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
-            }
-        }
-        if($request->has('filter')) 
-        {
-            $search = $request->get('q');
-            $users = User::whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
-            if(Auth::user()->isCountyCoordinator())
-            {
-                $users = County::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
-            }
-            else if(Auth::user()->isSubCountyCoordinator())
-            {
-                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
-            }
-            else if(Auth::user()->isFacilityInCharge())
-            {
-               $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+               $users = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
             }
         }
         foreach($users as $user)
         {
-            if((!empty($user->uid) || !empty($user->ru()->tier)))
-            {
-                $facility = Facility::find($user->ru()->tier);
-                $user->facility = $user->ru()->tier;
-                $user->program = $user->ru()->program_id;
-                $user->sub_county = $facility->subCounty->id;
-                $user->county = $facility->subCounty->county->id;
-
-                $user->fac = $facility->name;
-                $user->prog = Program::find($user->ru()->program_id)->name;
-                $user->sub = $facility->subCounty->name;
-                $user->kaunti = $facility->subCounty->county->name;
-            }
-            else
-            {
-                $user->facility = '';
-                $user->program = '';
-            }
             !empty($user->ru())?$user->role = $user->ru()->role_id:$user->role = '';
             !empty($user->ru())?$user->rl = Role::find($user->ru()->role_id)->name:$user->rl = '';
         }
@@ -221,7 +186,7 @@ class UserController extends Controller
             {
                 $tier = $request->facility_id;
             }
-            $ru = DB::table('role_user')->insert(["user_id" => $id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
+            $ru = DB::table('role_user')->update(["user_id" => $id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
         }
         return response()->json($edit);
     }
@@ -837,22 +802,23 @@ class UserController extends Controller
      */
     public function emailVerification($token)
     {
-        $check = User::where('email_verification_code', $token)->first();
+        $check = User::where('email_verification_code', $token)->withTrashed()->first();
 
         if(!is_null($check)){
-            $user = User::find($check->id);
+            $user = User::withTrashed()->find($check->id);
 
             if($user->email_verified == 1){
-                return redirect()->to('login')
+                return redirect()->to('verified')
                     ->with('success', "Your email is already verified.");                
             }
 
-            $user->update(['email_verified' => 1]);
+            $user->email_verified = 1;
+            $user->save();
 
-            return redirect()->to('login')
-                ->with('success', "Email successfully verified.");
+            return redirect()->to('verified')
+                ->with('success', "Email successfully verified. Your ID will be sent to you shortly.");
         }
-        return redirect()->to('login')
+        return redirect()->to('verified')
                 ->with('warning', "Your token is invalid.");
     }
 }

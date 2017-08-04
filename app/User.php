@@ -338,13 +338,27 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     */
     public function designation($des)
     {
-        if($des == User::NURSE)
-            return "Nurse";
-        else if($des == User::LABTECH)
-            return "Lab Tech.";
-        else if($des == User::COUNSELLOR)
-            return "Counsellor";
-        else if($des == User::RCO)
-            return "RCO";
+        if($des)
+        {
+            if($des == User::NURSE)
+                return "Nurse";
+            else if($des == User::LABTECH)
+                return "Lab Tech.";
+            else if($des == User::COUNSELLOR)
+                return "Counsellor";
+            else if($des == User::RCO)
+                return "RCO";
+        }
+        return "N/A";
+    }
+    /**
+     * Return readable gender
+     */
+    public static function sex($gender)
+    {
+        if($gender == "Male")
+              return USER::MALE;
+          else
+              return USER::FEMALE;;
     }
 }

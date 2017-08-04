@@ -32,7 +32,7 @@ class EmailVerification extends Mailable
     {
         return $this->view('email.verification')->with(
             [
-                'verification_code' => $this->user->verification_code,
+                'verification_code' => $this->user->email_verification_code,
             ]
         );
     }

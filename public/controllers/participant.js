@@ -29,7 +29,7 @@ new Vue({
         query: '',
         formTransErrors:{},
         uploadify: {id: '', excel: ''},
-        someUser : {'facility_id':'','program_id':'','sub_county_id':'','county_id':'','facility':'','program':'','sub_county':'','county':'','in_charge':'', 'id':''},
+        someUser : {'name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
         jimbo: [],
         sexes: [],
         uploadify: {excel: ''},
@@ -354,6 +354,18 @@ new Vue({
         },
 
         openUser: function(user){
+            this.someUser.id = user.id;
+            this.someUser.name = user.name;
+            this.someUser.gender = user.gndr;
+            this.someUser.phone = user.phone;
+            this.someUser.email = user.email;
+            this.someUser.address = user.address;
+            this.someUser.county = user.kaunti;
+            this.someUser.sub_county = user.sub;
+            this.someUser.mfl = user.mfl;
+            this.someUser.facility = user.fac;
+            this.someUser.program = user.prog;
+            this.someUser.designation = user.des;
             $("#approve-user").modal('show');
         },
 
@@ -361,7 +373,7 @@ new Vue({
             var input = this.someUser;
             this.$http.put('/approve/'+id, input).then((response) => {
                 this.changePage(this.pagination.current_page);
-                this.someUser = {'facility_id':'','program_id':'','sub_county_id':'','county_id':'','facility':'','program':'','sub_county':'','county':'','in_charge':'', 'id':''};
+                this.someUser = {'name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
                 $("#approve-user").modal('hide');
                 toastr.success('User Approved Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {

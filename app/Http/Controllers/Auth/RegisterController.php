@@ -113,7 +113,6 @@ class RegisterController extends Controller
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->address = $request->address;
-            $user->designation = $request->designation;
             $user->username = $request->name;
             $user->password = Hash::make(User::DEFAULT_PASSWORD);
             $user->deleted_at = $now;
@@ -149,7 +148,7 @@ class RegisterController extends Controller
         $facilityId = $facility->id;
         //  Prepare to save role-user details
         $roleId = Role::idByName('Participant');
-        DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => $request->program]);
+        DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => $request->program, 'designation' => $request->designation]);
         /*
         *  Do SMS Verification for phone number
         */
@@ -213,7 +212,7 @@ class RegisterController extends Controller
 
     public function verify($code)
     {
-        $user = User::whereVerificationCode($code)->first();
+        $user = User::whereEmailVerificationCode($code)->first();
 
         if(!$user)
         {
