@@ -63,10 +63,10 @@
             </td>
             <td>
             @permission('view-result')
-                <button class="btn btn-sm btn-secondary" @click.prevent="viewResult(result)"><i class="fa fa-reorder"></i> View</button>	
+                <button class="btn btn-sm btn-secondary" @click.prevent="viewResult(result)" disabled><i class="fa fa-reorder"></i> View</button>	
             @endpermission
             @permission('update-result')
-                <button  v-if="result.panel_status!=3" class="btn btn-sm btn-primary" @click.prevent="editResult(result)"><i class="fa fa-edit"></i> Edit</button>
+                <button  v-if="result.panel_status!=3" class="btn btn-sm btn-primary" @click.prevent="editResult(result)" disabled><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('delete-result')
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteResult(result)"><i class="fa fa-power-off"></i> Disable</button>
@@ -197,6 +197,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateResult('update_results')" id="update_test_results" data-vv-validate="update_results">
+                            <input type="text" name="id" :value="frmData.pt">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-5 form-control-label" for="title">PT Round:</label>
@@ -233,9 +234,10 @@
                                                         <input type="text" :name="'field_'+item.id" class="form-control" :value="dt.response" />
                                                     </div>
                                                     <div v-if="item.tag == 5">
-                                                        <div class="form-radio form-radio-inline" v-for="option in item.options">
+
+                                                        <div class="form-radio radio-inline" v-for="option in item.options">
                                                             <label class="form-radio-label">
-                                                                <input type="radio" @click="specToggle()" v-bind="{ 'checked': option.id==dt.response}" :value="option.id" :name="'field_'+item.id">
+                                                                <input type="radio" :value="option.id" :name="'field_'+item.id" v-bind="{ 'checked': option.id==dt.response}"/>
                                                                 @{{ option.title }}
                                                             </label>
                                                         </div>

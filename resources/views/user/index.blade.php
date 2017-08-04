@@ -262,7 +262,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone number') }" for="phone number">Phone Number:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone number') }" name="phone number" type="text" v-model="fillUser.phone"/>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone number') }" name="phone number" type="text" v-model="fillUser.phone"/>
                                         <span v-show="errors.has('phone number')" class="help is-danger">@{{ errors.first('phone number') }}</span>
                                     </div>
                                 </div>
@@ -281,11 +281,11 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('gender') }" for="tester id">Role:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('gender') }" for="role">Role:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="role in roles">
                                             <label class="form-radio-label">
-                                                <input v-validate="'required'" type="radio" :value="role.id" v-model="fillUser.role" name="role" :class="{'input': true, 'is-danger': errors.has('gender') }">
+                                                <input v-if="role.id!=2" v-validate="'required'" type="radio" :value="role.id" v-model="fillUser.role" name="role" :class="{'input': true, 'is-danger': errors.has('role') }">
                                                 @{{ role.value }}
                                             </label>
                                         </div>
