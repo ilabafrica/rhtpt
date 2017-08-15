@@ -191,6 +191,11 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "RoundController@rounds"
     ));
 
+    Route::get("/rndsDone", array(
+        "as"   => "rnds.fetch",
+        "uses" => "RoundController@roundsDone"
+    ));
+
     Route::get("/itms", array(
         "as"   => "itms.fetch",
         "uses" => "ExpectedController@items"

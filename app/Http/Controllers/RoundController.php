@@ -129,6 +129,25 @@ class RoundController extends Controller
         return $categories;
     }
     /**
+     * Function to return list of rounds already done by a user.
+     *
+     */
+    public function roundsDone()
+    {
+        // get enrolments with no submissions
+        $ids = Auth::user()->enrol()->where('status', 0)->pluck('round_id');
+        // fetch rounds details 
+        $rounds = Round::whereIn('id', $ids)->pluck('description', 'id');
+        // format to match dropdown values
+        // dd($rounds);
+        $categories = [];
+        foreach($rounds as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
+    /**
      * Enrol a user(s).
      *
      * @param  \Illuminate\Http\Request  $request
@@ -250,10 +269,9 @@ class RoundController extends Controller
         {
             foreach ($data->toArray() as $key => $value) 
             {
-                foreach($value as $harvey => $specter)
-                {
-                    dd($specter);
-                    if(!empty($specter))
+                
+                    // dd($value);
+                    if(!empty($value))
                     {
                         $mfl = NULL;
                         $uid = NULL;
@@ -265,7 +283,7 @@ class RoundController extends Controller
                         $incharge = NULL;
                         $iphone = NULL;
                         $iemail = NULL;
-                        foreach ($specter as $mike => $ross) 
+                        foreach ($value as $mike => $ross) 
                         {
                             if(strcmp($mike, "mfl_code") === 0)
                                 $mfl = $ross;
@@ -348,7 +366,7 @@ class RoundController extends Controller
                             }
                         }
                     }
-                }
+                
             }
         }
     }
