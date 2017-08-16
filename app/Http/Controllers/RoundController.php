@@ -250,10 +250,9 @@ class RoundController extends Controller
         {
             foreach ($data->toArray() as $key => $value) 
             {
-                foreach($value as $harvey => $specter)
-                {
-                    dd($specter);
-                    if(!empty($specter))
+                
+                    // dd($value);
+                    if(!empty($value))
                     {
                         $mfl = NULL;
                         $uid = NULL;
@@ -265,7 +264,7 @@ class RoundController extends Controller
                         $incharge = NULL;
                         $iphone = NULL;
                         $iemail = NULL;
-                        foreach ($specter as $mike => $ross) 
+                        foreach ($value as $mike => $ross) 
                         {
                             if(strcmp($mike, "mfl_code") === 0)
                                 $mfl = $ross;
@@ -348,7 +347,7 @@ class RoundController extends Controller
                             }
                         }
                     }
-                }
+                
             }
         }
     }
