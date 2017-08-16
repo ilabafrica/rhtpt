@@ -41,20 +41,20 @@ class OptionTest extends TestCase
     {
         $this->loginAdmin();
         $this->visit('/vueoptions?page=1')
-            ->see('Not Done');
+            ->see('First Response');
     }
     /**
      * Test create option
      *
      * @return void
      */
-    public function testCreatePost()
+    /*public function testCreatePost()
     {
         $this->loginAdmin();
         $response = $this->json('POST', '/vueoptions/create',$this->optionData);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertArrayHasKey("subject",[$response->original]);
-    }
+    }*/
     /**
      * Test show/edit option
      *
