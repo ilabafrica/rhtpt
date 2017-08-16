@@ -97,7 +97,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createSet('create_set')" data-vv-validate="create_set">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createSet('create_set')" data-vv-validate="create_set" data-vv-scope="create_set" >
 
                             <div class="col-md-12">
                                 <div class="form-group row">

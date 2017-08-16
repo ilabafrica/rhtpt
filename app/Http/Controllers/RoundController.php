@@ -67,12 +67,21 @@ class RoundController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $request->request->add(['user_id' => Auth::user()->id]);
+    {      
+        $rounds = Round::where('name', 'LIKE', "{$request->name}")->withTrashed()->get();
 
-        $create = Round::create($request->all());
+        if ($rounds->count() > 0) {
 
-        return response()->json($create);
+            return response()->json('error');
+
+        }else{
+
+            $request->request->add(['user_id' => Auth::user()->id]);
+
+            $create = Round::create($request->all());
+
+            return response()->json($create);
+        }
     }
 
     /**
