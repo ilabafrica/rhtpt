@@ -53,7 +53,7 @@
 						</div>
 					@endif
 					<!-- Begin form fields -->
-					<div class="col-md-6">
+					<div v-cloak class="col-md-6">
 						<div class="form-group row">
                             <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Name:</label>
                             <div class="col-sm-8" :class="{ 'control': true }">
@@ -115,7 +115,7 @@
                             </div>
                         </div>
 					</div>
-					<div class="col-md-6">						
+					<div v-cloak class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('county') }" for="county">County:</label>
                             <div class="col-sm-8" :class="{ 'control': true }">

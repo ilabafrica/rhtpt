@@ -1,47 +1,74 @@
 <?php
+
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+
 use App\Option;
+
 class OptionTest extends TestCase
 {
-	use DatabaseMigrations;
-	public function setup(){
-		parent::Setup();
-		$this->setVariables();
-	}
-	public function setVariables(){
-    	$this->optionData=array(        
-			"title"=>'Sample Title',
-			"description"=>'Sample Description'
-		);
-    	$this->updatedOptionData=array(        
-			"title"=>'Updated Title',
-			"description"=>'Updated Description'
+    use DatabaseMigrations;
+    /**
+     * Variables for use in the tests
+     *
+     * @return void
+     */
+    public function setup()
+    {
+        parent::Setup();
+        $this->setVariables();
+    }
+    public function setVariables()
+    {
+        $this->optionData=array(
+        
+            "title" => "Sample Title",
+            "description" => "Sample Description",
         );
-	}
-	public function testStoreOption()
-	{
-		$response=$this->json('POST', 'vueoptions',$this->optionData);
-		$this->assertEquals(200,$response->getStatusCode());
-		$this->assertArrayHasKey("subject",[$response->original]);
-	}
-	public function testListOption()
-	{
-		$response=$this->json('GET', '/vueoptions?page=1');
-		$this->assertEquals(200,$response->getStatusCode());
-		
-	}
-	public function testUpdateOption()
-	{
-		$this->json('POST', '/vueoptions',$this->updatedOptionData);
-		$response=$this->json('PUT', '/vueoptions/1');
-		$this->assertEquals(200,$response->getStatusCode());
-		$this->assertArrayHasKey("subject",[$response->original]);
-	}
-	public function testDeleteOption()
-	{
-		$this->json('POST', '/vueoptions',$this->optionData);
-		$response=$this->delete('/vueoptions/1');
-		$this->assertEquals(200,$response->getStatusCode());		
-	}
+        $this->updatedOptionData=array(
+        
+            "title" => "Updated Title",
+            "description" => "Updated Description",
+        );
+    }
+    /**
+     * Test index options
+     *
+     * @return void
+     */
+    public function testIndex()
+    {
+        $this->loginAdmin();
+        $this->visit('/vueoptions?page=1')
+            ->see('First Response');
+    }
+    /**
+     * Test create option
+     *
+     * @return void
+     */
+    /*public function testCreatePost()
+    {
+        $this->loginAdmin();
+        $response = $this->json('POST', '/vueoptions/create',$this->optionData);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey("subject",[$response->original]);
+    }*/
+    /**
+     * Test show/edit option
+     *
+     * @return void
+     */
+    /*public function testEditOption()
+    {
+        $this->loginAdmin();
+        $this->visit('/blog/1/edit')
+            ->type('My summary', 'summary')
+            ->type('Tag5', 'tags')
+            ->press('Send')
+            ->visit('/blog/post-1')
+            ->see('My summary')
+            ->see('Tag5');
+    }*/
 }

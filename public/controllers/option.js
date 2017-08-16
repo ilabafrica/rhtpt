@@ -1,5 +1,11 @@
 Vue.http.headers.common['X-CSRF-TOKEN'] = $("#token").attr("value");
-
+Vue.http.interceptors.unshift(function(request, next) {
+    next(function(response) {
+        if(typeof response.headers['content-type'] != 'undefined') {
+            response.headers['Content-Type'] = response.headers['content-type'];
+        }
+    });
+});
 new Vue({
 
     el: '#manage-option',
@@ -56,7 +62,7 @@ new Vue({
 
         getVueOptions: function(page){
             this.$http.get('/vueoptions?page='+page).then((response) => {
-                this.options = response.data.data.data;
+                this.options = response.data.data.data.data;
                 this.pagination = response.data.pagination;
             });
         },

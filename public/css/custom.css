@@ -1228,3 +1228,7 @@ fieldset[disabled][disabled] .mbtn-group-vertical.mbtn-group-raised:focus:not(:a
 }
 .card-outline-danger{background-color:transparent;border-color:#d9534f}
 .card-outline-success{background-color:transparent;border-color:#5cb85c}
+
+[v-cloak] {
+  display:none;
+}

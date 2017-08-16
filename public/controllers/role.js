@@ -1,7 +1,12 @@
 Vue.http.headers.common['X-CSRF-TOKEN'] = $("#token").attr("value");
 
-Vue.use(VeeValidate);
-
+Vue.http.interceptors.unshift(function(request, next) {
+    next(function(response) {
+        if(typeof response.headers['content-type'] != 'undefined') {
+            response.headers['Content-Type'] = response.headers['content-type'];
+        }
+    });
+});
 
 new Vue({
 
