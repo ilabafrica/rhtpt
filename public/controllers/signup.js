@@ -21,6 +21,9 @@ new Vue({
         warning: '',
         info: '',
         success: '',
+        subs: [],
+        facilities: [],
+        formErrors:{},
     },
 
     mounted : function(){
@@ -41,6 +44,7 @@ new Vue({
                     toastr.success('Registered Successfully.', 'Success Alert', {timeOut: 5000});
                     window.location.replace("/2fa");
                 }, (response) => {
+                    this.formErrors = response.data;
                 });
             }).catch(() => {
                 toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
@@ -106,6 +110,32 @@ new Vue({
                     toastr.success(this.success, 'Success Alert', {timeOut: 7000});
                     window.location.replace("/login");
                 }
+            });
+        },
+
+        fetchSubs: function() {
+            let id = $('#county_id').val();
+            // console.log(id);
+            this.$http.get('/subs/'+id).then((response) => {
+                this.subs = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        fetchFacilities: function() {
+            let id = $('#sub_id').val();
+            this.$http.get('/mfls/'+id).then((response) => {
+                this.facilities = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        fetchFacility: function() {
+            let id = $('#mfl').val();
+            this.$http.get('/mfl/'+id).then((response) => {
+                this.newParticipant.facility = response.data;
             });
         },
     }

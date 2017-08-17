@@ -206,11 +206,6 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "FacilityController@consignment"
     ));
 
-    Route::get("/subs/{id}", array(
-        "as"   => "subs.fetch",
-        "uses" => "FacilityController@subs"
-    ));
-
     Route::get("/fclts/{id}", array(
         "as"   => "facilities.fetch",
         "uses" => "FacilityController@facilities"
@@ -451,3 +446,18 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
     Route::get('api/search_parts',['as'=>'participants.search', 'uses'=>'UserController@forEnrol']);
 });
+
+Route::get("/subs/{id}", array(
+    "as"   => "subs.fetch",
+    "uses" => "FacilityController@subs"
+));
+
+Route::get("/mfls/{id}", array(
+    "as"   => "mfls.fetch",
+    "uses" => "FacilityController@mfls"
+));
+
+Route::get("/mfl/{id}", array(
+    "as"   => "mfl.fetch",
+    "uses" => "FacilityController@mfl"
+));

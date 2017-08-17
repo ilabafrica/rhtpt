@@ -323,5 +323,27 @@ class FacilityController extends Controller
             }
         }
     }
+    /**
+     * Function to return list of mfl codes for facilities in a certain sub-county.
+     *
+     */
+    public function mfls($id)
+    {
+        $facilities = SubCounty::find($id)->facilities->pluck('code', 'id');
+        $categories = [];
+        foreach($facilities as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
+    /**
+     * Function to return facility name
+     *
+     */
+    public function mfl($id)
+    {
+        return Facility::find($id)->name;
+    }
 }
 $excel = App::make('excel');
