@@ -12,7 +12,7 @@ new Vue({
 
     data: {
         formErrors:{},
-        newParticipant : {'name':'','gender':'','email':'','phone':'','address':'','program':'','designation':'','county':'','sub_county':'','mfl_code':'','facility':'','in_charge':'','in_charge_email':'','in_charge_phone':''},
+        newParticipant : {'fname':'','oname':'','surname':'','gender':'','email':'','phone':'','address':'','program':'','designation':'','county':'','sub_county':'','mfl_code':'','facility':'','in_charge':'','in_charge_email':'','in_charge_phone':''},
         sexes: [],
         programs: [],
         counties: [],
@@ -38,7 +38,7 @@ new Vue({
             this.$validator.validateAll().then(() => {
                 var input = this.newParticipant;
                 this.$http.post('/register', input).then((response) => {
-                    this.newParticipant = {'name':'','gender':'','email':'','phone':'','address':'','program':'','designation':'','county':'','sub_county':'','mfl_code':'','facility':'','in_charge':'','in_charge_email':'','in_charge_phone':''};
+                    this.newParticipant = {'fname':'','oname':'','surname':'','gender':'','email':'','phone':'','address':'','program':'','designation':'','county':'','sub_county':'','mfl_code':'','facility':'','in_charge':'','in_charge_email':'','in_charge_phone':''};
                     this.phone = response.data.phone;
                     // location.href = '/2fa';
                     toastr.success('Registered Successfully.', 'Success Alert', {timeOut: 5000});
@@ -97,18 +97,27 @@ new Vue({
                 if(response.data.warning)
                 {
                     this.warning = response.data.warning;
-                    toastr.warning(this.warning, 'Notification', {timeOut: 5000});
+                    swal("Alert!", this.warning, "warning")
+                    // toastr.warning(this.warning, 'Notification', {timeOut: 5000});
                 }
                 else if(response.data.info)
                 {
                     this.info = response.data.info;
-                    toastr.info(this.warning, 'Notification', {timeOut: 5000});
+                    swal("Alert!", this.info, "info")
+                    // toastr.info(this.warning, 'Notification', {timeOut: 5000});
                 }
                 else if(response.data.success)
                 {
                     this.success = response.data.success;
-                    toastr.success(this.success, 'Success Alert', {timeOut: 7000});
-                    window.location.replace("/login");
+                    swal({ 
+                        title: "Success!",
+                        text: this.success,
+                        type: "success" 
+                        },
+                        function(){
+                            window.location.replace("/login");
+                        }
+                    );
                 }
             });
         },
@@ -133,6 +142,16 @@ new Vue({
         },
 
         fetchFacility: function() {
+            let id = $('#mfl').val();
+            this.$http.get('/mfl/'+id).then((response) => {
+                console.log(response);
+                this.newParticipant.facility = response.data.name;
+                this.newParticipant.sub_county = response.data.sub_county;
+                this.newParticipant.county = response.data.county;
+            });
+        },
+
+        resendVerificationCode: function() {
             let id = $('#mfl').val();
             this.$http.get('/mfl/'+id).then((response) => {
                 this.newParticipant.facility = response.data;

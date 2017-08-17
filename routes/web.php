@@ -19,9 +19,7 @@ Route::get('signup', function () {
     return view('auth.signup');
 });
 
-Route::get('/2fa', function () {
-    return view('auth.2fa');
-});
+Route::get('/2fa', 'Auth\RegisterController@twoFa');
 
 Route::get('/verified', function () {
     return view('auth.verified');

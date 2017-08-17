@@ -343,7 +343,17 @@ class FacilityController extends Controller
      */
     public function mfl($id)
     {
-        return Facility::find($id)->name;
+        $data = ["name" => "", "sub_county" => "", "county" => ""];
+        $pk = Facility::idByCode($id);
+        if($pk)
+        {
+            $facility = Facility::find($pk);
+            $name = $facility->name;
+            $subCounty = $facility->subCounty->name;
+            $county = $facility->subCounty->county->name;
+            $data = ["name" => $name, "sub_county" => $subCounty, "county" => $county];
+        }
+        return response()->json($data);
     }
 }
 $excel = App::make('excel');
