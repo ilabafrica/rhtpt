@@ -83,10 +83,6 @@ Route::group(['middleware' => 'auth'], function()
         return view('welcome');
     });
 
-    Route::get('/', function () {
-        return view('app');
-    });
-
     Route::get('panel', 'PanelController@managePanel');
     Route::resource('vuepanels','PanelController');
     Route::any('vuepanels/{id}/restore','PanelController@restore');
