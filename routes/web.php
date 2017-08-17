@@ -456,3 +456,6 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
     Route::get('api/search_parts',['as'=>'participants.search', 'uses'=>'UserController@forEnrol']);
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
