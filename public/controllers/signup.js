@@ -152,9 +152,8 @@ new Vue({
         },
 
         resendVerificationCode: function() {
-            let id = $('#mfl').val();
-            this.$http.get('/mfl/'+id).then((response) => {
-                this.newParticipant.facility = response.data;
+            this.$http.get('/resend/').then((response) => {
+                // this.newParticipant.facility = response.data;
             });
         },
     }

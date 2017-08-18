@@ -19,6 +19,7 @@ use App\County;
 use App\Program;
 use App\Round;
 
+use Mail;
 use DB;
 use Hash;
 use Auth;
@@ -244,7 +245,14 @@ class RegisterController extends Controller
 
     public function resend()
     {
+        $user = User::find(1)->toArray();
 
+        Mail::send('auth.verification', $user, function($message) use ($user) {
+            $message->to('kipropbrian@gmail.com');
+            $message->subject('E-Mail Example');
+        });
+
+        dd('Mail Send Successfully');
     }
     /**
      * Redirect user for SMS verification

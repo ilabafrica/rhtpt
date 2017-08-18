@@ -459,3 +459,7 @@ Route::get("/mfl/{id}", array(
     "as"   => "mfl.fetch",
     "uses" => "FacilityController@mfl"
 ));
+Route::get("/resend", array(
+    "as"   => "resend.code",
+    "uses" => "Auth\RegisterController@resend"
+));
