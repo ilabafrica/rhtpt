@@ -66,7 +66,7 @@
 					</div>
 					<div class="form-group row">
 						<div class="col-md-offset-2 col-md-10">
-							<button class="btn btn-primary btn-block" type="submit">LOGIN</button>
+							<button class="btn btn-primary btn-block" type="submit" name="signin">LOGIN</button>
 							<a class="btn btn-wisteria btn-block" href="{{url('signup')}}">REGISTER HERE</a>
 							<hr>
 							<h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NHRL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>

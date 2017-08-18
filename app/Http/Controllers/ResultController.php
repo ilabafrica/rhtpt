@@ -100,7 +100,7 @@ class ResultController extends Controller
         $enrolment = Enrol::where('user_id', Auth::user()->id)->where('round_id', $round_id)->first();
     
         $pt = new Pt;
-        $pt->enrolment_id = $enrolment->id;
+        $pt->enrolment_id = 1;//$enrolment->id;
         $pt->panel_status = Pt::NOT_CHECKED;
         $pt->save();
         //	Proceed to form-fields
