@@ -74,14 +74,23 @@ new Vue({
         },
 
         createRound: function(scope){
+            
             this.$validator.validateAll(scope).then(() => {
                 var input = this.newRound;
           		this.$http.post('/vuerounds',input).then((response) => {
+                if(response.data == 'error')
+                {
+                    this.error = response.data;
+                    toastr.error(this.error, 'This Round already exists', {timeOut: 5000});
+                }
+                else
+                {
           		    this.changePage(this.pagination.current_page);
           			this.newRound = {'name':'','description':'','start_date':'','end_date':''};
           			$("#create-round").modal('hide');
           			toastr.success('Round Created Successfully.', 'Success Alert', {timeOut: 5000});
                     this.errors.clear();
+                }
           		});
             }).catch(() => {
                 toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});

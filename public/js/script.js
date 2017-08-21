@@ -10,5 +10,9 @@
                 $('#search_text').val(ui.item);
             }
         });
+
+        $(function() {
+             $( ".datepicker" ).datepicker(); 
+        });
     });
 

@@ -98,7 +98,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createLot('create_lot')" data-vv-validate="create_lot">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createLot('create_lot')" data-vv-validate="create_lot" data-vv-scope="create_lot">
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('pt round') }" for="round">PT Round:</label>

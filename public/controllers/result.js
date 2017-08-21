@@ -28,6 +28,7 @@ new Vue({
         form: [],
         sets: [],
         rounds: [],
+        roundsDone: [],
         frmData: {},
         viewFormData:{},
         loading: false,
@@ -66,6 +67,7 @@ new Vue({
     mounted : function(){
     	this.getVueResults(this.pagination.current_page);
         this.loadRounds();
+        this.loadRoundsDone();
         this.getForm();
         this.getSets();
     },
@@ -80,12 +82,27 @@ new Vue({
 
         createResult: function(scope){
             this.$validator.validateAll(scope).then(() => {
+                var input = this.newLot;
           		let myForm = document.getElementById('test_results');
                 let formData = new FormData(myForm);
           		this.$http.post('/vueresults', formData).then((response) => {
+                
+                if(response.data == '1')
+                {
+                    this.error = response.data;
+                    toastr.error(this.error, 'Select a valid PT Round', {timeOut: 5000});
+                }
+                else if(response.data == '2')
+                {
+                    this.error = response.data;
+                    toastr.error(this.error, 'Results already submitted', {timeOut: 5000});
+                }
+                else
+                {
         		    this.changePage(this.pagination.current_page);
           			$("#create-result").modal('hide');
           			toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
+                }
           		}, (response) => {
       			    this.formErrors = response.data;
           	    });
@@ -179,6 +196,14 @@ new Vue({
         loadRounds: function() {
             this.$http.get('/rnds').then((response) => {
                 this.rounds = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        loadRoundsDone: function() {
+            this.$http.get('/rndsDone').then((response) => {
+                this.roundsDone = response.data;
             }, (response) => {
                 // console.log(response);
             });

@@ -73,10 +73,24 @@ new Vue({
             this.$validator.validateAll(scope).then(() => {
           		var input = this.newLot;
           		this.$http.post('/vuelots',input).then((response) => {
+                
+                if(response.data == '1')
+                {
+                    this.error = response.data;
+                    toastr.error(this.error, 'Select a valid PT Round', {timeOut: 5000});
+                }
+                else if(response.data == '2')
+                {
+                    this.error = response.data;
+                    toastr.error(this.error, 'This Lot already exists', {timeOut: 5000});
+                }
+                else
+                {                
         		    this.changePage(this.pagination.current_page);
           			this.newLot = {'round_id':'','lot':'','tester_id':[]};
           			$("#create-lot").modal('hide');
           			toastr.success('Lot Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }
           		}, (response) => {
       			    this.formErrors = response.data;
                 });
