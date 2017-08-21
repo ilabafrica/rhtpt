@@ -186,7 +186,9 @@ class UserController extends Controller
             {
                 $tier = $request->facility_id;
             }
-            $ru = DB::table('role_user')->update(["user_id" => $id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
+            $user = User::find($id);
+            $user->detachAllRoles();
+            $ru = DB::table('role_user')->insert(["user_id" => $id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
         }
         return response()->json($edit);
     }

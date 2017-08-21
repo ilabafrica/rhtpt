@@ -328,4 +328,15 @@ EntrustUserTrait::restore insteadof SoftDeletes;
           else
               return USER::FEMALE;;
     }
+
+     /**
+     * Detach all roles from a user
+     *
+     * @return object
+     */
+    public function detachAllRoles()
+    {
+        DB::table('role_user')->where('user_id', $this->id)->delete();
+        return $this;
+    }
 }

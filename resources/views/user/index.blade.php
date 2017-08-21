@@ -153,7 +153,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('gender') }" for="tester id">Gender:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('gender') }" for="tester id">Role:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="role in roles">
                                             <label class="form-radio-label">
