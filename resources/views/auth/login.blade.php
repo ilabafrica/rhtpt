@@ -11,7 +11,6 @@
     <meta name="theme-color" content="#3e454c">
 
     <title>{!! Config::get('cms.name') !!}</title>
-
     <!-- Font awesome -->
     <link rel="stylesheet" href="{{ asset('css/font-awesome.css') }}">
     <!-- Bootstrap core CSS -->
@@ -84,4 +83,28 @@
     <script src="{{ asset('js/vue.min.js') }}"></script>
     <script src="{{ asset('js/vue-resource.min.js') }}"></script>
     <script src="{{ asset('js/vee-validate.js') }}"></script>
+    <!-- Sweet Alert -->
+    <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+    <script type="text/javascript">
+        function confirmRegistration()
+        {
+        	swal({
+                title: "Have you participated in PT before?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "No, Proceed!",
+                cancelButtonText: "Yes, retrive password!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    window.location.replace("/signup");
+                } else {
+                    swal("Cancelled", "Please use the signin page to login or reset password.", "success");
+                }
+            });
+        }
+    </script>
 </html>
