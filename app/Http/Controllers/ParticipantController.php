@@ -872,6 +872,15 @@ class ParticipantController extends Controller
         $user->uid = $max;
         $user->username = $max;
         $user->save();
+
+        //send mail
+        $usr = $user->toArray();
+
+        Mail::send('auth.approve', $usr, function($message) use ($usr) {
+            $message->to($usr['email']);
+            $message->subject('National HIV PT - Account Access Approved');
+        });
+
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
@@ -892,7 +901,17 @@ class ParticipantController extends Controller
         catch ( AfricasTalkingGatewayException $e )
         {
             echo "Encountered an error while sending: ".$e->getMessage();
-        }  
+        }        
+        
+    }
+    public function denyUserVerification(Request $request){
+        $id = $request->id;
+        $user = User::withTrashed()->find($id)->first()->toArray();   
+
+        Mail::send('auth.deny', $user, function($message) use ($user) {
+            $message->to($user['email']);
+            $message->subject('National HIV PT - Account Access Denied');
+        });
     }
 }
 $excel = App::make('excel');

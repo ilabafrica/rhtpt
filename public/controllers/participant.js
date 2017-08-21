@@ -377,7 +377,7 @@ new Vue({
 
         approveUser: function(id){
             var input = this.someUser;
-            this.$http.put('/approve/'+id, input).then((response) => {
+            this.$http.put('/approve/'+id, input, 'confirm').then((response) => {
                 this.changePage(this.pagination.current_page);
                 this.someUser = {'name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
                 $("#approve-user").modal('hide');
@@ -385,6 +385,41 @@ new Vue({
             }, (response) => {
                 // 
             });
+        },
+
+        denyUser: function(id){
+            var input = this.someUser;
+
+            swal({
+                  title: "Are you sure?",
+                  text: "The user will not be able to log in.",
+                  type: "warning",
+                  showCancelButton: true,
+                  confirmButtonClass: "btn-danger",
+                  confirmButtonText: "Yes, deactivate user!",
+                  cancelButtonText: "No, cancel please!",
+                  closeOnConfirm: true,
+                  closeOnCancel: false
+                },
+                function(isConfirm) {
+                  if (isConfirm) {
+                    swal("Deactivated!", "User has not been approved.", "success");
+                    
+                    this.$http.put('/denyUserVerification/'+id, input, ).then((response) => {
+                        this.changePage(this.pagination.current_page);
+                        this.someUser = {'name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
+                        $("#approve-user").modal('hide');
+                        toastr.success('User Denied Access.', 'Success Alert', {timeOut: 5000});
+                    }, (response) => {
+                        // 
+                    });
+                  } else {
+                    swal("Cancelled", "Click on the Approve Button)", "error");
+                  }
+                }.bind(this));
+
+
+            
         },
     }
 });

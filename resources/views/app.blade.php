@@ -33,6 +33,9 @@
                 background-color: white;
             }
         </style>
+        <!-- Sweet Alert Styling-->
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
+
         <!-- Datepicker
         <link rel="stylesheet" type="text/css" href="{{ asset('css/datepicker.css') }}" /> -->
     </head>
@@ -272,6 +275,8 @@
         <script type="text/javascript" src="{{ URL::asset('js/script.js') }} "></script>
 
         <script type="text/javascript" src="{{ URL::asset('js/moment.min.js') }} "></script>
+
+        <script src="{{ URL::asset('js/sweetalert.min.js') }}"></script>
 
         @if(Request::segment(1)==strtolower('event'))
         <script src="{{ asset('controllers/event.js') }}"></script>
