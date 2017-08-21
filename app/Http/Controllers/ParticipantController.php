@@ -93,18 +93,20 @@ class ParticipantController extends Controller
             if((!empty($user->uid) || !empty($user->ru()->tier)))
             {
                 $facility = Facility::find($user->ru()->tier);
-                $user->facility = $user->ru()->tier;
-                $user->program = $user->ru()->program_id;
-                $user->sub_county = $facility->subCounty->id;
-                $user->county = $facility->subCounty->county->id;
+                if(is_null($facility)){
+                    $user->facility = $user->ru()->tier;
+                    $user->program = $user->ru()->program_id;
+                    $user->sub_county = $facility->subCounty->id;
+                    $user->county = $facility->subCounty->county->id;
 
-                $user->mfl = $facility->code;
-                $user->fac = $facility->name;
-                $user->prog = Program::find($user->ru()->program_id)->name;
-                $user->sub = $facility->subCounty->name;
-                $user->kaunti = $facility->subCounty->county->name;
-                $user->des = $user->designation($user->ru()->designation);
-                $user->gndr = $user->sex($user->gender);
+                    $user->mfl = $facility->code;
+                    $user->fac = $facility->name;
+                    $user->prog = Program::find($user->ru()->program_id)->name;
+                    $user->sub = $facility->subCounty->name;
+                    $user->kaunti = $facility->subCounty->county->name;
+                    $user->des = $user->designation($user->ru()->designation);
+                    $user->gndr = $user->sex($user->gender);
+                }
             }
             else
             {

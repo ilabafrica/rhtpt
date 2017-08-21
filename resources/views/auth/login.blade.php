@@ -101,7 +101,7 @@
             },
             function(isConfirm){
                 if (isConfirm) {
-                    window.location.replace("http://127.0.0.1:8000/signup");
+                    window.location.replace("/signup");
                 } else {
                     swal("Cancelled", "Please use the signin page to login or reset password.", "success");
                 }
