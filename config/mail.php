@@ -98,7 +98,7 @@ return [
     | been provided here, which will work well on most of your systems.
     |
     */
-    'sendmail' => '\"C:\xampp\sendmail\sendmail.exe\" -t',
+    // 'sendmail' => '\"C:\xampp\sendmail\sendmail.exe\" -t',
 
     'sendmail' => '/usr/sbin/sendmail -bs',
 

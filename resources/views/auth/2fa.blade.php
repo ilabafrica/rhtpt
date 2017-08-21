@@ -23,11 +23,13 @@
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <!-- Toastr Styling -->
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet">
+    <!-- Sweet Alert Styling -->
+    <link href="{{ asset('css/sweetalert.css') }}" rel="stylesheet">
 </head>
 
 <body>
 	<div class="register-page" id="manage-registration" style="padding-top:20px;">
-		<div class="card col-md-10" style="margin:auto; float:none">
+        <div class="card col-md-10" style="margin:auto; float:none">
 			<div class="card-block">
 				<div class="row" style="padding:20px">
 					<div class="col-md-12 text-md-center">
@@ -66,7 +68,7 @@
                             </div>
 
                             <div class="col-sm-3">
-                                <button class="btn btn-midnight-blue btn-block"><strong><i class="fa fa-refresh"></i> Resend Code</strong></button>                            
+                                <button class="btn btn-midnight-blue btn-block" @click="resendVerificationCode"><strong><i class="fa fa-refresh"></i> Resend Code</strong></button>                            
                             </div>
                         </div>
                         <div class="card card-outline-success text-center">
@@ -103,5 +105,7 @@
     </script>
     <!-- Toastr -->
     <script src="{{ asset('js/toastr.min.js') }}"></script>
+    <!-- Sweet Alert -->
+    <script src="{{ asset('js/sweetalert.min.js') }}"></script>
     <script src="{{ asset('controllers/signup.js') }}"></script>
 </html>
