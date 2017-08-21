@@ -80,9 +80,18 @@ new Vue({
                 let myForm = document.getElementById('test_results');
                 let formData = new FormData(myForm);
                 this.$http.post('/vuefields',formData).then((response) => {
+
+                    if(response.data == 'error')
+                {
+                    this.error = response.data;
+                    toastr.error(this.error, 'This Field already exists', {timeOut: 5000});
+                }
+                else
+                {
                     this.changePage(this.pagination.current_page);
                     $("#create-field").modal('hide');
                     toastr.success('Field Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }
                 }, (response) => {
                     this.formErrors = response.data;
                 });

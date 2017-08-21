@@ -112,14 +112,14 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('date prepared') }" for="date prepared">Date Prepared:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control datepicker" :class="{'input': true, 'is-danger': errors.has('date prepared') }" name="date prepared" type="text" placeholder="" v-model="newMaterial.date_prepared" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('date prepared') }" name="date prepared" type="text" placeholder="" v-model="newMaterial.date_prepared" />
                                         <span v-show="errors.has('date prepared')" class="help is-danger">@{{ errors.first('date prepared') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('expiry date') }" for="expiry date">Expiry Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control datepicker" :class="{'input': true, 'is-danger': errors.has('expiry date') }" name="expiry date" type="text" placeholder="" v-model="newMaterial.expiry_date" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('expiry date') }" name="expiry date" type="text" placeholder="" v-model="newMaterial.expiry_date" />
                                         <span v-show="errors.has('expiry date')" class="help is-danger">@{{ errors.first('expiry date') }}</span>
                                     </div>
                                 </div>

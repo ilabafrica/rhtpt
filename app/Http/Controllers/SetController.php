@@ -55,10 +55,17 @@ class SetController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $create = Set::create($request->all());
+    {   $sets = Set::where('title', 'LIKE', "{$request->title}")->withTrashed()->get();
 
-        return response()->json($create);
+        if ($sets->count() > 0) {
+
+            return response()->json('error');
+
+        }else{
+            $create = Set::create($request->all());
+
+            return response()->json($create);
+        }
     }
 
     /**

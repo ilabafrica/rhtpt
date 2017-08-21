@@ -113,13 +113,13 @@
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createResult('create_result')" data-vv-validate="create_result" id="test_results" data-vv-scope="create_result">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-5 form-control-label" :class="{'help is-danger': errors.has('pt round') }"for="title">PT Round:</label>
+                                    <label class="col-sm-5 form-control-label" :class="{'help is-danger': errors.has('create_result.pt round') }"for="title">PT Round:</label>
                                     <div class="col-sm-7">
-                                        <select class="form-control c-select" v-validate="'required'" name="pt round" :class="{'input': true, 'is-danger': errors.has('pt round') }">
+                                        <select class="form-control c-select" v-validate="'required'" name="pt round" :class="{'input': true, 'is-danger': errors.has('create_result.pt round') }">
                                             <option selected></option>
                                             <option v-for="round in roundsDone" :value="round.id">@{{ round.value }}</option>   
                                         </select>
-                                    <span v-show="errors.has('pt round')" class="help is-danger">@{{ errors.first('pt round') }}</span>
+                                    <span v-show="errors.has('create_result.pt round')" class="help is-danger">@{{ errors.first('create_result.pt round') }}</span>
                                     </div>
                                 </div>
                                 <div v-for="frm in form">
@@ -127,49 +127,49 @@
                                     <hr>
                                     <div v-for="item in frm.fields">
                                         <div class="form-group row">
-                                            <label class="col-sm-5 form-control-label" :class="{'help is-danger': errors.has('form id') }" for="title">@{{ item.title }}:</label>
+                                            <label class="col-sm-5 form-control-label" :class="{'help is-danger': errors.has('create_result.form id') }" for="title">@{{ item.title }}:</label>
                                             <div class="col-sm-7" >
                                                 <div v-if="item.tag == 1">
                                                     <div class="form-checkbox checkbox-inline" v-for="option in item.options">
                                                         <label class="form-checkbox-label">
-                                                            <input type="checkbox" :value="option.id" :name="'field_'+item.id" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('field1 id') }">
+                                                            <input type="checkbox" :value="option.id" :name="'field_'+item.id" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('create_result.field id') }">
                                                             @{{ option.title }}
                                                         </label>
-                                                        <span v-show="errors.has('field1 id')" class="help is-danger">@{{ errors.first('field1 id') }}</span>
+                                                        <span v-show="errors.has('create_result.field id')" class="help is-danger">@{{ errors.first('create_result.field id') }}</span>
                                                     </div>
                                                 </div>
                                                 <div v-if="item.tag == 2">
-                                                    <input type="date" :name="'field_'+item.id" class="form-control" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('field2 id') }"/>
-                                                        <span v-show="errors.has('field2 id')" class="help is-danger">@{{ errors.first('field2 id') }}</span>
+                                                    <input type="date" :name="'field_'+item.id" class="form-control" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('create_result.field id') }"/>
+                                                        <span v-show="errors.has('create_result.field id')" class="help is-danger">@{{ errors.first('create_result.field id') }}</span>
                                                 </div>
                                                 <div v-if="item.tag == 3">
-                                                    <input type="email" :name="'field_'+item.id" class="form-control" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('field3 id') }"/>
-                                                        <span v-show="errors.has('field3 id')" class="help is-danger">@{{ errors.first('field3 id') }}</span>
+                                                    <input type="email" :name="'field_'+item.id" class="form-control" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('create_result.field id') }"/>
+                                                        <span v-show="errors.has('create_result.field id')" class="help is-danger">@{{ errors.first('create_result.field id') }}</span>
                                                 </div>
                                                 <div v-if="item.tag == 4">
-                                                    <input type="text" :name="'field_'+item.id" class="form-control" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('field4 id') }"/>
-                                                        <span v-show="errors.has('field4 id')" class="help is-danger">@{{ errors.first('field4 id') }}</span>
+                                                    <input type="text" :name="'field_'+item.id" class="form-control" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('create_result.field id') }"/>
+                                                        <span v-show="errors.has('create_result.field id')" class="help is-danger">@{{ errors.first('create_result.field id') }}</span>
                                                 </div>
                                                 <div v-if="item.tag == 5">
                                                     <div class="form-radio radio-inline" v-for="option in item.options">
                                                         <label class="form-radio-label">
-                                                            <input type="radio" :value="option.id" :name="'field_'+item.id" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('field5 id') }" />
+                                                            <input type="radio" :value="option.id" :name="'field_'+item.id" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('create_result.field id') }" />
                                                             @{{ option.title }}
                                                         </label>
-                                                        <span v-show="errors.has('field5 id')" class="help is-danger">@{{ errors.first('field5 id') }}</span>
+                                                        <span v-show="errors.has('create_result.field id')" class="help is-danger">@{{ errors.first('create_result.field id') }}</span>
                                                     </div>
                                                     <!-- <input type="text" :name="'comment_'+item.id" class="form-control" /> -->
                                                 </div>
                                                 <div v-if="item.tag == 6">
-                                                    <select class="form-control c-select" :name="'field_'+item.id" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('field6 id') }">
+                                                    <select class="form-control c-select" :name="'field_'+item.id" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('create_result.field6 id') }">
                                                         <option selected></option>
                                                         <option v-for="option in item.options" :value="option.id">@{{ round.title }}</option>   
                                                     </select>
-                                                        <span v-show="errors.has('field6 id')" class="help is-danger">@{{ errors.first('field6 id') }}</span>
+                                                        <span v-show="errors.has('create_result.field6 id')" class="help is-danger">@{{ errors.first('create_result.field id') }}</span>
                                                 </div>
                                                 <div v-if="item.tag == 7">
-                                                    <textarea :name="'field_'+item.id" class="form-control" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('field id') }"></textarea>
-                                                        <span v-show="errors.has('field id')" class="help is-danger">@{{ errors.first('field id') }}</span>
+                                                    <textarea :name="'field_'+item.id" class="form-control" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('create_result.field id') }"></textarea>
+                                                        <span v-show="errors.has('create_result.field id')" class="help is-danger">@{{ errors.first('create_result.field id') }}</span>
                                                 </div>
                                             </div>
                                         </div>

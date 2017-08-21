@@ -34,7 +34,7 @@
             }
         </style>
         <!-- Datepicker-->
-        <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/ui-lightness/jquery-ui-min.css') }}" />
+        <!-- <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/ui-lightness/jquery-ui-min.css') }}" /> -->
     </head>
     <body>
         <!-- Preloader -->

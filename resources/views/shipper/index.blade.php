@@ -111,43 +111,43 @@
 
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Name:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_shipper.name') }" for="name">Name:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newShipper.name" />
-                                        <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
+                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_shipper.name') }" name="name" type="text" placeholder="" v-model="newShipper.name" />
+                                        <span v-show="errors.has('create_shipper.name')" class="help is-danger">@{{ errors.first('create_shipper.name') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('shipper type') }" for="shipper type">Shipper Type:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_shipper.shipper type') }" for="shipper type">Shipper Type:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio form-radio-inline" v-for="option in options">
                                             <label class="form-radio-label">
-                                                <input v-validate="'required'" type="radio" name="shipper type"  :value="option.name" :class="{'input': true, 'is-danger': errors.has('shipper type') }" v-model="newShipper.shipper_type">
+                                                <input v-validate="'required'" type="radio" name="shipper type"  :value="option.name" :class="{'input': true, 'is-danger': errors.has('create_shipper.shipper type') }" v-model="newShipper.shipper_type">
                                                 @{{ option.title }}
                                             </label>
                                         </div>
-                                        <span v-show="errors.has('tester id')" class="help is-danger">@{{ errors.first('tester id') }}</span>
+                                        <span v-show="errors.has('create_shipper.shipper type')" class="help is-danger">@{{ errors.first('create_shipper.shipper type') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('contact') }" for="contact">Contact Person:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_shipper.contact') }" for="contact">Contact Person:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('contact') }" name="contact" type="text" placeholder="" v-model="newShipper.contact" />
-                                        <span v-show="errors.has('contact')" class="help is-danger">@{{ errors.first('contact') }}</span>
+                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_shipper.contact') }" name="contact" type="text" placeholder="" v-model="newShipper.contact" />
+                                        <span v-show="errors.has('create_shipper.contact')" class="help is-danger">@{{ errors.first('create_shipper.contact') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone') }" for="phone">Contact Phone:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_shipper.phone') }" for="phone">Contact Phone:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone') }" name="phone" type="text" placeholder="" v-model="newShipper.phone" />
-                                        <span v-show="errors.has('phone')" class="help is-danger">@{{ errors.first('phone') }}</span>
+                                        <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_shipper.phone') }" name="phone" type="text" placeholder="" v-model="newShipper.phone" />
+                                        <span v-show="errors.has('create_shipper.phone')" class="help is-danger">@{{ errors.first('create_shipper.phone') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('email') }" for="email">Contact Email:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_shipper.email') }" for="email">Contact Email:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" placeholder="" v-model="newShipper.email" />
-                                        <span v-show="errors.has('email')" class="help is-danger">@{{ errors.first('email') }}</span>
+                                        <input v-validate="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_shipper.email') }" name="email" type="text" placeholder="" v-model="newShipper.email" />
+                                        <span v-show="errors.has('create_shipper.email')" class="help is-danger">@{{ errors.first('create_shipper.email') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">

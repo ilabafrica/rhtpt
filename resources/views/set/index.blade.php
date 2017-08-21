@@ -101,10 +101,10 @@
 
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_set.title') }" for="title">Title:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="newSet.title" />
-                                        <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_set.title') }" name="title" type="text" placeholder="" v-model="newSet.title" />
+                                        <span v-show="errors.has('create_set.title')" class="help is-danger">@{{ errors.first('create_set.title') }}</span>
                                     </div>
                                 </div>
     				            <div class="form-group row">
@@ -114,13 +114,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('order') }" for="order">Order:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_set.order') }" for="order">Order:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="order" :class="{'input': true, 'is-danger': errors.has('order') }" v-model="newSet.order">
+                                        <select v-validate="'required'" class="form-control c-select" name="order" :class="{'input': true, 'is-danger': errors.has('create_set.order') }" v-model="newSet.order">
                                             <option selected></option>
                                             <option v-for="ordr in ordrs" :value="ordr.id">@{{ ordr.value }}</option>
                                         </select>
-                                        <span v-show="errors.has('order')" class="help is-danger">@{{ errors.first('order') }}</span>
+                                        <span v-show="errors.has('create_set.order')" class="help is-danger">@{{ errors.first('create_set.order') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">

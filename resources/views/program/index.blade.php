@@ -104,10 +104,10 @@
 
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_programtitle') }" for="title">Title:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="newProgram.name" />
-                                        <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
+                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_programtitle') }" name="title" type="text" placeholder="" v-model="newProgram.name" />
+                                        <span v-show="errors.has('create_programtitle')" class="help is-danger">@{{ errors.first('create_programtitle') }}</span>
                                     </div>
                                 </div>
     				            <div class="form-group row">

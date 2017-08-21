@@ -67,25 +67,33 @@ class FieldController extends Controller
             'order' => 'required',
             'tag' => 'required',
         ]);
-        $field = new Field;
-        $field->uid = $request->uid;
-        $field->title = $request->title;
-        $field->field_set_id = $request->field_set_id;
-        $field->order = $request->order;
-        $field->tag = $request->tag;
-        $field->save();
-        try
-        {
+        $fields = Field::where('title', 'LIKE', "{$request->title}")->withTrashed()->get();
+
+        if ($fields->count() > 0) {
+
+            return response()->json('error');
+
+        }else{
+            $field = new Field;
+            $field->uid = $request->uid;
+            $field->title = $request->title;
+            $field->field_set_id = $request->field_set_id;
+            $field->order = $request->order;
+            $field->tag = $request->tag;
             $field->save();
-            if($request->opts)
+            try
             {
-                $field->setOptions($request->opt);
+                $field->save();
+                if($request->opts)
+                {
+                    $field->setOptions($request->opt);
+                }
+                return response()->json($field);
             }
-            return response()->json($field);
-        }
-    	catch(QueryException $e)
-        {
-            Log::error($e);
+        	catch(QueryException $e)
+            {
+                Log::error($e);
+            }
         }
     }
     /**

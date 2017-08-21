@@ -74,10 +74,18 @@ new Vue({
             this.$validator.validateAll(scope).then(() => {
                 var input = this.newSet;
                 this.$http.post('/vuesets',input).then((response) => {
+                     if(response.data == 'error')
+                {
+                    this.error = response.data;
+                    toastr.error('This Field Set already exists', {timeOut: 5000});
+                }
+                else
+                {
                     this.changePage(this.pagination.current_page);
                     this.newSet = {'title':'','description':'','order':''};
                     $("#create-set").modal('hide');
                     toastr.success('Field Set Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }
                 }, (response) => {
                     this.formErrors = response.data;
                 });
