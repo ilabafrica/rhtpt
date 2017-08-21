@@ -292,7 +292,7 @@
                                         <span v-show="errors.has('role')" class="help is-danger">@{{ errors.first('role') }}</span>
                                     </div>
                                 </div>
-                                <div class="form-group row" v-if="newUser.role == 3">
+                                <div class="form-group row" v-if="fillUser.role == 3">
                                     <label class="col-sm-4 form-control-label" for="title">Counties:</label>
                                     <div class="col-sm-8">
                                         <select class="form-control" name="jimbo" multiple v-model="fillUser.jimbo">
