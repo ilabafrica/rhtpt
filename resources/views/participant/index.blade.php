@@ -76,7 +76,7 @@
             @permission('transfer-user') 
                 <button style="display: none;" v-if="user.uid" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
             @endpermission
-            	<button v-if="user.email_verified==1" v-if="user.phone_verified==1" v-if="user.deleted_at" class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
+            	<button v-if="!user.username" v-if="user.email_verified==1" v-if="user.phone_verified==1"  v-if="user.deleted_at" class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
             </td>
         </tr>
     </table>
@@ -469,7 +469,8 @@
                                 </tbody>
                             </table>
                             <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Confirm</button>
+                                <button type="submit" class="btn btn-sm btn-success" ><i class='fa fa-plus-circle'></i> Confirm</button>
+                                <button type="button" class="btn btn-sm btn-danger" @click="denyUser()"><i class='fa fa-ban'></i> Deny</button>
                                 <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>
                         </div>
