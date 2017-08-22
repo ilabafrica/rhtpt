@@ -107,7 +107,7 @@
                 <div class="modal-body">
 
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createShipper('create_shipper')" class="form-horizontal" data-vv-valdate="create_shipper">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createShipper('create_shipper')" class="form-horizontal" data-vv-validate="create_shipper" data-vv-scope="create_shipper">
 
                             <div class="col-md-12">
                                 <div class="form-group row">

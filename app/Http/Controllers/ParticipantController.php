@@ -93,7 +93,7 @@ class ParticipantController extends Controller
         }
         foreach($users as $user)
         {
-            if((!empty($user->uid) || !empty($user->ru()->tier)))
+            if((!empty($user->uid) && !empty($user->ru()->tier)))
             {
                 $facility = Facility::find($user->ru()->tier);
                 $user->facility = $user->ru()->tier;

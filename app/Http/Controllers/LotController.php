@@ -58,22 +58,28 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {   
-        // dd($request->round_id);
-
         if ($request->round_id =="") {
 
-            return response()->json(['error']);
+            return response()->json(['1']);
             
         } else
         {
-            $lot = new Lot;
-            $lot->round_id = $request->round_id;
-            $lot->lot = $request->lot;
-            $lot->tester_id = implode(", ", $request->tester_id);
-            $lot->user_id = Auth::user()->id;
-            $lot->save();
-        }
+            $lots = Lot::where('round_id', 'LIKE', $request->round_id)->where('lot', 'LIKE', $request->lot)->withTrashed()->get();
+            
+            if ($lots->count() > 0) {
 
+                return response()->json('2');
+
+            } else
+            {
+                $lot = new Lot;
+                $lot->round_id = $request->round_id;
+                $lot->lot = $request->lot;
+                $lot->tester_id = implode(", ", $request->tester_id);
+                $lot->user_id = Auth::user()->id;
+                $lot->save();
+            }
+        }
         return response()->json($lot);
     }
 

@@ -790,7 +790,7 @@ class UserController extends Controller
             $user->phone_verified = 1;
             $user->save();
 
-            return response()->json(["success" => "Phone number successfully verified. Your ID will be sent to you shortly."]);
+            return response()->json(["success" => "Phone number successfully verified. Your credentials will be sent to you shortly."]);
         }
         return response()->json(["warning" => "Your token is invalid."]);
     }

@@ -78,10 +78,19 @@ new Vue({
             this.$validator.validateAll(scope).then(() => {
       		    var input = this.newPanel;
       		    this.$http.post('/vuepanels',input).then((response) => {
+                
+                if(response.data == 'error')
+                {
+                    this.error = response.data;
+                    toastr.error(this.error, 'This Panel already exists', {timeOut: 5000});
+                }
+                else
+                {
         		    this.changePage(this.pagination.current_page);
           			this.newPanel = {'lot_id':'','panel':'','material_id':'','result':'','prepared_by':'','tested_by':''};
           			$("#create-panel").modal('hide');
           			toastr.success('Panel Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }
       		    }, (response) => {
       			    this.formErrors = response.data;
                 });

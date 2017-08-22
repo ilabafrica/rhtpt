@@ -1,4 +1,10 @@
-
+/* Bootstrap 3 datepicker */
+// $(function () {
+//     $('.datepicker').datepicker({
+//         format: 'yyyy-mm-dd'
+//     });
+// });
+// /* End datepicker */
 
 
 
@@ -145,23 +151,23 @@ $(function(){
 	
 	
 	
-	/********************************
-	DateTime Picker
-	********************************/
-	if( $.isFunction($.fn.datetimepicker) ){
-		$('#datetimepicker').datetimepicker();
-		$('#datepicker').datetimepicker({pickTime: false});
-		$('#timepicker').datetimepicker({pickDate: false});
+	// /********************************
+	// DateTime Picker
+	// ********************************/
+	// if( $.isFunction($.fn.datetimepicker) ){
+	// 	$('#datetimepicker').datetimepicker();
+	// 	$('#datepicker').datetimepicker({pickTime: false});
+	// 	$('#timepicker').datetimepicker({pickDate: false});
 		
-		$('#datetimerangepicker1').datetimepicker();
-		$('#datetimerangepicker2').datetimepicker();
-		$("#datetimerangepicker1").on("dp.change",function (e) {
-		   $('#datetimerangepicker2').data("DateTimePicker").setMinDate(e.date);
-		});
-		$("#datetimerangepicker2").on("dp.change",function (e) {
-		   $('#datetimerangepicker1').data("DateTimePicker").setMaxDate(e.date);
-		});
-	}
+	// 	$('#datetimerangepicker1').datetimepicker();
+	// 	$('#datetimerangepicker2').datetimepicker();
+	// 	$("#datetimerangepicker1").on("dp.change",function (e) {
+	// 	   $('#datetimerangepicker2').data("DateTimePicker").setMinDate(e.date);
+	// 	});
+	// 	$("#datetimerangepicker2").on("dp.change",function (e) {
+	// 	   $('#datetimerangepicker1').data("DateTimePicker").setMaxDate(e.date);
+	// 	});
+	// }
 	
 	
 	/********************************

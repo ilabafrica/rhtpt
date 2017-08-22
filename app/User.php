@@ -321,12 +321,12 @@ EntrustUserTrait::restore insteadof SoftDeletes;
         }
     }
     /**
-    * Pt relationship
+    * Enrol relationship
     *
     */
-    public function pt()
+    public function enrol()
     {
-        return $this->hasMany('App\Pt');
+        return $this->hasMany('App\Enrol');
     }
     public function getEmailVerificationUrlAttribute()
     {
@@ -360,5 +360,12 @@ EntrustUserTrait::restore insteadof SoftDeletes;
               return USER::MALE;
           else
               return USER::FEMALE;;
+    }
+     public function results()
+    {
+        
+        $enrolments = $this->enrol()->pluck('id');
+        $results = Pt::whereIn('enrolment_id', $enrolments);
+        return $results;
     }
 }

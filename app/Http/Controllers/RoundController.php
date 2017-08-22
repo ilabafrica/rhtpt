@@ -67,12 +67,21 @@ class RoundController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $request->request->add(['user_id' => Auth::user()->id]);
+    {      
+        $rounds = Round::where('name', 'LIKE', "{$request->name}")->withTrashed()->get();
 
-        $create = Round::create($request->all());
+        if ($rounds->count() > 0) {
 
-        return response()->json($create);
+            return response()->json('error');
+
+        }else{
+
+            $request->request->add(['user_id' => Auth::user()->id]);
+
+            $create = Round::create($request->all());
+
+            return response()->json($create);
+        }
     }
 
     /**
@@ -121,6 +130,25 @@ class RoundController extends Controller
     public function rounds()
     {
         $rounds = Round::pluck('description', 'id');
+        $categories = [];
+        foreach($rounds as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
+    /**
+     * Function to return list of rounds already done by a user.
+     *
+     */
+    public function roundsDone()
+    {
+        // get enrolments with no submissions
+        $ids = Auth::user()->enrol()->where('status', 0)->pluck('round_id');
+        // fetch rounds details 
+        $rounds = Round::whereIn('id', $ids)->pluck('description', 'id');
+        // format to match dropdown values
+        // dd($rounds);
         $categories = [];
         foreach($rounds as $key => $value)
         {

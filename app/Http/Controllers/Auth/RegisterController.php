@@ -19,6 +19,7 @@ use App\County;
 use App\Program;
 use App\Round;
 
+use Mail;
 use DB;
 use Hash;
 use Auth;
@@ -97,23 +98,26 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        $usr = NULL;
+        $validator = $this->validate($request, [
+            'email' => 'required|unique:users,email',
+            'phone' => 'required|unique:users,phone',
+        ]);
         $now = Carbon::now('Africa/Nairobi');
         //  Prepare to save user details
         //  Check if user exists
-        $userId = User::idByName($request->name);
-        if(!$userId)
-            $userId = User::idByEmail($request->email);
+        $userId = User::idByEmail($request->email);
         if(!$userId)
             $userId = User::idByUsername($request->username);
         if(!$userId)
         {
             $user = new User;
-            $user->name = $request->name;
+            $user->name = $request->surname." ".$request->fname." ".$request->oname;
             $user->gender = $request->gender;
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->address = $request->address;
-            $user->username = $request->name;
+            $user->username = $request->email;
             $user->password = Hash::make(User::DEFAULT_PASSWORD);
             $user->deleted_at = $now;
             $user->save();
@@ -171,29 +175,40 @@ class RegisterController extends Controller
             // Specified sender-id
             $from = $api->code;
             // Send message
-            // $result = $gateway->sendMessage($recipient, $message);
+            $result = $gateway->sendMessage($recipient, $message);
         }
         catch ( AfricasTalkingGatewayException $e )
         {
-            echo "Encountered an error while sending: ".$e->getMessage();
+            // echo "Encountered an error while sending: ".$e->getMessage();
+            DB::table('role_user')->where('user_id', $user->id)->forceDelete();
+            $user->forceDelete();
+            abort(500, 'Encountered an error while sending verification code. Please try again later.');
         }
-        //  Do Email verification for email address
-        $user->email_verification_code = Str::random(60);
-        $user->save();
-        /*$usr = $user->toArray();
+        try
+        {
+            //  Do Email verification for email address
+            $user->email_verification_code = Str::random(60);
+            $user->save();
+            /*$usr = $user->toArray();
 
-        Mail::send('auth.verification', $usr, function($message) use ($usr) {
-            $message->to($usr['email']);
-            $message->subject('National HIV PT - Email Verification Code');
-        });*/
+            Mail::send('auth.verification', $usr, function($message) use ($usr) {
+                $message->to($usr['email']);
+                $message->subject('National HIV PT - Email Verification Code');
+            });*/
 
-        event(new Registered($usr = $user));
+            event(new Registered($usr = $user));
 
-        //$this->guard()->login($user);
+            //$this->guard()->login($user);
+        }
+        catch(Exception $e)
+        {
+            DB::table('role_user')->where('user_id', $user->id)->forceDelete();
+            $user->forceDelete();
+            abort(500, 'Encountered an error while sending verification code. Please try again later.');
+        }
 
         /*return $this->registered($request, $user)
             ?: redirect($this->redirectPath());*/
-
         return $this->registered($request, $user)
             ?: redirect('/2fa');
     }
@@ -232,6 +247,23 @@ class RegisterController extends Controller
 
     public function resend()
     {
+        $user = User::find(1)->toArray();
 
+        Mail::send('auth.verification', $user, function($message) use ($user) {
+            $message->to('kipropbrian@gmail.com');
+            $message->subject('E-Mail Example');
+        });
+
+        dd('Mail Send Successfully');
+    }
+    /**
+     * Redirect user for SMS verification
+     *
+     * @param  array  $data
+     * @return User
+     */
+    protected function twoFa()
+    {
+        return view('auth.2fa');
     }
 }

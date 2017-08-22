@@ -135,7 +135,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" id="save_shipment" v-on:submit.prevent="saveShipment('create_shipment')" data-vv-validate="create_shipment">
+                        <form method="POST" enctype="multipart/form-data" id="save_shipment" v-on:submit.prevent="saveShipment('create_shipment')" data-vv-validate="create_shipment" data-vv-scope="create_shipment">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('pt round') }" for="round">PT Round:</label>
