@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 	<!-- Toastr Styling -->
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet">
+    <!-- Sweet Alert Styling -->
+    <link href="{{ asset('css/sweetalert.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -36,29 +38,43 @@
 					</div>
 				</div>
 				<form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createParticipant" id="self_registration">
-					@if($errors)
-						@if (count($errors) > 0)
-						<div class="alert alert-danger col-md-12">
-							<ul class="list-unstyled">
-								@foreach ($errors->all() as $error)
-									<li>{{ $error }}</li>
-								@endforeach
-							</ul>
-						</div>
-						@endif
-					@endif
-					@if (session()->has('message'))
-						<div class="alert alert-danger">
-							<p>{!! session('message') !!}</p>
-						</div>
-					@endif
+                    @if($errors)
+                        @if (count($errors) > 0)
+                        <div class="alert alert-danger col-md-12">
+                            <ul class="list-unstyled">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+                    @endif
+                    @if (session()->has('message'))
+                        <div class="alert alert-danger">
+                            <p>{!! session('message') !!}</p>
+                        </div>
+                    @endif
 					<!-- Begin form fields -->
 					<div v-cloak class="col-md-6">
 						<div class="form-group row">
-                            <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Name:</label>
+                            <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('first name') }" for="first name">First Name:</label>
                             <div class="col-sm-8" :class="{ 'control': true }">
-                                <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" v-model="newParticipant.name"/>
-                                <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
+                                <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('first name') }" name="first name" type="text" v-model="newParticipant.fname"/>
+                                <span v-show="errors.has('first name')" class="help is-danger">@{{ errors.first('first name') }}</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('middle name') }" for="middle name">Middle Name:</label>
+                            <div class="col-sm-8" :class="{ 'control': true }">
+                                <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('middle name') }" name="middle name" type="text" v-model="newParticipant.oname"/>
+                                <span v-show="errors.has('middle name')" class="help is-danger">@{{ errors.first('middle name') }}</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('surname') }" for="surname">Surname:</label>
+                            <div class="col-sm-8" :class="{ 'control': true }">
+                                <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('surname') }" name="surname" type="text" v-model="newParticipant.surname"/>
+                                <span v-show="errors.has('surname')" class="help is-danger">@{{ errors.first('surname') }}</span>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -78,6 +94,7 @@
                             <div class="col-sm-8" :class="{ 'control': true }">
                                 <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone number') }" name="phone number" type="text" v-model="newParticipant.phone"/>
                                 <span v-show="errors.has('phone number')" class="help is-danger">@{{ errors.first('phone number') }}</span>
+                                <span v-if="formErrors['phone']" class="error text-danger">@{{ formErrors['phone'] }}</span>
                             </div>
                         </div>
 						<div class="form-group row">
@@ -85,6 +102,7 @@
                             <div class="col-sm-8" :class="{ 'control': true }">
                                 <input v-validate="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" v-model="newParticipant.email"/>
                                 <span v-show="errors.has('email')" class="help is-danger">@{{ errors.first('email') }}</span>
+                                <span v-if="formErrors['email']" class="error text-danger">@{{ formErrors['email'] }}</span>
                             </div>
                         </div>
 						<div class="form-group row">
@@ -104,6 +122,8 @@
                                 <span v-show="errors.has('designation')" class="help is-danger">@{{ errors.first('designation') }}</span>
                             </div>
                         </div>
+					</div>
+					<div v-cloak class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('program') }" for="program">Program:</label>
                             <div class="col-sm-8" :class="{ 'control': true }">
@@ -114,37 +134,32 @@
                                 <span v-show="errors.has('program')" class="help is-danger">@{{ errors.first('program') }}</span>
                             </div>
                         </div>
-					</div>
-					<div v-cloak class="col-md-6">
-                        <div class="form-group row">
-                            <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('county') }" for="county">County:</label>
-                            <div class="col-sm-8" :class="{ 'control': true }">
-                                <select v-validate="'required'" class="form-control c-select" name="county" :class="{'input': true, 'is-danger': errors.has('county') }" v-model="newParticipant.county">
-                                    <option selected></option>
-                                    <option v-for="cnty in counties" :value="cnty.id">@{{ cnty.value }}</option>
-                                </select>
-                                <span v-show="errors.has('county')" class="help is-danger">@{{ errors.first('county') }}</span>
-                            </div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('sub county') }" for="sub county">Sub County:</label>
-                            <div class="col-sm-8" :class="{ 'control': true }">
-                                <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('sub county') }" name="sub county" type="text" v-model="newParticipant.sub_county"/>
-                                <span v-show="errors.has('sub county')" class="help is-danger">@{{ errors.first('sub county') }}</span>
-                            </div>
-                        </div>
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('mfl code') }" for="mfl code">MFL Code:</label>
                             <div class="col-sm-8" :class="{ 'control': true }">
-                                <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('mfl code') }" name="mfl code" type="text" v-model="newParticipant.mfl_code"/>
+                                <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('mfl code') }" name="mfl code" type="text" v-model="newParticipant.mfl_code" @change="fetchFacility" id="mfl" />
                                 <span v-show="errors.has('mfl code')" class="help is-danger">@{{ errors.first('mfl code') }}</span>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('facility name') }" for="facility name">Facility Name:</label>
                             <div class="col-sm-8" :class="{ 'control': true }">
-                                <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('facility name') }" name="facility name" type="text"  v-model="newParticipant.facility"/>
+                                <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('facility name') }" name="facility name" type="text"  v-model="newParticipant.facility" readonly="true" />
                                 <span v-show="errors.has('facility name')" class="help is-danger">@{{ errors.first('facility name') }}</span>
+                            </div>
+                        </div>
+						<div class="form-group row">
+                            <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('sub county') }" for="sub county">Sub County:</label>
+                            <div class="col-sm-8" :class="{ 'control': true }">
+                                <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('sub county') }" name="sub county" type="text"  v-model="newParticipant.sub_county" readonly="true" />
+                                <span v-show="errors.has('sub county')" class="help is-danger">@{{ errors.first('sub county') }}</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('county') }" for="county">County:</label>
+                            <div class="col-sm-8" :class="{ 'control': true }">
+                                <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('county') }" name="county" type="text"  v-model="newParticipant.county" readonly="true" />
+                                <span v-show="errors.has('county')" class="help is-danger">@{{ errors.first('county') }}</span>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -227,5 +242,7 @@
     </script>
     <!-- Toastr -->
     <script src="{{ asset('js/toastr.min.js') }}"></script>
+    <!-- Sweet Alert -->
+    <script src="{{ asset('js/sweetalert.min.js') }}"></script>
     <script src="{{ asset('controllers/signup.js') }}"></script>
 </html>

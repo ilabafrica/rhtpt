@@ -93,11 +93,19 @@ class ShipmentController extends Controller
      */
     public function store(Request $request)
     {
-        $request->request->add(['user_id' => Auth::user()->id]);
+         // Check if round has been selected
+        if ($request->get('round_id') =="") {
 
-        $create = Shipment::create($request->all());
+            return response()->json(['error']);
+            
+        } else
+        {
+            $request->request->add(['user_id' => Auth::user()->id]);
 
-        return response()->json($create);
+            $create = Shipment::create($request->all());
+
+            return response()->json($create);
+        }
     }
 
     /**

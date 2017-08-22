@@ -100,7 +100,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createProgram('create_program')" data-vv-validate="create_program">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createProgram('create_program')" data-vv-validate="create_program" data-vv-scope="create_program">
 
                             <div class="col-md-12">
                                 <div class="form-group row">

@@ -92,7 +92,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createNonperf('create_nonperf')" data-vv-validate="create_nonperf">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createNonperf('create_nonperf')" data-vv-validate="create_nonperf" data-vv-scope="create_nonperf">
 
                             <div class="col-md-12">
                                 <div class="form-group row">

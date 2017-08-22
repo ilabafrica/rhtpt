@@ -62,20 +62,29 @@ class PanelController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $this->validate($request, [
+    {       
+        $panels = Panel::where('lot_id', 'LIKE', $request->lot_id)->where('panel', 'LIKE', $request->panel)->withTrashed()->get();
+        
+        if ($panels->count() > 0) {
+
+            return response()->json('error');
+
+        }else
+        {
+            $this->validate($request, [
             'lot_id' => 'required',
             'panel' => 'required',
             'material_id' => 'required',
             'result' => 'required',
             'prepared_by' => 'required',
             'tested_by' => 'required',
-        ]);
-        $request->request->add(['user_id' => Auth::user()->id]);
+            ]);
+            $request->request->add(['user_id' => Auth::user()->id]);
 
-        $create = Panel::create($request->all());
+            $create = Panel::create($request->all());
 
-        return response()->json($create);
+            return response()->json($create);
+        }
     }
 
     /**

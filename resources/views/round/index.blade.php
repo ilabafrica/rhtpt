@@ -129,7 +129,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('start date') }" for="start date">Start Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('start date') }" name="start date" type="date" placeholder="" v-model="newRound.start_date" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('start date') }" name="start date" type="date" placeholder="" v-model="newRound.start_date" id="start_date" />
                                         <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('end date') }" for="end date">End Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('end date') }" name="end date" type="date" placeholder="" v-model="newRound.end_date" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('end date') }" name="end date" type="date" placeholder="" v-model="newRound.end_date" id="end_date" />
                                         <span v-show="errors.has('end date')" class="help is-danger">@{{ errors.first('end date') }}</span>
                                     </div>
                                 </div>

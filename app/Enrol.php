@@ -16,6 +16,14 @@ class Enrol extends Model
   	 * @var string
   	 */
   	protected $table = 'enrolments';
+
+    /**
+    *Enrolment status
+    *
+    **/
+
+    const DONE =1;
+    const NOT_DONE =0;
     /**
   	 * Relationship with users.
   	 *

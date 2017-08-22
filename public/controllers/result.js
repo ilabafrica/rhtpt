@@ -28,6 +28,7 @@ new Vue({
         form: [],
         sets: [],
         rounds: [],
+        roundsDone: [],
         frmData: {},
         viewFormData:{},
         loading: false,
@@ -66,6 +67,7 @@ new Vue({
     mounted : function(){
     	this.getVueResults(this.pagination.current_page);
         this.loadRounds();
+        this.loadRoundsDone();
         this.getForm();
         this.getSets();
     },
@@ -84,10 +86,16 @@ new Vue({
           		let myForm = document.getElementById('test_results');
                 let formData = new FormData(myForm);
           		this.$http.post('/vueresults', formData).then((response) => {
-                    if(response.data == 'error')
+                
+                if(response.data == '1')
                 {
                     this.error = response.data;
                     toastr.error(this.error, 'Select a valid PT Round', {timeOut: 5000});
+                }
+                else if(response.data == '2')
+                {
+                    this.error = response.data;
+                    toastr.error(this.error, 'Results already submitted', {timeOut: 5000});
                 }
                 else
                 {
@@ -188,6 +196,14 @@ new Vue({
         loadRounds: function() {
             this.$http.get('/rnds').then((response) => {
                 this.rounds = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        loadRoundsDone: function() {
+            this.$http.get('/rndsDone').then((response) => {
+                this.roundsDone = response.data;
             }, (response) => {
                 // console.log(response);
             });
