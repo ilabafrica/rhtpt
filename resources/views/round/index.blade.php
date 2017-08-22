@@ -49,11 +49,13 @@
     <table class="table table-bordered">
         <tr>
             <th>Title</th>
+            <th>Description</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Action</th>
         </tr>
         <tr v-for="round in rounds">
+            <td>@{{ round.name }}</td>
             <td>@{{ round.description }}</td>
             <td>@{{ round.start_date }}</td>
             <td>@{{ round.end_date }}</td>

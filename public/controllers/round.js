@@ -78,10 +78,15 @@ new Vue({
             this.$validator.validateAll(scope).then(() => {
                 var input = this.newRound;
           		this.$http.post('/vuerounds',input).then((response) => {
-                if(response.data == 'error')
+                if(response.data == '1')
                 {
                     this.error = response.data;
-                    toastr.error(this.error, 'This Round already exists', {timeOut: 5000});
+                    toastr.error('This Round already exists', {timeOut: 5000});
+                }
+                else if(response.data == '2')
+                {
+                    this.error = response.data;
+                    toastr.error('Start Date should not be greater than End Date', {timeOut: 5000});
                 }
                 else
                 {
