@@ -74,10 +74,18 @@ new Vue({
             this.$validator.validateAll(scope).then(() => {
                 var input = this.newShipper;
                 this.$http.post('/vueshippers',input).then((response) => {
+                if(response.data == 'error')
+                {
+                    this.error = response.data;
+                    toastr.error('This Shipping Agent already exists', {timeOut: 5000});
+                }
+                else
+                {
                     this.changePage(this.pagination.current_page);
                     this.newShipper = {'name':'','shipper_type':'','contact':'','phone':'','email':''};
                     $("#create-shipper").modal('hide');
                     toastr.success('Shipper Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }
                 }, (response) => {
                     this.formErrors = response.data;
                 });

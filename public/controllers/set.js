@@ -74,7 +74,7 @@ new Vue({
             this.$validator.validateAll(scope).then(() => {
                 var input = this.newSet;
                 this.$http.post('/vuesets',input).then((response) => {
-                     if(response.data == 'error')
+                if(response.data == 'error')
                 {
                     this.error = response.data;
                     toastr.error('This Field Set already exists', {timeOut: 5000});

@@ -56,9 +56,17 @@ class NonperformanceController extends Controller
             'title' => 'required',
         ]);
 
-        $create = Nonperformance::create($request->all());
+        $reasons = Nonperformance::where('title', 'LIKE', "{$request->title}")->withTrashed()->get();
 
-        return response()->json($create);
+        if ($reasons->count() > 0) {
+
+            return response()->json('error');
+
+        }else{
+            $create = Nonperformance::create($request->all());
+
+            return response()->json($create);
+        }
     }
 
     /**

@@ -52,9 +52,17 @@ class ProgramController extends Controller
      */
     public function store(Request $request)
     {
-        $create = Program::create($request->all());
+        $programs = Program::where('name', 'LIKE', "{$request->name}")->withTrashed()->get();
 
-        return response()->json($create);
+        if ($programs->count() > 0) {
+
+            return response()->json('error');
+
+        }else{
+            $create = Program::create($request->all());
+
+            return response()->json($create);
+        }
     }
 
     /**

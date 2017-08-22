@@ -55,7 +55,8 @@ class SetController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   $sets = Set::where('title', 'LIKE', "{$request->title}")->withTrashed()->get();
+    {   
+        $sets = Set::where('title', 'LIKE', "{$request->title}")->withTrashed()->get();
 
         if ($sets->count() > 0) {
 

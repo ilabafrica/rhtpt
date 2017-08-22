@@ -71,10 +71,18 @@ new Vue({
             this.$validator.validateAll(scope).then(() => {
                 var input = this.newNonperf;
                 this.$http.post('/vuenonperfs',input).then((response) => {
+                if(response.data == 'error')
+                {
+                    this.error = response.data;
+                    toastr.error('This Non-performance Reason already exists', {timeOut: 5000});
+                }
+                else
+                {
                     this.changePage(this.pagination.current_page);
                     this.newNonperf = {'title':'','description':''};
                     $("#create-nonperf").modal('hide');
                     toastr.success('Non-performance reason Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }
                 }, (response) => {
                     this.formErrors = response.data;
                 });
