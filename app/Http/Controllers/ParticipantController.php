@@ -25,6 +25,9 @@ use Excel;
 use App;
 use File;
 
+//  Notification
+use App\Notifications\WelcomeNote;
+use App\Notifications\RegretNote;
 class ParticipantController extends Controller
 {
 
@@ -868,19 +871,17 @@ class ParticipantController extends Controller
         //  Assign UID and restore
         $user->restore();
         $user = User::find($userId);
-        $max = $user->id;
+        $max = $user->id; //change this to pick sequential unique ids
         $user->uid = $max;
         $user->username = $max;
         $user->save();
 
         //send mail
-        $usr = $user->toArray();
-
-        Mail::send('auth.approve', $usr, function($message) use ($usr) {
-            $message->to($usr['email']);
-            $message->subject('National HIV PT - Account Access Approved');
-        });
-
+        $token = app('auth.password.broker')->createToken($user);
+        $user->token = $token;
+        $user->username = $username;
+        $user->notify(new WelcomeNote($user));
+        
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
@@ -888,7 +889,7 @@ class ParticipantController extends Controller
         //  Remove beginning 0 and append +254
         $phone = ltrim($user->phone, '0');
         $recipient = "+254".$phone;
-        $message    = "Dear ".$user->name.", your PT request is approved. Your Unique ID is ".$user->uid." and the default password is 'secret'";
+        $message    = "Dear ".$user->name.", NHRL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
         // Create a new instance of our awesome gateway class
         $gateway    = new Bulk($username, $apikey);
         try 
@@ -902,16 +903,11 @@ class ParticipantController extends Controller
         {
             echo "Encountered an error while sending: ".$e->getMessage();
         }        
-        
     }
     public function denyUserVerification(Request $request){
         $id = $request->id;
-        $user = User::withTrashed()->find($id)->first()->toArray();   
-
-        Mail::send('auth.deny', $user, function($message) use ($user) {
-            $message->to($user['email']);
-            $message->subject('National HIV PT - Account Access Denied');
-        });
+        $user = User::withTrashed()->find($id); 
+        $user->notify(new RegretNote($user));        
     }
 }
 $excel = App::make('excel');
