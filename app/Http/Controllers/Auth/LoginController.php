@@ -7,6 +7,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\User;
+use Hash;
+
 class LoginController extends Controller
 {
     /*
@@ -68,5 +71,32 @@ class LoginController extends Controller
     public function username()
     {
         return 'username';
+    }
+    /**
+     * Attempt to log the user into the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function attemptLogin(Request $request)
+    {
+        //check if attempt is successful using the email field
+        $try = $this->guard()->attempt($this->credentials($request));
+        if($try)
+        {
+            $user = User::find(auth()->user()->id);
+            if(Hash::check("123456", $user->password))
+            {
+                $token = app('auth.password.broker')->createToken($user);
+                // auth()->logout();
+                return redirect()->route('/password/reset/'.$token);
+            }
+            else
+            {
+                return $try;
+            }
+        }
+
+        return $try;
     }
 }

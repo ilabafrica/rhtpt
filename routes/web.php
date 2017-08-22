@@ -19,9 +19,7 @@ Route::get('signup', function () {
     return view('auth.signup');
 });
 
-Route::get('/2fa', function () {
-    return view('auth.2fa');
-});
+Route::get('/2fa', 'Auth\RegisterController@twoFa');
 
 Route::get('/verified', function () {
     return view('auth.verified');
@@ -205,11 +203,6 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/con_subs/{id?}", array(
         "as"   => "cons.subs",
         "uses" => "FacilityController@consignment"
-    ));
-
-    Route::get("/subs/{id}", array(
-        "as"   => "subs.fetch",
-        "uses" => "FacilityController@subs"
     ));
 
     Route::get("/fclts/{id}", array(
@@ -455,3 +448,22 @@ Route::group(['middleware' => 'auth'], function()
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+
+Route::get("/subs/{id}", array(
+    "as"   => "subs.fetch",
+    "uses" => "FacilityController@subs"
+));
+
+Route::get("/mfls/{id}", array(
+    "as"   => "mfls.fetch",
+    "uses" => "FacilityController@mfls"
+));
+
+Route::get("/mfl/{id}", array(
+    "as"   => "mfl.fetch",
+    "uses" => "FacilityController@mfl"
+));
+Route::get("/resend", array(
+    "as"   => "resend.code",
+    "uses" => "Auth\RegisterController@resend"
+));
