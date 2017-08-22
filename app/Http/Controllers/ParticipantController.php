@@ -879,7 +879,6 @@ class ParticipantController extends Controller
         //send mail
         $token = app('auth.password.broker')->createToken($user);
         $user->token = $token;
-        $user->username = $username;
         $user->notify(new WelcomeNote($user));
         
         //  Bulk-sms settings
