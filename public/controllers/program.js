@@ -70,10 +70,18 @@ new Vue({
             this.$validator.validateAll(scope).then(() => {
                 var input = this.newProgram;
                 this.$http.post('/vueprograms',input).then((response) => {
+                if(response.data == 'error')
+                {
+                    this.error = response.data;
+                    toastr.error('This Program already exists', {timeOut: 5000});
+                }
+                else
+                {
                     this.changePage(this.pagination.current_page);
                     this.newProgram = {'name':'','description':''};
                     $("#create-program").modal('hide');
                     toastr.success('Program Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }
                 }, (response) => {
                     this.formErrors = response.data;
                 });

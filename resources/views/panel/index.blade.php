@@ -102,59 +102,59 @@
 
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('lot') }" for="lot">Lot:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_panel.lot') }" for="lot">Lot:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="lot" :class="{'input': true, 'is-danger': errors.has('lot') }" v-model="newPanel.lot_id">
+                                        <select v-validate="'required'" class="form-control c-select" name="lot" :class="{'input': true, 'is-danger': errors.has('create_panel.lot') }" v-model="newPanel.lot_id">
                                             <option selected></option>
                                             <option  v-for="lot in lots" :value="lot.id">@{{ lot.value }}</option>
                                         </select>
-                                        <span v-show="errors.has('lot')" class="help is-danger">@{{ errors.first('lot') }}</span>
+                                        <span v-show="errors.has('create_panel.lot')" class="help is-danger">@{{ errors.first('create_panel.lot') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('panel') }" for="panel">Panel ID:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_panel.panel') }" for="panel">Panel ID:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="panel" :class="{'input': true, 'is-danger': errors.has('panel') }" v-model="newPanel.panel">
+                                        <select v-validate="'required'" class="form-control c-select" name="panel" :class="{'input': true, 'is-danger': errors.has('create_panel.panel') }" v-model="newPanel.panel">
                                             <option selected></option>
                                             <option  v-for="panel in [1,2,3,4,5,6]" :value="panel">@{{ panel }}</option>
                                         </select>
-                                        <span v-show="errors.has('panel')" class="help is-danger">@{{ errors.first('panel') }}</span>
+                                        <span v-show="errors.has('create_panel.panel')" class="help is-danger">@{{ errors.first('create_panel.panel') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('material') }" for="material">Material:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_panel.material') }" for="material">Material:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="material" :class="{'input': true, 'is-danger': errors.has('material') }" v-model="newPanel.material_id">
+                                        <select v-validate="'required'" class="form-control c-select" name="material" :class="{'input': true, 'is-danger': errors.has('create_panel.material') }" v-model="newPanel.material_id">
                                             <option selected></option>
                                             <option  v-for="material in materials" :value="material.id">@{{ material.value }}</option>
                                         </select>
-                                        <span v-show="errors.has('material')" class="help is-danger">@{{ errors.first('material') }}</span>
+                                        <span v-show="errors.has('create_panel.material')" class="help is-danger">@{{ errors.first('create_panel.material') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('characterized by') }" for="characterized">Characterized By:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_panel.characterized by') }" for="characterized">Characterized By:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('characterized by') }" name="characterized by" type="text" placeholder="" v-model="newPanel.prepared_by" />
-                                        <span v-show="errors.has('characterized by')" class="help is-danger">@{{ errors.first('characterized by') }}</span>
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_panel.characterized by') }" name="characterized by" type="text" placeholder="" v-model="newPanel.prepared_by" />
+                                        <span v-show="errors.has('create_panel.characterized by')" class="help is-danger">@{{ errors.first('create_panel.characterized by') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('expected result') }" for="expected">Expected Result:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_panel.expected result') }" for="expected">Expected Result:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="option in options">
                                             <label class="form-radio-label">
-                                                <input type="radio" v-validate="'required'" :value="option.id" v-model="newPanel.result" name="expected result" :class="{'input': true, 'is-danger': errors.has('verified by') }" name="expected result">
+                                                <input type="radio" v-validate="'required'" :value="option.id" v-model="newPanel.result" name="expected result" :class="{'input': true, 'is-danger': errors.has('create_panel.expected result') }" name="expected result">
                                                 @{{ option.value }}
                                             </label>
                                         </div>
-                                        <span v-show="errors.has('expected result')" class="help is-danger">@{{ errors.first('expected result') }}</span>
+                                        <span v-show="errors.has('create_panel.expected result')" class="help is-danger">@{{ errors.first('create_panel.expected result') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('verified by') }" for="verified">Verified By:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_panel.verified by') }" for="verified">Verified By:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('verified by') }" name="verified by" type="text" placeholder="" v-model="newPanel.tested_by" />
-                                        <span v-show="errors.has('verified by')" class="help is-danger">@{{ errors.first('verified by') }}</span>
+                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_panel.verified by') }" name="verified by" type="text" placeholder="" v-model="newPanel.tested_by" />
+                                        <span v-show="errors.has('create_panel.verified by')" class="help is-danger">@{{ errors.first('create_panel.verified by') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">

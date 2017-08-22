@@ -62,7 +62,7 @@ new Vue({
 
         getVueOptions: function(page){
             this.$http.get('/vueoptions?page='+page).then((response) => {
-                this.options = response.data.data.data.data;
+                this.options = response.data.data.data;
                 this.pagination = response.data.pagination;
             });
         },
@@ -71,10 +71,18 @@ new Vue({
             this.$validator.validateAll(scope).then(() => {
                 var input = this.newOption;
                 this.$http.post('/vueoptions',input).then((response) => {
+                if(response.data == 'error')
+                {
+                    this.error = response.data;
+                    toastr.error('This Option already exists', {timeOut: 5000});
+                }
+                else
+                {
                     this.changePage(this.pagination.current_page);
                     this.newOption = {'title':'','description':''};
                     $("#create-option").modal('hide');
                     toastr.success('Option Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }
                 }, (response) => {
                     this.formErrors = response.data;
                 });

@@ -61,9 +61,17 @@ class ShipperController extends Controller
             'email' => 'required',
         ]);
 
-        $create = Shipper::create($request->all());
+        $shippers = Shipper::where('name', 'LIKE', "{$request->name}")->withTrashed()->get();
 
-        return response()->json($create);
+        if ($shippers->count() > 0) {
+
+            return response()->json('error');
+
+        }else{
+            $create = Shipper::create($request->all());
+
+            return response()->json($create);
+        }
     }
 
     /**

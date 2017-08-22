@@ -52,9 +52,17 @@ class OptionController extends Controller
      */
     public function store(Request $request)
     {
-        $create = Option::create($request->all());
+        $options = Option::where('title', 'LIKE', "{$request->title}")->withTrashed()->get();
 
-        return response()->json($create);
+        if ($options->count() > 0) {
+
+            return response()->json('error');
+
+        }else{
+           $create = Option::create($request->all());
+
+            return response()->json($create);
+        }
     }
 
     /**

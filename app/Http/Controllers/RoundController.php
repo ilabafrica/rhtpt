@@ -72,9 +72,14 @@ class RoundController extends Controller
 
         if ($rounds->count() > 0) {
 
-            return response()->json('error');
+            return response()->json('1');
 
-        }else{
+        }else if ($request->start_date > $request->end_date) {
+           
+            return response()->json('2');
+
+        }else
+        {        
 
             $request->request->add(['user_id' => Auth::user()->id]);
 
