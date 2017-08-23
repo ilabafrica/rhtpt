@@ -97,60 +97,60 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createField('create_field')" data-vv-validate="create_field">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createField('create_field')" data-vv-validate="create_field" data-vv-scope="create_field">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_field.title') }" for="title">Title:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder=""/>
-                                        <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_field.title') }" name="title" type="text" placeholder="" v-model="newFieldSet.title"/>
+                                        <span v-show="errors.has('create_field.title')" class="help is-danger">@{{ errors.first('create_field.title') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('uid') }" for="uid">UID:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_field.uid') }" for="uid">UID:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('uid') }" name="uid" type="text" placeholder=""/>
-                                        <span v-show="errors.has('uid')" class="help is-danger">@{{ errors.first('uid') }}</span>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_field.uid') }" name="uid" type="text" placeholder="" v-model="newFieldSet.uid"/>
+                                        <span v-show="errors.has('create_field.uid')" class="help is-danger">@{{ errors.first('create_field.uid') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('tag') }" for="tag">Tag:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_field.tag') }" for="tag">Tag:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="tag" :class="{'input': true, 'is-danger': errors.has('tag') }" v-model="selected">
+                                        <select v-validate="'required'" class="form-control c-select" name="tag" :class="{'input': true, 'is-danger': errors.has('create_field.tag') }" v-model="newFieldSet.tag">
                                             <option selected></option>
                                             <option v-for="tag in tags" :value="tag.id">@{{ tag.value }}</option>
                                         </select>
-                                        <span v-show="errors.has('tag')" class="help is-danger">@{{ errors.first('tag') }}</span>
+                                        <span v-show="errors.has('create_field.tag')" class="help is-danger">@{{ errors.first('create_field.tag') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('order') }" for="order">Order:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_field.order') }" for="order">Order:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="order" :class="{'input': true, 'is-danger': errors.has('order') }">
+                                        <select v-validate="'required'" class="form-control c-select" name="order" :class="{'input': true, 'is-danger': errors.has('create_field.order') }" v-model="newFieldSet.order">
                                             <option selected></option>
                                             <option v-for="fld in flds" :value="fld.id">@{{ fld.value }}</option>
                                         </select>
-                                        <span v-show="errors.has('order')" class="help is-danger">@{{ errors.first('order') }}</span>
+                                        <span v-show="errors.has('create_field.order')" class="help is-danger">@{{ errors.first('create_field.order') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('field_set_id') }" for="field set">Field Set:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_field.field_set_id') }" for="field set">Field Set:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="field_set_id" :class="{'input': true, 'is-danger': errors.has('field_set_id') }">
+                                        <select v-validate="'required'" class="form-control c-select" name="field_set_id" :class="{'input': true, 'is-danger': errors.has('create_field.field_set_id') }" v-model="newFieldSet.field_set_id">
                                             <option selected></option>
                                             <option v-for="set in sets" :value="set.id">@{{ set.value }}</option>
                                         </select>
-                                        <span v-show="errors.has('field_set_id')" class="help is-danger">@{{ errors.first('field_set_id') }}</span>
+                                        <span v-show="errors.has('create_field.field_set_id')" class="help is-danger">@{{ errors.first('create_field.field_set_id') }}</span>
                                     </div>
                                 </div>
-                                <div v-if="selected === 1 || selected === 5 || selected === 6" class="shhde">
+                                <div v-if="newFieldSet.tag === 1 || newFieldSet.tag === 5 || newFieldSet.tag === 6" class="shhde">
                                     <div class="form-group row">
-                                        <label class="col-sm-4 form-control-label" for="title">Options:</label>
+                                        <label class="col-sm-4 form-control-label" for="options">Options:</label>
                                         <div class="col-sm-8">
                                             <div class="card card-block">
                                                 <div class="form-checkbox form-checkbox-inline" v-for="option in options">
                                                     <label class="form-checkbox-label">
-                                                        <input type="checkbox" :value="option.id" name="opts[]">
+                                                        <input type="checkbox" :value="option.id" name="opts[]" v-model="newFieldSet.opts">
                                                         @{{ option.value }}
                                                     </label>
                                                 </div>
@@ -163,8 +163,8 @@
                                     <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
-                            </div>
                         </form>
+                            </div>
                     </div>            
                 </div>
             </div>

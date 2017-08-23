@@ -81,10 +81,6 @@ Route::group(['middleware' => 'auth'], function()
         return view('welcome');
     });
 
-    Route::get('/', function () {
-        return view('app');
-    });
-
     Route::get('panel', 'PanelController@managePanel');
     Route::resource('vuepanels','PanelController');
     Route::any('vuepanels/{id}/restore','PanelController@restore');
@@ -187,6 +183,11 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/rnds", array(
         "as"   => "rnds.fetch",
         "uses" => "RoundController@rounds"
+    ));
+
+    Route::get("/rndsDone", array(
+        "as"   => "rnds.fetch",
+        "uses" => "RoundController@roundsDone"
     ));
 
     Route::get("/itms", array(
@@ -421,6 +422,10 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "approve.participant",
         "uses" => "ParticipantController@approve"
     ));
+    Route::any("/denyUserVerification/{id}", array(
+        "as"   => "denyUserVerification.participant",
+        "uses" => "ParticipantController@denyUserVerification"
+    ));
 
     Route::get('participant', 'ParticipantController@manageParticipant');
     Route::resource('vueparticipants','ParticipantController');
@@ -444,6 +449,9 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
     Route::get('api/search_parts',['as'=>'participants.search', 'uses'=>'UserController@forEnrol']);
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
 
 Route::get("/subs/{id}", array(
     "as"   => "subs.fetch",

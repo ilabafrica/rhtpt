@@ -33,8 +33,8 @@
                 background-color: white;
             }
         </style>
-        <!-- Datepicker
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/datepicker.css') }}" /> -->
+        <!-- Sweet Alert Styling-->
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
     </head>
     <body>
         <!-- Preloader -->
@@ -245,9 +245,8 @@
         </section>
         <!-- JQuery v1.9.1 -->
         <script src="{{ asset('js/jquery-1.12.3.min.js') }}"></script>
-        <script src="{{ asset('js/jquery.js') }}"></script>
-        <script src="{{ asset('js/jquery-ui-min.js') }}"></script>
         <script src="{{ asset('js/underscore-min.js') }}"></script>
+        <script src="{{ asset('js/jquery-ui-min.js') }}"></script>
         <!-- Bootstrap -->
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
         <!-- Globalize -->
@@ -255,8 +254,6 @@
 
         <!-- NanoScroll -->
         <script src="{{ asset('js/jquery.nicescroll.min.js') }}"></script>
-        <!-- Custom JQuery -->
-        <script src="{{ asset('js/custom.js') }}"></script>
         <!-- Vue JS -->
         <script src="{{ asset('js/vue.js') }}"></script>
         <script src="{{ asset('js/vue-resource.min.js') }}"></script>
@@ -265,13 +262,16 @@
         <script>
             Vue.use(VeeValidate); // good to go. 
         </script>
-        
         <!-- Toastr -->
         <script src="{{ asset('js/toastr.min.js') }}"></script>
 
         <script type="text/javascript" src="{{ URL::asset('js/script.js') }} "></script>
 
-        <script type="text/javascript" src="{{ URL::asset('js/moment.min.js') }} "></script>
+        <script type="text/javascript" src="{{ URL::asset('js/moment.min.js') }} "></script>        
+        <!-- Custom JQuery -->
+        <script src="{{ asset('js/custom.js') }}"></script>
+
+        <script src="{{ URL::asset('js/sweetalert.min.js') }}"></script>
 
         @if(Request::segment(1)==strtolower('event'))
         <script src="{{ asset('controllers/event.js') }}"></script>

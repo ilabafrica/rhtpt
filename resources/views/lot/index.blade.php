@@ -98,38 +98,38 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createLot('create_lot')" data-vv-validate="create_lot">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createLot('create_lot')" data-vv-validate="create_lot" data-vv-scope="create_lot">
                         <div class="col-md-12">
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('pt round') }" for="round">PT Round:</label>
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_lot.pt round') }" for="round">PT Round:</label>
                                 <div class="col-sm-8" :class="{ 'control': true }">
-                                    <select v-validate="'required'" class="form-control c-select" name="pt round" :class="{'input': true, 'is-danger': errors.has('pt round') }" v-model="newLot.round_id">
+                                    <select v-validate="'required'" class="form-control c-select" name="pt round" :class="{'input': true, 'is-danger': errors.has('create_lot.pt round') }" v-model="newLot.round_id">
                                         <option selected></option>
                                         <option  v-for="round in rounds" :value="round.id">@{{ round.value }}</option>   
                                     </select>
-                                    <span v-show="errors.has('pt round')" class="help is-danger">@{{ errors.first('pt round') }}</span>
+                                    <span v-show="errors.has('create_lot.pt round')" class="help is-danger">@{{ errors.first('create_lot.pt round') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('lot no.') }" for="lot">Lot No.:</label>
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_lot.lot no.') }" for="lot">Lot No.:</label>
                                 <div class="col-sm-8" :class="{ 'control': true }">
-                                    <select v-validate="'required'" class="form-control c-select" name="lot no." :class="{'input': true, 'is-danger': errors.has('lot no.') }" v-model="newLot.lot">
+                                    <select v-validate="'required'" class="form-control c-select" name="lot no." :class="{'input': true, 'is-danger': errors.has('create_lot.lot no.') }" v-model="newLot.lot">
                                         <option selected></option>
                                         <option v-for="lt in [1,2,3,4,5]" :value="lt">@{{ lt }}</option>  
                                     </select>
-                                    <span v-show="errors.has('lot no.')" class="help is-danger">@{{ errors.first('lot no.') }}</span>
+                                    <span v-show="errors.has('create_lot.lot no.')" class="help is-danger">@{{ errors.first('create_lot.lot no.') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('tester id') }" for="tester id">Tester ID:</label>
+                                <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_lot.tester id') }" for="tester id">Tester ID:</label>
                                 <div class="col-sm-8" :class="{ 'control': true }">
                                     <div class="form-checkbox checkbox-inline" v-for="option in [0,1,2,3,4,5,6,7,8,9]">
                                         <label class="form-checkbox-label">
-                                            <input v-validate="'required'" type="checkbox" name="tester id" :value="option" :class="{'input': true, 'is-danger': errors.has('tester id') }" v-model="newLot.tester_id">
+                                            <input v-validate="'required'" type="checkbox" name="tester id" :value="option" :class="{'input': true, 'is-danger': errors.has('create_lot.tester id') }" v-model="newLot.tester_id">
                                             @{{ option }}
                                         </label>
                                     </div>
-                                    <span v-show="errors.has('tester id')" class="help is-danger">@{{ errors.first('tester id') }}</span>
+                                    <span v-show="errors.has('create_lot.tester id')" class="help is-danger">@{{ errors.first('create_lot.tester id') }}</span>
                                 </div>
                             </div>
                             <div class="form-group row col-sm-offset-4 col-sm-8">

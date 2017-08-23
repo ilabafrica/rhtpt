@@ -17,7 +17,7 @@
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.sample-preparation', 2) !!}
         
                 @permission('create-sample')
-                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-material">
+                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-material" >
                         <i class="fa fa-plus-circle"></i>
                         {!! trans('messages.add') !!}
                     </button>
@@ -100,7 +100,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createMaterial('create_material')" data-vv-validate="create_material">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createMaterial('create_material')" data-vv-validate="create_material" data-vv-scope="create_material">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('batch no.') }" for="batch no.">Batch No:</label>
@@ -112,14 +112,14 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('date prepared') }" for="date prepared">Date Prepared:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('date prepared') }" name="date prepared" type="date" placeholder="" v-model="newMaterial.date_prepared" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('date prepared') }" name="date prepared" type="text" placeholder="" v-model="newMaterial.date_prepared" />
                                         <span v-show="errors.has('date prepared')" class="help is-danger">@{{ errors.first('date prepared') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('expiry date') }" for="expiry date">Expiry Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('expiry date') }" name="expiry date" type="date" placeholder="" v-model="newMaterial.expiry_date" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('expiry date') }" name="expiry date" type="text" placeholder="" v-model="newMaterial.expiry_date" />
                                         <span v-show="errors.has('expiry date')" class="help is-danger">@{{ errors.first('expiry date') }}</span>
                                     </div>
                                 </div>

@@ -288,12 +288,45 @@ EntrustUserTrait::restore insteadof SoftDeletes;
         }
     }
     /**
-    * Pt relationship
+    * Return User ID given the email
     *
     */
-    public function pt()
+    public static function idByUsername($username=NULL)
     {
-        return $this->hasMany('App\Pt');
+        if($username!=NULL)
+        {
+            try 
+            {
+                $count = User::where('username', $username)->count();
+                if($count > 0)
+                {
+                    $user = User::where('username', $username)->orderBy('name', 'asc')->first();
+                    return $user->id;
+                }
+                else
+                {
+                    return null;
+                }
+            } 
+            catch (ModelNotFoundException $e) 
+            {
+                Log::error("The user with username ` $username ` does not exist:  ". $e->getMessage());
+                //TODO: send username?
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+    /**
+    * Enrol relationship
+    *
+    */
+    public function enrol()
+    {
+        return $this->hasMany('App\Enrol');
     }
     public function getEmailVerificationUrlAttribute()
     {
@@ -338,5 +371,13 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     {
         DB::table('role_user')->where('user_id', $this->id)->delete();
         return $this;
+    }
+
+    public function results()
+    {
+        
+        $enrolments = $this->enrol()->pluck('id');
+        $results = Pt::whereIn('enrolment_id', $enrolments);
+        return $results;
     }
 }

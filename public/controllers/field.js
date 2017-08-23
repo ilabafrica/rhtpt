@@ -27,6 +27,7 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
+        newFieldSet: {'title':'','uid':'','tag':'','order':'','field_set_id':'','opts[]':''},
         frmData: {},
         loading: false,
         error: false,
@@ -77,12 +78,23 @@ new Vue({
 
         createField: function(scope){
             this.$validator.validateAll(scope).then(() => {
-                let myForm = document.getElementById('test_results');
-                let formData = new FormData(myForm);
-                this.$http.post('/vuefields',formData).then((response) => {
+                // let myForm = document.getElementById('create_field');
+                // let formData = new FormData(myForm);
+                var input = this.newFieldSet;
+                this.$http.post('/vuefields',input).then((response) => {
+
+                if(response.data == 'error')
+                {
+                    this.error = response.data;
+                    toastr.error(this.error, 'This Field already exists', {timeOut: 5000});
+                }
+                else
+                {
                     this.changePage(this.pagination.current_page);
+                    this.newFieldSet= {'title':'','uid':'','tag':'','order':'','field_set_id':'','opts[]':''};
                     $("#create-field").modal('hide');
                     toastr.success('Field Created Successfully.', 'Success Alert', {timeOut: 5000});
+                }
                 }, (response) => {
                     this.formErrors = response.data;
                 });

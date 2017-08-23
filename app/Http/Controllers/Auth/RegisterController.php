@@ -108,6 +108,8 @@ class RegisterController extends Controller
         //  Check if user exists
         $userId = User::idByEmail($request->email);
         if(!$userId)
+            $userId = User::idByUsername($request->username);
+        if(!$userId)
         {
             $user = new User;
             $user->name = $request->surname." ".$request->fname." ".$request->oname;

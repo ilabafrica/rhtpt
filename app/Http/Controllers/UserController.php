@@ -604,6 +604,7 @@ class UserController extends Controller
     public function batchRegistration(Request $request)
     {
         $exploded = explode(',', $request->excel);
+        // dd($exploded);
         $decoded = base64_decode($exploded[1]);
         if(str_contains($exploded[0], 'sheet'))
             $extension = 'xlsx';

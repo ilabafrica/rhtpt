@@ -3,13 +3,19 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 
-class SendVerificationCode extends Notification
+class RegretNote extends Notification
 {
     use Queueable;
 
+    /**
+     * Create a new notification instance.
+     *
+     * @return void
+     */
     protected $user;
 
     /**
@@ -26,7 +32,7 @@ class SendVerificationCode extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed $notifiable
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -37,23 +43,23 @@ class SendVerificationCode extends Notification
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed $notifiable
+     * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('You have been registered with the Kenya National Rapid HIV Proficiency Testing Program. Please click on the button below to verify your email address.')
+            ->subject('PT Participation Request')
             ->greeting('Hello '.$this->user->name)
-            ->subject('Email Verification')
-            ->action('Verify Email', url('/email/verify/' . $this->user->email_verification_code))
+            ->line('Your request to participate in the Rapid HIV Proficiency Testing has not been approved.')
+            ->line('Kindly contact your County Coordinator for further assistance.')
             ->line('Thank you for using our application!');
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed $notifiable
+     * @param  mixed  $notifiable
      * @return array
      */
     public function toArray($notifiable)

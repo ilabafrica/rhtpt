@@ -49,11 +49,13 @@
     <table class="table table-bordered">
         <tr>
             <th>Title</th>
+            <th>Description</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Action</th>
         </tr>
         <tr v-for="round in rounds">
+            <td>@{{ round.name }}</td>
             <td>@{{ round.description }}</td>
             <td>@{{ round.start_date }}</td>
             <td>@{{ round.end_date }}</td>
@@ -108,13 +110,13 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRound('create_round')" id="create_round" data-vv-scope ='create_round'>
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createRound('create_round')" id="create_round" data-vv-scope="create_round">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Title:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_round.name') }" for="name">Title:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newRound.name" />
-                                        <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_round.name') }" name="name" type="text" placeholder="" v-model="newRound.name" />
+                                        <span v-show="errors.has('create_round.name')" class="help is-danger">@{{ errors.first('create_round.name') }}</span>
                                     </div>
                                 </div>
 
@@ -127,18 +129,18 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('start date') }" for="start date">Start Date:</label>
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('create_round.start date') }" for="start date">Start Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('start date') }" name="start date" type="date" placeholder="" v-model="newRound.start_date" />
-                                        <span v-show="errors.has('start date')" class="help is-danger">@{{ errors.first('start date') }}</span>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_round.start date') }" name="start date" type="date" placeholder="" v-model="newRound.start_date" id="start_date" />
+                                        <span v-show="errors.has('create_round.start date')" class="help is-danger">@{{ errors.first('create_round.start date') }}</span>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('end date') }" for="end date">End Date:</label>
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('create_round.end date') }" for="end date">End Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('end date') }" name="end date" type="date" placeholder="" v-model="newRound.end_date" />
-                                        <span v-show="errors.has('end date')" class="help is-danger">@{{ errors.first('end date') }}</span>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_round.end date') }" name="end date" type="date" placeholder="" v-model="newRound.end_date" id="end_date" />
+                                        <span v-show="errors.has('create_round.end date')" class="help is-danger">@{{ errors.first('create_round.end date') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
