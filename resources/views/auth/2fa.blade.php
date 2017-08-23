@@ -64,11 +64,12 @@
                                 <span v-show="errors.has('code')" class="help is-danger">@{{ errors.first('code') }}</span>
                             </div>
                             <div class="col-sm-2">
-                                <button class="btn btn-nephritis btn-block"><strong><i class="fa fa-check"></i> Verify</strong></button>                            
+                                <button class="btn btn-nephritis btn-block" @click="verifyPhone"><strong><i class="fa fa-check"></i> Verify</strong></button>                            
                             </div>
+                </form>
 
                             <div class="col-sm-3">
-                                <button class="btn btn-midnight-blue btn-block" @click="resendVerificationCode"><strong><i class="fa fa-refresh"></i> Resend Code</strong></button>                            
+                                <button class="btn btn-midnight-blue btn-block" v-on:click.prevent="resendVerificationCode"><strong><i class="fa fa-refresh" ></i> Resend Code</strong></button>                            
                             </div>
                         </div>
                         <div class="card card-outline-success text-center">
@@ -79,7 +80,6 @@
                             </div>
                         </div>
                     </div>
-				</form>
 			</div>
             <div class="row" style="padding:20px">
                 <div class="col-md-12 text-md-center">

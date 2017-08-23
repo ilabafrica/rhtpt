@@ -245,16 +245,57 @@ class RegisterController extends Controller
 
     }
 
-    public function resend()
+    public function resend($request)
     {
-        $user = User::find(1)->toArray();
+        if(strlen($request) < 10 || strlen($request) > 10)
+            return response()->json(["error" => "Enter a valid phone number."]);
+        $phone = ltrim($request, '0');
+        $recipient = "+254".$phone;
+        $user = User::withTrashed()->where('phone', 'LIKE', '%'.$phone.'%')->first();
+        if(!$user)
+            return response()->json(["error" => "Phone number not found."]);
+        //  Bulk-sms settings
+        $api = DB::table('bulk_sms_settings')->first();
+        $username   = $api->username;
+        $apikey     = $api->api_key;
+        $token = mt_rand(100000, 999999);
+        $user->sms_code = $token;
+        $user->save();
+        $message    = "Your Verification Code is: ".$token;
+        // Create a new instance of our awesome gateway class
+        $gateway    = new Bulk($username, $apikey);
+        try 
+        { 
+            // Specified sender-id
+            $from = $api->code;
+            // Send message
+            $result = $gateway->sendMessage($recipient, $message);
+        }
+        catch (\AfricasTalkingGatewayException $e )
+        {
+            // echo "Encountered an error while sending: ".$e->getMessage();
+            return response()->json(["error" => "'Encountered an error while sending verification code. Please try again later."], 500);
+        }
+        try
+        {
+            //  Do Email verification for email address
+            $user->email_verification_code = Str::random(60);
+            $user->save();
+            /*$usr = $user->toArray();
 
-        Mail::send('auth.verification', $user, function($message) use ($user) {
-            $message->to('kipropbrian@gmail.com');
-            $message->subject('E-Mail Example');
-        });
+            Mail::send('auth.verification', $usr, function($message) use ($usr) {
+                $message->to($usr['email']);
+                $message->subject('National HIV PT - Email Verification Code');
+            });*/
 
-        dd('Mail Send Successfully');
+            event(new Registered($usr = $user));
+
+            //$this->guard()->login($user);
+        }
+        catch(\Exception $e)
+        {
+            return response()->json(["error" => "'Encountered an error while sending verification code. Please try again later."]);
+        }
     }
     /**
      * Redirect user for SMS verification

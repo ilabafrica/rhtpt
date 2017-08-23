@@ -24,6 +24,8 @@ use Jenssegers\Date\Date as Carbon;
 use Excel;
 use App;
 use File;
+//  Notification
+use App\Notifications\WelcomeNote;
 
 class UserController extends Controller
 {
@@ -394,7 +396,6 @@ class UserController extends Controller
     public function designations()
     {
         $designations = [
-            0 => '',
             User::NURSE => 'Nurse',
             User::LABTECH => 'Lab Tech.',
             User::COUNSELLOR => 'Counsellor',
@@ -730,7 +731,10 @@ class UserController extends Controller
                                 $user->username = uniqid();
                                 $user->save();
                                 $user->username = $user->id;
-                                $user->password = User::DEFAULT_PASSWORD;
+                                $user->uid = $user->id;
+                                $user->phone_verified = 1;
+                                $user->email_verified = 1;
+                                $user->password = Hash::make(User::DEFAULT_PASSWORD);
                                 $user->save();
                                 $userId = $user->id;
                             }
@@ -763,7 +767,32 @@ class UserController extends Controller
                             //  Prepare to save role-user details
                             $roleId = Role::idByName('Participant');
                             DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => Program::idByTitle($tprog), "designation" => $tdes]);
-                            //  send email and sms for registration
+                            //  send email and sms
+                            $token = app('auth.password.broker')->createToken($user);
+                            $user->token = $token;
+                            $user->notify(new WelcomeNote($user));
+                            
+                            //  Bulk-sms settings
+                            $api = DB::table('bulk_sms_settings')->first();
+                            $username   = $api->username;
+                            $apikey     = $api->api_key;
+                            //  Remove beginning 0 and append +254
+                            $phone = ltrim($user->phone, '0');
+                            $recipient = "+254".$phone;
+                            $message    = "Dear ".$user->name.", NHRL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
+                            // Create a new instance of our awesome gateway class
+                            $gateway    = new Bulk($username, $apikey);
+                            try 
+                            { 
+                                // Specified sender-id
+                                $from = $api->code;
+                                // Send message
+                                $result = $gateway->sendMessage($recipient, $message);
+                            }
+                            catch ( AfricasTalkingGatewayException $e )
+                            {
+                                echo "Encountered an error while sending: ".$e->getMessage();
+                            }
                         }
                     }
                 }

@@ -144,17 +144,46 @@ new Vue({
         fetchFacility: function() {
             let id = $('#mfl').val();
             this.$http.get('/mfl/'+id).then((response) => {
-                console.log(response);
                 this.newParticipant.facility = response.data.name;
                 this.newParticipant.sub_county = response.data.sub_county;
                 this.newParticipant.county = response.data.county;
+                if(this.newParticipant.facility.length == 0)
+                    swal("Facility not found!", "Enter a valid MFL Code.", "info");
             });
         },
 
         resendVerificationCode: function() {
-            this.$http.get('/resend/').then((response) => {
-                // this.newParticipant.facility = response.data;
-            });
+            swal({
+                    title: "Enter your phone number.",
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "e.g. 0722000000"
+                },
+                function(inputValue)
+                {
+                    if (inputValue === false) return false;
+                  
+                    if (inputValue.length == 0) {
+                        swal.showInputError("Please enter the phone number you registered with.");
+                        return false
+                    }
+                    else
+                    {          
+                        this.$http.get('/resend/'+inputValue).then((response) => {
+                            if(response.data.error)
+                            {
+                                swal("Error!", response.data.error, "error");
+                            }
+                            else
+                            {
+                                swal("Success!", "The verification code was successfully sent. Please check your phone.", "success");
+                            }
+                        });
+                    }
+                }.bind(this)
+            );
         },
     }
 });
