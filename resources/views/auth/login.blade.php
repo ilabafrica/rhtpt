@@ -11,14 +11,17 @@
     <meta name="theme-color" content="#3e454c">
 
     <title>{!! Config::get('cms.name') !!}</title>
+
     <!-- Font awesome -->
     <link rel="stylesheet" href="{{ asset('css/font-awesome.css') }}">
     <!-- Bootstrap core CSS -->
-        <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
     <!-- Custom Font -->
     <link rel="stylesheet" href="{{ asset('css/font.css') }}">
     <!-- Custom Styling -->
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <!-- Sweet Alert Styling -->
+    <link href="{{ asset('css/sweetalert.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -66,12 +69,11 @@
                     <div class="form-group row">
                         <div class="col-md-offset-2 col-md-10">
                             <button class="btn btn-primary btn-block" type="submit" name="signin">LOGIN</button>
-                            <a class="btn btn-wisteria btn-block" href="{{url('signup')}}">REGISTER HERE</a>
+                            <a class="btn btn-wisteria btn-block" onclick="confirmRegistration()">REGISTER HERE</a>
                             <a class="btn btn-link btn-block" href="{{url('password/reset')}}">FORGOT PASSWORD</a>
                             <hr>
                             <h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NHRL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>
                         </div>
-
                     </div>
                 </form>
             </div>
@@ -88,7 +90,7 @@
     <script type="text/javascript">
         function confirmRegistration()
         {
-        	swal({
+            swal({
                 title: "Have you participated in PT before?",
                 type: "warning",
                 showCancelButton: true,
