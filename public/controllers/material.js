@@ -64,8 +64,11 @@ new Vue({
 
         getVueMaterials: function(page){
             this.$http.get('/vuematerials?page='+page).then((response) => {
-                this.materials = response.data.data.data;
-                this.pagination = response.data.pagination;
+                if(response.data.data)
+                {
+                    this.materials = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                }
             });
         },
 

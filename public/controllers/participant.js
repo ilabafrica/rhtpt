@@ -405,7 +405,7 @@ new Vue({
                   if (isConfirm) {
                     swal("Deactivated!", "User has not been approved.", "success");
                     
-                    this.$http.put('/denyUserVerification/'+id, input, ).then((response) => {
+                    this.$http.put('/denyUserVerification/'+id, input).then((response) => {
                         this.changePage(this.pagination.current_page);
                         this.someUser = {'name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
                         $("#approve-user").modal('hide');

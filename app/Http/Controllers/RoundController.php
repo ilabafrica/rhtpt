@@ -193,7 +193,7 @@ class RoundController extends Controller
         $message = str_replace('] ', ' ', $message);
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
+        $username   = $api->code;
         $apikey     = $api->api_key;
         if($recipients)
         {
@@ -353,7 +353,7 @@ class RoundController extends Controller
                         $message = str_replace('] ', ' ', $message);
                         //  Bulk-sms settings
                         $api = DB::table('bulk_sms_settings')->first();
-                        $username   = $api->username;
+                        $username   = $api->code;
                         $apikey     = $api->api_key;
                         if($recipients)
                         {

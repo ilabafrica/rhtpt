@@ -97,13 +97,13 @@ new Vue({
                 if(response.data.warning)
                 {
                     this.warning = response.data.warning;
-                    swal("Alert!", this.warning, "warning")
+                    swal("Alert!", this.warning, "warning");
                     // toastr.warning(this.warning, 'Notification', {timeOut: 5000});
                 }
                 else if(response.data.info)
                 {
                     this.info = response.data.info;
-                    swal("Alert!", this.info, "info")
+                    swal("Alert!", this.info, "info");
                     // toastr.info(this.warning, 'Notification', {timeOut: 5000});
                 }
                 else if(response.data.success)
@@ -185,5 +185,10 @@ new Vue({
                 }.bind(this)
             );
         },
+
+        backHome()
+        {
+            window.location.replace("/login");
+        }
     }
 });

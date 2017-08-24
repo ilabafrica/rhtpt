@@ -510,7 +510,7 @@ class ParticipantController extends Controller
         */
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
+        $username   = $api->code;
         $apikey     = $api->api_key;
         //  Remove beginning 0 and append +254
         $phone = ltrim($user->phone, '0');
@@ -883,7 +883,7 @@ class ParticipantController extends Controller
         
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
+        $username   = $api->code;
         $apikey     = $api->api_key;
         //  Remove beginning 0 and append +254
         $phone = ltrim($user->phone, '0');
