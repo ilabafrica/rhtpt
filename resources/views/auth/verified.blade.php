@@ -68,8 +68,9 @@
 			</div>
             <div class="row" style="padding:20px">
                 <div class="col-md-12 text-md-center">
-                    <br >
-                    Designed for <a href="http://www.nphls.or.ke">NHRL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a>
+                    <div class="col-md-3 col-md-offset-4">
+                        <button class="btn btn-midnight-blue btn-block" @click="backHome"><strong><i class="fa fa-logout"></i> Home</strong></button>                            
+                    </div>
                 </div>
             </div>
 		</div>

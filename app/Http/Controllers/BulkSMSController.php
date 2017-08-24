@@ -88,7 +88,7 @@ class BulkSMSController extends Controller
         //  Prepare to send SMS
         // Retrieve login credentials
         $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
+        $username   = $api->code;
         $apikey     = $api->api_key;
         //  TO DO: Use query to retrieve -- number to send messages
         # Prepare to fetch list of phone numbers from the selected counties.
@@ -236,7 +236,7 @@ class BulkSMSController extends Controller
         //  Prepare to send SMS
         // Retrieve login credentials
         $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
+        $username   = $api->code;
         $apikey     = $api->api_key;
         //  TO DO: Use query to retrieve -- number to send messages
         $recipients = implode(",", $request->participant);

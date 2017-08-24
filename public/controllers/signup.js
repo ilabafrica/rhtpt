@@ -97,13 +97,13 @@ new Vue({
                 if(response.data.warning)
                 {
                     this.warning = response.data.warning;
-                    swal("Alert!", this.warning, "warning")
+                    swal("Alert!", this.warning, "warning");
                     // toastr.warning(this.warning, 'Notification', {timeOut: 5000});
                 }
                 else if(response.data.info)
                 {
                     this.info = response.data.info;
-                    swal("Alert!", this.info, "info")
+                    swal("Alert!", this.info, "info");
                     // toastr.info(this.warning, 'Notification', {timeOut: 5000});
                 }
                 else if(response.data.success)
@@ -144,10 +144,12 @@ new Vue({
         fetchFacility: function() {
             let id = $('#mfl').val();
             this.$http.get('/mfl/'+id).then((response) => {
-                console.log(response);
+                // console.log(response);
                 this.newParticipant.facility = response.data.name;
                 this.newParticipant.sub_county = response.data.sub_county;
                 this.newParticipant.county = response.data.county;
+                if(this.newParticipant.facility.length == 0)
+                    swal("Facility not found!", "Please enter a valid MFL Code.", "info");
             });
         },
 
@@ -156,5 +158,10 @@ new Vue({
                 // this.newParticipant.facility = response.data;
             });
         },
+
+        backHome()
+        {
+            window.location.replace("/login");
+        }
     }
 });

@@ -100,60 +100,60 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createMaterial('create_material')" data-vv-validate="create_material" data-vv-scope="create_material">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createMaterial('create_material')" data-vv-scope="create_material">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('batch no.') }" for="batch no.">Batch No:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_material.batch') }" for="batch no.">Batch No:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('batch no.') }" name="batch no." type="text" placeholder="" v-model="newMaterial.batch" />
-                                        <span v-show="errors.has('batch no.')" class="help is-danger">@{{ errors.first('batch no.') }}</span>
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_material.batch') }" name="batch" type="text" placeholder="" v-model="newMaterial.batch" />
+                                        <span v-show="errors.has('create_material.batch')" class="help is-danger">@{{ errors.first('create_material.batch') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('date prepared') }" for="date prepared">Date Prepared:</label>
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('create_material.date-prepared') }" for="date-prepared">Date Prepared:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('date prepared') }" name="date prepared" type="text" placeholder="" v-model="newMaterial.date_prepared" />
-                                        <span v-show="errors.has('date prepared')" class="help is-danger">@{{ errors.first('date prepared') }}</span>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_material.date-prepared') }" name="date-prepared" type="date" placeholder="" v-model="newMaterial.date_prepared" />
+                                        <span v-show="errors.has('create_material.date-prepared')" class="help is-danger">@{{ errors.first('create_material.date-prepared') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('expiry date') }" for="expiry date">Expiry Date:</label>
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('create_material.expiry-date') }" for="expiry-date">Expiry Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('expiry date') }" name="expiry date" type="text" placeholder="" v-model="newMaterial.expiry_date" />
-                                        <span v-show="errors.has('expiry date')" class="help is-danger">@{{ errors.first('expiry date') }}</span>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_material.expiry-date') }" name="expiry-date" type="date" placeholder="" v-model="newMaterial.expiry_date" />
+                                        <span v-show="errors.has('create_material.expiry-date')" class="help is-danger">@{{ errors.first('create_material.expiry-date') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('material type') }" for="material type">Material Type:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_material.sample-type') }" for="sample-type">Sample Type:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="option in options">
                                             <label class="form-radio-label">
-                                                <input v-validate="'required'" type="radio" :value="option.name" :class="{'input': true, 'is-danger': errors.has('material type') }" v-model="newMaterial.material_type" name="material type">
+                                                <input v-validate="'required'" type="radio" name="sample-type" :value="option.name" :class="{'input': true, 'is-danger': errors.has('create_material.sample-type') }" v-model="newMaterial.material_type">
                                                 @{{ option.title }}
                                             </label>
                                         </div>
-                                        <span v-show="errors.has('material type')" class="help is-danger">@{{ errors.first('material type') }}</span>
+                                        <span v-show="errors.has('create_material.sample-type')" class="help is-danger">@{{ errors.first('create_material.sample-type') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('original source') }" for="original source">Original Source:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_material.original-source') }" for="original-source">Original Source:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('original source') }" name="original source" type="text" placeholder="" v-model="newMaterial.original_source" />
-                                        <span v-show="errors.has('original source')" class="help is-danger">@{{ errors.first('original source') }}</span>
+                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_material.original-source') }" name="original-source" type="text" placeholder="" v-model="newMaterial.original_source" />
+                                        <span v-show="errors.has('create_material.original-source')" class="help is-danger">@{{ errors.first('create_material.original-source') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('date collected') }" for="date collected">Date Collected:</label>
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('create_material.date-collected') }" for="date-collected">Date Collected:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('date collected') }" name="date collected" type="date" placeholder="" v-model="newMaterial.date_collected" />
-                                        <span v-show="errors.has('date collected')" class="help is-danger">@{{ errors.first('date collected') }}</span>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_material.date-collected') }" name="date-collected" type="date" placeholder="" v-model="newMaterial.date_collected" />
+                                        <span v-show="errors.has('create_material.date-collected')" class="help is-danger">@{{ errors.first('create_material.date-collected') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('prepared by') }" for="prepared by">Prepared By:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_material.prepared-by') }" for="prepared-by">Prepared By:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('prepared by') }" name="prepared by" type="text" placeholder="" v-model="newMaterial.prepared_by" />
-                                        <span v-show="errors.has('prepared by')" class="help is-danger">@{{ errors.first('prepared by') }}</span>
+                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_material.prepared-by') }" name="prepared-by" type="text" placeholder="" v-model="newMaterial.prepared_by" />
+                                        <span v-show="errors.has('create_material.prepared-by')" class="help is-danger">@{{ errors.first('create_material.prepared-by') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
@@ -178,39 +178,39 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateMaterial(fillMaterial.id, 'update_material')" data-vv-validate="update_material">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateMaterial(fillMaterial.id, 'update_material')" data-vv-scope="update_material">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('batch no.') }" for="batch no.">Batch No:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('update_material.batch') }" for="batch">Batch No:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('batch no.') }" name="batch no." type="text" placeholder="" v-model="fillMaterial.batch" />
-                                        <span v-show="errors.has('batch no.')" class="help is-danger">@{{ errors.first('batch no.') }}</span>
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('update_material.batch') }" name="batch" type="text" placeholder="" v-model="fillMaterial.batch" />
+                                        <span v-show="errors.has('update_material.batch')" class="help is-danger">@{{ errors.first('update_material.batch') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('date prepared') }" for="date prepared">Date Prepared:</label>
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('update_material.date-prepared') }" for="date-prepared">Date Prepared:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('date prepared') }" name="date prepared" type="date" placeholder="" v-model="fillMaterial.date_prepared" />
-                                        <span v-show="errors.has('date prepared')" class="help is-danger">@{{ errors.first('date prepared') }}</span>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('update_material.date-prepared') }" name="date-prepared" type="date" placeholder="" v-model="fillMaterial.date_prepared" />
+                                        <span v-show="errors.has('update_material.date-prepared')" class="help is-danger">@{{ errors.first('update_material.date-prepared') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('expiry date') }" for="expiry date">Expiry Date:</label>
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('update_material.expiry-date') }" for="expiry-date">Expiry Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('expiry date') }" name="expiry date" type="date" placeholder="" v-model="fillMaterial.expiry_date" />
-                                        <span v-show="errors.has('expiry date')" class="help is-danger">@{{ errors.first('expiry date') }}</span>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('update_material.expiry-date') }" name="expiry-date" type="date" placeholder="" v-model="fillMaterial.expiry_date" />
+                                        <span v-show="errors.has('update_material.expiry-date')" class="help is-danger">@{{ errors.first('update_material.expiry-date') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('material type') }" for="material type">Material Type:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('update_material.sample-type') }" for="sample-type">Sample Type:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="option in options">
                                             <label class="form-radio-label">
-                                                <input v-validate="'required'" type="radio" :value="option.name" :class="{'input': true, 'is-danger': errors.has('material type') }" v-model="fillMaterial.material_type" name="material type">
+                                                <input v-validate="'required'" type="radio" :value="option.name" :class="{'input': true, 'is-danger': errors.has('update_material.sample-type') }" v-model="fillMaterial.material_type" name="sample-type">
                                                 @{{ option.title }}
                                             </label>
                                         </div>
-                                        <span v-show="errors.has('material type')" class="help is-danger">@{{ errors.first('material type') }}</span>
+                                        <span v-show="errors.has('update_material.sample-type')" class="help is-danger">@{{ errors.first('update_material.sample-type') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">

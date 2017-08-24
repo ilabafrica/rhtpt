@@ -156,10 +156,8 @@ class ResultController extends Controller
         //             $recipients = User::find($pt->enrolment->user->id)->value('phone');
         //             //  Bulk-sms settings
         //             $api = DB::table('bulk_sms_settings')->first();
-        //             // $username   = $api->username;
+        //             // $username   = $api->code;
         //             // $apikey     = $api->api_key;
-        //             $username = 'alogendo';
-        //             $apikey = 'e31606f8c1996aa3dfc053f89411d59692ee564e3130b4924096d5d4b742eedd';
         //             if($recipients)
         //             {
         //                 // Specified sender-id
@@ -241,7 +239,7 @@ class ResultController extends Controller
         $recipients = User::find($result->enrolment->user->id)->value('phone');
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
+        $username   = $api->code;
         $apikey     = $api->api_key;
         if($recipients)
         {

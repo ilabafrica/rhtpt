@@ -470,7 +470,7 @@ class UserController extends Controller
         */
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
+        $username   = $api->code;
         $apikey     = $api->api_key;
         //  Remove beginning 0 and append +254
         $phone = ltrim($user->phone, '0');
@@ -818,7 +818,7 @@ class UserController extends Controller
             $user->save();
 
             return redirect()->to('verified')
-                ->with('success', "Email successfully verified. Your ID will be sent to you shortly.");
+                ->with('success', "Email successfully verified. You will be notified when your request is approved. Click on the below button to get to the homepage.");
         }
         return redirect()->to('verified')
                 ->with('warning', "Your token is invalid.");
