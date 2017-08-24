@@ -65,8 +65,15 @@ new Vue({
 
         getVueShippers: function(page){
             this.$http.get('/vueshippers?page='+page).then((response) => {
-                this.shippers = response.data.data.data;
-                this.pagination = response.data.pagination;
+                if(response.data.data)
+                {
+                    this.shippers = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                }
+                else
+                {
+                    swal("No data found for PT rounds.", "", "info");
+                }
             });
         },
 

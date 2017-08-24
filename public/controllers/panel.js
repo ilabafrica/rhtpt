@@ -69,8 +69,15 @@ new Vue({
 
         getVuePanels: function(page){
             this.$http.get('/vuepanels?page='+page).then((response) => {
-                this.panels = response.data.data.data;
-                this.pagination = response.data.pagination;
+                if(response.data.data)
+                {
+                    this.panels = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                }
+                else
+                {
+                    swal("No data found for PT panels.", "", "info");
+                }
             });
         },
 
