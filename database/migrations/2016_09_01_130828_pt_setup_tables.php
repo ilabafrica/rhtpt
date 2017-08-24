@@ -122,7 +122,7 @@ class PtSetupTables extends Migration
             $table->increments('id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->integer('round_id')->unsigned();
-            $table->tinyInteger('status')->default(0);
+            // $table->tinyInteger('status')->default(0);
 
             $table->softDeletes();
             $table->timestamps();

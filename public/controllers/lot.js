@@ -77,12 +77,12 @@ new Vue({
                 if(response.data == '1')
                 {
                     this.error = response.data;
-                    toastr.error(this.error, 'Select a valid PT Round', {timeOut: 5000});
+                    toastr.error('Select a valid PT Round', {timeOut: 5000});
                 }
                 else if(response.data == '2')
                 {
                     this.error = response.data;
-                    toastr.error(this.error, 'This Lot already exists', {timeOut: 5000});
+                    toastr.error('This Lot already exists', {timeOut: 5000});
                 }
                 else
                 {                
