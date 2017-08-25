@@ -103,7 +103,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_set.title') }" for="title">Title:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_set.title') }" name="title" type="text" placeholder="" v-model="newSet.title" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_set.title') }" name="title" type="text" placeholder="" v-model="newSet.title" />
                                         <span v-show="errors.has('create_set.title')" class="help is-danger">@{{ errors.first('create_set.title') }}</span>
                                     </div>
                                 </div>
@@ -153,7 +153,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="fillSet.title" />
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="fillSet.title" />
                                         <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
                                     </div>
                                 </div>

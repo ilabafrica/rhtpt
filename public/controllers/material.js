@@ -68,6 +68,10 @@ new Vue({
                 {
                     this.materials = response.data.data.data;
                     this.pagination = response.data.pagination;
+                }                
+                else
+                {
+                    swal("No data found for PT samples.", "", "info");
                 }
             });
         },

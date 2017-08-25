@@ -100,10 +100,14 @@
                 closeOnConfirm: false,
                 closeOnCancel: false
             },
-            function(isConfirm){
-                if (isConfirm) {
+            function(isConfirm)
+            {
+                if (isConfirm) 
+                {
                     window.location.replace("/signup");
-                } else {
+                } 
+                else 
+                {
                     swal("Cancelled", "Please use the signin page to login or reset password.", "success");
                 }
             });

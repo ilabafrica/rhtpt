@@ -78,9 +78,16 @@ new Vue({
 
         getVueShipments: function(page){
             this.$http.get('/vueshipments?page='+page).then((response) => {
-                this.shipments = response.data.data.data;
-                this.consignments = response.data.data.data;
-                this.pagination = response.data.pagination;
+                if(response.data.data)
+                {
+                    this.shipments = response.data.data.data;
+                    this.consignments = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                }                
+                else
+                {
+                    swal("No data found for shipments.", "", "info");
+                }
             });
         },
 

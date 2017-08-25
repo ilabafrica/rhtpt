@@ -75,8 +75,15 @@ new Vue({
     methods : {
         getVueResults: function(page){
             this.$http.get('/vueresults?page='+page).then((response) => {
-                this.results = response.data.data.data;
-                this.pagination = response.data.pagination;
+                if(response.data.data)
+                {
+                    this.results = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                }
+                else
+                {
+                    swal("No data found for PT results.", "", "info");
+                }
             });
         },
 

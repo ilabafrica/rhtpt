@@ -64,8 +64,15 @@ new Vue({
 
         getVueLots: function(page){
             this.$http.get('/vuelots?page='+page).then((response) => {
-                this.lots = response.data.data.data;
-                this.pagination = response.data.pagination;
+                if(response.data.data)
+                {
+                    this.lots = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                }
+                else
+                {
+                    swal("No data found for PT lots.", "", "info");
+                }
             });
         },
 

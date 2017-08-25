@@ -68,8 +68,15 @@ new Vue({
     methods : {
         getVueRounds: function(page){
             this.$http.get('/vuerounds?page='+page).then((response) => {
-                this.rounds = response.data.data.data;
-                this.pagination = response.data.pagination;
+                if(response.data.data)
+                {
+                    this.rounds = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                }
+                else
+                {
+                    swal("No data found for PT rounds.", "", "info");
+                }
             });
         },
 
