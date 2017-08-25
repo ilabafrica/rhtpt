@@ -362,7 +362,7 @@ new Vue({
         openUser: function(user){
             this.someUser.id = user.id;
             this.someUser.name = user.name;
-            this.someUser.gender = user.gndr;
+            this.someUser.sex = user.gndr;
             this.someUser.phone = user.phone;
             this.someUser.email = user.email;
             this.someUser.address = user.address;
