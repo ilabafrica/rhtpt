@@ -76,7 +76,7 @@
             @permission('transfer-user') 
                 <button style="display: none;" v-if="user.uid" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
             @endpermission
-            	<button v-if="!user.username" v-if="user.email_verified==1" v-if="user.phone_verified==1"  v-if="user.deleted_at" class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
+            	<button class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
             </td>
         </tr>
     </table>
@@ -428,7 +428,7 @@
                                     </tr>
                                     <tr>
                                         <td><strong>Gender</strong></td>
-                                        <td>@{{someUser.gender}}</td>
+                                        <td>@{{someUser.sex}}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Phone</strong></td>
@@ -443,20 +443,20 @@
                                         <td>@{{someUser.address}}</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>County</strong></td>
-                                        <td>@{{someUser.county}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Sub-County</strong></td>
-                                        <td>@{{someUser.sub_county}}</td>
-                                    </tr>
-                                    <tr>
                                         <td><strong>MFL</strong></td>
                                         <td>@{{someUser.mfl}}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Facility</strong></td>
                                         <td>@{{someUser.facility}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>County</strong></td>
+                                        <td>@{{someUser.county}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Sub-County</strong></td>
+                                        <td>@{{someUser.sub_county}}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Program</strong></td>

@@ -357,9 +357,9 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     public static function sex($gender)
     {
         if($gender == "Male")
-              return USER::MALE;
+              return User::MALE;
           else
-              return USER::FEMALE;;
+              return User::FEMALE;;
     }
 
      /**
@@ -379,5 +379,15 @@ EntrustUserTrait::restore insteadof SoftDeletes;
         $enrolments = $this->enrol()->pluck('id');
         $results = Pt::whereIn('enrolment_id', $enrolments);
         return $results;
+    }
+    /**
+     * Return readable gender
+     */
+    public static function maleOrFemale($gender)
+    {
+        if($gender==User::MALE)
+            return "Male";
+        else
+            return "Female";
     }
 }

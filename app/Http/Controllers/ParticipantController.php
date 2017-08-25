@@ -107,7 +107,7 @@ class ParticipantController extends Controller
                 $user->sub = $facility->subCounty->name;
                 $user->kaunti = $facility->subCounty->county->name;
                 $user->des = $user->designation($user->ru()->designation);
-                $user->gndr = $user->sex($user->gender);
+                $user->gndr = $user->maleOrFemale((int)$user->gender);
             }
             else
             {
