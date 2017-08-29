@@ -55,9 +55,9 @@
                         </div>
                     @endif
                     <div class="form-group row">
-                        <label for="username" class="col-md-2 col-form-label">Username</label>
+                        <label for="username" class="col-md-2 col-form-label">Tester ID</label>
                         <div class="col-md-10">
-                            <input type="text" class="form-control" name="username" placeholder="Username">
+                            <input type="text" class="form-control" name="username" placeholder="Tester ID">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -108,7 +108,7 @@
                 } 
                 else 
                 {
-                    swal("Cancelled", "Please use the signin page to login or reset password.", "success");
+                    swal("Hello", "Please use your previously assigned PT Enrollment ID to sign in.", "success");
                 }
             });
         }

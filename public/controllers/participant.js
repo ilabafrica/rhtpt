@@ -396,8 +396,8 @@ new Vue({
                   type: "warning",
                   showCancelButton: true,
                   confirmButtonClass: "btn-danger",
-                  confirmButtonText: "Yes, deactivate user!",
-                  cancelButtonText: "No, cancel please!",
+                  confirmButtonText: "Yes",
+                  cancelButtonText: "No",
                   closeOnConfirm: true,
                   closeOnCancel: false
                 },
