@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <!-- Sweet Alert Styling -->
     <link href="{{ asset('css/sweetalert.css') }}" rel="stylesheet">
+    
 </head>
 
 <body>
@@ -57,28 +58,29 @@
                     <div class="form-group row">
                         <label for="username" class="col-md-2 col-form-label">Username</label>
                         <div class="col-md-10">
-                            <input type="text" class="form-control" name="username" placeholder="Username">
+                            <input type="text" class="form-control" name="username" placeholder="Username" data-toggle="tooltip" data-placement="top" title="Enter Username or PT Tester Enrollment ID which you got at the time of registration">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="inputPassword3" class="col-md-2 col-form-label">Password</label>
                         <div class="col-md-10">
-                            <input type="password" class="form-control" name="password" placeholder="Password">
+                            <input type="password" class="form-control" name="password" placeholder="Password " data-toggle="tooltip" data-placement="top" title="Enter Password that you use to Login">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-offset-2 col-md-10">
-                            <button class="btn btn-primary btn-block" type="submit" name="signin">LOGIN</button>
-                            <a class="btn btn-wisteria btn-block" onclick="confirmRegistration()">REGISTER HERE</a>
-                            <a class="btn btn-link btn-block" href="{{url('password/reset')}}">FORGOT PASSWORD</a>
+                            <button class="btn btn-primary btn-block" type="submit" name="signin" data-toggle="tooltip" data-placement="top" title="Click to Login">LOGIN</button>
+                            <a class="btn btn-wisteria btn-block" onclick="confirmRegistration()" data-toggle="tooltip" data-placement="top" title="Click to Register a new participant">REGISTER HERE</a>
+                            <a class="btn btn-link btn-block" href="{{url('password/reset')}}" data-toggle="tooltip" data-placement="top" title="Click and enter Tester ID to get reset password link in your email">FORGOT PASSWORD</a>
                             <hr>
-                            <h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NHRL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>
+                            <h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke" data-toggle="tooltip" data-placement="top" title="Click to go to NPHL website">NPHL</a> by <a href="//www.ilabafrica.ac.ke" data-toggle="tooltip" data-placement="top" title="Click to go to iLabAfrica website" >@iLabAfrica</a></h6>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
 </body>
     <!-- Vue JS -->
     <script src="{{ asset('js/jquery-1.12.3.min.js') }}"></script>
@@ -111,6 +113,6 @@
                     swal("Cancelled", "Please use the signin page to login or reset password.", "success");
                 }
             });
-        }
-    </script>
+        }        
+    </script>    
 </html>
