@@ -399,7 +399,7 @@ new Vue({
                   confirmButtonText: "Yes, deactivate user!",
                   cancelButtonText: "No, cancel please!",
                   closeOnConfirm: true,
-                  closeOnCancel: false
+                  closeOnCancel: true
                 },
                 function(isConfirm) {
                   if (isConfirm) {

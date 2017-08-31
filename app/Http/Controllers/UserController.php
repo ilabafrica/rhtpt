@@ -13,6 +13,7 @@ use App\SubCounty;
 use App\County;
 use App\Program;
 use App\Round;
+use App\SmsHandler;
 
 use DB;
 use Hash;
@@ -203,7 +204,18 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        User::find($id)->delete();
+        $user = User::find($id);
+        $message    = "Dear ".$user->name.", NPHL has disabled your account.";
+        try 
+        {
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($user->phone, $message);
+        }
+        catch ( AfricasTalkingGatewayException $e )
+        {
+            echo "Encountered an error while sending: ".$e->getMessage();
+        }
+        $user->delete();
         return response()->json(['done']);
     }
 
@@ -216,6 +228,16 @@ class UserController extends Controller
     public function restore($id) 
     {
         $user = User::withTrashed()->find($id)->restore();
+        $message    = "Dear ".$user->name.", NPHL has enabled your account.";
+        try 
+        {
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($user->phone, $message);
+        }
+        catch ( AfricasTalkingGatewayException $e )
+        {
+            echo "Encountered an error while sending: ".$e->getMessage();
+        }
         return response()->json(['done']);
     }
     /**
@@ -779,7 +801,7 @@ class UserController extends Controller
                             //  Remove beginning 0 and append +254
                             $phone = ltrim($user->phone, '0');
                             $recipient = "+254".$phone;
-                            $message    = "Dear ".$user->name.", NHRL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
+                            $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
                             // Create a new instance of our awesome gateway class
                             $gateway    = new Bulk($username, $apikey);
                             try 
