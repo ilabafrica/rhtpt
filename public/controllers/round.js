@@ -30,6 +30,7 @@ new Vue({
         srchParticipant: '',
         enrollments: [],
         esrch: '',
+        date: '',
         testers: [],
         durations: [],
         uploadify: {id: '', excel: ''}
