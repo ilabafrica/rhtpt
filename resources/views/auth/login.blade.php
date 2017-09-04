@@ -55,9 +55,9 @@
                         </div>
                     @endif
                     <div class="form-group row">
-                        <label for="username" class="col-md-2 col-form-label">Tester ID</label>
+                        <label for="username" class="col-md-2 col-form-label">Username </label>
                         <div class="col-md-10">
-                            <input type="text" class="form-control" name="username" placeholder="Tester ID">
+                            <input type="text" class="form-control" name="username" placeholder="TesterID/Username">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -95,8 +95,8 @@
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
-                confirmButtonText: "No, Proceed!",
-                cancelButtonText: "Yes, retrive password!",
+                confirmButtonText: "No",
+                cancelButtonText: "Yes",
                 closeOnConfirm: false,
                 closeOnCancel: false
             },
@@ -108,7 +108,7 @@
                 } 
                 else 
                 {
-                    swal("Hello", "Please use your previously assigned PT Enrollment ID to sign in.", "success");
+                    swal("Dear Participant", "Please use your previously assigned PT Enrollment ID to Log in.", "success");
                 }
             });
         }
