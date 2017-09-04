@@ -122,8 +122,6 @@
                                 <span v-show="errors.has('designation')" class="help is-danger">@{{ errors.first('designation') }}</span>
                             </div>
                         </div>
-					</div>
-					<div v-cloak class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('program') }" for="program">Program:</label>
                             <div class="col-sm-8" :class="{ 'control': true }">
