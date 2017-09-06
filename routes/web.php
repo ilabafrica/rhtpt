@@ -468,3 +468,25 @@ Route::get("/resend/{phone}", array(
     "as"   => "resend.code",
     "uses" => "Auth\RegisterController@resend"
 ));
+
+Route::get('profile', 'ProfileController@manageProfile')->name('profile');
+
+Route::get("/user/profile", array(
+    "as"   => "user.profile",
+    "uses" => "ProfileController@index"
+));
+
+Route::post("/user/profile/update", array(
+    "as"   => "user.profile.update",
+    "uses" => "ProfileController@update"
+));
+
+Route::post("/user/password/update", array(
+    "as"   => "user.password.update",
+    "uses" => "ProfileController@updatePassword"
+));
+
+Route::post("/user/transfer/facility", array(
+    "as"   => "user.transfer",
+    "uses" => "ProfileController@transferUser"
+));
