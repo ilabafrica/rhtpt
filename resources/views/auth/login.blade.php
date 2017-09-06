@@ -72,7 +72,7 @@
                             <a class="btn btn-wisteria btn-block" onclick="confirmRegistration()">REGISTER HERE</a>
                             <a class="btn btn-link btn-block" href="{{url('password/reset')}}">FORGOT PASSWORD</a>
                             <hr>
-                            <h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NHRL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>
+                            <h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NPHL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>
                         </div>
                     </div>
                 </form>
