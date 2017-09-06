@@ -77,7 +77,8 @@ class Lot extends Model
           $total = 0;
           for($i = 0; $i < $counter; $i++)
           {
-              $count = Enrol::where('user_id', 'LIKE', '%'.$exploded[$i])->where('round_id', $this->round_id)->count();
+              $users = User::where('uid', 'LIKE', '%'.$exploded[$i])->pluck('id');
+              $count = Enrol::whereIn('user_id', $users)->where('round_id', $this->round_id)->count();
               $total += $count;
           }
           return $total;
