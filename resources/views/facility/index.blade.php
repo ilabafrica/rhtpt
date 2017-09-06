@@ -1,5 +1,25 @@
 @extends('app')
 @section('content')
+<script type="text/javascript">
+function myFunction() {
+    document.getElementById("Dropdown").classList.toggle("show");
+}
+
+
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
@@ -62,12 +82,17 @@
             <td>@{{ facility.sub }}</td>
             <td>@{{ facility.county }}</td>
             <td>	
+            <div class="dropdown">
+            <a class="dropbtn" onclick="myFunction()"  >View</a>
+            <div id="Dropdown" class="dropdown-content">
             @permission('update-facility')
-                <button class="btn btn-sm btn-primary" @click.prevent="editFacility(facility)" disabled><i class="fa fa-edit"></i> Edit</button>
+                <a  @click.prevent="editFacility(facility)" disabled> Edit</button>
             @endpermission
             @permission('delete-facility')
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteFacility(facility)"><i class="fa fa-power-off"></i> Disable</button>
+                <a @click.prevent="deleteFacility(facility)"> Disable</a>
             @endpermission
+            </div>
+            </div>
             </td>
         </tr>
     </table>

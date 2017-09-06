@@ -1,5 +1,25 @@
 @extends('app')
 @section('content')
+<script type="text/javascript">
+function myFunction() {
+    document.getElementById("Dropdown").classList.toggle("show");
+}
+
+
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
@@ -55,15 +75,20 @@
                 <button v-if="program.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>
+            <div class="dropdown">
+            <a class="dropbtn" onclick="myFunction()"  >View</a>
+            <div id="Dropdown" class="dropdown-content">
             @permission('update-program')	
-                <button v-bind="{ 'disabled': program.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editProgram(program)"><i class="fa fa-edit"></i> Edit</button>
+                <a v-bind="{ 'disabled': program.deleted_at}" @click.prevent="editProgram(program)"> Edit</a>
             @endpermission
             @permission('restore-program')
-                <button v-if="program.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreProgram(program)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <a v-if="program.deleted_at"@click.prevent="restoreProgram(program)"> Enable</a>
             @endpermission
             @permission('delete-program')
-                <button v-if="!program.deleted_at" class="btn btn-sm btn-alizarin" @click.prevent="deleteProgram(program)"><i class="fa fa-power-off"></i> Disable</button>
+                <a v-if="!program.deleted_at"  @click.prevent="deleteProgram(program)"> Disable</a>
             @endpermission
+             </div>
+            </div>
             </td>
         </tr>
     </table>

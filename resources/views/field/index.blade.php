@@ -1,5 +1,25 @@
 @extends('app')
 @section('content')
+<script type="text/javascript">
+function myFunction() {
+    document.getElementById("Dropdown").classList.toggle("show");
+}
+
+
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
@@ -54,13 +74,18 @@
             <td>@{{ field.tg }}</td>
             <td>@{{ field.ordr }}</td>
             <td>	
+            <div class="dropdown">
+             <a class="dropbtn" onclick="myFunction()"  >View</a>
+            <div id="Dropdown" class="dropdown-content">
             @permission('update-field')
-                <button class="btn btn-sm btn-primary" @click.prevent="editField(field)" disabled><i class="fa fa-edit"></i> Edit</button>
+                <a @click.prevent="editField(field)" disabled> Edit</button>
             @endpermission
-                <button v-if="field.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreField(field)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <a v-if="field.deleted_at" click.prevent="restoreField(field)"> Enable</a>
             @permission('delete-field')
-                <button v-if="!field.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteField(field)"><i class="fa fa-power-off"></i> Disable</button>
+                <a v-if="!field.deleted_at"  @click.prevent="deleteField(field)"> Disable</a>
             @endpermission
+            </div>
+            </div>
             </td>
         </tr>
     </table>

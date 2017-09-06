@@ -5,7 +5,7 @@ function myFunction() {
     document.getElementById("Dropdown").classList.toggle("show");
 }
 
-// Close the dropdown menu if the user clicks outside of it
+
 window.onclick = function(event) {
   if (!event.target.matches('.dropbtn')) {
 
@@ -484,7 +484,7 @@ window.onclick = function(event) {
                                     </tr>
                                     <tr>
                                         <td><strong>Program</strong></td>
-                                        <td>@{{someUser.program}}</td>
+                                            <td>@{{someUser.program}}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Designation</strong></td>

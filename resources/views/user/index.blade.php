@@ -1,5 +1,25 @@
 @extends('app')
 @section('content')
+<script type="text/javascript">
+function myFunction() {
+    document.getElementById("Dropdown").classList.toggle("show");
+}
+
+
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
@@ -61,19 +81,22 @@
                 <button v-if="user.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>
+            <div class="dropdown">
+            <a class="dropbtn" onclick="myFunction()"  >View</a>
+            <div id="Dropdown" class="dropdown-content">
             @permission('update-user')	
-                <button v-bind="{ 'disabled': user.deleted_at }" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)"><i class="fa fa-edit"></i> Edit</button>
+                <a v-bind="{ 'disabled': user.deleted_at }" @click.prevent="editUser(user)"> Edit</a>
             @endpermission
             @permission('restore-user') 
-                <button v-if="user.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <a v-if="user.deleted_at"@click.prevent="restoreUser(user)"> Enable</a>
             @endpermission
             @permission('delete-user') 
-                <button v-if="!user.deleted_at" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)"><i class="fa fa-power-off"></i> Disable</button>
+                <a v-if="!user.deleted_at"  @click.prevent="deleteUser(user)"> Disable</a>
             @endpermission
             @permission('transfer-user') 
-                <button style="display: none;" v-if="user.uid" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
+                <a style="display: none;" v-if="user.uid" @click.prevent="populateUser(user)"> Transfer</a>
             @endpermission
-            	<button v-if="user.sms_code" v-if="!user.deleted_at" class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
+            	<a v-if="user.sms_code" v-if="!user.deleted_at" @click.prevent="openUser(user)"> Approve</a>
             </td>
         </tr>
     </table>
