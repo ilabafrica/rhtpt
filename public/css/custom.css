@@ -256,6 +256,18 @@
     .btn.btn-registered:hover {
         opacity: .8;
     }
+    .btn.btn-new-participants {
+        background-color: #00acc1;
+        color: #ffffff;
+        -webkit-transition:all 0.5s ease;
+        -moz-transition:all 0.5s ease;
+        -o-transition:all 0.5s ease;
+        -ms-transition:all 0.5s ease;
+        transition:all 0.5s ease;
+    }
+    .btn.btn-new-participants:hover {
+        opacity: .8;
+    }
     /*** End button colors ***/
 /* Labels */
 .label-silver{background-color:#BDC3C7;color: #ffffff;}.label-silver[href]:hover,.label-silver[href]:focus{opacity: .8;}
