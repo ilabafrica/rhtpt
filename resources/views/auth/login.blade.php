@@ -55,9 +55,9 @@
                         </div>
                     @endif
                     <div class="form-group row">
-                        <label for="username" class="col-md-2 col-form-label">Username </label>
+                        <label for="username" class="col-md-2 col-form-label">PTEnrollmentID </label>
                         <div class="col-md-10">
-                            <input type="text" class="form-control" name="username" placeholder="TesterID/Username">
+                            <input type="text" class="form-control" name="username" placeholder="TPTEnrollmentID">
                         </div>
                     </div>
                     <div class="form-group row">

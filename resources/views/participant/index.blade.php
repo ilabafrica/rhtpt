@@ -48,7 +48,7 @@
             <th>Name</th>
             <th>Gender</th>
             <th>Phone</th>
-            <th>Username</th>
+            <th>PTEnrollmentID</th>
             <th>Role</th>
             <th>Status</th>
             <th>Action</th>
