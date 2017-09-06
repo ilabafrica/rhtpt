@@ -257,6 +257,10 @@ body.stop-scrolling {
         border-radius: 2px;
         margin-left: -2px;
         background-color: #F8BB86; }
+      .sweet-alert button.cancel{
+        background-color:#228B22;
+        color: white;
+      }
       .sweet-alert .sa-icon.sa-warning .sa-dot {
         position: absolute;
         width: 7px;

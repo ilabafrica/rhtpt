@@ -1,5 +1,25 @@
 @extends('app')
 @section('content')
+<script type="text/javascript">
+function myFunction() {
+    document.getElementById("Dropdown").classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
@@ -21,7 +41,7 @@
                         {!! trans('messages.back') !!}
                     </a>
                 @permission('create-user')
-                    <a class="btn btn-sm btn-concrete" href="/Registration.xlsx">
+                    <a class="btn btn-sm btn-nephritis" href="/Registration.xlsx">
                         <i class="fa fa-download"></i>
                         Worksheet
                     </a>
@@ -46,16 +66,16 @@
     <table class="table table-bordered">
         <tr>
             <th>Name</th>
-            <th>Gender</th>
+            <th>Facility</th>
             <th>Phone</th>
-            <th>Username</th>
+            <th>Username/Tester ID</th>
             <th>Role</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
         <tr v-for="user in users">
             <td>@{{ user.name }}</td>
-            <td>@{{ user.gender==0?'Male':'Female' }}</td>
+            <td>@{{ user.fac}}</td>
             <td>@{{ user.phone }}</td>
             <td>@{{ user.username }}</td>
             <td>@{{ user.rl }}</td>
@@ -63,20 +83,25 @@
                 <button v-if="!user.deleted_at" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
                 <button v-if="user.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
+
             <td>
-            @permission('update-user')	
-                <button v-bind="{ 'disabled': user.deleted_at }" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)"><i class="fa fa-edit"></i> Edit</button>
+            <div class="dropdown">
+            <a class="dropbtn" onclick="myFunction()"  >View</a>
+            <div id="Dropdown" class="dropdown-content">
+             @permission('update-user')   
+            <a v-bind="{ 'disabled': user.deleted_at }"@click.prevent="editUser(user)">Edit</a> @endpermission
+            @permission('restore-user')
+            <a v-if="user.deleted_at" click.prevent="restoreUser(user)">Enable</a>
             @endpermission
-            @permission('restore-user') 
-                <button v-if="user.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)"><i class="fa fa-toggle-on"></i> Enable</button>
-            @endpermission
-            @permission('delete-user') 
-                <button v-if="!user.deleted_at" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)"><i class="fa fa-power-off"></i> Disable</button>
-            @endpermission
+            @permission('delete-user')
+              <a v-if="!user.deleted_at" @click.prevent="deleteUser(user)">Disable</a>
+            @endpermission 
             @permission('transfer-user') 
-                <button style="display: none;" v-if="user.uid" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
+            <a style="display: none;" v-if="user.uid"   @click.prevent="populateUser(user)">Transfer</a>
             @endpermission
-            	<button class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
+            <a  @click.prevent="openUser(user)">Approve</a>
+             </div>
+             </div>
             </td>
         </tr>
     </table>
@@ -243,6 +268,12 @@
                     <div class="row">
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateUser(fillUser.id, 'update_user')" data-vv-validate="update_user">
                             <div class="col-md-12">
+                            <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Unique ID:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="username" class="form-control" v-model="fillUser.username" disabled/>
+                                    </div>
+                                </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Name:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
@@ -288,7 +319,7 @@
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="role in roles">
                                             <label class="form-radio-label">
-                                                <input v-validate="'required'" type="radio" :value="role.id" v-model="fillUser.role" name="role" disabled>
+                                                <input v-validate="'required'" type="radio" :value="role.id" v-model="fillUser.role" name="role" >
                                                 @{{ role.value }}
                                             </label>
                                         </div>
@@ -330,14 +361,7 @@
                                             <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
                                         </select>
                                     </div>
-                                </div>
-                                
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Unique ID:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="username" class="form-control" v-model="fillUser.username" />
-                                    </div>
-                                </div>
+                                </div>                              
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
                                     <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
@@ -370,15 +394,15 @@
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
                                     <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                                </div>
+                                    <button type="button" class="btn btn-sm btn-silver"  data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>                                
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
     <!-- Import users list -->
     <div class="modal fade" id="import-user-list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
