@@ -12,6 +12,7 @@ use App\Notification;
 use App\User;
 use App\County;
 use App\Role;
+use App\SubCounty;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
@@ -21,6 +22,7 @@ use Jenssegers\Date\Date as Carbon;
 use Excel;
 use App;
 use File;
+use Hash;
 
 class RoundController extends Controller
 {
@@ -248,7 +250,7 @@ class RoundController extends Controller
      * Function to enrol participants using excel sheet uploaded
      *
      */
-    public function batchEnrolment(Request $request)
+    /*public function batchEnrolment(Request $request)
     {
         $rId = $request->id;
         $id = Round::find($rId)->name;
@@ -390,7 +392,6 @@ class RoundController extends Controller
      */
     public function testerSummary(Request $request)
     {
-        // $data = Program::get()->toArray();
         $rId = $request->id;
         $roundId = Round::find($rId)->name;
         $suffix = "ROUND ".$roundId." PARTICIPANTS SUMMARY";
@@ -402,8 +403,9 @@ class RoundController extends Controller
             $title = County::find($countyId)->name." COUNTY ".$suffix;
         else
             $title = "KENYA RAPID HIV PT ".$suffix;
-        return Excel::create($title, function($excel) use ($rId, $roundId, $users, $roleId) 
+        return Excel::create($title, function($excel) use ($rId, $roundId, $users, $roleId, $request) 
         {
+            $round = Round::find($rId);
             if(Auth::user()->isCountyCoordinator())
             {
                 $countyId = Auth::user()->ru()->tier;
@@ -411,6 +413,8 @@ class RoundController extends Controller
                 //  sub-counties and facilities
                 $fIds = County::find($countyId)->facilities()->pluck('id');
                 $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
+                if($request->status)
+                    $ids = User::whereIn('id', $ids)->whereBetween('date_registered', [$round->start_date, $round->end_date])->pluck('id');
                 $testers = Enrol::where('round_id', $rId)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
                 $testers = implode(",", $testers);
 
@@ -448,7 +452,7 @@ class RoundController extends Controller
                             if(strcasecmp("PROGRAM", $mike) == 0)
                                 $tprog = $ross;
                             if(strcasecmp("DESIGNATION", $mike) == 0)
-                                $tdes = User::designation($ross);
+                                $tdes = User::des($ross);
                             if(strcasecmp("FACILITY", $mike) == 0)
                                 $facility = $ross;
                             if(strcasecmp("MFL CODE", $mike) == 0)
@@ -472,68 +476,289 @@ class RoundController extends Controller
                 $counties = County::all();
                 foreach($counties as $county)
                 {
-                    $sheetTitle = $county->name;
                     $fIds = $county->facilities()->pluck('id');
                     $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
-                    $testers = Enrol::where('round_id', $roundId)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
-               
-                    $testers = implode(",", $testers);
+                    if($request->status)
+                        $ids = User::whereIn('id', $ids)->whereBetween('date_registered', [$round->start_date, $round->end_date])->pluck('id');
+                    
+                    $testers = Enrol::where('round_id', $round->id)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
+                    if(count($testers) > 0)
+                    {
+                        $testers = implode(",", $testers);
+                        // dd($testers);
 
-                    if (empty($testers)) {
-                       $summary[] = ['TESTER NAME' => '', 'TESTER UNIQUE ID' => '', 'TESTER PHONE' => '', 'TESTER EMAIL' => '', 'PROGRAM' => '', 'DESIGNATION' => '', 'FACILITY' => '', 'MFL CODE' => '', 'IN CHARGE' => '', 'IN CHARGE PHONE' => '', 'IN CHARGE EMAIL' => '']; 
-                    }else{
-                        $data = DB::select("SELECT u.name AS 'TESTER NAME', u.uid AS 'TESTER UNIQUE ID', u.phone AS 'TESTER PHONE', u.email AS 'TESTER EMAIL', p.name AS 'PROGRAM', ru.designation AS 'DESIGNATION', f.name AS 'FACILITY', f.code AS 'MFL CODE', f.in_charge AS 'IN CHARGE', f.in_charge_phone AS 'IN CHARGE PHONE', f.in_charge_email AS 'IN CHARGE EMAIL' FROM users u, facilities f, role_user ru WHERE u.id = ru.user_id AND ru.tier = f.id AND u.id IN (".$testers.") ORDER BY u.uid ASC;");
-                        // dd($data);
-                        //  create assotiative array
-                        $summary = [];
-                        foreach($data as $key => $value)
-                        {
-                            $tname = NULL;
-                            $tuid = NULL;
-                            $tname = NULL;
-                            $tphone = NULL;
-                            $temail = NULL;
-                            $tprog = NULL;
-                            $tdes = NULL;
-                            $facility = NULL;
-                            $mfl = NULL;
-                            $icharge = NULL;
-                            $iphone = NULL;
-                            $iemail = NULL;
-                            foreach($value as $mike => $ross)
+                        if (count($testers)>0) {
+                            $sheetTitle = $county->name;
+                            $data = DB::select("SELECT u.name AS 'TESTER NAME', u.uid AS 'TESTER UNIQUE ID', u.phone AS 'TESTER PHONE', u.email AS 'TESTER EMAIL', p.name AS 'PROGRAM', ru.designation AS 'DESIGNATION', f.name AS 'FACILITY', f.code AS 'MFL CODE', f.in_charge AS 'IN CHARGE', f.in_charge_phone AS 'IN CHARGE PHONE', f.in_charge_email AS 'IN CHARGE EMAIL' FROM users u, facilities f, programs p, role_user ru WHERE u.id = ru.user_id AND ru.program_id = p.id AND ru.tier = f.id AND u.id IN (".$testers.") ORDER BY u.uid ASC;");
+                            // dd($data);
+                            //  create assotiative array
+                            $summary = [];
+                            foreach($data as $key => $value)
                             {
-                                if(strcasecmp("TESTER NAME", $mike) == 0)
-                                    $tname = $ross;
-                                if(strcasecmp("TESTER UNIQUE ID", $mike) == 0)
-                                    $tuid = $ross;
-                                if(strcasecmp("TESTER PHONE", $mike) == 0)
-                                    $tphone = $ross;
-                                if(strcasecmp("TESTER EMAIL", $mike) == 0)
-                                    $temail = $ross;
-                                if(strcasecmp("PROGRAM", $mike) == 0)
-                                    $tprog = $ross;
-                                if(strcasecmp("DESIGNATION", $mike) == 0)
-                                    $tdes = User::designation($ross);
-                                if(strcasecmp("FACILITY", $mike) == 0)
-                                    $facility = $ross;
-                                if(strcasecmp("MFL CODE", $mike) == 0)
-                                    $mfl = $ross;
-                                if(strcasecmp("IN CHARGE", $mike) == 0)
-                                    $icharge = $ross;
-                                if(strcasecmp("IN CHARGE PHONE", $mike) == 0)
-                                    $iphone = $ross;
-                                if(strcasecmp("IN CHARGE EMAIL", $mike) == 0)
-                                    $iemail = $ross;
+                                $tname = NULL;
+                                $tuid = NULL;
+                                $tname = NULL;
+                                $tphone = NULL;
+                                $temail = NULL;
+                                $tprog = NULL;
+                                $tdes = NULL;
+                                $facility = NULL;
+                                $mfl = NULL;
+                                $icharge = NULL;
+                                $iphone = NULL;
+                                $iemail = NULL;
+                                foreach($value as $mike => $ross)
+                                {
+                                    if(strcasecmp("TESTER NAME", $mike) == 0)
+                                        $tname = $ross;
+                                    if(strcasecmp("TESTER UNIQUE ID", $mike) == 0)
+                                        $tuid = $ross;
+                                    if(strcasecmp("TESTER PHONE", $mike) == 0)
+                                        $tphone = $ross;
+                                    if(strcasecmp("TESTER EMAIL", $mike) == 0)
+                                        $temail = $ross;
+                                    if(strcasecmp("PROGRAM", $mike) == 0)
+                                        $tprog = $ross;
+                                    if(strcasecmp("DESIGNATION", $mike) == 0)
+                                        $tdes = User::des($ross);
+                                    if(strcasecmp("FACILITY", $mike) == 0)
+                                        $facility = $ross;
+                                    if(strcasecmp("MFL CODE", $mike) == 0)
+                                        $mfl = $ross;
+                                    if(strcasecmp("IN CHARGE", $mike) == 0)
+                                        $icharge = $ross;
+                                    if(strcasecmp("IN CHARGE PHONE", $mike) == 0)
+                                        $iphone = $ross;
+                                    if(strcasecmp("IN CHARGE EMAIL", $mike) == 0)
+                                        $iemail = $ross;
+                                }
+                                $summary[] = ['TESTER NAME' => $tname, 'TESTER UNIQUE ID' => $tuid, 'TESTER PHONE' => $tphone, 'TESTER EMAIL' => $temail, 'PROGRAM' => $tprog, 'DESIGNATION' => $tdes, 'FACILITY' => $facility, 'MFL CODE' => $mfl, 'IN CHARGE' => $icharge, 'IN CHARGE PHONE' => $iphone, 'IN CHARGE EMAIL' => $iemail];                   
                             }
-                            $summary[] = ['TESTER NAME' => $tname, 'TESTER UNIQUE ID' => $tuid, 'TESTER PHONE' => $tphone, 'TESTER EMAIL' => $temail, 'PROGRAM' => $tprog, 'DESIGNATION' => $tdes, 'FACILITY' => $facility, 'MFL CODE' => $mfl, 'IN CHARGE' => $icharge, 'IN CHARGE PHONE' => $iphone, 'IN CHARGE EMAIL' => $iemail];                   
                         }
+                        $excel->sheet($sheetTitle, function($sheet) use ($summary) {
+                            $sheet->fromArray($summary);
+                        });
                     }
-                    $excel->sheet($sheetTitle, function($sheet) use ($summary) {
-                        $sheet->fromArray($summary);
-                    });
                 }
             }
         })->download('xlsx');
+    }
+
+    /**
+     * Batch registration and enrollment
+     *
+     */
+    public function batchRegisterAndEnrol(Request $request)
+    {
+        $rId = $request->id;
+        $id = Round::find($rId)->name;
+        $exploded = explode(',', $request->excel);
+        $decoded = base64_decode($exploded[1]);
+        if(str_contains($exploded[0], 'sheet'))
+            $extension = 'xlsx';
+        else
+            $extension = 'xls';
+        $fileName = uniqid().'.'.$extension;
+        $county = 0;
+        if(Auth::user()->isCountyCoordinator())
+        {
+            $county = County::find(Auth::user()->ru()->tier)->name;
+            $folder = '/batch/'.$id.'/'.$county.'/';
+        }
+        else
+            $folder = '/batch/'.$id.'/nphls/';
+        if(!is_dir(public_path().$folder))
+            File::makeDirectory(public_path().$folder, 0777, true);
+        file_put_contents(public_path().$folder.$fileName, $decoded);
+
+        //  get today's date
+        $today = Carbon::today();
+        // dd();
+        //  Handle the import
+        //  Get the results
+        //  Import a user provided file
+        //  Convert file to csv
+        if(Auth::user()->isCountyCoordinator())
+            $data = Excel::load('public/batch/'.$id.'/'.$county.'/'.$fileName, function($reader) {$reader->ignoreEmpty();})->get();
+        else
+            $data = Excel::load('public/batch/'.$id.'/nphls/'.$fileName, function($reader) {$reader->ignoreEmpty();})->get();
+        if(!empty($data) && $data->count())
+        {
+
+            foreach ($data->toArray() as $key => $value) 
+            {
+                foreach($value as $harvey => $specter)
+                {
+                    if(!empty($specter))
+                    {
+                        $county = NULL;
+                        $sub_county = NULL;
+                        $facility = NULL;
+                        $mfl = NULL;
+                        $uid = NULL;
+                        $tfname = NULL;
+                        $tsname = NULL;
+                        $toname = NULL;
+                        $tgender = NULL;
+                        $tphone = NULL;
+                        $temail = NULL;
+                        $taddress = NULL;
+                        $tdes = NULL;
+                        $tprog = NULL;
+                        $incharge = NULL;
+                        $iphone = NULL;
+                        $iemail = NULL;
+                        foreach ($specter as $mike => $ross) 
+                        {
+                            if(strcmp($mike, "county") === 0)
+                                $county = $ross;
+                            if(strcmp($mike, "sub_county") === 0)
+                                $sub_county = $ross;
+                            if(strcmp($mike, "facility") === 0)
+                                $facility = $ross;
+                            if(strcmp($mike, "mfl_code") === 0)
+                                $mfl = $ross;
+                            if(strcmp($mike, "tester_enrollment_id") === 0)
+                                $uid = $ross;
+                            if(strcmp($mike, "tester_first_name") === 0)
+                                $tfname = $ross;
+                            if(strcmp($mike, "tester_surname") === 0)
+                                $tsname = $ross;
+                            if(strcmp($mike, "tester_other_name") === 0)
+                                $toname = $ross;
+                            if(strcmp($mike, "gender") === 0)
+                                $tgender = $ross;
+                            if(strcmp($mike, "tester_mobile_number") === 0)
+                                $tphone = $ross;
+                            if(strcmp($mike, "tester_email") === 0)
+                                $temail = $ross;
+                            if(strcmp($mike, "tester_address") === 0)
+                                $taddress = $ross;
+                            if(strcmp($mike, "designation") === 0)
+                                $tdes = $ross;
+                            if(strcmp($mike, "program") === 0)
+                                $tprog = $ross;
+                            if(strcmp($mike, "in_charge") === 0)
+                                $incharge = $ross;
+                            if(strcmp($mike, "in_charge_email") === 0)
+                                $iemail = $ross;
+                            if(strcmp($mike, "in_charge_phone") === 0)
+                                $iphone = $ross;
+                        }
+                        //  process gender
+                        if(strcmp($tgender, "Male") === 0)
+                            $tgender = User::MALE;
+                        else
+                            $tgender = User::FEMALE;
+                        //  process designation
+                        if(strcmp($tdes, "Nurse") === 0)
+                            $tdes = User::NURSE;
+                        else if(strcmp($tdes, "Lab Tech.") === 0)
+                            $tdes = User::LABTECH;
+                        else if(strcmp($tdes, "Counsellor") === 0)
+                            $tdes = User::COUNSELLOR;
+                        else if(strcmp($tdes, "RCO") === 0)
+                            $tdes = User::RCO;
+
+                        if(strcmp($county, "MURANGA") === 0)
+                            $county = "Murang'a";
+                        if(strcmp($county, "HOMABAY") === 0)
+                            $county = "Homa Bay";
+                        if(strcmp($county, "THARAKA-NITHI") === 0)
+                            $county = "Tharaka Nithi";
+
+                        //  process user details only if the name exists
+                        if($uid)
+                        {
+                            $user = User::find(User::idByUid($uid));
+                            if(!$user)
+                            {
+                                $user = new User;
+                                $user->uid = $uid;
+                            }
+                        }
+                        else
+                        {
+                            $userId = User::idByEmail($temail);
+                            if($userId)
+                            {
+                                $user = User::find($userId);
+                                $user->uid = $user->uid;
+                            }
+                            else
+                            {
+                                $user = new User;
+                                $user->date_registered = $today;
+                                $count = count(User::where('uid', User::MIN_UNIQUE_ID)->get());
+                                if($count > 0)
+                                    $user->uid = DB::table('users')->where('uid', '>=', User::MIN_UNIQUE_ID)->max('uid')+1;
+                                else
+                                    $user->uid = User::MIN_UNIQUE_ID;
+                            }
+                        }
+                        //  process user details
+                        if($tfname)
+                        {
+                            $user->name = $tsname." ".$tfname." ".$toname;
+                            $user->gender = $tgender;
+                            $user->email = $temail;
+                            $user->phone = $tphone;
+                            $user->address = $taddress;
+                            $user->username = uniqid();
+                            $user->save();
+                            $user->username = $user->uid;
+                            $user->password = Hash::make(User::DEFAULT_PASSWORD);
+                            $user->save();
+                            $userId = $user->id;
+
+                            //  Prepare to save facility details
+                            $facilityId = Facility::idByCode($mfl);
+                            if(!$facilityId)
+                                $facilityId = Facility::idByName(trim($facility));
+                            if($facilityId)
+                                $fc = Facility::find($facilityId);
+                            else
+                                $fc = new Facility;
+                            $fc->code = $mfl;
+                            $fc->name = $facility;
+                            $fc->in_charge = $incharge;
+                            $fc->in_charge_phone = $iphone;
+                            $fc->in_charge_email = $iemail;
+                            //  Get sub-county
+                            $sub_county_id = SubCounty::idByName($sub_county);
+                            if(!$sub_county_id)
+                            {
+                                if(!$sub_county)
+                                $sb = new SubCounty;
+                                $sb->name = $sub_county;
+                                $sb->county_id = County::idByName($county);
+                                $sb->save();
+                                $sub_county_id = $sb->id;
+                            }
+                            $fc->sub_county_id = $sub_county_id;
+                            $fc->save();
+                            $facilityId = $fc->id;
+                            //  Prepare to save role-user details
+                            $roleId = Role::idByName('Participant');
+                            $user->detachAllRoles();
+                            DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => Program::idByTitle($tprog), "designation" => $tdes]);
+                            //  Enrol the participant to the pt round
+                            $userId = $user->id;
+                            $roundId = $rId;
+                            $enrol = Enrol::where('round_id', $roundId)->where('user_id', $userId)->get();
+                            if(count($enrol) == 0)
+                            {
+                                $enrol = new Enrol;
+                                $enrol->round_id = $roundId;
+                                $enrol->user_id = $userId;
+                                $enrol->save();
+                            }
+                            //  send email and sms for registration
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 $excel = App::make('excel');
