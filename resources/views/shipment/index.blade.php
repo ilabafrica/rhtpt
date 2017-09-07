@@ -68,24 +68,27 @@
             <th>County</th>
             <th>Date Shipped</th>
             <th>Shipper</th>
-            <th>Panels</th>
+            <th>Panels Shipped</th>
+            <th>Panels Received</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
-        <tr v-for="shipment in shipments">
+        <tr v-for="shipment in shipments" v-bind:class="{'text-danger': shipment.panels_received != shipment.panels_shipped}">
             <td>@{{ shipment.rnd }}</td>
             <td>@{{ shipment.cnty }}</td>
             <td>@{{ shipment.date_shipped }}</td>
             <td>@{{ shipment.shppr }}</td>
             <td>@{{ shipment.panels_shipped }}</td>
+            <td>@{{ shipment.panels_received }}</td>
             <td>
                 <button v-if="!shipment.date_received" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
                 <button v-if="shipment.date_received" class="mbtn mbtn-raised mbtn-success mbtn-xs">Received</button>
             </td>
-            <td>	
+            <td>
             @permission('receive-shipment')
-                <button v-bind="{ 'disabled': shipment.date_received}" id="receipt" class="btn btn-sm btn-asbestos receive" @click.prevent="receive(shipment.id)"><i class="fa fa-download"></i> Receive</button>
+                <button v-bind="{ 'disabled': shipment.date_received}" id="receipt" class="btn btn-sm btn-new-participants receive" @click.prevent="receive(shipment.id)"><i class="fa fa-level-down"></i> Receive</button>
             @endpermission
+            <button class="btn btn-sm btn-midnight-blue" @click.prevent="view(shipment)"><i class="fa fa-navicon"></i> View</button>
             @permission('update-shipment')
                 <button v-bind="{ 'disabled': shipment.date_received}" class="btn btn-sm btn-primary" @click.prevent="editShipment(shipment)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
@@ -563,6 +566,79 @@
                             </div>
                         </form>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View shipment for necessary action -->
+    <div class="modal fade" id="view-shipment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Shipment Details</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Round</strong></td>
+                                        <td>@{{viewShipment.rnd}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>County</strong></td>
+                                        <td>@{{viewShipment.cnty}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Tracker ID</strong></td>
+                                        <td>@{{viewShipment.tracker}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Date Shipped</strong></td>
+                                        <td>@{{viewShipment.date_shipped}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Panels Shipped</strong></td>
+                                        <td>@{{viewShipment.panels_shipped}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Shipping Agent</strong></td>
+                                        <td>@{{viewShipment.shppr}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Contact Person</strong></td>
+                                        <td>@{{viewShipment.cperson}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Phone Number</strong></td>
+                                        <td>@{{viewShipment.cphone}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Date Received</strong></td>
+                                        <td>@{{viewShipment.date_received}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Panels Received</strong></td>
+                                        <td>@{{viewShipment.panels_received}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Received By</strong></td>
+                                        <td>@{{viewShipment.receiver}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Condition</strong></td>
+                                        <td>@{{viewShipment.condition}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="form-group row col-sm-offset-9 col-sm-3">
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.close') !!}</span></button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

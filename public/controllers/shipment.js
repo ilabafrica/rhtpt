@@ -39,6 +39,7 @@ new Vue({
         consignments: [],
         formReceiptErrors: {},
         fillConsignment : {'shipment_id':'','facility_id':'','tracker':'','total':'','date_picked':'','picked_by':'','contacts':''},
+        viewShipment: {},
     },
 
     computed: {
@@ -321,6 +322,12 @@ new Vue({
             }).catch(() => {
                 toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
             });
+        },
+
+        view(shipment)
+        {
+            this.viewShipment = shipment;
+            $("#view-shipment").modal('show');
         },
     }
 });
