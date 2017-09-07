@@ -161,11 +161,11 @@ class ProfileController extends Controller
      */
     public function transferUser(Request $request)
     {
-    	$user = auth()->user();
-    	$tier = $request->mfl_code;
+        $user = auth()->user();
+    	$tier = Facility::where('code', $request->mfl_code)->first()->id;
     	$program_id = $request->program;
     	$designation = $request->designation;
-        $update = DB::table('users')->where('user_id', $user->id)->update(['tier' => $tier, 'program_id' => $program_id, 'designation' => $designation]);
+        $update = DB::table('role_user')->where('user_id', $user->id)->update(['tier' => $tier, 'program_id' => $program_id, 'designation' => $designation]);
         return response()->json($update);
     }
     /**
