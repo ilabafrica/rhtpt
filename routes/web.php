@@ -490,7 +490,6 @@ Route::post("/user/transfer/facility", array(
     "as"   => "user.transfer",
     "uses" => "ProfileController@transferUser"
 ));
-
 Route::get("/workbook", array(
     "as"   => "participants.download",
     "uses" => "ParticipantController@testerSummary"
