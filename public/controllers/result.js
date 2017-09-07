@@ -233,7 +233,7 @@ new Vue({
                 doc.setFontSize(9);
                 doc.writeText(0, 60, "NATIONAL PUBLIC HEALTH LABORATORY SERVICES (NPHLS)", { align: 'center' });
                 doc.setFontSize(8);
-                doc.writeText(0, 65, "NATIONAL HIV REFERENCE LABORATORY (NHRL)", { align: 'center' });
+                doc.writeText(0, 65, "NATIONAL HIV REFERENCE LABORATORY (NPHL)", { align: 'center' });
                 doc.setFontSize(7);
                 doc.writeText(0, 70, "P.O. BOX 20750 - 00202, NAIROBI", { align: 'center' });
                 doc.setFontSize(10);
@@ -263,7 +263,7 @@ new Vue({
                 doc.writeText(22.5, 110, "RE: Proficiency Testing Results");
                 doc.line(22.5, 112, 75, 112);
                 doc.setFontType("normal");
-                doc.writeText(22.5, 117, "NHRL acknowledges receipt of your Proficiency Testing results for Round " + feedback.round);
+                doc.writeText(22.5, 117, "NPHL acknowledges receipt of your Proficiency Testing results for Round " + feedback.round);
                 doc.writeText(22.5, 122, "Your result is ")
                 doc.setFontType("bolditalic");
                 doc.text(45, 122, feedback.verdict);
@@ -271,10 +271,10 @@ new Vue({
                 doc.writeText(22.5, 127, feedback.remark);
                 //  Footer
                 doc.writeText(22.5, 257, "Thank you for your participation.");
-                doc.writeText(22.5, 265, "NHRL HEAD:     Nancy Bowen");
+                doc.writeText(22.5, 265, "NPHL HEAD:     Nancy Bowen");
                 doc.writeText(90, 265, "Signature: ");
                 doc.writeText(135, 265, "Date authorized:     " + feedback.date_authorized);
-                doc.writeText(22.5, 270, "NHRL Doc No 105 V:0 ");
+                doc.writeText(22.5, 270, "NPHL Doc No 105 V:0 ");
                 window.open(doc.output('bloburl'), '_blank');
             }, (response) => {
                 

@@ -392,14 +392,13 @@ new Vue({
 
             swal({
                   title: "Are you sure?",
-                  text: "The user will not be able to log in.",
                   type: "warning",
                   showCancelButton: true,
                   confirmButtonClass: "btn-danger",
                   confirmButtonText: "Yes",
                   cancelButtonText: "No",
-                  closeOnConfirm: true,
-                  closeOnCancel: false
+                  closeOnConfirm: false,
+                  closeOnCancel: true,
                 },
                 function(isConfirm) {
                   if (isConfirm) {

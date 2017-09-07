@@ -26,7 +26,7 @@
 
 <body>
     <div class="login-page" style="padding-top:20px;">
-        <div class="card col-md-5" style="margin:auto; float:none">
+        <div class="card col-md-5" style="margin:auto; float:none;width: 600px;">
             <div class="card-block">
                 <div class="row" style="padding:20px">
                     <div class="col-md-12  text-md-center">
@@ -55,14 +55,14 @@
                         </div>
                     @endif
                     <div class="form-group row">
-                        <label for="username" class="col-md-2 col-form-label">PTEnrollmentID </label>
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" name="username" placeholder="TPTEnrollmentID">
+                        <label for="username" class="col-md-2 col-form-label" style="margin-right: 100px">PTEnrollmentID</label>
+                        <div class="col-md-10" style="width: 300px;">
+                            <input type="text" class="form-control" name="username" placeholder="PTEnrollmentID">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="inputPassword3" class="col-md-2 col-form-label">Password</label>
-                        <div class="col-md-10">
+                        <label for="inputPassword3" class="col-md-2 col-form-label" style="margin-right: 100px">Password</label>
+                        <div class="col-md-10" style="width: 300px;">
                             <input type="password" class="form-control" name="password" placeholder="Password">
                         </div>
                     </div>

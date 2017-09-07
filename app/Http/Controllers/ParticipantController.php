@@ -888,7 +888,7 @@ class ParticipantController extends Controller
         //  Remove beginning 0 and append +254
         $phone = ltrim($user->phone, '0');
         $recipient = "+254".$phone;
-        $message    = "Dear ".$user->name.", NHRL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
+        $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
         // Create a new instance of our awesome gateway class
         $gateway    = new Bulk($username, $apikey);
         try 

@@ -258,10 +258,10 @@ class PTSeeder extends DatabaseSeeder
 
         /* Notifications table */
         $notifications = array(
-            array("template" => Notification::ENROLMENT, "message" => "Dear PT Participant, you have been enrolled into [round] of PT. If not not participating, contact NHRL on 0722934622 or nhrlpt@gmail.com"),
-            array("template" => Notification::PANEL_DISPATCH, "message" => "Dear PT Participant, NHRL has dispatched your PT Panel for [round]. If not received within 7 days, contact NHRL on 0722934622 or nhrlpt@gmail.com"),
-            array("template" => Notification::RESULTS_RECEIVED, "message" => "Dear PT Participant, NHRL has received your PT Results for [round]. You will get your feedback shortly."),
-            array("template" => Notification::FEEDBACK_RELEASE, "message" => "Dear PT Participant, NHRL has released your PT Feedback for [round]. If not received within 7 days, contact NHRL on 0722934622 or nhrlpt@gmail.com"),            
+            array("template" => Notification::ENROLMENT, "message" => "Dear PT Participant, you have been enrolled into [round] of PT. If not not participating, contact NPHL on 0722934622 or NPHLpt@gmail.com"),
+            array("template" => Notification::PANEL_DISPATCH, "message" => "Dear PT Participant, NPHL has dispatched your PT Panel for [round]. If not received within 7 days, contact NPHL on 0722934622 or NPHLpt@gmail.com"),
+            array("template" => Notification::RESULTS_RECEIVED, "message" => "Dear PT Participant, NPHL has received your PT Results for [round]. You will get your feedback shortly."),
+            array("template" => Notification::FEEDBACK_RELEASE, "message" => "Dear PT Participant, NPHL has released your PT Feedback for [round]. If not received within 7 days, contact NPHL on 0722934622 or NPHLpt@gmail.com"),
         );
         foreach ($notifications as $notification)
         {
