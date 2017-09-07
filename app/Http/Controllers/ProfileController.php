@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Role;
+use Hash;
 
 class ProfileController extends Controller
 {
@@ -23,7 +24,7 @@ class ProfileController extends Controller
         $user->sex = $user->maleOrFemale($user->gender);
         $user->rl = $user->ru()->role_id;
         $user->participant = Role::idByName("Participant");
-        $user->image?$user->image=$user->image:$user->image='default.jpg';
+        $user->image?$user->image=$user->image:$user->image='default.png';
 
         return response()->json($user);
     }
@@ -121,10 +122,14 @@ class ProfileController extends Controller
 	        'confirm' => 'required|same:new',
 	    ]);
 	    $user = auth()->user();
-	    if(Hash::check($request->new, $user->password))
+	    if(!Hash::check($request->old, $user->password))
 	    {
-         	return response()->json(['error','Your new password should not match the current password.']);
+         	return response()->json(['error' => 'You entered a wrong current password.']);
     	}
+        else if(Hash::check($request->new, $user->password))
+        {
+            return response()->json(['error' => 'Your new password should not match the current password.']);
+        }
     	else
     	{
     		$user->password = Hash::make($request->new);
@@ -148,5 +153,13 @@ class ProfileController extends Controller
         $userTier->designation = $designation;
         $userTier->save();
         return response()->json($userTier);
+    }
+    /**
+     * Blank function to rid console errors.
+     *
+     */
+    public function blank()
+    {
+
     }
 }

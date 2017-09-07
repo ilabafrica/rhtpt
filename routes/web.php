@@ -490,3 +490,8 @@ Route::post("/user/transfer/facility", array(
     "as"   => "user.transfer",
     "uses" => "ProfileController@transferUser"
 ));
+
+Route::get("/images/profiles", array(
+    "as"   => "user.image",
+    "uses" => "ProfileController@blank"
+));
