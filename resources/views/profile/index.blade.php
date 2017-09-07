@@ -247,7 +247,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('transfer_facility.designation') }" for="designation">Designation:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="designation" :class="{'input': true, 'is-danger': errors.has('transfer_facility.designation') }" v-model="userProfile.designation">
+                                        <select v-validate="'required'" class="form-control c-select" name="designation" :class="{'input': true, 'is-danger': errors.has('transfer_facility.designation') }" v-model="transUser.designation">
                                             <option selected></option>
                                             <option v-for="des in designations" :value="des.name">@{{ des.title }}</option>
                                         </select>
@@ -257,7 +257,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('transfer_facility.program') }" for="program">Program:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="program" :class="{'input': true, 'is-danger': errors.has('transfer_facility.program') }" v-model="userProfile.program">
+                                        <select v-validate="'required'" class="form-control c-select" name="program" :class="{'input': true, 'is-danger': errors.has('transfer_facility.program') }" v-model="transUser.program">
                                             <option selected></option>
                                             <option v-for="prog in programs" :value="prog.id">@{{ prog.value }}</option>
                                         </select>
@@ -267,7 +267,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('transfer_facility.mfl-code') }" for="mfl code">MFL Code:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('transfer_facility.mfl-code') }" name="mfl-code" type="text" v-model="userProfile.mfl_code" @change="fetchFacility" id="mfl" />
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('transfer_facility.mfl-code') }" name="mfl_code" type="text" v-model="transUser.mfl_code" @change="fetchFacility" id="mfl" />
                                         <span v-show="errors.has('transfer_facility.mfl-code')" class="help is-danger">@{{ errors.first('transfer_facility.mfl-code') }}</span>
                                     </div>
                                 </div>

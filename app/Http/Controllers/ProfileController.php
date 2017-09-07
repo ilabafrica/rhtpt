@@ -162,10 +162,11 @@ class ProfileController extends Controller
     public function transferUser(Request $request)
     {
     	$user = auth()->user();
-    	$tier = $request->mfl_code;
+    	$mfl_code = $request->mfl_code;
     	$program_id = $request->program;
     	$designation = $request->designation;
-        $update = DB::table('users')->where('user_id', $user->id)->update(['tier' => $tier, 'program_id' => $program_id, 'designation' => $designation]);
+        $facility = Facility::where('code', $mfl_code)->first();
+        $update = DB::table('role_user')->where('user_id', $user->id)->update(['tier' => $facility->id, 'program_id' => $program_id, 'designation' => $designation]);
         return response()->json($update);
     }
     /**
