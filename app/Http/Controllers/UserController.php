@@ -488,29 +488,16 @@ class UserController extends Controller
         //  Prepare to save role-user details
         $roleId = Role::idByName('Participant');
         DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => $request->program]);
-        /*
-        *  Do SMS Verification for phone number
-        */
-        //  Bulk-sms settings
-        $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->code;
-        $apikey     = $api->api_key;
-        //  Remove beginning 0 and append +254
-        $phone = ltrim($user->phone, '0');
-        $recipient = "+254".$phone;
+        
         // Generate code and store it in the database then send to participant
         $token = mt_rand(100000, 999999);
         $user->sms_code = $token;
         $user->save();
         $message    = "Your Verification Code is: ".$token;
-        // Create a new instance of our awesome gateway class
-        $gateway    = new Bulk($username, $apikey);
         try 
-        { 
-            // Specified sender-id
-            $from = $api->code;
-            // Send message
-            // $result = $gateway->sendMessage($recipient, $message);
+        {
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($user->phone, $message);
         }
         catch ( AfricasTalkingGatewayException $e )
         {
@@ -794,22 +781,11 @@ class UserController extends Controller
                             $user->token = $token;
                             $user->notify(new WelcomeNote($user));
                             
-                            //  Bulk-sms settings
-                            $api = DB::table('bulk_sms_settings')->first();
-                            $username   = $api->username;
-                            $apikey     = $api->api_key;
-                            //  Remove beginning 0 and append +254
-                            $phone = ltrim($user->phone, '0');
-                            $recipient = "+254".$phone;
                             $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
-                            // Create a new instance of our awesome gateway class
-                            $gateway    = new Bulk($username, $apikey);
                             try 
-                            { 
-                                // Specified sender-id
-                                $from = $api->code;
-                                // Send message
-                                $result = $gateway->sendMessage($recipient, $message);
+                            {
+                                $smsHandler = new SmsHandler();
+                                $smsHandler->sendMessage($user->phone, $message);
                             }
                             catch ( AfricasTalkingGatewayException $e )
                             {

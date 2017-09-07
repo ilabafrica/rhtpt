@@ -12,6 +12,7 @@ use App\Notification;
 use App\User;
 use App\County;
 use App\Role;
+use App\SmsHandler;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
