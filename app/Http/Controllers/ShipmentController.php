@@ -68,6 +68,8 @@ class ShipmentController extends Controller
                 $shipment->shppr = $shipment->shipper->name;
                 $shipment->cnty = $shipment->county->name;
                 $shipment->cons = $shipment->consignments->count();
+                $shipment->cperson = $shipment->shipper->contact;
+                $shipment->cphone = $shipment->shipper->phone;
             }
         }
         $response = [
