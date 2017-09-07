@@ -2,8 +2,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\Role;
+use App\Facility;
+use App\Program;
+
 use Hash;
+use DB;
 
 class ProfileController extends Controller
 {
@@ -25,7 +30,17 @@ class ProfileController extends Controller
         $user->rl = $user->ru()->role_id;
         $user->participant = Role::idByName("Participant");
         $user->image?$user->image=$user->image:$user->image='default.png';
-
+        if($user->rl == $user->participant)
+        {
+            $roleUser = $user->ru();
+            $facility = Facility::find($roleUser->tier);
+            $user->des = $user->designation($roleUser->designation);
+            $user->prog = Program::find($roleUser->program_id)->name;
+            $user->mfl = $facility->code;
+            $user->facility = $facility->name;
+            $user->sub_county = $facility->subCounty->name;
+            $user->county = $facility->subCounty->county->name;
+        }
         return response()->json($user);
     }
     /**
@@ -70,16 +85,20 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-    	$exploded = explode(',', $request->image);
-		$decoded = base64_decode($exploded[1]);
-		if(str_contains($exploded[0], 'jpeg'))
-			$extension = 'jpg';
-		else
-			$extension = 'png';
-		$fileName = uniqid().'.'.$extension;
-        $folder = '/images/profiles/';
-        file_put_contents(public_path().$folder.$fileName, $decoded);
         $user = auth()->user();
+        if(strcasecmp($request->image, "default.png") !== 0)
+        {
+        	$exploded = explode(',', $request->image);
+    		$decoded = base64_decode($exploded[1]);
+    		if(str_contains($exploded[0], 'jpeg'))
+    			$extension = 'jpg';
+    		else
+    			$extension = 'png';
+    		$fileName = uniqid().'.'.$extension;
+            $folder = '/images/profiles/';
+            file_put_contents(public_path().$folder.$fileName, $decoded);
+            $user->image = $fileName;
+        }
     	$this->validate($request, [
             'name' => 'required',
             'phone' => 'required',
@@ -90,7 +109,6 @@ class ProfileController extends Controller
         $user->phone = $request->phone;
         $user->email = $request->email;
         $user->address = $request->address;
-        $user->image = $fileName;
         $user->save();
         if($request->role)
         {
@@ -147,12 +165,8 @@ class ProfileController extends Controller
     	$tier = $request->mfl_code;
     	$program_id = $request->program;
     	$designation = $request->designation;
-        $userTier = Tier::where('user_id', $user->id)->first();
-        $userTier->tier = $tier;
-        $userTier->program_id = $program_id;
-        $userTier->designation = $designation;
-        $userTier->save();
-        return response()->json($userTier);
+        $update = DB::table('users')->where('user_id', $user->id)->update(['tier' => $tier, 'program_id' => $program_id, 'designation' => $designation]);
+        return response()->json($update);
     }
     /**
      * Blank function to rid console errors.
