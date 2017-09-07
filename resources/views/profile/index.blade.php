@@ -267,7 +267,11 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('transfer_facility.mfl-code') }" for="mfl code">MFL Code:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
+<<<<<<< HEAD
                                         <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('transfer_facility.mfl-code') }" name="mfl-code" type="text" v-model="transUser.mfl_code" @change="fetchFacility" id="mfl" />
+=======
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('transfer_facility.mfl-code') }" name="mfl_code" type="text" v-model="transUser.mfl_code" @change="fetchFacility" id="mfl" />
+>>>>>>> b412cd1d2148c1f9d2381a6fb619dae541149161
                                         <span v-show="errors.has('transfer_facility.mfl-code')" class="help is-danger">@{{ errors.first('transfer_facility.mfl-code') }}</span>
                                     </div>
                                 </div>

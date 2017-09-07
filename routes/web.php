@@ -393,7 +393,7 @@ Route::group(['middleware' => 'auth'], function()
     //  Batch enrolment
     Route::post("/batch/enrol", array(
         "as"   => "batch.enrolment",
-        "uses" => "RoundController@batchEnrolment"
+        "uses" => "RoundController@batchRegisterAndEnrol"
     ));
     //  Batch registration
     Route::post('/batch/register', array(
@@ -413,7 +413,7 @@ Route::group(['middleware' => 'auth'], function()
         "uses"  =>  "UserController@importUserList"
     ));
 
-    Route::get("/download/{id}", array(
+    Route::get("/download/{id}/{status?}", array(
         "as"   => "testers.download",
         "uses" => "RoundController@testerSummary"
     ));
@@ -490,8 +490,12 @@ Route::post("/user/transfer/facility", array(
     "as"   => "user.transfer",
     "uses" => "ProfileController@transferUser"
 ));
+Route::get("/workbook", array(
+    "as"   => "participants.download",
+    "uses" => "ParticipantController@testerSummary"
+));
 
-Route::get("/images/profiles", array(
-    "as"   => "user.image",
-    "uses" => "ProfileController@blank"
+Route::get("/new_participants/{id}/{}", array(
+    "as"   => "new.participants",
+    "uses" => "RoundController@testerSummary"
 ));
