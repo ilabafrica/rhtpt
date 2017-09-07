@@ -67,9 +67,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button class="btn btn-primary btn-block" type="submit" name="signin">LOGIN</button>
-                            <a class="btn btn-wisteria btn-block" onclick="confirmRegistration()">REGISTER HERE</a>
+                        <div class="col-md-offset-4 col-md-10"style="width: 300px;">
+                            <button class="btn btn-primary btn-block"  style="margin-right: 100px"type="submit" name="signin">LOGIN</button>
+                            <a class="btn btn-wisteria btn-block" style="margin-right: 100px" onclick="confirmRegistration()">REGISTER HERE</a>
                             <a class="btn btn-link btn-block" href="{{url('password/reset')}}">FORGOT PASSWORD</a>
                             <hr>
                             <h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NPHL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>
