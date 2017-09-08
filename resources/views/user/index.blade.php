@@ -110,58 +110,58 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createUser('create_user')" data-vv-validate="create_user">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createUser('create_user')" data-vv-scope="create_user">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Name:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.name') }" for="name">Name:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="newUser.name" />
-                                        <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
+                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.name') }" name="name" type="text" placeholder="" v-model="newUser.name" />
+                                        <span v-show="errors.has('create_user.name')" class="help is-danger">@{{ errors.first('create_user.name') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('gender') }" for="tester id">Gender:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.gender') }" for="tester id">Gender:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="sex in sexes">
                                             <label class="form-radio-label">
-                                                <input v-validate="'required'" type="radio" name="gender" :value="sex.name" :class="{'input': true, 'is-danger': errors.has('gender') }" v-model="newUser.gender">
+                                                <input v-validate="'required'" type="radio" name="gender" :value="sex.name" :class="{'input': true, 'is-danger': errors.has('create_user.gender') }" v-model="newUser.gender">
                                                 @{{ sex.title }}
                                             </label>
                                         </div>
-                                        <span v-show="errors.has('gender')" class="help is-danger">@{{ errors.first('gender') }}</span>
+                                        <span v-show="errors.has('create_user.gender')" class="help is-danger">@{{ errors.first('create_user.gender') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone number') }" for="phone number">Phone Number:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.phone number') }" for="phone number">Phone Number:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone number') }" name="phone number" type="text" v-model="newUser.phone"/>
-                                        <span v-show="errors.has('phone number')" class="help is-danger">@{{ errors.first('phone number') }}</span>
+                                        <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.phone number') }" name="phone number" type="text" v-model="newUser.phone"/>
+                                        <span v-show="errors.has('create_user.phone number')" class="help is-danger">@{{ errors.first('create_user.phone number') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('email') }" for="email">Email:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.email') }" for="email">Email:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" v-model="newUser.email"/>
-                                        <span v-show="errors.has('email')" class="help is-danger">@{{ errors.first('email') }}</span>
+                                        <input v-validate="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.email') }" name="email" type="text" v-model="newUser.email"/>
+                                        <span v-show="errors.has('create_user.email')" class="help is-danger">@{{ errors.first('create_user.email') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('address') }" for="address">Address:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.address') }" for="address">Address:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('address') }" name="address" type="text" v-model="newUser.address"/>
-                                        <span v-show="errors.has('address')" class="help is-danger">@{{ errors.first('address') }}</span>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.address') }" name="address" type="text" v-model="newUser.address"/>
+                                        <span v-show="errors.has('create_user.address')" class="help is-danger">@{{ errors.first('create_user.address') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('gender') }" for="tester id">Role:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.role') }" for="role">Role:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="role in roles">
                                             <label class="form-radio-label">
-                                                <input v-validate="'required'" type="radio" :value="role.id" v-model="newUser.role" name="role" :class="{'input': true, 'is-danger': errors.has('gender') }" v-model="newUser.gender">
+                                                <input v-validate="'required'" type="radio" :value="role.id" v-model="newUser.role" name="role" :class="{'input': true, 'is-danger': errors.has('create_user.role') }" v-model="newUser.gender">
                                                 @{{ role.value }}
                                             </label>
                                         </div>
-                                        <span v-show="errors.has('role')" class="help is-danger">@{{ errors.first('role') }}</span>
+                                        <span v-show="errors.has('create_user.role')" class="help is-danger">@{{ errors.first('create_user.role') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row" v-if="newUser.role == 3">
