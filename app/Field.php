@@ -71,7 +71,7 @@ class Field extends Model
   	public function order($ordr = 0)
   	{
         if($ordr!=0)
-            return Field::find($ordr)->first()->label;
+            return Field::withTrashed()->find($ordr)->first()->label;
         else
             return 'Not Applicable';
   	}
