@@ -51,10 +51,13 @@
             <td>@{{ option.description }}</td>
             <td>
             @permission('update-option')	
-                <button class="btn btn-sm btn-primary" @click.prevent="editOption(option)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': option.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editOption(option)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
+            
+                <button v-if="option.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreOption(option)"><i class="fa fa-toggle-on"></i> Enable</button>
+            
             @permission('delete-option')
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteOption(option)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!option.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteOption(option)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             </td>
         </tr>

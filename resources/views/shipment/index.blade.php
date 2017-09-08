@@ -157,7 +157,7 @@
                                             <option selected></option>
                                             <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>
                                         </select>
-                                        <span v-show="errors.has('create_shipmentcounty')" class="help is-danger">@{{ errors.first('create_shipmentcounty') }}</span>
+                                        <span v-show="errors.has('create_shipmentcounty')" class="help is-danger">@{{ errors.first('create_shipment.county') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -170,7 +170,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('create_shipment.date shipped') }" for="date shipped">Date Shipped:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_shipment.date shipped') }" id="shppd" name="date shipped" type="date" placeholder="" v-model="newShipment.date_shipped" />
+                                        <input v-validate="'required|after:date prepared'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_shipment.date shipped') }" id="shppd" name="date shipped" type="date" placeholder="" v-model="newShipment.date_shipped" />
                                         <span v-show="errors.has('create_shipment.date shipped')" class="help is-danger">@{{ errors.first('create_shipment.date shipped') }}</span>
                                     </div>
                                 </div>
