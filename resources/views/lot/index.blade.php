@@ -56,9 +56,7 @@
             @permission('update-lot')	
                 <button v-bind="{ 'disabled': lot.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editLot(lot)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
-            @permission('restore-lot')
                 <button v-if="lot.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreLot(lot)"><i class="fa fa-toggle-on"></i> Enable</button>
-            @endpermission
             @permission('delete-lot')
                 <button v-if="!lot.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteLot(lot)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
