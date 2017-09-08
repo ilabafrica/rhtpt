@@ -131,7 +131,7 @@
                             </li>
                             @endpermission
                             @permission('read-nonperf')
-                            <li class="{!! Request::segment(1)==strtolower('nonperf')?strtolower(trans('messages.active')):'' !!}">
+                            <li style="display:none;" class="{!! Request::segment(1)==strtolower('nonperf')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('nonperf') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.nonperf', 2) !!}</a>
                             </li>
                             @endpermission
