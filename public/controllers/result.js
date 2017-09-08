@@ -321,25 +321,17 @@ new Vue({
                 // Clear the query.
                 this.query = '';
             });
-        }
+        },
         //  toggle other
+
+        //  Normal js
+        specToggle(className, id){
+            var $input = $("#field_"+id);
+            if($input.val() != 4)
+                $(className).hide();
+            else
+                $(className).show();
+        }
 
     },
 });
-
-//  Normal js
-function specToggle(className, id){
-    var $input = $("#field_"+id);
-    if($input.val() != 4)
-        $(className).hide();
-    else
-        $(className).show();
-}
-$("#dt").on("change", function() {
-  alert('Fuck');
-    this.setAttribute(
-        "data-date",
-        moment(this.value, "yyyy-MM-dd")
-        .format( this.getAttribute("data-date-format") )
-    )
-}).trigger("change")
