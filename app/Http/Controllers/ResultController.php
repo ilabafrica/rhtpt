@@ -239,7 +239,7 @@ class ResultController extends Controller
         $recipients = User::find($result->enrolment->user->id)->value('phone');
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->code;
+        $username   = $api->username;
         $apikey     = $api->api_key;
         if($recipients)
         {
