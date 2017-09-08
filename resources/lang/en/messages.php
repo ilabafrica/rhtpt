@@ -183,4 +183,8 @@ return [
     */
     'enter-result'          =>  'Enter Results',
     'verify-result'          =>  'Verify Results',
+    /**
+    *   User Profile
+    */
+    'user-profile'          =>  'User Profile',
 ];

@@ -30,6 +30,7 @@ new Vue({
         srchParticipant: '',
         enrollments: [],
         esrch: '',
+        date: '',
         testers: [],
         durations: [],
         uploadify: {id: '', excel: ''}
@@ -262,7 +263,7 @@ new Vue({
                 this.$http.post('/batch/enrol', input).then((response) => {
                     this.uploadify = {'id':'','excel':''};
                     $("#batch-enrolment").modal('hide');
-                    toastr.success('Round Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                    toastr.success('Data uploaded Successfully.', 'Success Alert', {timeOut: 5000});
                     this.errors.clear();
                 }, (response) => {
                     // 

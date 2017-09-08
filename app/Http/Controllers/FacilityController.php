@@ -221,7 +221,7 @@ class FacilityController extends Controller
         if(Auth::user()->isCountyCoordinator())
         {
             $id = Auth::user()->ru()->tier;
-            $subs = County::find($id)->subCounties->pluck('name', 'id');
+            $subs = County::find($id)->subCounties->orderBy('name', 'ASC')->pluck('name', 'id');
             $categories = [];
             foreach($subs as $key => $value)
             {
@@ -233,7 +233,7 @@ class FacilityController extends Controller
         {
             //  remember to remove this shitty block
             $id = Auth::user()->ru()->tier;
-            $subs = County::find(1)->subCounties->pluck('name', 'id');
+            $subs = SubCounty::orderBy('name', 'ASC')->pluck('name', 'id');
             $categories = [];
             foreach($subs as $key => $value)
             {
