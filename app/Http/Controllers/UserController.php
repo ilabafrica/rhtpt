@@ -140,6 +140,8 @@ class UserController extends Controller
                 $tier = $request->facility_id;
             }
             $ru = DB::table('role_user')->insert(["user_id" => $create->id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
+            //  SMS and email notification
+
         }
         return response()->json($create);
     }
@@ -192,6 +194,24 @@ class UserController extends Controller
             $user = User::find($id);
             $user->detachAllRoles();
             $ru = DB::table('role_user')->insert(["user_id" => $id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
+        }
+        if($user)
+        {
+            //  send email and sms
+            $token = app('auth.password.broker')->createToken($user);
+            $user->token = $token;
+            $user->notify(new WelcomeNote($user));
+            
+            $message    = "Dear ".$user->name.", Your HIV PT System account has been created. Your username is ".$user->username.". Use the link sent to your email to get started.";
+            try 
+            {
+                $smsHandler = new SmsHandler();
+                $smsHandler->sendMessage($user->phone, $message);
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+                echo "Encountered an error while sending: ".$e->getMessage();
+            }
         }
         return response()->json($edit);
     }

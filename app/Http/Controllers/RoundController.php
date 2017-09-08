@@ -24,6 +24,9 @@ use Excel;
 use App;
 use File;
 use Hash;
+//  Notification
+use App\Notifications\WelcomeNote;
+use App\Notifications\EnrollmentNote;
 
 class RoundController extends Controller
 {
@@ -757,6 +760,38 @@ class RoundController extends Controller
                                 $enrol->save();
                             }
                             //  send email and sms for registration
+                            if($user->date_registered)
+                            {
+                                //  send email and sms
+                                $token = app('auth.password.broker')->createToken($user);
+                                $user->token = $token;
+                                $user->notify(new WelcomeNote($user));
+                                
+                                $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
+                                try 
+                                {
+                                    $smsHandler = new SmsHandler();
+                                    $smsHandler->sendMessage($user->phone, $message);
+                                }
+                                catch ( AfricasTalkingGatewayException $e )
+                                {
+                                    echo "Encountered an error while sending: ".$e->getMessage();
+                                }
+                            }
+                            //  Enrollment notifications
+                            $round = Round::find($roundId)->name;
+                            $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
+                            $message = ApiController::replace_between($message, '[', ']', $round);
+                            $message = str_replace(' [', ' ', $message);
+                            $message = str_replace('] ', ' ', $message);
+                            try 
+                            {
+                                $smsHandler = new SmsHandler();
+                                $smsHandler->sendMessage($user->phone, $message);
+                            }
+                            $user->round = $round;                        
+                            $user->notify(new EnrollmentNote($user));
+                            //  Bulk-sms settings
                         }
                     }
                 }
