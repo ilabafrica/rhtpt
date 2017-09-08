@@ -188,7 +188,7 @@
 						</div>
 					</div>
 					<hr>
-					<h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NHRL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>
+					<h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NHPL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>
 				</form>
 			</div>
 		</div>
