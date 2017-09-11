@@ -1,5 +1,51 @@
 @extends('app')
 @section('content')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<script type="text/javascript">
+    $(document).ready(function() {
+
+    $('form').on('submit', function(event) {
+
+        event.preventDefault();
+
+        var formData = new FormData($('form')[0]);
+
+        $.ajax({
+            xhr : function() {
+                var xhr = new window.XMLHttpRequest();
+
+                xhr.upload.addEventListener('progress', function(e) {
+
+                    if (e.lengthComputable) {
+
+                        console.log('Bytes Loaded: ' + e.loaded);
+                        console.log('Total Size: ' + e.total);
+                        console.log('Percentage Uploaded: ' + (e.loaded / e.total))
+
+                        var percent = Math.round((e.loaded / e.total) * 100);
+
+                        $('#progressBar').attr('aria-valuenow', percent).css('width', percent + '%').text(percent + '%');
+
+                    }
+
+                });
+
+                return xhr;
+            },
+            type : 'POST',
+            data : formData,
+            processData : false,
+            contentType : false,
+            success : function() {
+                alert('File uploaded!');
+            }
+        });
+
+    });
+
+});
+</script>
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
@@ -315,6 +361,11 @@
                                     <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
+                                <div class="progress">
+                                <div v-validate="'required|ext:xlsx,xls'" id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                                   0%
+                                 </div>
+                             </div>
                             </div>
                         </form>
                     </div>

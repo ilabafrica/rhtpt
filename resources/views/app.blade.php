@@ -191,7 +191,11 @@
                         <a href="{!! url('report') !!}"><i class="fa fa-bar-chart-o"></i> {!! trans('messages.reports') !!}</a>
                     </li>
                     @endpermission
-                </ul>
+                    <li>
+                    <a  href="{{ route('logout') }}" onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();"><i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out</a>
+                    </li>
+                </ul>                
             </nav>
         </aside>
 
@@ -204,11 +208,11 @@
                                 <a class="nav-link text-primary" href="#">{!! Carbon::now(Config::get('cms.zone'))->toDayDateTimeString() !!}</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{!! Auth::user()->name !!}</a>
+                                <a class="nav-link dropdown-toggle text-success" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{!! Auth::user()->name !!}</a>
                                 <div class="dropdown-menu  dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+                                    <a class="dropdown-item  " href="{{ route('profile') }}">Profile</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                    <a class="dropdown-item"  href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">Sign Out</a>
                                 </div>
                             </li>

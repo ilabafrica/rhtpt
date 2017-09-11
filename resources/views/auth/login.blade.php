@@ -57,25 +57,28 @@
                         </div>
                     @endif
                     <div class="form-group row">
-                        <label for="username" class="col-md-2 col-form-label">Username</label>
+                        <label for="username" class="col-md-1 col-form-label"></label>
                         <div class="col-md-10">
-                            <input type="text" class="form-control" name="username" placeholder="Username" data-toggle="tooltip" title="Enter Username or PT Tester Enrollment ID which you got at the time of registration" data-placement="top" data-trigger="hover">
+                            <input type="text" class="form-control" name="username" placeholder="Username or PT Enrollment ID" data-toggle="tooltip" title="Enter Username or PT Tester Enrollment ID which you got at the time of registration" data-placement="top" data-trigger="hover">
+                        </div>
+                    </div>                 
+                     <div class="form-group row">
+                        <label for="inputPassword3" class="col-md-1 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input type="password" class="form-control" name="password" placeholder="Password " data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Enter Password that you use to Login"><a style="float: right" href="{{url('password/reset')}}" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click and enter Tester ID to get reset password link in your email">Forgot password</a>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="inputPassword3" class="col-md-2 col-form-label">Password</label>
-                        <div class="col-md-10">
-                            <input type="password" class="form-control" name="password" placeholder="Password " data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Enter Password that you use to Login">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-offset-2 col-md-10">
+                        <div class="col-md-offset-1 col-md-5">
                             <button class="btn btn-primary btn-block" type="submit" name="signin" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to LogIn"  >LOGIN</button>
-                            <a class="btn btn-wisteria btn-block" onclick="confirmRegistration()" data-toggle="tooltip" data-placement="top" title="Click to Register a new participant" data-trigger="hover">REGISTER HERE</a>
-                            <a class="btn btn-link btn-block" href="{{url('password/reset')}}" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click and enter Tester ID to get reset password link in your email">FORGOT PASSWORD</a>
+                            </div>
+                           <div class="col-md-offset-1 col-md-5">
+                            <button class="btn btn-wisteria btn-block" onclick="confirmRegistration()" data-toggle="tooltip" data-placement="top" title="Click to Register a new participant" data-trigger="hover">REGISTER HERE</button>                            
+                            </div>
+                            <div class="col-md-offset-1 col-md-10">
                             <hr>
                             <h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke" data-toggle="tooltip" data-placement="top"  data-trigger="hover" title="Click to go to NPHL website">NPHL</a> by <a href="//www.ilabafrica.ac.ke" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to go to iLabAfrica website" >@iLabAfrica</a></h6>
-                        </div>
+                            </div>                        
                     </div>
                 </form>
             </div>
@@ -107,8 +110,8 @@
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
-                confirmButtonText: "No, Proceed!",
-                cancelButtonText: "Yes, retrive password!",
+                confirmButtonText: "No",
+                cancelButtonText: "Yes",
                 closeOnConfirm: false,
                 closeOnCancel: false
             },
@@ -120,7 +123,7 @@
                 } 
                 else 
                 {
-                    swal("Cancelled", "Please use the signin page to login or reset password.", "success");
+                    swal("PT Participation Prompt", "By getting to this page, you're already registered, please retrieve your enrollment ID from past reports or your county health coordinator to proceed.", "success");
                 }
             });
         }        
