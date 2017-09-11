@@ -950,7 +950,7 @@ class ParticipantController extends Controller
                     $county = County::find($countyId)->name;
                     //  sub-counties and facilities
                     $fIds = County::find($countyId)->facilities()->pluck('id');
-                    $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
+                    $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id')->toArray();
                     $testers = $ids;
                     $testers = implode(",", $testers);
 
@@ -1014,7 +1014,7 @@ class ParticipantController extends Controller
                     {
                         $sheetTitle = $county->name;
                         $fIds = $county->facilities()->pluck('id');
-                        $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
+                        $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id')->toArray();
                         $testers = $ids;
                    
                         $testers = implode(",", $testers);
