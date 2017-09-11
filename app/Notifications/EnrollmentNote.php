@@ -53,7 +53,7 @@ class EnrollmentNote extends Notification
             ->line('You have been enrolled to PT round '.$this->user->round.'.')
             ->greeting('Hello '.$this->user->name)
             ->line('Your tester enrollment ID is '.$this->user->username)
-            ->action('Click the below button to login to the PT system.')
+            ->line('Click the below button to login to the PT system.')
             ->action('Rapid HIV PT System', url('/login'))
             ->line('If you wish to opt out, please contact your County Coordinator.')
             ->line('Thank you for using our application!');
