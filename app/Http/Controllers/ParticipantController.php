@@ -988,7 +988,7 @@ class ParticipantController extends Controller
                                 if(strcasecmp("PROGRAM", $mike) == 0)
                                     $tprog = $ross;
                                 if(strcasecmp("DESIGNATION", $mike) == 0)
-                                    $tdes = User::designation($ross);
+                                    $tdes = User::des($ross);
                                 if(strcasecmp("FACILITY", $mike) == 0)
                                     $facility = $ross;
                                 if(strcasecmp("MFL CODE", $mike) == 0)
@@ -1053,7 +1053,7 @@ class ParticipantController extends Controller
                                     if(strcasecmp("PROGRAM", $mike) == 0)
                                         $tprog = $ross;
                                     if(strcasecmp("DESIGNATION", $mike) == 0)
-                                        $tdes = User::designation($ross);
+                                        $tdes = User::des($ross);
                                     if(strcasecmp("FACILITY", $mike) == 0)
                                         $facility = $ross;
                                     if(strcasecmp("MFL CODE", $mike) == 0)
