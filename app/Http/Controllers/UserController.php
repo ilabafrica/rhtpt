@@ -27,6 +27,7 @@ use App;
 use File;
 //  Notification
 use App\Notifications\WelcomeNote;
+use App\Notifications\AccountNote;
 
 class UserController extends Controller
 {
@@ -141,6 +142,20 @@ class UserController extends Controller
             }
             $ru = DB::table('role_user')->insert(["user_id" => $create->id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
             //  SMS and email notification
+            $token = app('auth.password.broker')->createToken($create);
+            $create->token = $token;
+            $create->notify(new AccountNote($create));
+            
+            $message    = "Dear ".$create->name.", your PT system account has been created. Use the link sent to your email address to get started.";
+            try 
+            {
+                $smsHandler = new SmsHandler();
+                $smsHandler->sendMessage($create->phone, $message);
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+                echo "Encountered an error while sending: ".$e->getMessage();
+            }
 
         }
         return response()->json($create);

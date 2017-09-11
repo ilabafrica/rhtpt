@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class EnrollmentNote extends Notification
+class AccountNote extends Notification
 {
     use Queueable;
 
@@ -49,13 +49,11 @@ class EnrollmentNote extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('PT Round Enrollment')
-            ->line('You have been enrolled to PT round '.$this->user->round.'.')
+            ->subject('Kenya Rapid HIV PT Welcome Note')
+            ->line('Use the link below to get started.')
             ->greeting('Hello '.$this->user->name)
-            ->line('Your tester enrollment ID is '.$this->user->username)
-            ->action('Click the below button to login to the PT system.')
-            ->action('Rapid HIV PT System', url('/login'))
-            ->line('If you wish to opt out, please contact your County Coordinator.')
+            ->action('Get Started', url('password/reset', $this->user->token))
+            ->line('In case of any challenges, please use our help desk for assitance.')
             ->line('Thank you for using our application!');
     }
 

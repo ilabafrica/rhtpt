@@ -780,14 +780,19 @@ class RoundController extends Controller
                             }
                             //  Enrollment notifications
                             $round = Round::find($roundId)->name;
-                            $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
+                            /*$message = Notification::where('template', Notification::ENROLMENT)->first()->message;
                             $message = ApiController::replace_between($message, '[', ']', $round);
                             $message = str_replace(' [', ' ', $message);
-                            $message = str_replace('] ', ' ', $message);
+                            $message = str_replace('] ', ' ', $message);*/
+                            $message = "Dear ".$user->name.", you have been enrolled to PT round ".$round.". If not participating, contact your county lab coordinator."
                             try 
                             {
                                 $smsHandler = new SmsHandler();
                                 $smsHandler->sendMessage($user->phone, $message);
+                            }
+                            catch ( AfricasTalkingGatewayException $e )
+                            {
+                                echo "Encountered an error while sending: ".$e->getMessage();
                             }
                             $user->round = $round;                        
                             $user->notify(new EnrollmentNote($user));
