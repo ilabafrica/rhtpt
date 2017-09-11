@@ -784,7 +784,7 @@ class RoundController extends Controller
                             $message = ApiController::replace_between($message, '[', ']', $round);
                             $message = str_replace(' [', ' ', $message);
                             $message = str_replace('] ', ' ', $message);*/
-                            $message = "Dear ".$user->name.", you have been enrolled to PT round ".$round.". If not participating, contact your county lab coordinator."
+                            $message = "Dear ".$user->name.", you have been enrolled to PT round ".$round.". If not participating, contact your county lab coordinator.";
                             try 
                             {
                                 $smsHandler = new SmsHandler();
