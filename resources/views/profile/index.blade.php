@@ -34,6 +34,10 @@
         </div>
         <div class="col-md-9">
             <table class="table table-bordered">
+                <tr v-if="userProfile.rl == userProfile.participant">
+                    <td>Tester Enrollment ID:</td>
+                    <td class="text-info"><strong>@{{ userProfile.uid }}</strong></td>
+                </tr>
                 <tr>
                     <td>Name:</td>
                     <td class="text-info"><strong>@{{ userProfile.name }}</strong></td>
@@ -54,9 +58,21 @@
                     <td>Address:</td>
                     <td class="text-info"><strong>@{{ userProfile.address }}</strong></td>
                 </tr>
-                <tr>
+                <tr v-if="userProfile.rl != userProfile.participant">
                     <td>Username:</td>
                     <td class="text-info"><strong>@{{ userProfile.username }}</strong></td>
+                </tr>
+                <tr v-if="userProfile.rl == userProfile.participant">
+                    <td>Designation:</td>
+                    <td class="text-info"><strong>@{{ userProfile.des }}</strong></td>
+                </tr>
+                <tr v-if="userProfile.rl == userProfile.participant">
+                    <td>Program:</td>
+                    <td class="text-info"><strong>@{{ userProfile.prog }}</strong></td>
+                </tr>
+                <tr v-if="userProfile.rl == userProfile.participant">
+                    <td>Facility:</td>
+                    <td class="text-info"><strong>@{{ userProfile.mfl+' '+userProfile.facility+' ('+userProfile.sub_county+' - '+userProfile.county+' County)' }}</strong></td>
                 </tr>
             </table>
         </div>
@@ -127,13 +143,13 @@
                                 <div class="form-group row" v-if="userProfile.rl == userProfile.participant">
                                     <label class="col-sm-4 form-control-label" for="designation">Designation:</label>
                                     <div class="col-sm-8">
-                                        <label for="mfl" class="text-primary"><strong>@{{ userProfile.designation }}</strong></label>
+                                        <label for="mfl" class="text-primary"><strong>@{{ userProfile.des }}</strong></label>
                                     </div>
                                 </div>
                                 <div class="form-group row" v-if="userProfile.rl == userProfile.participant">
                                     <label class="col-sm-4 form-control-label" for="program">Program:</label>
                                     <div class="col-sm-8">
-                                        <label for="mfl" class="text-primary"><strong>@{{ userProfile.program }}</strong></label>
+                                        <label for="mfl" class="text-primary"><strong>@{{ userProfile.prog }}</strong></label>
                                     </div>
                                 </div>
                                 <div class="form-group row" v-if="userProfile.rl == userProfile.participant">
@@ -145,19 +161,19 @@
                                 <div class="form-group row" v-if="userProfile.rl == userProfile.participant">
                                     <label class="col-sm-4 form-control-label" for="facility name">Facility Name:</label>
                                     <div class="col-sm-8">
-                                        <label for="facility" class="text-primary"><strong>@{{ facility }}</strong></label>
+                                        <label for="facility" class="text-primary"><strong>@{{ userProfile.facility }}</strong></label>
                                     </div>
                                 </div>
                                 <div class="form-group row" v-if="userProfile.rl == userProfile.participant">
                                     <label class="col-sm-4 form-control-label" for="sub county">Sub County:</label>
                                     <div class="col-sm-8" v-if="userProfile.rl == userProfile.participant">
-                                        <label for="sub-county" class="text-primary"><strong>@{{ sub_county }}</strong></label>
+                                        <label for="sub-county" class="text-primary"><strong>@{{ userProfile.sub_county }}</strong></label>
                                     </div>
                                 </div>
                                 <div class="form-group row" v-if="userProfile.rl == userProfile.participant">
                                     <label class="col-sm-4 form-control-label" for="county">County:</label>
                                     <div class="col-sm-8">
-                                        <label for="county" class="text-primary"><strong>@{{ county }}</strong></label>
+                                        <label for="county" class="text-primary"><strong>@{{ userProfile.county }}</strong></label>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
@@ -226,33 +242,33 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="transferUser('transfer_facility')" data-vv-validate="transfer_facility">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="transferUser('transfer_facility')" data-vv-scope="transfer_facility">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('designation') }" for="designation">Designation:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('transfer_facility.designation') }" for="designation">Designation:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="designation" :class="{'input': true, 'is-danger': errors.has('designation') }" v-model="userProfile.designation">
+                                        <select v-validate="'required'" class="form-control c-select" name="designation" :class="{'input': true, 'is-danger': errors.has('transfer_facility.designation') }" v-model="transUser.designation">
                                             <option selected></option>
                                             <option v-for="des in designations" :value="des.name">@{{ des.title }}</option>
                                         </select>
-                                        <span v-show="errors.has('designation')" class="help is-danger">@{{ errors.first('designation') }}</span>
+                                        <span v-show="errors.has('transfer_facility.designation')" class="help is-danger">@{{ errors.first('transfer_facility.designation') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('program') }" for="program">Program:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('transfer_facility.program') }" for="program">Program:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="program" :class="{'input': true, 'is-danger': errors.has('program') }" v-model="userProfile.program">
+                                        <select v-validate="'required'" class="form-control c-select" name="program" :class="{'input': true, 'is-danger': errors.has('transfer_facility.program') }" v-model="transUser.program">
                                             <option selected></option>
                                             <option v-for="prog in programs" :value="prog.id">@{{ prog.value }}</option>
                                         </select>
-                                        <span v-show="errors.has('program')" class="help is-danger">@{{ errors.first('program') }}</span>
+                                        <span v-show="errors.has('transfer_facility.program')" class="help is-danger">@{{ errors.first('transfer_facility.program') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('mfl code') }" for="mfl code">MFL Code:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('transfer_facility.mfl-code') }" for="mfl code">MFL Code:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('mfl code') }" name="mfl code" type="text" v-model="userProfile.mfl_code" @change="fetchFacility" id="mfl" />
-                                        <span v-show="errors.has('mfl code')" class="help is-danger">@{{ errors.first('mfl code') }}</span>
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('transfer_facility.mfl-code') }" name="mfl-code" type="text" v-model="transUser.mfl_code" @change="fetchFacility" id="mfl" />
+                                        <span v-show="errors.has('transfer_facility.mfl-code')" class="help is-danger">@{{ errors.first('transfer_facility.mfl-code') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">

@@ -59,10 +59,11 @@
             <td>@{{ material.date_collected }}</td>
             <td>
             @permission('update-sample')	
-                <button class="btn btn-sm btn-primary" @click.prevent="editMaterial(material)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-if="!material.deleted_at" class="btn btn-sm btn-primary" @click.prevent="editMaterial(material)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
+                <button v-if="material.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreMaterial(material)"><i class="fa fa-toggle-on"></i> Enable</button>
             @permission('delete-sample')
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteMaterial(material)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!material.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteMaterial(material)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             </td>
         </tr>
@@ -119,7 +120,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('create_material.expiry-date') }" for="expiry-date">Expiry Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_material.expiry-date') }" name="expiry-date" type="date" placeholder="" v-model="newMaterial.expiry_date" />
+                                        <input v-validate="'required|after:date-prepared'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_material.expiry-date') }" name="expiry-date" type="date" placeholder="" v-model="newMaterial.expiry_date" />
                                         <span v-show="errors.has('create_material.expiry-date')" class="help is-danger">@{{ errors.first('create_material.expiry-date') }}</span>
                                     </div>
                                 </div>
@@ -197,7 +198,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('update_material.expiry-date') }" for="expiry-date">Expiry Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('update_material.expiry-date') }" name="expiry-date" type="date" placeholder="" v-model="fillMaterial.expiry_date" />
+                                        <input v-validate="'required|after:date-prepared'" class="form-control" :class="{'input': true, 'is-danger': errors.has('update_material.expiry-date') }" name="expiry-date" type="date" placeholder="" v-model="fillMaterial.expiry_date" />
                                         <span v-show="errors.has('update_material.expiry-date')" class="help is-danger">@{{ errors.first('update_material.expiry-date') }}</span>
                                     </div>
                                 </div>

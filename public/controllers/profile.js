@@ -110,10 +110,18 @@ new Vue({
             this.$validator.validateAll(scope).then(() => {
                 var input = this.userPassword;
                 this.$http.post('/user/password/update', input).then((response) => {
-                    this.userPassword = {'old':'', 'new':'', 'confirm':''},
-                    $("#update-password").modal('hide');
-                    this.getVueProfile();
-                    toastr.success('Password Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                    if(response.data.error)
+                    {
+                        swal("Alert!", response.data.error, "error");
+                        // toastr.warning(this.warning, 'Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.userPassword = {'old':'', 'new':'', 'confirm':''},
+                        $("#update-password").modal('hide');
+                        this.getVueProfile();
+                        toastr.success('Password Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                    }
                 }, (response) => {
                     if(response.data.error)
                     {

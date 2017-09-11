@@ -28,7 +28,7 @@ new Vue({
         formErrors:{},
         formErrorsUpdate:{},
         newFieldSet: {'title':'','uid':'','tag':'','order':'','field_set_id':'','opts[]':''},
-        frmData: {},
+        frmData: {'title':'','uid':'','tag':'','order':'','field_set_id':'','opts[]':''},
         loading: false,
         error: false,
         query: ''
@@ -121,18 +121,16 @@ new Vue({
         editField: function(field){
             //    Fetch the result using the id
             let id = field.id;
-            this.$http.get('/frmfld/'+id).then((response) => {
-                this.frmData = response.data;
-            });
+            this.frmData = field;
             $("#edit-field").modal('show');
         },
 
         updateField: function(id, scope){
             this.$validator.validateAll(scope).then(() => {
-                var input = this.fillField;
+                var input = this.frmData;
                 this.$http.put('/vuefields/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);
-                    this.fillField = {'uid':'','title':'', 'order':'', 'tag':'', 'field_set_id':'', 'opts[]':'','id':''};
+                    this.frmData = {'uid':'','title':'', 'order':'', 'tag':'', 'field_set_id':'', 'opts[]':'','id':''};
                     $("#edit-field").modal('hide');
                     toastr.success('Field Updated Successfully.', 'Success Alert', {timeOut: 5000});
                 }, (response) => {

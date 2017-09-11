@@ -123,7 +123,7 @@ window.onclick = function(event) {
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createSet('create_set')" data-vv-validate="create_set" data-vv-scope="create_set" >
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createSet('create_set')" data-vv-scope="create_set" >
 
                             <div class="col-md-12">
                                 <div class="form-group row">
@@ -174,13 +174,13 @@ window.onclick = function(event) {
                 <div class="row">
                     <div class="modal-body">
 
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateSet(fillSet.id, 'update_set')" data-vv-validate="update_set">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateSet(fillSet.id, 'update_set')" data-vv-scope="update_set">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('update_set.title') }" for="title">Title:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="fillSet.title" />
-                                        <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('update_set.title') }" name="title" type="text" placeholder="" v-model="fillSet.title" />
+                                        <span v-show="errors.has('update_set.title')" class="help is-danger">@{{ errors.first('update_set.title') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -190,13 +190,13 @@ window.onclick = function(event) {
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('order') }" for="order">Order:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('update_set.order') }" for="order">Order:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <select v-validate="'required'" class="form-control c-select" name="order" :class="{'input': true, 'is-danger': errors.has('order') }" v-model="fillSet.order">
+                                        <select v-validate="'required'" class="form-control c-select" name="order" :class="{'input': true, 'is-danger': errors.has('update_set.order') }" v-model="fillSet.order">
                                             <option selected></option>
                                             <option v-for="ordr in ordrs" :value="ordr.id">@{{ ordr.value }}</option>
                                         </select>
-                                        <span v-show="errors.has('order')" class="help is-danger">@{{ errors.first('order') }}</span>
+                                        <span v-show="errors.has('update_set.order')" class="help is-danger">@{{ errors.first('update_set.order') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
