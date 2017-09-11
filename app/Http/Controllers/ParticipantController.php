@@ -1022,7 +1022,7 @@ class ParticipantController extends Controller
                         if (empty($testers)) {
                            $summary[] = ['TESTER NAME' => '', 'TESTER UNIQUE ID' => '', 'TESTER PHONE' => '', 'TESTER EMAIL' => '', 'PROGRAM' => '', 'DESIGNATION' => '', 'FACILITY' => '', 'MFL CODE' => '', 'IN CHARGE' => '', 'IN CHARGE PHONE' => '', 'IN CHARGE EMAIL' => '']; 
                         }else{
-                            $data = DB::select("SELECT u.name AS 'TESTER NAME', u.uid AS 'TESTER UNIQUE ID', u.phone AS 'TESTER PHONE', u.email AS 'TESTER EMAIL', p.name AS 'PROGRAM', ru.designation AS 'DESIGNATION', f.name AS 'FACILITY', f.code AS 'MFL CODE', f.in_charge AS 'IN CHARGE', f.in_charge_phone AS 'IN CHARGE PHONE', f.in_charge_email AS 'IN CHARGE EMAIL' FROM users u, facilities f, role_user ru WHERE u.id = ru.user_id AND ru.tier = f.id AND u.id IN (".$testers.") ORDER BY u.uid ASC;");
+                            $data = DB::select("SELECT u.name AS 'TESTER NAME', u.uid AS 'TESTER UNIQUE ID', u.phone AS 'TESTER PHONE', u.email AS 'TESTER EMAIL', p.name AS 'PROGRAM', ru.designation AS 'DESIGNATION', f.name AS 'FACILITY', f.code AS 'MFL CODE', f.in_charge AS 'IN CHARGE', f.in_charge_phone AS 'IN CHARGE PHONE', f.in_charge_email AS 'IN CHARGE EMAIL' FROM users u, facilities f, role_user ru, programs p WHERE u.id = ru.user_id AND ru.tier = f.id AND ru.program_id = p.id AND u.id IN (".$testers.") ORDER BY u.uid ASC;");
                             // dd($data);
                             //  create assotiative array
                             $summary = [];
