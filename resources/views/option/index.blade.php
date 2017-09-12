@@ -50,18 +50,14 @@
             <td>@{{ option.title }}</td>
             <td>@{{ option.description }}</td>
             <td>
-            <div class="dropdown">
-            <a class="dropbtn" onclick="myFunction()"  >View</a>
-            <div id="Dropdown" class="dropdown-content">
-            @permission('update-option')	
-            <button v-bind="{ 'disabled': option.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editOption(option)"><i class="fa fa-edit"></i> Edit</button>
+             @permission('update-option')   
+                <button v-bind="{ 'disabled': option.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editOption(option)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission            
-             <button v-if="option.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreOption(option)"><i class="fa fa-toggle-on"></i> Enable</button>            
+                <button v-if="option.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreOption(option)"><i class="fa fa-toggle-on"></i> Enable</button>
+            
             @permission('delete-option')
-             <button v-if="!option.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteOption(option)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!option.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteOption(option)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
-            </div>
-            </div>
             </td>
         </tr>
     </table>

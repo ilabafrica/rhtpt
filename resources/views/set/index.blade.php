@@ -1,25 +1,5 @@
 @extends('app')
 @section('content')
-<script type="text/javascript">
-function myFunction() {
-    document.getElementById("Dropdown").classList.toggle("show");
-}
-
-
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
-</script>
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
@@ -72,21 +52,15 @@ window.onclick = function(event) {
             <td>@{{ set.description }}</td>
             <td>@{{ set.ordr }}</td>
             <td>
-            <div class="dropdown">
-             <a class="dropbtn" onclick="myFunction()"  >View</a>
-            <div id="Dropdown" class="dropdown-content">   
-            
-            @permission('update-set')	
-                <a v-bind="{ 'disabled': set.deleted_at}"  @click.prevent="editSet(set)"> Edit</a>
+            @permission('update-set')   
+                <button v-bind="{ 'disabled': set.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editSet(set)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-set')
-                <a v-if="set.deleted_at"  @click.prevent="restoreSet(set)"> Enable</a>
+                <button v-if="set.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreSet(set)"><i class="fa fa-toggle-on"></i> Enable</button>
             @endpermission
             @permission('delete-set')
-                <a v-if="!set.deleted_at" @click.prevent="deleteSet(set)"> Disable</a>
+                <button v-if="!set.deleted_at" class="btn btn-sm btn-alizarin" @click.prevent="deleteSet(set)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
-            </div>
-            </div>
             </td>
         </tr>
     </table>

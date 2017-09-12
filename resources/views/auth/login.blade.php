@@ -1,6 +1,4 @@
 <!doctype html>
-<html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,22 +20,33 @@
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <!-- Sweet Alert Styling -->
     <link href="{{ asset('css/sweetalert.css') }}" rel="stylesheet">
-    
-    
+
+          <title>Kenya Serology Rapid HIV PT,Login</title>
+
+    <!-- Bootstrap core CSS -->
+      <link rel="stylesheet" href="/css/bootstrap-core.css" type="text/css" media="all">
+      <link rel="stylesheet" href="/css/font-awesome.css" type="text/css" media="all"> 
+      <style>
+    .form-control:focus {
+    border-color: #006400;
+    outline: none;
+  
+     }
+     .loginArea{
+        color:#333;
+        margin-top:15px;
+        padding: 15px;
+        border-radius: 3px 
+     }
+      </style>  
 </head>
 
-<body>
+    <!-- Fixed navbar -->
+    <body>    
     <div class="login-page" style="padding-top:20px;">
-        <div class="card col-md-5" style="margin:auto; float:none">
-            <div class="card-block">
-                <div class="row" style="padding:20px">
-                    <div class="col-md-12  text-md-center">
-                        <img src="{{ '../'.Config::get('cms.logo') }}" height="75px">
-                        <h4 class="text-primary">{!! Config::get('cms.name') !!}</h4>
-                    </div>
-                </div>
-                <form class="mt" role="form" method="POST" action="{{ route('login') }}">
-                    <!-- CSRF Token -->
+    <div class="card col-md-4" style="margin:auto; float:none">
+      <form class="mt form-signin" id="loginForm" Irole="form" method="POST" action="{{ route('login') }}">
+       <!-- CSRF Token -->
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <!-- ./ csrf token -->
                     @if($errors)
@@ -56,38 +65,46 @@
                             <p>{!! session('message') !!}</p>
                         </div>
                     @endif
-                    <div class="form-group row">
-                        <label for="username" class="col-md-1 col-form-label"></label>
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" name="username" placeholder="Username or PT Enrollment ID" data-toggle="tooltip" title="Enter Username or PT Tester Enrollment ID which you got at the time of registration" data-placement="top" data-trigger="hover">
-                        </div>
-                    </div>                 
-                     <div class="form-group row">
-                        <label for="inputPassword3" class="col-md-1 col-form-label"></label>
-                        <div class="col-md-10">
-                            <input type="password" class="form-control" name="password" placeholder="Password " data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Enter Password that you use to Login"><a style="float: right" href="{{url('password/reset')}}" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click and enter Tester ID to get reset password link in your email">Forgot password</a>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-offset-1 col-md-5">
-                            <button class="btn btn-primary btn-block" type="submit" name="signin" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to LogIn"  >LOGIN</button>
-                            </div>
-                           <div class="col-md-offset-1 col-md-5">
-                            <button class="btn btn-wisteria btn-block" onclick="confirmRegistration()" data-toggle="tooltip" data-placement="top" title="Click to Register a new participant" data-trigger="hover">REGISTER HERE</button>                            
-                            </div>
-                            <div class="col-md-offset-1 col-md-10">
-                            <hr>
-                            <h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke" data-toggle="tooltip" data-placement="top"  data-trigger="hover" title="Click to go to NPHL website">NPHL</a> by <a href="//www.ilabafrica.ac.ke" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to go to iLabAfrica website" >@iLabAfrica</a></h6>
-                            </div>                        
-                    </div>
-                </form>
-            </div>
-        </div>
+      
+        <div style="text-align:center;">
+        <br>
+         <img src="{{ '../'.Config::get('cms.logo') }}" style="max-height:120px;margin:0 auto !important;">
+          <h3 class="form-signin-heading">
+          <span>Kenya Serology Rapid HIV PT</span>
+        </h3>
+        </div> 
+        <div class="form-group">
+        <label for="username/TesterID">Username or PT Enrollment ID</label>
+        <input type="text" class="isRequired form-control" name="username" placeholder="eg. mymail@gmail.com or 11695" data-toggle="tooltip" title="Enter Username or PT Tester Enrollment ID which you got at the time of registration" data-placement="top" data-trigger="hover" autofocus="">
     </div>
-
+    <div class="form-group">
+        <label for="inputPassword3">Password</label>
+       <input type="password" class="form-control" name="password" placeholder="eg.sjK2542" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Enter Password that you use to Login">
+           <br>
+            <a class=" pull-right" style="color:blue" href="{{url('password/reset')}}" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click and enter Tester ID to get reset password link in your email">Forgot password</a>
+            <br>
+        
+    </div>        
+        <div class="form-group row">
+                <div class="col-md-offset-1 col-md-5">
+                    <button class="btn btn-primary btn-block" style="color:#fff;background-color:#2c3e50" type="submit" name="signin" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to LogIn"  >Sign in</button>
+                    </div>
+                   <div class="col-md-offset-1 col-md-5">
+                    <button class="btn btn-success btn-block" onclick="confirmRegistration()" data-toggle="tooltip" data-placement="top" title="Click to Register a new participant" data-trigger="hover">REGISTER HERE</button>                            
+                    </div>
+                    <br><br>
+                    <label class="loginArea">Log in with your Username or PT Enrollment ID.Click on the register button to create a new participant.</label>
+                                  
+                       
+                                           
+            </div>         
+              </div>
+              </div>               
+      </form>
+    </div>    
 </body>
-    <!-- Vue JS -->
-    
+</html>
+   
     <script src="{{ asset('js/vue.min.js') }}"></script>
     <script src="{{ asset('js/vue-resource.min.js') }}"></script>
     <script src="{{ asset('js/vee-validate.js') }}"></script>
