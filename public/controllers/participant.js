@@ -402,7 +402,7 @@ new Vue({
                 },
                 function(isConfirm) {
                   if (isConfirm) {
-                    swal("Deactivated!", "User has not been approved.", "success");
+                    swal("Rejected!", "", "success");
                     
                     this.$http.put('/denyUserVerification/'+id, input).then((response) => {
                         this.changePage(this.pagination.current_page);
