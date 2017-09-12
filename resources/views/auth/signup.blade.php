@@ -122,8 +122,6 @@
                                 <span v-show="errors.has('designation')" class="help is-danger">@{{ errors.first('designation') }}</span>
                             </div>
                         </div>
-					</div>
-					<div v-cloak class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('program') }" for="program">Program:</label>
                             <div class="col-sm-8" :class="{ 'control': true }">
@@ -190,7 +188,7 @@
 						</div>
 					</div>
 					<hr>
-					<h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NPHL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>
+					<h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NHPL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>
 				</form>
 			</div>
 		</div>

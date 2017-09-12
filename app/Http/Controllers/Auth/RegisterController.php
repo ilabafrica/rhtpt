@@ -18,6 +18,7 @@ use App\SubCounty;
 use App\County;
 use App\Program;
 use App\Round;
+use App\SmsHandler;
 
 use Mail;
 use DB;
@@ -157,33 +158,22 @@ class RegisterController extends Controller
         *  Do SMS Verification for phone number
         */
         //  Bulk-sms settings
-        $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->code;
-        $apikey     = $api->api_key;
-        //  Remove beginning 0 and append +254
-        $phone = ltrim($user->phone, '0');
-        $recipient = "+254".$phone;
-        // Generate code and store it in the database then send to participant
         $token = mt_rand(100000, 999999);
         $user->sms_code = $token;
         $user->save();
         $message    = "Your Verification Code is: ".$token;
-        // Create a new instance of our awesome gateway class
-        $gateway    = new Bulk($username, $apikey);
         try 
-        { 
-            // Specified sender-id
-            $from = $api->code;
-            // Send message
-            $result = $gateway->sendMessage($recipient, $message);
+        {
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($user->phone, $message);
         }
         catch ( AfricasTalkingGatewayException $e )
         {
-            // echo "Encountered an error while sending: ".$e->getMessage();
             DB::table('role_user')->where('user_id', $user->id)->forceDelete();
             $user->forceDelete();
             abort(500, 'Encountered an error while sending verification code. Please try again later.');
         }
+        
         try
         {
             //  Do Email verification for email address

@@ -57,10 +57,11 @@
             <td>@{{ panel.tested_by }}</td>
             <td>
             @permission('update-panel')	
-                <button class="btn btn-sm btn-primary" @click.prevent="editPanel(panel)"><i class="fa fa-edit"></i> Edit</button>
+                <button v-bind="{ 'disabled': panel.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editPanel(panel)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
+                <button v-if="panel.deleted_at" class="btn btn-sm btn-success" @click.prevent="restorePanel(panel)"><i class="fa fa-toggle-on"></i> Enable</button>
             @permission('delete-panel')
-                <button class="btn btn-sm btn-danger" @click.prevent="deletePanel(panel)"><i class="fa fa-power-off"></i> Disable</button>
+                <button v-if="!panel.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deletePanel(panel)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             </td>
         </tr>

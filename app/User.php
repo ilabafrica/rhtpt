@@ -390,4 +390,25 @@ EntrustUserTrait::restore insteadof SoftDeletes;
         else
             return "Female";
     }
+    //  DMinimum participant ID
+    const MIN_UNIQUE_ID = 119607;
+    /**
+    * Return user designation
+    *
+    */
+    public static function des($des)
+    {
+        if($des)
+        {
+            if($des == User::NURSE)
+                return "Nurse";
+            else if($des == User::LABTECH)
+                return "Lab Tech.";
+            else if($des == User::COUNSELLOR)
+                return "Counsellor";
+            else if($des == User::RCO)
+                return "RCO";
+        }
+        return "N/A";
+    }
 }

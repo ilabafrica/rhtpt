@@ -21,14 +21,14 @@
                         {!! trans('messages.back') !!}
                     </a>
                 @permission('create-user')
-                    <a class="btn btn-sm btn-concrete" href="/Registration.xlsx">
-                        <i class="fa fa-download"></i>
-                        Worksheet
+                    <a class="btn btn-sm btn-nephritis" :href="'/workbook'">
+                        <i class="fa fa-book"></i>
+                        Download Workbook
                     </a>
-                    <button class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#batch-registration"><i class="fa fa-level-up"></i> Batch Reg.</button>
-                    <button class="btn btn-sm btn-nephritis" id="import" data-toggle="modal" data-target="#import-user-list"><i class="fa fa-level-down"></i> Import Users</button>
+                    <button style="display:none" class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#batch-registration"><i class="fa fa-level-up"></i> Batch Reg.</button>
+                    <button style="display:none" class="btn btn-sm btn-nephritis" id="import" data-toggle="modal" data-target="#import-user-list"><i class="fa fa-level-down"></i> Import Users</button>
                 @endpermission
-                	<button class="btn btn-sm btn-registered" @click="registered"><i class="fa fa-address-card"></i> Self</button>
+                	<button class="btn btn-sm btn-registered" @click="registered"><i class="fa fa-address-card"></i> Self Registered</button>
                 </h5>
             </div>
             <div class="col-md-3">
@@ -42,7 +42,9 @@
             </div>
         </div>
     </div>
-
+    @if(session()->has('error'))
+        <div class="alert alert-info">{!! session()->get('error') !!}</div>
+    @endif
     <table class="table table-bordered">
         <tr>
             <th>Name</th>

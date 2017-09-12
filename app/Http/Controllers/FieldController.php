@@ -64,36 +64,27 @@ class FieldController extends Controller
             'title' => 'required',
             'uid' => 'required',
             'field_set_id' => 'required',
-            'order' => 'required',
             'tag' => 'required',
         ]);
-        $fields = Field::where('title', 'LIKE', "{$request->title}")->withTrashed()->get();
-
-        if ($fields->count() > 0) {
-
-            return response()->json('error');
-
-        }else{
-            $field = new Field;
-            $field->uid = $request->uid;
-            $field->title = $request->title;
-            $field->field_set_id = $request->field_set_id;
-            $field->order = $request->order;
-            $field->tag = $request->tag;
+        $field = new Field;
+        $field->uid = $request->uid;
+        $field->title = $request->title;
+        $field->field_set_id = $request->field_set_id;
+        $field->order = $request->order;
+        $field->tag = $request->tag;
+        $field->save();
+        try
+        {
             $field->save();
-            try
+            if($request->opts)
             {
-                $field->save();
-                if($request->opts)
-                {
-                    $field->setOptions($request->opt);
-                }
-                return response()->json($field);
+                $field->setOptions($request->opts);
             }
-        	catch(QueryException $e)
-            {
-                Log::error($e);
-            }
+            return response()->json($field);
+        }
+    	catch(QueryException $e)
+        {
+            Log::error($e);
         }
     }
     /**
@@ -129,7 +120,6 @@ class FieldController extends Controller
             'title' => 'required',
             'uid' => 'required',
             'field_set_id' => 'required',
-            'order' => 'required',
             'tag' => 'required',
         ]);
 
@@ -145,7 +135,7 @@ class FieldController extends Controller
             $field->save();
             if($request->opts)
             {
-                $field->setOptions($request->opt);
+                $field->setOptions($request->opts);
             }
             return response()->json($field);
         }

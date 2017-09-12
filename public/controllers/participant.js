@@ -395,10 +395,12 @@ new Vue({
                   type: "warning",
                   showCancelButton: true,
                   confirmButtonClass: "btn-danger",
+
                   confirmButtonText: "Yes",
                   cancelButtonText: "No",
                   closeOnConfirm: false,
                   closeOnCancel: true,
+                  
                 },
                 function(isConfirm) {
                   if (isConfirm) {
