@@ -285,7 +285,7 @@
                                         <span v-show="errors.has('address')" class="help is-danger">@{{ errors.first('address') }}</span>
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="form-group row" style="display:none;">
                                     <label class="col-sm-4 form-control-label" for="role">Role:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="role in roles">
@@ -329,7 +329,7 @@
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="program_id" v-model="fillUser.program_id">
                                             <option selected></option>
-                                            <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
+                                            <option v-for="program in programs" v-bind="{ 'true': program.id == fillUser.program}" :value="program.id">@{{ program.value }}</option>   
                                         </select>
                                     </div>
                                 </div>
