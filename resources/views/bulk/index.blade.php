@@ -31,7 +31,7 @@
             <td>@{{ code }}</td>
         </tr>
         <tr>
-            <td>Username:</td>
+            <td>PTEnrollmentID:</td>
             <td>@{{ username }}</td>
         </tr>
         <tr>
@@ -61,7 +61,7 @@
                                      </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Username:</label>
+                                    <label class="col-sm-4 form-control-label" for="title">PTEnrollmentID:</label>
                                     <div class="col-sm-8">
                                         <input type="text" name="username" class="form-control" v-model="fillSettings.username" />
                                         <span v-if="formErrors['username']" class="error text-danger">@{{ formErrors['username'] }}</span>

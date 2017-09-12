@@ -50,7 +50,7 @@
             <th>Name</th>
             <th>Gender</th>
             <th>Phone</th>
-            <th>Username</th>
+            <th>PT Enrollment ID</th>
             <th>Role</th>
             <th>Status</th>
             <th>Action</th>
@@ -78,7 +78,7 @@
             @permission('transfer-user') 
                 <button style="display: none;" v-if="user.uid" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
             @endpermission
-            	<button class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
+            	<button class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> View</button>
             </td>
         </tr>
     </table>
@@ -417,7 +417,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Approve Participant</h4>
+                    <h4 class="modal-title" id="myModalLabel">View Participant</h4>
                 </div>
                 <div class="modal-body">
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="approveUser(someUser.id)">
@@ -471,8 +471,8 @@
                                 </tbody>
                             </table>
                             <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success" ><i class='fa fa-plus-circle'></i> Confirm</button>
-                                <button type="button" class="btn btn-sm btn-danger" @click="denyUser()"><i class='fa fa-ban'></i> Deny</button>
+                                <button type="submit" class="btn btn-sm btn-success" ><i class='fa fa-plus-circle'></i> Enroll</button>
+                                <button type="button" class="btn btn-sm btn-danger" @click="denyUser()"><i class='fa fa-ban'></i> Reject</button>
                                 <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>
                         </div>

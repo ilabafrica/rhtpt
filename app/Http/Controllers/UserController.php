@@ -816,7 +816,17 @@ class UserController extends Controller
                             $user->token = $token;
                             $user->notify(new WelcomeNote($user));
                             
+
+                            //  Bulk-sms settings
+                            $api = DB::table('bulk_sms_settings')->first();
+                            $username   = $api->username;
+                            $apikey     = $api->api_key;
+                            //  Remove beginning 0 and append +254
+                            $phone = ltrim($user->phone, '0');
+                            $recipient = "+254".$phone;
                             $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
+                            // Create a new instance of our awesome gateway class
+                            $gateway    = new Bulk($username, $apikey);
                             try 
                             {
                                 $smsHandler = new SmsHandler();

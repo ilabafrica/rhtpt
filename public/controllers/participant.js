@@ -392,18 +392,19 @@ new Vue({
 
             swal({
                   title: "Are you sure?",
-                  text: "The user will not be able to log in.",
                   type: "warning",
                   showCancelButton: true,
                   confirmButtonClass: "btn-danger",
-                  confirmButtonText: "Yes, deactivate user!",
-                  cancelButtonText: "No, cancel please!",
-                  closeOnConfirm: true,
-                  closeOnCancel: true
+
+                  confirmButtonText: "Yes",
+                  cancelButtonText: "No",
+                  closeOnConfirm: false,
+                  closeOnCancel: true,
+                  
                 },
                 function(isConfirm) {
                   if (isConfirm) {
-                    swal("Deactivated!", "User has not been approved.", "success");
+                    swal("Rejected!", "", "success");
                     
                     this.$http.put('/denyUserVerification/'+id, input).then((response) => {
                         this.changePage(this.pagination.current_page);

@@ -161,6 +161,7 @@ return [
     'no-photo'          =>  'No Photo',
     'password'          =>  'Password',
     'email-address'     =>  'Email Address',
+    'nphl'              =>  'NPHL',
     /**
     *   Bulk SMS
     */
