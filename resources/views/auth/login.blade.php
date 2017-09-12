@@ -73,21 +73,25 @@
           <span>Kenya Serology Rapid HIV PT</span>
         </h3>
         </div> 
+        <div class="bs-callout bs-callout-info text-left">
+    <h4 class="md-18">Lost Password Recovery</h4>
+    <p>If you have forgotten your password, you can request to reset it. Fill in your registered email address below and you will be sent instructions on how to reset your password.</p>
+  </div>
         <div class="form-group">
         <label for="username/TesterID">Username or PT Enrollment ID</label>
-        <input type="text" class="isRequired form-control" name="username" placeholder="eg. mymail@gmail.com or 11695" data-toggle="tooltip" title="Enter Username or PT Tester Enrollment ID which you got at the time of registration" data-placement="top" data-trigger="hover" autofocus="">
+        <input type="text" class="isRequired form-control" data-vv-validate="'required'" name="username" placeholder="eg. mymail@gmail.com or 11695" data-toggle="tooltip" title="Enter Username or PT Tester Enrollment ID which you got at the time of registration" data-placement="top" data-trigger="hover" autofocus="">
     </div>
     <div class="form-group">
         <label for="inputPassword3">Password</label>
        <input type="password" class="form-control" name="password" placeholder="eg.sjK2542" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Enter Password that you use to Login">
            <br>
-            <a class=" pull-right" style="color:blue" href="{{url('password/reset')}}" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click and enter Tester ID to get reset password link in your email">Forgot password</a>
+            <a class=" pull-right" style="color:blue" href="{{url('password/reset')}}" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click and enter Tester ID to get reset password link in your email"><strong>Forgot password?</strong></a>
             <br>
         
     </div>        
         <div class="form-group row">
                 <div class="col-md-offset-1 col-md-5">
-                    <button class="btn btn-primary btn-block" style="color:#fff;background-color:#2c3e50" type="submit" name="signin" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to LogIn"  >Sign in</button>
+                    <button class="btn btn-primary btn-block" style="color:#fff;background-color:#2c3e50;border-color:#2c3e50" type="submit" name="signin" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to LogIn"  >Sign in</button>
                     </div>
                    <div class="col-md-offset-1 col-md-5">
                     <button class="btn btn-success btn-block" onclick="confirmRegistration()" data-toggle="tooltip" data-placement="top" title="Click to Register a new participant" data-trigger="hover">REGISTER HERE</button>                            
