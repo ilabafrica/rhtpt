@@ -100,7 +100,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createProgram('create_program')" data-vv-validate="create_program" data-vv-scope="create_program">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createProgram('create_program')" data-vv-scope="create_program">
 
                             <div class="col-md-12">
                                 <div class="form-group row">
@@ -139,13 +139,13 @@
                 <div class="row">
                     <div class="modal-body">
 
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateProgram(fillProgram.id, 'update_program')" data-vv-validate="update_program">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateProgram(fillProgram.id, 'update_program')" data-vv-scope="update_program">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('title') }" for="title">Title:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('update_program.title') }" for="title">Title:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('title') }" name="title" type="text" placeholder="" v-model="fillProgram.name" />
-                                        <span v-show="errors.has('title')" class="help is-danger">@{{ errors.first('title') }}</span>
+                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('update_program.title') }" name="title" type="text" placeholder="" v-model="fillProgram.name" />
+                                        <span v-show="errors.has('update_program.title')" class="help is-danger">@{{ errors.first('update_program.title') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">

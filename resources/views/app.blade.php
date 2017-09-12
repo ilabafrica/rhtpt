@@ -131,7 +131,7 @@
                             </li>
                             @endpermission
                             @permission('read-nonperf')
-                            <li class="{!! Request::segment(1)==strtolower('nonperf')?strtolower(trans('messages.active')):'' !!}">
+                            <li style="display:none;" class="{!! Request::segment(1)==strtolower('nonperf')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('nonperf') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.nonperf', 2) !!}</a>
                             </li>
                             @endpermission
@@ -206,7 +206,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{!! Auth::user()->name !!}</a>
                                 <div class="dropdown-menu  dropdown-menu-right">
-                                    <a class="dropdown-item" href="#">Profile</a>
+                                    <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">Sign Out</a>
@@ -271,7 +271,7 @@
         <!-- Custom JQuery -->
         <script src="{{ asset('js/custom.js') }}"></script>
 
-        <script src="{{ URL::asset('js/sweetalert.min.js') }}"></script>
+        <script src="{{ asset('js/sweetalert.min.js') }}"></script>
 
         @if(Request::segment(1)==strtolower('event'))
         <script src="{{ asset('controllers/event.js') }}"></script>
@@ -325,6 +325,8 @@
         <script src="{{ asset('controllers/report.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('bulk') || Request::segment(1)==strtolower('settings'))
         <script src="{{ asset('controllers/bulk.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('profile'))
+        <script src="{{ asset('controllers/profile.js') }}"></script>
         @endif
 </body>
 </html>

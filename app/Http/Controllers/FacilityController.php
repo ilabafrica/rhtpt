@@ -1,7 +1,6 @@
 <?php
-
 namespace App\Http\Controllers;
-
+set_time_limit(0); //60 seconds = 1 minute
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\County;
@@ -222,7 +221,7 @@ class FacilityController extends Controller
         if(Auth::user()->isCountyCoordinator())
         {
             $id = Auth::user()->ru()->tier;
-            $subs = County::find($id)->subCounties->pluck('name', 'id');
+            $subs = County::find($id)->subCounties->orderBy('name', 'ASC')->pluck('name', 'id');
             $categories = [];
             foreach($subs as $key => $value)
             {
@@ -234,7 +233,7 @@ class FacilityController extends Controller
         {
             //  remember to remove this shitty block
             $id = Auth::user()->ru()->tier;
-            $subs = County::find(1)->subCounties->pluck('name', 'id');
+            $subs = SubCounty::orderBy('name', 'ASC')->pluck('name', 'id');
             $categories = [];
             foreach($subs as $key => $value)
             {
@@ -281,6 +280,9 @@ class FacilityController extends Controller
                     $name = NULL;
                     $sub_county = NULL;
                     $county = NULL;
+                    $in_charge = NULL;
+                    $in_charge_phone = NULL;
+                    $in_charge_email = NULL;
                     foreach ($value as $mike => $ross) 
                     {
                         if(strcmp($mike, "mfl_code") === 0)
@@ -291,34 +293,46 @@ class FacilityController extends Controller
                             $sub_county = $ross;
                         if(strcmp($mike, "county") === 0)
                             $county = $ross;
+                        if(strcmp($mike, "in_charge") === 0)
+                            $in_charge = $ross;
+                        if(strcmp($mike, "in_charge_phone") === 0)
+                            $in_charge_phone = $ross;
+                        if(strcmp($mike, "in_charge_email") === 0)
+                            $in_charge_email = $ross;
                     }
                     if(strcmp($county, "MURANGA") === 0)
                         $county = "Murang'a";
                     if(strcmp($county, "HOMABAY") === 0)
                         $county = "Homa Bay";
-                    if(!$code)
-                        $code = "N/A";
-                    $county_id = County::idByName(trim($county));
-                    //  Prepare to save facility details
-                    $facilityCount = Facility::where('name', trim($name))->where('code', trim($code))->count();
-                    if($facilityCount > 0)
-                        $facility = Facility::where('name', trim($name))->where('code', trim($code))->first();
-                    else
-                        $facility = new Facility;
-                    $facility->code = $code;
-                    $facility->name = $name;
-                    //  Get sub-county
-                    $sub_county_id = SubCounty::idByName(trim($sub_county));
-                    if(!$sub_county_id)
+                    if(strcmp($county, "THARAKA-NITHI") === 0)
+                        $county = "Tharaka Nithi";
+                    if($code)
                     {
-                        $subCounty = new SubCounty;
-                        $subCounty->name = $sub_county;
-                        $subCounty->county_id = $county_id;
-                        $subCounty->save();
-                        $sub_county_id = $subCounty->id;
+                        $county_id = County::idByName(trim($county));
+                        //  Prepare to save facility details
+                        $facilityCount = Facility::where('code', trim($code))->count();
+                        if($facilityCount == 0)
+                        {
+                            $facility = new Facility;
+                            $facility->code = $code;
+                            $facility->name = $name;
+                            $facility->in_charge = $in_charge;
+                            $facility->in_charge_phone = $in_charge_phone;
+                            $facility->in_charge_email = $in_charge_email;
+                            //  Get sub-county
+                            $sub_county_id = SubCounty::idByName(trim($sub_county));
+                            if(!$sub_county_id)
+                            {
+                                $subCounty = new SubCounty;
+                                $subCounty->name = $sub_county;
+                                $subCounty->county_id = $county_id;
+                                $subCounty->save();
+                                $sub_county_id = $subCounty->id;
+                            }
+                            $facility->sub_county_id = $sub_county_id;
+                            $facility->save();
+                        }
                     }
-                    $facility->sub_county_id = $sub_county_id;
-                    $facility->save();
                 }
             }
         }

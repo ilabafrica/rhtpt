@@ -13,6 +13,7 @@ use App\SubCounty;
 use App\County;
 use App\Program;
 use App\Round;
+use App\SmsHandler;
 
 use DB;
 use Hash;
@@ -93,7 +94,7 @@ class ParticipantController extends Controller
         }
         foreach($users as $user)
         {
-            if((!empty($user->uid) && !empty($user->ru()->tier)))
+            if(!empty($user->ru()->tier))
             {
                 $facility = Facility::find($user->ru()->tier);
                 $user->facility = $user->ru()->tier;
@@ -241,7 +242,18 @@ class ParticipantController extends Controller
      */
     public function destroy($id)
     {
-        User::find($id)->delete();
+        $user = User::find($id);
+        $message    = "Dear ".$user->name.", NPHL has disabled your account.";
+        try 
+        {
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($user->phone, $message);
+        }
+        catch ( AfricasTalkingGatewayException $e )
+        {
+            echo "Encountered an error while sending: ".$e->getMessage();
+        }
+        $user->delete();
         return response()->json(['done']);
     }
 
@@ -254,6 +266,17 @@ class ParticipantController extends Controller
     public function restore($id) 
     {
         $user = User::withTrashed()->where('id', $id)->restore();
+        $user = User::find($id);
+        $message    = "Dear ".$user->name.", NPHL has enabled your account.";
+        try 
+        {
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($user->phone, $message);
+        }
+        catch ( AfricasTalkingGatewayException $e )
+        {
+            echo "Encountered an error while sending: ".$e->getMessage();
+        }
         return response()->json(['done']);
     }
     /**
@@ -505,29 +528,15 @@ class ParticipantController extends Controller
         //  Prepare to save role-user details
         $roleId = Role::idByName('Participant');
         DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => $request->program]);
-        /*
-        *  Do SMS Verification for phone number
-        */
-        //  Bulk-sms settings
-        $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->code;
-        $apikey     = $api->api_key;
-        //  Remove beginning 0 and append +254
-        $phone = ltrim($user->phone, '0');
-        $recipient = "+254".$phone;
-        // Generate code and store it in the database then send to participant
+        
         $token = mt_rand(100000, 999999);
         $user->sms_code = $token;
         $user->save();
         $message    = "Your Verification Code is: ".$token;
-        // Create a new instance of our awesome gateway class
-        $gateway    = new Bulk($username, $apikey);
         try 
-        { 
-            // Specified sender-id
-            $from = $api->code;
-            // Send message
-            // $result = $gateway->sendMessage($recipient, $message);
+        {
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($user->phone, $message);
         }
         catch ( AfricasTalkingGatewayException $e )
         {
@@ -641,7 +650,7 @@ class ParticipantController extends Controller
      * Batch registration
      *
      */
-    public function batchRegistration(Request $request)
+    /*public function batchRegistration(Request $request)
     {
         $exploded = explode(',', $request->excel);
         $decoded = base64_decode($exploded[1]);
@@ -808,7 +817,7 @@ class ParticipantController extends Controller
                 }
             }
         }
-    }
+    }*/
     /**
      * Check for user phone verification code
      *
@@ -891,22 +900,195 @@ class ParticipantController extends Controller
         $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
         // Create a new instance of our awesome gateway class
         $gateway    = new Bulk($username, $apikey);
+       
         try 
-        { 
-            // Specified sender-id
-            $from = $api->code;
-            // Send message
-            $result = $gateway->sendMessage($recipient, $message);
+        {
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($user->phone, $message);
         }
         catch ( AfricasTalkingGatewayException $e )
         {
             echo "Encountered an error while sending: ".$e->getMessage();
-        }        
+        }
     }
     public function denyUserVerification(Request $request){
         $id = $request->id;
         $user = User::withTrashed()->find($id); 
-        $user->notify(new RegretNote($user));        
+        $user->notify(new RegretNote($user));
+        $message    = "Dear ".$user->name.", NPHL has rejected your request to participate in PT.";
+        try 
+        {
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($user->phone, $message);
+        }
+        catch ( AfricasTalkingGatewayException $e )
+        {
+            echo "Encountered an error while sending: ".$e->getMessage();
+        }
+    }
+
+    /**
+     * Function to download all participants - batch + self-enrolled
+     *
+     */
+    public function testerSummary()
+    {
+        // $data = Program::get()->toArray();
+        $suffix = "PARTICIPANTS SUMMARY";
+        $title = "";
+        $users = NULL;
+        $roleId = Role::idByName('Participant');
+        $counter = 0;
+        //  workbook title
+        if(Auth::user()->isCountyCoordinator())
+        {
+            $title = County::find(Auth::user()->ru()->tier)->name." COUNTY ".$suffix;
+            $counter = County::find(Auth::user()->ru()->tier)->users->count();
+        }
+        else
+        {
+            $title = "KENYA RAPID HIV PT ".$suffix;
+            $counter = DB::table('role_user')->where('role_id', $roleId)->count();
+        }
+        if($counter > 0)
+        {
+            return Excel::create($title, function($excel) use ($users, $roleId) 
+            {
+                if(Auth::user()->isCountyCoordinator())
+                {
+                    $countyId = Auth::user()->ru()->tier;
+                    $county = County::find($countyId)->name;
+                    //  sub-counties and facilities
+                    $fIds = County::find($countyId)->facilities()->pluck('id');
+                    $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id')->toArray();
+                    $testers = $ids;
+                    $testers = implode(",", $testers);
+
+                    $summary = [];
+
+                    if (empty($testers)) {
+                       $summary[] = ['TESTER NAME' => '', 'TESTER UNIQUE ID' => '', 'TESTER PHONE' => '', 'TESTER EMAIL' => '', 'PROGRAM' => '', 'DESIGNATION' => '', 'FACILITY' => '', 'MFL CODE' => '', 'IN CHARGE' => '', 'IN CHARGE PHONE' => '', 'IN CHARGE EMAIL' => '']; 
+                    }else{
+                        $data = DB::select("SELECT u.name AS 'TESTER NAME', u.uid AS 'TESTER UNIQUE ID', u.phone AS 'TESTER PHONE', u.email AS 'TESTER EMAIL', p.name AS 'PROGRAM', ru.designation AS 'DESIGNATION', f.name AS 'FACILITY', f.code AS 'MFL CODE', f.in_charge AS 'IN CHARGE', f.in_charge_phone AS 'IN CHARGE PHONE', f.in_charge_email AS 'IN CHARGE EMAIL' FROM users u, facilities f, role_user ru, programs p WHERE u.id = ru.user_id AND ru.tier = f.id AND ru.program_id = p.id AND u.id IN (".$testers.") ORDER BY u.uid ASC;");
+                        
+                        foreach($data as $key => $value)
+                        {
+                            $tname = NULL;
+                            $tuid = NULL;
+                            $tname = NULL;
+                            $tphone = NULL;
+                            $temail = NULL;
+                            $tprog = NULL;
+                            $tdes = NULL;
+                            $facility = NULL;
+                            $mfl = NULL;
+                            $icharge = NULL;
+                            $iphone = NULL;
+                            $iemail = NULL;
+                            foreach($value as $mike => $ross)
+                            {
+                                if(strcasecmp("TESTER NAME", $mike) == 0)
+                                    $tname = $ross;
+                                if(strcasecmp("TESTER UNIQUE ID", $mike) == 0)
+                                    $tuid = $ross;
+                                if(strcasecmp("TESTER PHONE", $mike) == 0)
+                                    $tphone = $ross;
+                                if(strcasecmp("TESTER EMAIL", $mike) == 0)
+                                    $temail = $ross;
+                                if(strcasecmp("PROGRAM", $mike) == 0)
+                                    $tprog = $ross;
+                                if(strcasecmp("DESIGNATION", $mike) == 0)
+                                    $tdes = User::des($ross);
+                                if(strcasecmp("FACILITY", $mike) == 0)
+                                    $facility = $ross;
+                                if(strcasecmp("MFL CODE", $mike) == 0)
+                                    $mfl = $ross;
+                                if(strcasecmp("IN CHARGE", $mike) == 0)
+                                    $icharge = $ross;
+                                if(strcasecmp("IN CHARGE PHONE", $mike) == 0)
+                                    $iphone = $ross;
+                                if(strcasecmp("IN CHARGE EMAIL", $mike) == 0)
+                                    $iemail = $ross;
+                            }
+                            $summary[] = ['TESTER NAME' => $tname, 'TESTER UNIQUE ID' => $tuid, 'TESTER PHONE' => $tphone, 'TESTER EMAIL' => $temail, 'PROGRAM' => $tprog, 'DESIGNATION' => $tdes, 'FACILITY' => $facility, 'MFL CODE' => $mfl, 'IN CHARGE' => $icharge, 'IN CHARGE PHONE' => $iphone, 'IN CHARGE EMAIL' => $iemail];                   
+                        }
+                    }
+                    $excel->sheet($sheetTitle, function($sheet) use ($summary) {
+                        $sheet->fromArray($summary);
+                    });
+                }
+                else
+                {
+                    $counties = County::all();
+                    foreach($counties as $county)
+                    {
+                        $sheetTitle = $county->name;
+                        $fIds = $county->facilities()->pluck('id');
+                        $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id')->toArray();
+                        $testers = $ids;
+                   
+                        $testers = implode(",", $testers);
+
+                        if (empty($testers)) {
+                           $summary[] = ['TESTER NAME' => '', 'TESTER UNIQUE ID' => '', 'TESTER PHONE' => '', 'TESTER EMAIL' => '', 'PROGRAM' => '', 'DESIGNATION' => '', 'FACILITY' => '', 'MFL CODE' => '', 'IN CHARGE' => '', 'IN CHARGE PHONE' => '', 'IN CHARGE EMAIL' => '']; 
+                        }else{
+                            $data = DB::select("SELECT u.name AS 'TESTER NAME', u.uid AS 'TESTER UNIQUE ID', u.phone AS 'TESTER PHONE', u.email AS 'TESTER EMAIL', p.name AS 'PROGRAM', ru.designation AS 'DESIGNATION', f.name AS 'FACILITY', f.code AS 'MFL CODE', f.in_charge AS 'IN CHARGE', f.in_charge_phone AS 'IN CHARGE PHONE', f.in_charge_email AS 'IN CHARGE EMAIL' FROM users u, facilities f, role_user ru, programs p WHERE u.id = ru.user_id AND ru.tier = f.id AND ru.program_id = p.id AND u.id IN (".$testers.") ORDER BY u.uid ASC;");
+                            // dd($data);
+                            //  create assotiative array
+                            $summary = [];
+                            foreach($data as $key => $value)
+                            {
+                                $tname = NULL;
+                                $tuid = NULL;
+                                $tname = NULL;
+                                $tphone = NULL;
+                                $temail = NULL;
+                                $tprog = NULL;
+                                $tdes = NULL;
+                                $facility = NULL;
+                                $mfl = NULL;
+                                $icharge = NULL;
+                                $iphone = NULL;
+                                $iemail = NULL;
+                                foreach($value as $mike => $ross)
+                                {
+                                    if(strcasecmp("TESTER NAME", $mike) == 0)
+                                        $tname = $ross;
+                                    if(strcasecmp("TESTER UNIQUE ID", $mike) == 0)
+                                        $tuid = $ross;
+                                    if(strcasecmp("TESTER PHONE", $mike) == 0)
+                                        $tphone = $ross;
+                                    if(strcasecmp("TESTER EMAIL", $mike) == 0)
+                                        $temail = $ross;
+                                    if(strcasecmp("PROGRAM", $mike) == 0)
+                                        $tprog = $ross;
+                                    if(strcasecmp("DESIGNATION", $mike) == 0)
+                                        $tdes = User::des($ross);
+                                    if(strcasecmp("FACILITY", $mike) == 0)
+                                        $facility = $ross;
+                                    if(strcasecmp("MFL CODE", $mike) == 0)
+                                        $mfl = $ross;
+                                    if(strcasecmp("IN CHARGE", $mike) == 0)
+                                        $icharge = $ross;
+                                    if(strcasecmp("IN CHARGE PHONE", $mike) == 0)
+                                        $iphone = $ross;
+                                    if(strcasecmp("IN CHARGE EMAIL", $mike) == 0)
+                                        $iemail = $ross;
+                                }
+                                $summary[] = ['TESTER NAME' => $tname, 'TESTER UNIQUE ID' => $tuid, 'TESTER PHONE' => $tphone, 'TESTER EMAIL' => $temail, 'PROGRAM' => $tprog, 'DESIGNATION' => $tdes, 'FACILITY' => $facility, 'MFL CODE' => $mfl, 'IN CHARGE' => $icharge, 'IN CHARGE PHONE' => $iphone, 'IN CHARGE EMAIL' => $iemail];                   
+                            }
+                        }
+                        $excel->sheet($sheetTitle, function($sheet) use ($summary) {
+                            $sheet->fromArray($summary);
+                        });
+                    }
+                }
+            })->download('xlsx');
+        }
+        else
+        {
+            return redirect()->back()->with('error', 'No data for PT participants found');
+        }
     }
 }
 $excel = App::make('excel');

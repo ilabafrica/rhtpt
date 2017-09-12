@@ -393,7 +393,7 @@ Route::group(['middleware' => 'auth'], function()
     //  Batch enrolment
     Route::post("/batch/enrol", array(
         "as"   => "batch.enrolment",
-        "uses" => "RoundController@batchEnrolment"
+        "uses" => "RoundController@batchRegisterAndEnrol"
     ));
     //  Batch registration
     Route::post('/batch/register', array(
@@ -413,7 +413,7 @@ Route::group(['middleware' => 'auth'], function()
         "uses"  =>  "UserController@importUserList"
     ));
 
-    Route::get("/download/{id}", array(
+    Route::get("/download/{id}/{status?}", array(
         "as"   => "testers.download",
         "uses" => "RoundController@testerSummary"
     ));
@@ -467,4 +467,35 @@ Route::get("/mfl/{id}", array(
 Route::get("/resend/{phone}", array(
     "as"   => "resend.code",
     "uses" => "Auth\RegisterController@resend"
+));
+
+Route::get('profile', 'ProfileController@manageProfile')->name('profile');
+
+Route::get("/user/profile", array(
+    "as"   => "user.profile",
+    "uses" => "ProfileController@index"
+));
+
+Route::post("/user/profile/update", array(
+    "as"   => "user.profile.update",
+    "uses" => "ProfileController@update"
+));
+
+Route::post("/user/password/update", array(
+    "as"   => "user.password.update",
+    "uses" => "ProfileController@updatePassword"
+));
+
+Route::post("/user/transfer/facility", array(
+    "as"   => "user.transfer",
+    "uses" => "ProfileController@transferUser"
+));
+Route::get("/workbook", array(
+    "as"   => "participants.download",
+    "uses" => "ParticipantController@testerSummary"
+));
+
+Route::get("/new_participants/{id}/{}", array(
+    "as"   => "new.participants",
+    "uses" => "RoundController@testerSummary"
 ));
