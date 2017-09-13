@@ -74,7 +74,7 @@
         </h3>
         </div> 
         <div class="bs-callout bs-callout-info text-left">
-    <h4 class="md-18">Lost Password Recovery</h4>
+    <h5 class="md-18">User Guide</h5>
     <p>If you have forgotten your password, you can request to reset it. Fill in your registered email address below and you will be sent instructions on how to reset your password.</p>
   </div>
         <div class="form-group">

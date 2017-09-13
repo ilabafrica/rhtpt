@@ -1,5 +1,7 @@
 @extends('layouts.app')
 @section('content')
+<!-- Custom Styling -->
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 <style>
 .form-control:focus {
     border-color: #006400;
@@ -21,9 +23,14 @@
             <div style="text-align:center;">
               <img src="{{ '../'.Config::get('cms.logo') }}" style="max-height:120px;margin:0 auto !important;">
                 <h3 class="form-signin-heading">
-                    <span>Kenya Serology Rapid HIV PT</span><br><br>Password Recovery<br><br>
+                    <span>Kenya Serology Rapid HIV PT</span>
                 </h3>               
-            </div>    
+            </div> 
+
+        <div class="bs-callout bs-callout-info text-left">
+    <h4 class="md-18">Password Recovery</h4>
+    <p>If you have forgotten your password, you can request to reset it. Fill in your registered email address below and you will be sent instructions on how to reset your password.</p>
+  </div>   
              <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                 <label for="email">PT Enrollment ID</label>
                  <input id="email" type="email" class="form-control" name="username" placeholder="eg. 19595" value="{{ old('email') }}" required>
