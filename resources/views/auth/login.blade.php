@@ -45,6 +45,17 @@
     <body>    
     <div class="login-page" style="padding-top:20px;">
     <div class="card col-md-4" style="margin:auto; float:none">
+        <div style="text-align:center;">
+        <br>
+         <img src="{{ '../'.Config::get('cms.logo') }}" style="max-height:120px;margin:0 auto !important;">
+            <h3 class="form-signin-heading">
+            <span>Kenya Serology Rapid HIV PT</span>
+            </h3>
+        </div> 
+        <div class="bs-callout bs-callout-info text-left">
+        <h5 class="md-18">Getting Started</h5>
+             <p>Login with your Username or PT Enrollment ID. Click on the Sign-up button to register as a new participant. If you have forgotten your password, you can reset it by clicking the Lost password button.</p>
+        </div>
       <form class="mt form-signin" id="loginForm" Irole="form" method="POST" action="{{ route('login') }}">
        <!-- CSRF Token -->
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -64,47 +75,33 @@
                         <div class="alert alert-danger">
                             <p>{!! session('message') !!}</p>
                         </div>
-                    @endif
-      
-        <div style="text-align:center;">
-        <br>
-         <img src="{{ '../'.Config::get('cms.logo') }}" style="max-height:120px;margin:0 auto !important;">
-          <h3 class="form-signin-heading">
-          <span>Kenya Serology Rapid HIV PT</span>
-        </h3>
-        </div> 
-        <div class="bs-callout bs-callout-info text-left">
-    <h5 class="md-18">User Guide</h5>
-    <p>If you have forgotten your password, you can request to reset it. Fill in your registered email address below and you will be sent instructions on how to reset your password.</p>
-  </div>
-        <div class="form-group">
-        <label for="username/TesterID">Username or PT Enrollment ID</label>
-        <input type="text" class="isRequired form-control" data-vv-validate="'required'" name="username" placeholder="eg. mymail@gmail.com or 11695" data-toggle="tooltip" title="Enter Username or PT Tester Enrollment ID which you got at the time of registration" data-placement="top" data-trigger="hover" autofocus="">
+                    @endif     
+                    <div class="form-group">
+                        <label for="username/TesterID">Username or PT Enrollment ID</label>
+                        <input type="text" class="isRequired form-control" data-vv-validate="'required'" name="username" placeholder="eg. mymail@gmail.com or 11695" data-toggle="tooltip" title="Enter Username or PT Tester Enrollment ID which you got at the time of registration" data-placement="top" data-trigger="hover" autofocus="">
+                    </div>
+                    <div class="form-group">
+                         <label for="inputPassword3">Password</label>
+                         <input type="password" class="form-control" name="password" placeholder="eg.sjK2542" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Enter Password that you use to Login">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" style="color:#fff;background-color:#2c3e50;border-color:#2c3e50" type="submit" name="signin" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to LogIn"  >LOG IN</button>      
+                    </div>    
+                    <div class="form-group row">
+                   
+                        <div class="col-md-offset-1 col-md-5">
+                            <br>
+                            <a class=" pull-center" style="color:#3498db" onclick="confirmRegistration()" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to Register as a new participant"><strong>Sign up </strong></a>
+                            <br>
+                        </div>
+                        <div class="col-md-offset-1 col-md-5">
+                            <br>
+                            <a class=" pull-center" style="color:#3498db" href="{{url('password/reset')}}" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click and enter Tester ID to get reset password link in your email"><strong>Lost password</strong></a>
+                            <br>
+                        </div>                 
+                    </div>                       
+        </form>
     </div>
-    <div class="form-group">
-        <label for="inputPassword3">Password</label>
-       <input type="password" class="form-control" name="password" placeholder="eg.sjK2542" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Enter Password that you use to Login">
-           <br>
-            <a class=" pull-right" style="color:blue" href="{{url('password/reset')}}" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click and enter Tester ID to get reset password link in your email"><strong>Forgot password?</strong></a>
-            <br>
-        
-    </div>        
-        <div class="form-group row">
-                <div class="col-md-offset-1 col-md-5">
-                    <button class="btn btn-primary btn-block" style="color:#fff;background-color:#2c3e50;border-color:#2c3e50" type="submit" name="signin" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to LogIn"  >Sign in</button>
-                    </div>
-                   <div class="col-md-offset-1 col-md-5">
-                    <button class="btn btn-success btn-block" onclick="confirmRegistration()" data-toggle="tooltip" data-placement="top" title="Click to Register a new participant" data-trigger="hover">REGISTER HERE</button>                            
-                    </div>
-                    <br><br>
-                    <label class="loginArea">Log in with your Username or PT Enrollment ID.Click on the register button to create a new participant.</label>
-                                  
-                       
-                                           
-            </div>         
-              </div>
-              </div>               
-      </form>
     </div>    
 </body>
 </html>

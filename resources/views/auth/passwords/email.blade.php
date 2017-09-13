@@ -29,7 +29,7 @@
 
         <div class="bs-callout bs-callout-info text-left">
     <h4 class="md-18">Password Recovery</h4>
-    <p>If you have forgotten your password, you can request to reset it. Fill in your registered email address below and you will be sent instructions on how to reset your password.</p>
+    <p> If you have forgotten your password, fill in your PT Enrollment ID below and click Reset Password button. Instructions will be sent to your registered email on how to reset your password.</p>
   </div>   
              <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                 <label for="email">PT Enrollment ID</label>
@@ -42,7 +42,7 @@
                                 @endif
             </div>            
             <button style="background-color: #3498db;border-color: #3498db" type="submit" class="btn btn-md btn-info btn-block">
-           Send Password Reset Link
+           Reset Password
               </button>
             <br><a href="/login" style="color:#18bc9c">No, I remember my password.</a>
         </form>
