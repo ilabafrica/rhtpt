@@ -52,8 +52,8 @@ class RegretNote extends Notification
             ->subject('PT Participation Request')
             ->greeting('Hello '.$this->user->name)
             ->line('Your request to participate in the Rapid HIV Proficiency Testing has not been approved.')
-            ->line('Kindly contact your County Coordinator for further assistance.')
-            ->line('Thank you for using our application!');
+            ->line('Thank you for using our application!')
+            ->line('In case of any challenges, please use the PT help desk http://nphls.or.ke/helpdesk/index.php?a=add.');
     }
 
     /**

@@ -55,8 +55,8 @@ class EnrollmentNote extends Notification
             ->line('Your tester enrollment ID is '.$this->user->username)
             ->line('Click the below button to login to the PT system.')
             ->action('Rapid HIV PT System', url('/login'))
-            ->line('If you wish to opt out, please contact your County Coordinator.')
-            ->line('Thank you for using our application!');
+            ->line('Thank you for using our application!')
+            ->line('In case of any challenges, please use the PT help desk http://nphls.or.ke/helpdesk/index.php?a=add.');
     }
 
     /**

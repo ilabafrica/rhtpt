@@ -54,7 +54,8 @@ class AccountNote extends Notification
             ->greeting('Hello '.$this->user->name)
             ->action('Get Started', url('password/reset', $this->user->token))
             ->line('In case of any challenges, please use our help desk for assitance.')
-            ->line('Thank you for using our application!');
+            ->line('Thank you for using our application!')
+            ->line('In case of any challenges, please use the PT help desk http://nphls.or.ke/helpdesk/index.php?a=add.');
     }
 
     /**
