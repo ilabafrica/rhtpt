@@ -28,7 +28,7 @@ new Vue({
         formErrors:{},
         formErrorsUpdate:{},
         newUser : {'name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':''},
-        fillUser : {'name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':'', 'id':''},
+        fillUser : {'name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'','designation':'','county':'','sub_county':'','mfl_code':'','facility':'',},
         transferUser : {'facility_id':'','program_id':'', 'id':''},
         loading: false,
         error: false,
@@ -39,7 +39,8 @@ new Vue({
         jimbo: [],
         sexes: [],
         uploadify: {excel: ''},
-        upload: {list: ''}
+        upload: {list: ''},
+        designations: []
     },
 
     computed: {
@@ -73,6 +74,7 @@ new Vue({
         this.loadCounties();
         this.loadRoles();
         this.loadSexes();
+        this.loadDesignations();
     },
 
     methods : {
@@ -132,9 +134,14 @@ new Vue({
             this.fillUser.address = user.address;
             this.fillUser.rl = user.rl;
             this.fillUser.role = user.role;
-            this.fillUser.program = user.program;
+            this.fillUser.program_id = user.program;
             this.fillUser.uid = user.uid;
             this.fillUser.address = user.address;
+            this.fillUser.mfl_code = user.mfl;
+            this.fillUser.facility = user.fac;
+            this.fillUser.sub_county = user.sub;
+            this.fillUser.county = user.kaunti;
+            this.fillUser.designation = user.designation;
             $("#edit-user").modal('show');
         },
 
@@ -142,8 +149,8 @@ new Vue({
             this.$validator.validateAll(scope).then(() => {
                 var input = this.fillUser;
                 this.$http.put('/vueparticipants/'+id,input).then((response) => {
-                    //this.changePage(this.pagination.current_page); - @TODO
-                    this.fillUser = {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''};
+                    this.changePage(this.pagination.current_page);
+                    this.fillUser = {'name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'','designation':'','county':'','sub_county':'','mfl_code':'','facility':'',};
                     $("#edit-user").modal('hide');
                     toastr.success('User Updated Successfully.', 'Success Alert', {timeOut: 5000});
                 }, (response) => {
@@ -397,7 +404,7 @@ new Vue({
         denyUser: function(id){
             var input = this.someUser;
 
-            swal({
+            /*swal({
                   title: "Are you sure?",
                   type: "warning",
                   showCancelButton: true,
@@ -408,26 +415,68 @@ new Vue({
                   closeOnConfirm: false,
                   closeOnCancel: true,
                   
-                },
-                function(isConfirm) {
-                  if (isConfirm) {
-                    swal("Rejected!", "", "success");
-                    
+            },
+            function(isConfirm) {
+                if (isConfirm) {
                     this.$http.put('/denyUserVerification/'+id, input).then((response) => {
                         this.changePage(this.pagination.current_page);
                         this.someUser = {'name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
                         $("#approve-user").modal('hide');
-                        toastr.success('User Denied Access.', 'Success Alert', {timeOut: 5000});
-                    }, (response) => {
-                        // 
+                        toastr.success('PT participation request successfully rejected.', 'Success Alert', {timeOut: 5000});
                     });
-                  } else {
-                    swal("Cancelled", "Click on the Approve Button)", "error");
-                  }
-                }.bind(this));
+                } else {
+                    alert('Mahako');
+                    this.changePage(this.pagination.current_page);
+                    $("#approve-user").modal('hide');
+                }
+            }.bind(this));*/
 
+            swal({
+                    title: "Enter reason for rejection.",
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "e.g. 123"
+                },
+                function(inputValue)
+                {
+                    if (inputValue === false) return false;
+                  
+                    if (inputValue.length == 0) {
+                        swal.showInputError("Please enter the reason for rejection.");
+                        return false
+                    }
+                    else
+                    {          
+                        this.$http.put('/denyUserVerification/'+id, input).then((response) => {
+                            this.changePage(this.pagination.current_page);
+                            this.someUser = {'name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
+                            $("#approve-user").modal('hide');
+                            toastr.success('PT participation request successfully rejected.', 'Success Alert', {timeOut: 5000});
+                        });
+                    }
+                }.bind(this)
+            );
+        },
 
-            
+        loadDesignations: function() {
+            this.$http.get('/des').then((response) => {
+                this.designations = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        fetchFacility: function() {
+            let id = $('#mfl').val();
+            this.$http.get('/mfl/'+id).then((response) => {
+                this.fillUser.facility = response.data.name;
+                this.fillUser.sub_county = response.data.sub_county;
+                this.fillUser.county = response.data.county;
+                if(this.fillUser.facility.length == 0)
+                    swal("Facility not found!", "Enter a valid MFL Code.", "info");
+            });
         },
     }
 });

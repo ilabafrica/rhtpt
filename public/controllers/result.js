@@ -22,7 +22,7 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        newResult : {'round_id':'','field_id[]':'','response[]':'','comment[]':''},
+        analysisResult : {'round_id':'','field_id[]':'','response[]':'','comment[]':''},
         fillResult : {'round_id':'','field_id[]':'','response[]':'','comment[]':'','id':''},
         fillVerifiedResult: {},
         form: [],
@@ -87,36 +87,16 @@ new Vue({
             });
         },
 
-        createResult: function(scope){
-            this.$validator.validateAll(scope).then(() => {
-                var input = this.newLot;
-          		let myForm = document.getElementById('test_results');
-                let formData = new FormData(myForm);
-          		this.$http.post('/vueresults', formData).then((response) => {
-                
-                if(response.data == '1')
-                {
-                    this.error = response.data;
-                    toastr.error('Select a valid PT Round', {timeOut: 5000});
-                }
-                else if(response.data == '2')
-                {
-                    this.error = response.data;
-                    toastr.error('Results already submitted', {timeOut: 5000});
-                }
-                else
-                {
-        		    this.changePage(this.pagination.current_page);
-          			$("#create-result").modal('hide');
-          			toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
-                }
-          		}, (response) => {
-      			    this.formErrors = response.data;
-          	    });
-            }).catch(() => {
-                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
-                return false;
-            });
+        createResult: function(){
+            let myForm = document.getElementById('analysis_results');
+            let formData = new FormData(myForm);
+      		this.$http.post('/vueresults', formData).then((response) => {
+    		    this.changePage(this.pagination.current_page);
+      			$("#create-result").modal('hide');
+      			toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
+      		}, (response) => {
+  			    this.formErrors = response.data;
+          	});
       	},
 
         deleteResult: function(result){
