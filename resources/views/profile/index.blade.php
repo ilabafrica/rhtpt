@@ -16,7 +16,7 @@
                 <h5><i class="fa fa-book"></i> {!! trans('messages.user-profile') !!}
                     <button class="btn btn-sm btn-primary" @click.prevent="editProfile(userProfile)"><i class="fa fa-edit"></i> Edit Profile</button>
 
-                    <button class="btn btn-sm btn-alizarin" data-toggle="modal" data-target="#update-password"><i class="fa fa-address-card"></i> Update Password</button>
+                    <button class="btn btn-sm btn-alizarin" data-toggle="modal" data-target="#update-password"><i class="fa fa-address-card"></i> Change Password</button>
 
                     <button class="btn btn-sm btn-registered" v-show="userProfile.rl == userProfile.participant" @click="fetchUser(userProfile)"><i class="fa fa-random"></i> Transfer Facility</button>
 
@@ -193,7 +193,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel">Updating password for @{{ userProfile.name }}</h4>
+                <h4 class="modal-title" id="myModalLabel">Change password for @{{ userProfile.name }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">

@@ -1,25 +1,5 @@
 @extends('app')
 @section('content')
-<script type="text/javascript">
-function myFunction() {
-    document.getElementById("Dropdown").classList.toggle("show");
-}
-
-
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
-</script>
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
