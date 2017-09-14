@@ -79,8 +79,15 @@ new Vue({
 
         getVueUsers: function(page){
             this.$http.get('/vueparticipants?page='+page).then((response) => {
+                if(response.data.data)
+                {
                 this.users = response.data.data.data;
                 this.pagination = response.data.pagination;
+            }
+            else
+            {
+                swal("No data found for Participants.","","info");
+            }
             });
         },
 

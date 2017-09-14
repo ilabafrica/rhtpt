@@ -122,6 +122,8 @@
                                 <span v-show="errors.has('designation')" class="help is-danger">@{{ errors.first('designation') }}</span>
                             </div>
                         </div>
+                    </div>
+                    <div v-cloak class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('program') }" for="program">Program:</label>
                             <div class="col-sm-8" :class="{ 'control': true }">
@@ -184,11 +186,9 @@
 					</div>
 					<div class="form-group row">
 						<div class="col-md-offset-2 col-md-10">
-							<button class="btn btn-wisteria btn-block">REGISTER</button>							
+							<button class="btn btn-nephritis btn-block">REGISTER</button>							
 						</div>
 					</div>
-					<hr>
-					<h6 class="text-md-center">Designed for <a href="http://www.nphls.or.ke">NHPL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a></h6>
 				</form>
 			</div>
 		</div>

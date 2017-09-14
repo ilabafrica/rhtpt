@@ -54,6 +54,7 @@
             <td>@{{ field.tg }}</td>
             <td>@{{ field.ordr }}</td>
             <td>	
+             <td>   
             @permission('update-field')
                 <button class="btn btn-sm btn-primary" @click.prevent="editField(field)" ><i class="fa fa-edit"></i> Edit</button>
             @endpermission
@@ -61,6 +62,7 @@
             @permission('delete-field')
                 <button v-if="!field.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteField(field)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
+            </td>
             </td>
         </tr>
     </table>

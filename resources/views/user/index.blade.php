@@ -61,7 +61,7 @@
                 <button v-if="user.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>
-            @permission('update-user')	
+            @permission('update-user')    
                 <button v-bind="{ 'disabled': user.deleted_at }" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-user') 
@@ -73,7 +73,7 @@
             @permission('transfer-user') 
                 <button style="display: none;" v-if="user.uid" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
             @endpermission
-            	<button v-if="user.sms_code" v-if="!user.deleted_at" class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
+                <button v-if="user.sms_code" v-if="!user.deleted_at" class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
             </td>
         </tr>
     </table>

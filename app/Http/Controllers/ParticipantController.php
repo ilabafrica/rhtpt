@@ -45,7 +45,7 @@ class ParticipantController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $users = User::whereNotNull('uid')->latest()->withTrashed()->paginate(5);
+        $users = User::whereNotNull('uid')-> latest()->withTrashed()->paginate(5);
         if(Auth::user()->isCountyCoordinator())
         {
             $users = County::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);

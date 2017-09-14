@@ -61,7 +61,7 @@
                 <button v-if="shipper.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>	
-            @permission('update-shipper')
+             @permission('update-shipper')
                 <button v-bind="{ 'disabled': shipper.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editShipper(shipper)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-shipper')

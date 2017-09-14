@@ -52,7 +52,7 @@
             <td>@{{ set.description }}</td>
             <td>@{{ set.ordr }}</td>
             <td>
-            @permission('update-set')	
+            @permission('update-set')   
                 <button v-bind="{ 'disabled': set.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editSet(set)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-set')

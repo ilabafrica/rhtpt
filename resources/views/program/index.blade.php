@@ -55,7 +55,7 @@
                 <button v-if="program.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>
-            @permission('update-program')	
+            @permission('update-program')   
                 <button v-bind="{ 'disabled': program.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editProgram(program)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-program')

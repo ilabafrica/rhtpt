@@ -71,7 +71,7 @@ class Facility extends Model
 				if($facility > 0)
 				{
 					$facility = Facility::where('name', $name)->orderBy('name', 'asc')->first();
-					return $facility->id;
+					return $facility->code;
 				}
 				else
 				{

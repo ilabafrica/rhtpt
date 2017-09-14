@@ -48,7 +48,7 @@
     <table class="table table-bordered">
         <tr>
             <th>Name</th>
-            <th>Gender</th>
+            <th>Facility</th>
             <th>Phone</th>
             <th>PT Enrollment ID</th>
             <th>Role</th>
@@ -57,7 +57,7 @@
         </tr>
         <tr v-for="user in users">
             <td>@{{ user.name }}</td>
-            <td>@{{ user.gender==0?'Male':'Female' }}</td>
+            <td>@{{ user.fac}}</td>
             <td>@{{ user.phone }}</td>
             <td>@{{ user.username }}</td>
             <td>@{{ user.rl }}</td>
@@ -65,8 +65,9 @@
                 <button v-if="!user.deleted_at" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
                 <button v-if="user.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
+
             <td>
-            @permission('update-user')	
+           @permission('update-user')   
                 <button v-bind="{ 'disabled': user.deleted_at }" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-user') 
@@ -245,6 +246,12 @@
                     <div class="row">
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateUser(fillUser.id, 'update_user')" data-vv-validate="update_user">
                             <div class="col-md-12">
+                            <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Unique ID:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="username" class="form-control" v-model="fillUser.username" disabled/>
+                                    </div>
+                                </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Name:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
@@ -290,7 +297,7 @@
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="role in roles">
                                             <label class="form-radio-label">
-                                                <input v-validate="'required'" type="radio" :value="role.id" v-model="fillUser.role" name="role" disabled>
+                                                <input v-validate="'required'" type="radio" :value="role.id" v-model="fillUser.role" name="role" >
                                                 @{{ role.value }}
                                             </label>
                                         </div>
@@ -332,14 +339,7 @@
                                             <option v-for="program in programs" v-bind="{ 'true': program.id == fillUser.program}" :value="program.id">@{{ program.value }}</option>   
                                         </select>
                                     </div>
-                                </div>
-                                
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Unique ID:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="username" class="form-control" v-model="fillUser.username" />
-                                    </div>
-                                </div>
+                                </div>                              
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
                                     <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
@@ -372,15 +372,15 @@
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
                                     <button class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Submit</button>
-                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                                </div>
+                                    <button type="button" class="btn btn-sm btn-silver"  data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>                                
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
     <!-- Import users list -->
     <div class="modal fade" id="import-user-list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -462,7 +462,7 @@
                                     </tr>
                                     <tr>
                                         <td><strong>Program</strong></td>
-                                        <td>@{{someUser.program}}</td>
+                                            <td>@{{someUser.program}}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Designation</strong></td>
