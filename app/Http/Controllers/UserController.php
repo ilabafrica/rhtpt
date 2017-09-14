@@ -14,6 +14,7 @@ use App\County;
 use App\Program;
 use App\Round;
 use App\SmsHandler;
+use App\Designation;
 
 use DB;
 use Hash;
@@ -452,12 +453,7 @@ class UserController extends Controller
      */
     public function designations()
     {
-        $designations = [
-            User::NURSE => 'Nurse',
-            User::LABTECH => 'Lab Tech.',
-            User::COUNSELLOR => 'Counsellor',
-            User::RCO => 'RCO',
-        ];
+        $designations = Designation::pluck('name', 'id');
         $categories = [];
         foreach($designations as $key => $value)
         {
