@@ -82,17 +82,14 @@ window.onclick = function(event) {
             <td>@{{ facility.sub }}</td>
             <td>@{{ facility.county }}</td>
             <td>	
-            <div class="dropdown">
-            <a class="dropbtn" onclick="myFunction()"  >View</a>
-            <div id="Dropdown" class="dropdown-content">
+            <td>    
             @permission('update-facility')
-                <a  @click.prevent="editFacility(facility)" disabled> Edit</button>
+                <button class="btn btn-sm btn-primary" @click.prevent="editFacility(facility)" disabled><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('delete-facility')
-                <a @click.prevent="deleteFacility(facility)"> Disable</a>
+                <button class="btn btn-sm btn-danger" @click.prevent="deleteFacility(facility)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
-            </div>
-            </div>
+            </td>
             </td>
         </tr>
     </table>
