@@ -1313,7 +1313,7 @@ fieldset[disabled][disabled] .mbtn-group-vertical.mbtn-group-raised:focus:not(:a
 .bs-callout-info {
     border-color:#1b809e;
 }
-.bs-callout-info h4, h5 {
+.bs-callout-info h4, h5, h6 {
     color: #1b809e;
 }
 

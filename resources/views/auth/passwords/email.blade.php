@@ -33,7 +33,7 @@
   </div>   
              <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                 <label for="email">PT Enrollment ID</label>
-                 <input id="email" type="email" class="form-control" name="username" placeholder="eg. 19595" value="{{ old('email') }}" required>
+                 <input id="email" type="email" class="form-control" name="email" placeholder="eg. 19595" value="{{ old('email') }}" required>
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
