@@ -715,8 +715,7 @@
                 "sftp",
                 "storage"
             ],
-
-            "time": "2017-08-06 17:41:04"
+            "time": "2017-08-06T17:41:04+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -795,8 +794,7 @@
                 "import",
                 "laravel"
             ],
-
-            "time": "2017-08-31 14:52:24"
+            "time": "2017-08-31T14:52:24+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -1022,8 +1020,7 @@
                 "parser",
                 "php"
             ],
-
-            "time": "2017-09-02 17:10:46"
+            "time": "2017-09-02T17:10:46+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -1298,8 +1295,7 @@
                 "interactive",
                 "shell"
             ],
-
-            "time": "2017-07-29 19:30:02"
+            "time": "2017-07-29T19:30:02+00:00"
         },
         {
             "name": "ramsey/uuid",
@@ -1381,8 +1377,7 @@
                 "identifier",
                 "uuid"
             ],
-
-            "time": "2017-08-04 13:39:04"
+            "time": "2017-08-04T13:39:04+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -1670,8 +1665,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-
-            "time": "2017-07-29 21:54:42"
+            "time": "2017-07-29T21:54:42+00:00"
         },
         {
             "name": "symfony/finder",
@@ -1914,8 +1908,7 @@
                 "portable",
                 "shim"
             ],
-
-            "time": "2017-06-14 15:44:48"
+            "time": "2017-06-14T15:44:48+00:00"
         },
         {
             "name": "symfony/polyfill-php56",
@@ -1971,8 +1964,7 @@
                 "portable",
                 "shim"
             ],
-
-            "time": "2017-06-14 15:44:48"
+            "time": "2017-06-14T15:44:48+00:00"
         },
         {
             "name": "symfony/polyfill-util",
@@ -2024,8 +2016,7 @@
                 "polyfill",
                 "shim"
             ],
-
-            "time": "2017-07-05 15:09:33"
+            "time": "2017-07-05T15:09:33+00:00"
         },
         {
             "name": "symfony/process",
@@ -2547,8 +2538,7 @@
                 "faker",
                 "fixtures"
             ],
-
-            "time": "2017-08-15 16:48:10"
+            "time": "2017-08-15T16:48:10+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -2799,7 +2789,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-08-08 06:39:58"
+            "time": "2017-08-08T06:39:58+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -2846,7 +2836,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2017-06-03 08:32:36"
+            "time": "2017-06-03T08:32:36+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -2909,7 +2899,8 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-09-04 11:05:03"
+
+            "time": "2017-09-04T11:05:03+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -3923,7 +3914,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-           "time": "2017-07-29 21:54:42"
+            "time": "2017-07-29T21:54:42+00:00"
         },
         {
             "name": "webmozart/assert",

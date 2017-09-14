@@ -20,7 +20,6 @@
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <!-- Sweet Alert Styling -->
     <link href="{{ asset('css/sweetalert.css') }}" rel="stylesheet">
-
     <title>Kenya Serology Rapid HIV PT,Login</title>
     <style>
         .form-control:focus 
@@ -151,5 +150,5 @@
             }
         });
     }        
-</script>    
+</script> 
 </html>

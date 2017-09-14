@@ -427,6 +427,10 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "ParticipantController@denyUserVerification"
     ));
 
+    Route::get('designation', 'DesignationController@manageDesignation');
+    Route::resource('vuedesignations','DesignationController');
+    Route::any('vuedesignations/{id}/restore','DesignationController@restore');
+
     Route::get('participant', 'ParticipantController@manageParticipant');
     Route::resource('vueparticipants','ParticipantController');
     Route::any('vueparticipants/{id}/restore','ParticipantController@restore');
@@ -448,6 +452,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_participant',['as'=>'participant.search', 'uses'=>'ParticipantController@index']);
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
     Route::get('api/search_parts',['as'=>'participants.search', 'uses'=>'UserController@forEnrol']);
+    Route::get('api/search_designation',['as'=>'designation.search', 'uses'=>'DesignationController@index']);
 });
 
 Route::get("/subs/{id}", array(

@@ -117,7 +117,7 @@
                     </li>
                     @endpermission
                     @permission('config')
-                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('program'), strtolower('shipper'), strtolower('nonperf')])?' '.strtolower(trans('messages.active')):'' !!}">
+                    <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('program'), strtolower('shipper'), strtolower('nonperf'), strtolower('designation')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-cog"></i> {!! trans('messages.config') !!}</a>
                         <ul class="list-unstyled">
                             @permission('read-program')
@@ -134,6 +134,11 @@
                             <li style="display:none;" class="{!! Request::segment(1)==strtolower('nonperf')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('nonperf') !!}"><i class="fa fa-bookmark"></i> {!! trans_choice('messages.nonperf', 2) !!}</a>
                             </li>
+                            @permission('read-program')
+                            <li class="{!! Request::segment(1)==strtolower('designation')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('designation') !!}"><i class="fa fa-bookmark"></i> Designations</a>
+                            </li>
+                            @endpermission
                             @endpermission
                         </ul>
                     </li>
@@ -331,6 +336,8 @@
         <script src="{{ asset('controllers/bulk.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('profile'))
         <script src="{{ asset('controllers/profile.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('designation'))
+        <script src="{{ asset('controllers/designation.js') }}"></script>
         @endif
 </body>
 </html>
