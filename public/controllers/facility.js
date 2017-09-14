@@ -23,11 +23,13 @@ new Vue({
         formErrors:{},
         formErrorsUpdate:{},
         newFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
-        fillFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''},
+        fillFacility : {'code':'','registration_number':'', 'name':'', 'sub_county':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','id':''},
         loading: false,
         error: false,
         query: '',
-        uploadify: {excel: ''}
+        uploadify: {excel: ''},
+        counties: [],
+        subs: [],
     },
 
     computed: {
@@ -57,6 +59,7 @@ new Vue({
 
     mounted : function(){
         this.getVueFacilitys(this.pagination.current_page);
+        this.loadCounties();
     },
 
     methods : {
@@ -94,24 +97,25 @@ new Vue({
         },
 
         editFacility: function(facility){
-            this.fillFacility.name = facility.name;
-            this.fillFacility.id = facility.id;
-            this.fillFacility.description = facility.description;
-            this.fillFacility.order = facility.order;
-            this.fillFacility.tag = facility.tag;
-            this.fillFacility.options = facility.options;
+            this.fillFacility = facility;
+            this.subs = facility.subs;
             $("#edit-facility").modal('show');
         },
 
-        updateFacility: function(id){
-            var input = this.fillFacility;
-            this.$http.put('/vuefacilitys/'+id,input).then((response) => {
-                this.changePage(this.pagination.current_page);
-                this.fillFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''};
-                $("#edit-facility").modal('hide');
-                toastr.success('Facility Updated Successfully.', 'Success Alert', {timeOut: 5000});
-            }, (response) => {
-                this.formErrorsUpdate = response.data;
+        updateFacility: function(id, scope){
+            this.$validator.validateAll(scope).then(() => {
+                var input = this.fillFacility;
+                this.$http.put('/vuefacilitys/'+id,input).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    this.fillFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''};
+                    $("#edit-facility").modal('hide');
+                    toastr.success('Facility Updated Successfully.', 'Success Alert', {timeOut: 5000});
+                }, (response) => {
+                    this.formErrorsUpdate = response.data;
+                });
+            }).catch(() => {
+                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+                return false;
             });
         },
 
@@ -174,6 +178,24 @@ new Vue({
             fileReader.onload = (e) => {
                 this.uploadify.excel = e.target.result;
             }
+        },
+
+        //Populate counties from FacilityController
+        loadCounties: function() {
+            this.$http.get('/cnts').then((response) => {
+                this.counties = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        fetchSubs: function() {
+            let id = $('#county_id').val();
+            this.$http.get('/subs/'+id).then((response) => {
+                this.subs = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
         },
     }
 });
