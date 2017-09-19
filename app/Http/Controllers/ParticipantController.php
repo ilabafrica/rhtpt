@@ -109,6 +109,7 @@ class ParticipantController extends Controller
                 $user->kaunti = $facility->subCounty->county->name;
                 $user->des = $user->designation($user->ru()->designation);
                 $user->gndr = $user->maleOrFemale((int)$user->gender);
+                $user->designation = $user->ru()->designation;
             }
             else
             {
@@ -192,46 +193,27 @@ class ParticipantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'gender' => 'required',
-            'phone' => 'required',
-            'email' => 'required',
-            'address' => 'required',
-            'username' => 'required'
-        ]);
-
-        $edit = User::find($id)->update($request->all());
-        if($request->role)
-        {
+        //dd($request->all());
+        $user = User::find($id);
+        $user->name = $request->name;
+        $user->phone = $request->phone;
+        $user->email = $request->email;
+        $user->address = $request->address;
+        try{
+            $user->save();
             $role = $request->role;
-            $tier = NULL;
-            $program_id = NULL;
-            if($role == Role::idByName("Partner"))
-            {
-                $tier = implode(", ", $request->jimbo);
-            }
-            else if($role == Role::idByName("County Coordinator"))
-            {
-                $tier = $request->county_id;
-            }
-            else if($role == Role::idByName("Sub-County Coordinator"))
-            {
-                $tier = $request->sub_id;
-            }
-            else if($role == Role::idByName("Participant"))
-            {
-                $tier = $request->facility_id;
-                $program_id = $request->program_id;
-            }
-            else if($role == Role::idByName("Facility Incharge"))
-            {
-                $tier = $request->facility_id;
-            }
+            $tier = Facility::idByCode($request->mfl_code);
+            $program_id = $request->program_id;
+            $designation = $request->designation;
             DB::table('role_user')->where('user_id', $id)->where('role_id', $role)->delete();
-            $ru = DB::table('role_user')->insert(["user_id" => $id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
+            $ru = DB::table('role_user')->insert(["user_id" => $id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id, "designation" => $designation]);
         }
-        return response()->json($edit);
+        catch(Exception $e)
+        {
+            abort(404);
+        }
+        
+        return response()->json($user);
     }
 
     /**
@@ -913,8 +895,13 @@ class ParticipantController extends Controller
     }
     public function denyUserVerification(Request $request){
         $id = $request->id;
-        $user = User::withTrashed()->find($id); 
-        $user->notify(new RegretNote($user));
+        $user = User::withTrashed()->find($id);
+        $user->status = User::REJECTED;
+        $now = Carbon::now('Africa/Nairobi')->toDateString();
+        $user->status_date = $now;
+        $user->save();
+        $user->delete(); 
+        /*$user->notify(new RegretNote($user));
         $message    = "Dear ".$user->name.", NPHL has rejected your request to participate in PT.";
         try 
         {
@@ -924,7 +911,7 @@ class ParticipantController extends Controller
         catch ( AfricasTalkingGatewayException $e )
         {
             echo "Encountered an error while sending: ".$e->getMessage();
-        }
+        }*/
     }
 
     /**

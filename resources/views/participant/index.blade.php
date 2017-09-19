@@ -63,7 +63,8 @@
             <td>@{{ user.rl }}</td>
             <td>
                 <button v-if="!user.deleted_at" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
-                <button v-if="user.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
+                <button v-if="user.deleted_at && !user.status" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
+                <button v-if="user.status" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Rejected</button>
             </td>
 
             <td>
@@ -304,40 +305,52 @@
                                         <span v-show="errors.has('role')" class="help is-danger">@{{ errors.first('role') }}</span>
                                     </div>
                                 </div>
+
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">County:</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs()" v-model="fillUser.county_id">
-                                            <option selected></option>
-                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
-                                        </select>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('mfl code') }" for="mfl code">MFL Code:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('mfl code') }" name="mfl code" type="text" v-model="fillUser.mfl_code" @change="fetchFacility" id="mfl" />
+                                        <span v-show="errors.has('mfl code')" class="help is-danger">@{{ errors.first('mfl code') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
+                                    <label class="col-sm-4 form-control-label" for="facility name">Facility Name:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control c-select" name="sub_id" id="sub_id" @change="fetchFacilities" v-model="fillUser.sub_id">
-                                            <option selected></option>
-                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
-                                        </select>
+                                        <h6>@{{ fillUser.facility }}</h6>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Facility:</label>
+                                    <label class="col-sm-4 form-control-label" for="sub county">Sub County:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control c-select" name="facility_id" v-model="fillUser.facility_id">
-                                            <option selected></option>
-                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
-                                        </select>
+                                        <h6>@{{ fillUser.sub_county }}</h6>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Program:</label>
+                                    <label class="col-sm-4 form-control-label"for="county">County:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control c-select" name="program_id" v-model="fillUser.program_id">
+                                        <h6>@{{ fillUser.county }}</h6>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('designation') }" for="designation">Designation:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <select v-validate="'required'" class="form-control c-select" name="designation" :class="{'input': true, 'is-danger': errors.has('designation') }" v-model="fillUser.designation">
                                             <option selected></option>
-                                            <option v-for="program in programs" v-bind="{ 'true': program.id == fillUser.program}" :value="program.id">@{{ program.value }}</option>   
+                                            <option v-for="des in designations" :value="des.name">@{{ des.title }}</option>
                                         </select>
+                                        <span v-show="errors.has('designation')" class="help is-danger">@{{ errors.first('designation') }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('program_id') }" for="title">Program:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <select class="form-control c-select" :class="{'input': true, 'is-danger': errors.has('program_id') }" name="program_id" v-model="fillUser.program_id">
+                                            <option selected></option>
+                                            <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
+                                        </select>
+                                        <span v-show="errors.has('program_id')" class="help is-danger">@{{ errors.first('program_id') }}</span>
                                     </div>
                                 </div>                              
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
@@ -472,7 +485,7 @@
                             </table>
                             <div class="form-group row col-sm-offset-4 col-sm-8">
                                 <button type="submit" class="btn btn-sm btn-success" ><i class='fa fa-plus-circle'></i> Enroll</button>
-                                <button type="button" class="btn btn-sm btn-danger" @click="denyUser()"><i class='fa fa-ban'></i> Reject</button>
+                                <button type="button" class="btn btn-sm btn-danger" @click="denyUser(someUser.id)"><i class='fa fa-ban'></i> Reject</button>
                                 <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                             </div>
                         </div>

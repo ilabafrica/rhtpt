@@ -400,4 +400,6 @@ EntrustUserTrait::restore insteadof SoftDeletes;
         }
         return "N/A";
     }
+    //  self-registered participants status
+    const REJECTED = 1;
 }
