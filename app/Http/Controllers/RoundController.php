@@ -405,7 +405,7 @@ class RoundController extends Controller
         $roleId = Role::idByName('Participant');
         //  workbook title
         if(Auth::user()->isCountyCoordinator())
-            $title = County::find($countyId)->name." COUNTY ".$suffix;
+            $title = County::find(Auth::user()->ru()->tier)->name." COUNTY ".$suffix;
         else
             $title = "KENYA RAPID HIV PT ".$suffix;
         return Excel::create($title, function($excel) use ($rId, $roundId, $users, $roleId, $request) 
