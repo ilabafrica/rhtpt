@@ -62,7 +62,15 @@ class FacilityController extends Controller
         foreach($facilitys as $facility)
         {
             $facility->sub = $facility->subCounty->name;
+            $facility->sub_id = $facility->subCounty->id;
             $facility->county = $facility->subCounty->county->name;
+            $facility->county_id = $facility->subCounty->county->id;
+            $facility->subs = $facility->subCounty->county->subCounties;
+            foreach($facility->subs as $sbc)
+            {
+                $sbc->id = $sbc->id;
+                $sbc->value = $sbc->name;
+            }
         }
 
         $response = [
@@ -133,18 +141,17 @@ class FacilityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'label' => 'required',
-            'description' => 'required',
-            'order' => 'required',
-            'tag' => 'required',
-            'options' => 'required',
-        ]);
+        $fclty = Facility::find($id);
+        $fclty->name = $request->name;
+        $fclty->registration_number = $request->registration_number;
+        $fclty->mailing_address = $request->mailing_address;
+        $fclty->sub_county_id = $request->sub_id;
+        $fclty->in_charge = $request->in_charge;
+        $fclty->in_charge_phone = $request->in_charge_phone;
+        $fclty->in_charge_email = $request->in_charge_email;
+        $fclty->save();
 
-        $edit = Facility::find($id)->update($request->all());
-
-        return response()->json($edit);
+        return response()->json($fclty);
     }
 
     /**
