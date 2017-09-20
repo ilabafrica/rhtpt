@@ -588,7 +588,7 @@ class RoundController extends Controller
             $data = Excel::load('public/batch/'.$id.'/nphls/'.$fileName, function($reader) {$reader->ignoreEmpty();})->get();
         if(!empty($data) && $data->count())
         {
-            foreach ($data->toArray() as $harvey => $specter)
+            foreach ($data->first()->toArray() as $harvey => $specter)
             {
                 if(!empty($specter))
                 {
@@ -766,13 +766,13 @@ class RoundController extends Controller
                             //  send email and sms
                             $token = app('auth.password.broker')->createToken($user);
                             $user->token = $token;
-                            $user->notify(new WelcomeNote($user));
+                            //$user->notify(new WelcomeNote($user));
                             
                             $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
                             try 
                             {
                                 $smsHandler = new SmsHandler();
-                                $smsHandler->sendMessage($user->phone, $message);
+                                //$smsHandler->sendMessage($user->phone, $message);
                             }
                             catch ( AfricasTalkingGatewayException $e )
                             {
