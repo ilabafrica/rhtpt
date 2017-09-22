@@ -703,7 +703,7 @@ class RoundController extends Controller
                             }
                         }
                         //  process user details
-                        if($tfname && $toname && $tsname && $tphone && $temail && $tprog && $tdes)
+                        if($tfname && $tsname && $tphone && $temail && $tprog && $tdes)
                         {
                             $user->name = $tsname." ".$tfname." ".$toname;
                             $user->gender = $tgender;
