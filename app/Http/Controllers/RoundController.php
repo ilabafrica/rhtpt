@@ -588,6 +588,7 @@ class RoundController extends Controller
             $loadedFile = Excel::load('public/batch/'.$id.'/nphls/'.$fileName, function($reader) {$reader->ignoreEmpty();})->get();
         if(!empty($loadedFile) && $loadedFile->count())
         {
+            $duplicates = array();
             foreach($loadedFile as $sheet){
                 foreach ($sheet->toArray() as $harvey => $specter)
                 {
@@ -705,6 +706,11 @@ class RoundController extends Controller
                         //  process user details
                         if($tfname && $tsname && $tphone && $temail && $tprog && $tdes)
                         {
+                            if(count(User::where('email', $temail)->orWhere('phone', $tphone)->get()) > 0){
+                                $duplicateParticapant = array($tfname, $tsname, $tphone, $temail);
+                                $duplicates[] = $duplicateParticapant;
+                                continue;
+                            }
                             $user->name = $tsname." ".$tfname." ".$toname;
                             $user->gender = $tgender;
                             $user->email = $temail;
@@ -802,6 +808,7 @@ class RoundController extends Controller
                     }
                 }
             }
+            return response()->json(array('errors' => $duplicates));
         }
     }
 }
