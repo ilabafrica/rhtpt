@@ -33,6 +33,7 @@ new Vue({
         date: '',
         testers: [],
         durations: [],
+        duplicates: [],
         uploadify: {id: '', excel: ''}
     },
 
@@ -257,14 +258,24 @@ new Vue({
             $("#batch-enrolment").modal('show');
         },
 
-        batchEnrol(){
+        batchEnrol: function(){
             // this.$validator.validateAll().then(() => {
                 var input = this.uploadify;
+                this.duplicates = [];
                 this.$http.post('/batch/enrol', input).then((response) => {
-                    this.uploadify = {'id':'','excel':''};
-                    $("#batch-enrolment").modal('hide');
-                    toastr.success('Data uploaded Successfully.', 'Success Alert', {timeOut: 5000});
-                    this.errors.clear();
+                    var resp = JSON.parse(response.body);
+                    if(resp.errors !== undefined){
+                        $("#dups").show();
+                        this.duplicates = resp.errors;
+                        toastr.success('Data uploaded Successfully.', 'Success Alert', {timeOut: 5000});
+                        this.errors.clear();
+                    }
+                    else{
+                        this.uploadify = {'id':'','excel':''};
+                        $("#batch-enrolment").modal('hide');
+                        toastr.success('Data uploaded Successfully.', 'Success Alert', {timeOut: 5000});
+                        this.errors.clear();
+                    }
                 }, (response) => {
                     // 
                 });

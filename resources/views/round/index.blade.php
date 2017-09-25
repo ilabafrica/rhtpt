@@ -298,6 +298,14 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 <h4 class="modal-title" id="myModalLabel">Batch Enrolment</h4>
                 </div>
+                <div id="dups" class="alert alert-danger" style="display: none">
+                   Some duplicated records were found and ignored.
+                   <ul id="manage-round">
+                      <li v-for="duplicate in duplicates">
+                        @{{ duplicate[0] +', '+ duplicate[1] +', '+ duplicate[2] +', '+ duplicate[3] }}
+                      </li>
+                    </ul>
+                </div>
                 <div class="modal-body">
                     <div class="row">
                         
