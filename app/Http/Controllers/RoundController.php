@@ -577,7 +577,6 @@ class RoundController extends Controller
 
         //  get today's date
         $today = Carbon::today();
-        // dd();
         //  Handle the import
         //  Get the results
         //  Import a user provided file
@@ -725,32 +724,32 @@ class RoundController extends Controller
                             $user->save();
                             $userId = $user->id;
 
-                            //  Prepare to save facility details
+                            //  Prepare to save new facility details
                             $facilityId = Facility::idByCode($mfl);
                             if(!$facilityId)
-                                $facilityId = Facility::idByName(trim($facility));
-                            if($facilityId)
-                                $fc = Facility::find($facilityId);
-                            else
-                                $fc = new Facility;
-                            $fc->code = $mfl;
-                            $fc->name = $facility;
-                            $fc->in_charge = $incharge;
-                            $fc->in_charge_phone = $iphone;
-                            $fc->in_charge_email = $iemail;
-                            //  Get sub-county
-                            $sub_county_id = SubCounty::idByName($sub_county);
-                            if(!$sub_county_id)
                             {
-                                $sb = new SubCounty;
-                                $sb->name = $sub_county;
-                                $sb->county_id = County::idByName($county);
-                                $sb->save();
-                                $sub_county_id = $sb->id;
-                            }
-                            $fc->sub_county_id = $sub_county_id;
-                            $fc->save();
-                            $facilityId = $fc->id;
+                                $fc = new Facility;
+                                $fc->code = $mfl;
+                                $fc->name = $facility;
+                                $fc->in_charge = $incharge;
+                                $fc->in_charge_phone = $iphone;
+                                $fc->in_charge_email = $iemail;
+
+                                //  Get sub-county
+                                $sub_county_id = SubCounty::idByName($sub_county);
+                                if(!$sub_county_id)
+                                {
+                                    $sb = new SubCounty;
+                                    $sb->name = $sub_county;
+                                    $sb->county_id = County::idByName($county);
+                                    $sb->save();
+                                    $sub_county_id = $sb->id;
+                                }
+                                $fc->sub_county_id = $sub_county_id;
+                                $fc->save();
+                                $facilityId = $fc->id;
+                            }                                
+                            
                             //  Prepare to save role-user details
                             $roleId = Role::idByName('Participant');
                             $user->detachAllRoles();
@@ -767,7 +766,7 @@ class RoundController extends Controller
                                 $enrol->save();
                             }
                             //  send email and sms for registration
-                            
+                            /*
                             if($user->date_registered)
                             {
                                 //  send email and sms
@@ -790,7 +789,7 @@ class RoundController extends Controller
                             /*$message = Notification::where('template', Notification::ENROLMENT)->first()->message;
                             $message = ApiController::replace_between($message, '[', ']', $round);
                             $message = str_replace(' [', ' ', $message);
-                            $message = str_replace('] ', ' ', $message);*/
+                            $message = str_replace('] ', ' ', $message);
                             $message = "Dear ".$user->name.", you have been enrolled to PT round ".$round.". If not participating, contact your county lab coordinator.";
                             try 
                             {
@@ -804,6 +803,7 @@ class RoundController extends Controller
                             $user->round = $round;                        
                             //$user->notify(new EnrollmentNote($user));
                             //  Bulk-sms settings
+                            */
                         }
                     }
                 }
