@@ -766,7 +766,7 @@ class RoundController extends Controller
                                 $enrol->save();
                             }
                             //  send email and sms for registration
-                            /*
+                            
                             if($user->date_registered)
                             {
                                 //  send email and sms
@@ -790,7 +790,7 @@ class RoundController extends Controller
                             $message = ApiController::replace_between($message, '[', ']', $round);
                             $message = str_replace(' [', ' ', $message);
                             $message = str_replace('] ', ' ', $message);
-                            $message = "Dear ".$user->name.", you have been enrolled to PT round ".$round.". If not participating, contact your county lab coordinator.";
+                            $message = "Dear ".$user->name.", you have been enrolled to PT round ".$round.". If not participating, contact your county lab coordinator.";*/
                             try 
                             {
                                 //$smsHandler = new SmsHandler();
@@ -803,7 +803,7 @@ class RoundController extends Controller
                             $user->round = $round;                        
                             //$user->notify(new EnrollmentNote($user));
                             //  Bulk-sms settings
-                            */
+                            
                         }
                     }
                 }
