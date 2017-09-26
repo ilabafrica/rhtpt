@@ -264,7 +264,7 @@ new Vue({
                 this.duplicates = [];
                 this.$http.post('/batch/enrol', input).then((response) => {
                     var resp = JSON.parse(response.body);
-                    if(resp.errors !== undefined){
+                    if(resp.errors.length > 0){
                         $("#dups").show();
                         this.duplicates = resp.errors;
                         toastr.success('Data uploaded Successfully.', 'Success Alert', {timeOut: 5000});
