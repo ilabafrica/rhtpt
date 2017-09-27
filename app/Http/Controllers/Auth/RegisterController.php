@@ -185,7 +185,7 @@ class RegisterController extends Controller
                 $message->to($usr['email']);
                 $message->subject('National HIV PT - Email Verification Code');
             });*/
-
+          
             event(new Registered($usr = $user));
 
             //$this->guard()->login($user);

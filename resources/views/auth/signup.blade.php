@@ -117,9 +117,9 @@
                             <div class="col-sm-8" :class="{ 'control': true }">
                                 <select v-validate="'required'" class="form-control c-select" name="designation" :class="{'input': true, 'is-danger': errors.has('designation') }" v-model="newParticipant.designation">
                                     <option selected></option>
-                                    <option v-for="des in designations" :value="des.name">@{{ des.title }}</option>
+                                    <option v-for="des in designations" :value="des.name">@{{des.title}}</option>
                                 </select>
-                                <span v-show="errors.has('designation')" class="help is-danger">@{{ errors.first('designation') }}</span>
+                                <span v-show="errors.has('designation')" class="help is-danger">@{{errors.first('designation')}}</span>
                             </div>
                         </div>
                     </div>
