@@ -21,7 +21,7 @@
             </div>   
             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                 <label for="email">Registered Email</label>
-                <input id="email" type="email" class="form-control" name="email" placeholder="eg. you@xzd.com" value="{{ old('email') }}" required>
+                <input id="email" type="email" class="form-control" name="email" placeholder="eg. you@example.com" value="{{ old('email') }}" required>
                 @if ($errors->has('email'))
                     <span class="help-block">
                         <strong>{{ $errors->first('email') }}</strong>
