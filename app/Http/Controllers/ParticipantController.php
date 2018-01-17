@@ -893,16 +893,17 @@ class ParticipantController extends Controller
             echo "Encountered an error while sending: ".$e->getMessage();
         }
     }
-    public function denyUserVerification($reason, $id){
+    public function denyUserVerification(Request $request, $id){
+       
         $user = User::withTrashed()->find($id);
         $user->status = User::REJECTED;
-        $user->reason = $reason;
+        $user->reason = $request->reason;
         $now = Carbon::now('Africa/Nairobi')->toDateString();
         $user->status_date = $now;
-        $user->save();
-        $user->delete();
+        // $user->save();
+        // $user->delete();
         
-        $message = "Dear ".$user->name.", NPHL has rejected your request to participate in PT because ".$reason;
+        $message = "Dear ".$user->name.", NPHL has rejected your request to participate in PT because ".$request->reason;
         return response()->json($message);
         
         /*$user->notify(new RegretNote($user));

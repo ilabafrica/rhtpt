@@ -40,7 +40,8 @@ new Vue({
         sexes: [],
         uploadify: {excel: ''},
         upload: {list: ''},
-        designations: []
+        designations: [],
+        reasons: { 'reason': '' }
     },
 
     computed: {
@@ -409,7 +410,7 @@ new Vue({
                     title: "Enter reason for rejection.",
                     type: "input",
                     showCancelButton: true,
-                    closeOnConfirm: true,
+                    closeOnConfirm: false,
                     animation: "slide-from-top",
                     inputPlaceholder: "e.g. 123"
                 },
@@ -422,8 +423,11 @@ new Vue({
                         return false
                     }
                     else
-                    {          
-                        this.$http.put('/denyUserVerification/'+reason+'/'+id).then((response) => {
+                    {    
+                        this.reasons.reason = reason;  
+                        var input = this.reasons;
+
+                        this.$http.put('/denyUserVerification/'+id, input).then((response) => {
                             this.changePage(this.pagination.current_page);
                             this.someUser = {'name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
                             $("#approve-user").modal('hide');
