@@ -422,7 +422,7 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "approve.participant",
         "uses" => "ParticipantController@approve"
     ));
-    Route::any("/denyUserVerification/{id}", array(
+    Route::any("/denyUserVerification/{reason}/{id}", array(
         "as"   => "denyUserVerification.participant",
         "uses" => "ParticipantController@denyUserVerification"
     ));
