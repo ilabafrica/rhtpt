@@ -410,7 +410,7 @@ new Vue({
                     title: "Enter reason for rejection.",
                     type: "input",
                     showCancelButton: true,
-                    closeOnConfirm: false,
+                    closeOnConfirm: true,
                     animation: "slide-from-top",
                     inputPlaceholder: "e.g. 123"
                 },
