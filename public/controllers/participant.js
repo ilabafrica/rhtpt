@@ -437,6 +437,7 @@ new Vue({
                     }
                 }.bind(this)
             );
+            $(document).on('focusin.modal');
         },
 
         loadDesignations: function() {
