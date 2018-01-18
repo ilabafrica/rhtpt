@@ -387,6 +387,7 @@ new Vue({
             this.someUser.facility = user.fac;
             this.someUser.program = user.prog;
             this.someUser.designation = user.des;
+            this.someUser.status = user.status;
             $("#approve-user").modal('show');
         },
 
