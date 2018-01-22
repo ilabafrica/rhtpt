@@ -166,12 +166,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row" :class="'toggle_'+item.id" style="display:none;">
+                                        <!-- <div class="form-group row" :class="'toggle_'+item.id" style="display:none;">
                                             <label class="col-sm-5 form-control-label text-danger font-weight-bold" for="title">Please Specify:</label>
                                             <div class="col-sm-7">
                                                 <textarea :name="'field_'+item.id" class="form-control"></textarea>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-5 col-sm-7">

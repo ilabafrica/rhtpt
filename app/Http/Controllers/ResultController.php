@@ -89,8 +89,7 @@ class ResultController extends Controller
     public function store(Request $request)
     {           
                 //return response()->json('Saved.');
-        //Check if round has been 
-
+        //Check if round has been         
         if ($request->get('round_id') =="") {
             return response()->json(['1']);            
         } else
@@ -103,17 +102,7 @@ class ResultController extends Controller
             if ($enrolment->status ==1) {
                 return response()->json(['2']);            
             }else
-            {
-        
-                $pt = new Pt;
-                $pt->enrolment_id = $enrolment->id;
-                $pt->panel_status = Pt::NOT_CHECKED;
-                $pt->save();
-
-                //update enrollment status to 1
-                $enrolment->status = Enrol::DONE;        
-                $enrolment->save();
-
+            {        
                 //	Proceed to form-fields
                 foreach ($request->all() as $key => $value)
                 {
@@ -140,6 +129,14 @@ class ResultController extends Controller
                         }
                     }
                 }    
+                    $pt = new Pt;
+                    $pt->enrolment_id = $enrolment->id;
+                    $pt->panel_status = Pt::NOT_CHECKED;
+                    $pt->save();
+
+                    //update enrollment status to 1
+                    $enrolment->status = Enrol::DONE;        
+                    $enrolment->save();
                     //  Send SMS
                     $round = Round::find($pt->enrolment->round->id)->description;
                     $message = Notification::where('template', Notification::RESULTS_RECEIVED)->first()->message;
@@ -157,8 +154,8 @@ class ResultController extends Controller
                     $recipients = User::find($pt->enrolment->user->id)->value('phone');
                     //  Bulk-sms settings
                     $api = DB::table('bulk_sms_settings')->first();
-                    // $username   = $api->code;
-                    // $apikey     = $api->api_key;
+                    $username   = $api->code;
+                    $apikey     = $api->api_key;
                     if($recipients)
                     {
                         // Specified sender-id
