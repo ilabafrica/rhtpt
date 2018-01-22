@@ -34,6 +34,7 @@ new Vue({
         testers: [],
         durations: [],
         duplicates: [],
+        roundId:'',
         uploadify: {id: '', excel: ''}
     },
 
@@ -215,15 +216,16 @@ new Vue({
             });
         },
 
-        /*loadParticipants: function() {
+        loadParticipants: function(roundID) {
             this.$http.get('/parts').then((response) => {
-                this.participants = response.data.data.data;
-                this.pagination = response.data.pagination;
+                //this.participants = response.data.data.data; 
+                this.roundId = roundID;                             
+                //this.pagination = response.data.pagination;
             }, (response) => {
                 // 
             });
         },
-*/
+
         enrolParticipants: function(){
 		    let myForm = document.getElementById('partFrm');
             let formData = new FormData(myForm);
