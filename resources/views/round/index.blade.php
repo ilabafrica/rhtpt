@@ -73,7 +73,7 @@
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" style="display:none;" :data-fk="round.id" @click.prevent="loadParticipants(1)"><i class="fa fa-send"></i> Enrol</button>
                 <a v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" :href="'/download/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i> Summary Workbook</a>
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
-                <a v-if="!round.deleted_at" class="btn btn-sm btn-new-participants" :href="'/download/'+round.id+'/1'"><i class="fa fa-book"></i> New Participants</a>
+                <button v-if="!round.deleted_at" class="btn btn-sm btn-new-participants" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id"   @click.prevent="loadParticipants(round.id)"><i class="fa fa-book"></i> New Participants</button>
             @endpermission
             </td>
         </tr>
@@ -237,7 +237,7 @@
                     <div class="row">
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="enrolParticipants" id="partFrm">
                             <div class="col-md-12">
-                                <input type="hidden" class="form-control" name="round_id" id="round-id" value=""/>
+                                <input type="hidden" class="form-control" name="round_id" id="round-id" v-bind:value="roundId"/>
                                 <table class="table table-bordered">
                                     <tr>
                                         <th>Participant</th>
