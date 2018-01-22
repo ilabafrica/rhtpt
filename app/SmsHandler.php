@@ -44,12 +44,13 @@ class SmsHandler{
     }
 
     public function sendMessage($phone, $message)
-    {
+    { 
+	$from = "Nat-HIVPT";
         if($phone != null && strlen($phone) >= 9){
             $phone = ltrim($phone, '0');
             $recepient = "+254".$phone;
             $gateway = new Gateway($this->username, $this->apiKey);
-            $result = $gateway->sendMessage($recepient, $message);
+            $result = $gateway->sendMessage($recepient, $message, $from);
         }
     }
 }
