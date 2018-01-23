@@ -402,7 +402,12 @@ class RoundController extends Controller
         $suffix = "ROUND ".$roundId." PARTICIPANTS SUMMARY";
         $title = "";
         $users = NULL;
-        $roleId = Role::idByName('Participant');
+        $roleId = Role::idByName('Participant');        
+        //check if anyone registered for that round is enrolled to tha round
+        $p = Enrol::where('round_id',$rId)->get();
+        if(count($p) == 0){
+            return back()->withInput(['2']);
+        }
         //  workbook title
         if(Auth::user()->isCountyCoordinator())
             $title = County::find(Auth::user()->ru()->tier)->name." COUNTY ".$suffix;
@@ -421,8 +426,7 @@ class RoundController extends Controller
                 if($request->status)
                     $ids = User::whereIn('id', $ids)->whereBetween('date_registered', [$round->start_date, $round->end_date])->pluck('id');
                 $testers = Enrol::where('round_id', $rId)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
-                $testers = implode(",", $testers);
-
+                $testers = implode(",", $testers);               
                 $summary = [];
                 $sheetTitle = $county;
                 if (empty($testers)) {
