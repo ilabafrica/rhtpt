@@ -300,7 +300,12 @@ new Vue({
         {
         	let id = round.id;
             this.$http.get('/download/'+id).then((response) => {
-                toastr.success('File Downloaded Successfully.', 'Success Alert', {timeOut: 5000});
+                if(response.data == 2) {
+                    toastr.alert('No participants enrolled');
+                } 
+                else {
+                    toastr.success('File Downloaded Successfully.', 'Success Alert', {timeOut: 5000});                    
+                }
             }, (response) => {
                 // 
             });
