@@ -255,7 +255,7 @@ class RoundController extends Controller
      * Function to enrol participants using excel sheet uploaded
      *
      */
-    public function batchEnrolment(Request $request)
+    /*public function batchEnrolment(Request $request)
     {
         $rId = $request->id;
         $id = Round::find($rId)->name;
@@ -777,12 +777,12 @@ class RoundController extends Controller
                                 //  send email and sms
                                 $token = app('auth.password.broker')->createToken($user);
                                 $user->token = $token;
-                                //$user->notify(new WelcomeNote($user));
+                                $user->notify(new WelcomeNote($user));
                                 $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
                                 try 
                                 {
-                                    //$smsHandler = new SmsHandler();
-                                    //$smsHandler->sendMessage($user->phone, $message);
+                                    $smsHandler = new SmsHandler();
+                                    $smsHandler->sendMessage($user->phone, $message);
                                 }
                                 catch ( AfricasTalkingGatewayException $e )
                                 {
@@ -791,22 +791,22 @@ class RoundController extends Controller
                             }
                             //  Enrollment notifications
                             $round = Round::find($roundId)->name;
-                            /*$message = Notification::where('template', Notification::ENROLMENT)->first()->message;
+                            $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
                             $message = ApiController::replace_between($message, '[', ']', $round);
                             $message = str_replace(' [', ' ', $message);
-                            $message = str_replace('] ', ' ', $message);*/
+                            $message = str_replace('] ', ' ', $message);
                             $message = "Dear ".$user->name.", you have been enrolled to PT round ".$round.". If not participating, contact your county lab coordinator.";
                             try 
                             {
-                                //$smsHandler = new SmsHandler();
-                                //$smsHandler->sendMessage($user->phone, $message);
+                                $smsHandler = new SmsHandler();
+                                $smsHandler->sendMessage($user->phone, $message);
                             }
                             catch ( AfricasTalkingGatewayException $e )
                             {
                                 echo "Encountered an error while sending: ".$e->getMessage();
                             }
                             $user->round = $round;                        
-                            //$user->notify(new EnrollmentNote($user));
+                            $user->notify(new EnrollmentNote($user));
                             //  Bulk-sms settings
                             
                         }
