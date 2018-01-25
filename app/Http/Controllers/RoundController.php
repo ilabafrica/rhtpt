@@ -255,7 +255,7 @@ class RoundController extends Controller
      * Function to enrol participants using excel sheet uploaded
      *
      */
-    /*public function batchEnrolment(Request $request)
+    public function batchEnrolment(Request $request)
     {
         $rId = $request->id;
         $id = Round::find($rId)->name;
@@ -406,7 +406,8 @@ class RoundController extends Controller
         //check if anyone registered for that round is enrolled to tha round
         $p = Enrol::where('round_id',$rId)->get();
         if(count($p) == 0){
-            return back()->withInput(['2']);
+            Session()->flash ('message',"The round has no participants please add participants to the round");
+            return back();
         }
         //  workbook title
         if(Auth::user()->isCountyCoordinator())

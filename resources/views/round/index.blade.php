@@ -12,6 +12,9 @@
 <div class="" id="manage-round">
     <!-- Round Listing -->
     <div class="row">
+    @if (Session::has('message'))
+            <div class="alert alert-info">{{ Session::get('message') }}</div>
+        @endif
         <div class="col-lg-12 margin-tb">
             <div class="pull-left col-md-8">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.pt-round', 2) !!}
@@ -71,9 +74,10 @@
             @endpermission
             @permission('enrol-participants')
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" style="display:none;" :data-fk="round.id" @click.prevent="loadParticipants(1)"><i class="fa fa-send"></i> Enrol</button>
+                
                 <a v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" :href="'/download/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i> Summary Workbook</a>
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
-                <button v-if="!round.deleted_at" class="btn btn-sm btn-new-participants" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id"   @click.prevent="loadParticipants(round.id)"><i class="fa fa-book"></i> New Participants</button>
+                <button v-if="!round.deleted_at" class="btn btn-sm btn-new-participants" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id"   @click.prevent="loadParticipants(round.id)"><i class="fa fa-book"></i> New Participants</button>                
             @endpermission
             </td>
         </tr>
