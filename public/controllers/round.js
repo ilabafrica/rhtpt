@@ -218,9 +218,9 @@ new Vue({
 
         loadParticipants: function(roundID) {
             this.$http.get('/parts').then((response) => {
-                this.participants = response.data.data.data; 
+                //this.participants = response.data.data.data; 
                 this.roundId = roundID;                             
-                this.pagination = response.data.pagination;
+                //this.pagination = response.data.pagination;
             }, (response) => {
                 // 
             });
