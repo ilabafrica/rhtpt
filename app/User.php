@@ -58,7 +58,7 @@ EntrustUserTrait::restore insteadof SoftDeletes;
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password', 'username', 'address', 'phone', 'gender', 'designation'];
+    protected $fillable = ['first_name', 'middle_name', 'last_name', 'name', 'email', 'password', 'username', 'address', 'phone', 'gender', 'designation'];
 
     /**
      * The attributes that should be mutated to dates.

@@ -27,8 +27,8 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        newUser : {'name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':''},
-        fillUser : {'name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':'', 'id':''},
+        newUser : {'first_name':'','middle_name':'','last_name':'','name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':''},
+        fillUser : {'first_name':'','middle_name':'','last_name':'','name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':'', 'id':''},
         transferUser : {'facility_id':'','program_id':'', 'id':''},
         loading: false,
         error: false,
@@ -117,6 +117,9 @@ new Vue({
 
         editUser: function(user){
             this.fillUser.id = user.id;
+            this.fillUser.first_name = user.first_name;
+            this.fillUser.middle_name = user.middle_name;
+            this.fillUser.last_name = user.last_name;
             this.fillUser.name = user.name;
             this.fillUser.username = user.username;
             this.fillUser.gender = user.gender;
@@ -136,7 +139,7 @@ new Vue({
                 var input = this.fillUser;
                 this.$http.put('/vueusers/'+id,input).then((response) => {
                     //this.changePage(this.pagination.current_page); - @TODO
-                    this.fillUser = {'name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''};
+                    this.fillUser = {'first_name':'','middle_name':'','last_name':'','name':'','username': '','gender':'', 'phone':'', 'email':'', 'address':''};
                     $("#edit-user").modal('hide');
                     toastr.success('User Updated Successfully.', 'Success Alert', {timeOut: 5000});
                 }, (response) => {
