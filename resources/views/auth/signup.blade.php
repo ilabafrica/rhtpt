@@ -66,7 +66,7 @@
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('middle name') }" for="middle name">Middle Name:</label>
                             <div class="col-sm-8" :class="{ 'control': true }">
-                                <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('middle name') }" name="middle name" type="text" v-model="newParticipant.oname"/>
+                                <input v-validate="'alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('middle name') }" name="middle name" type="text" v-model="newParticipant.oname"/>
                                 <span v-show="errors.has('middle name')" class="help is-danger">@{{ errors.first('middle name') }}</span>
                             </div>
                         </div>

@@ -129,7 +129,7 @@
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.middle_name') }"
                                         for="middle_name">Middle Name:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control"
+                                        <input v-validate="'alpha_spaces'" class="form-control"
                                             :class="{'input': true,'is-danger': errors.has('create_user.middle_name') }" name="middle_name"
                                             type="text" placeholder=""
                                             v-model="newUser.middle_name" />
@@ -279,7 +279,7 @@
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('middle_name') }"
                                         for="middle_name">Middle Name:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control"
+                                        <input v-validate="'alpha_spaces'" class="form-control"
                                             :class="{'input': true,'is-danger': errors.has('middle_name') }" name="middle_name"
                                             type="text" placeholder=""
                                             v-model="fillUser.middle_name" />
