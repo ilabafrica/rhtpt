@@ -110,7 +110,6 @@ class UserController extends Controller
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'address' => 'required',
             'username' => 'required'
         ]);
         $request->merge(['password' => Hash::make(User::DEFAULT_PASSWORD)]);
@@ -176,7 +175,6 @@ class UserController extends Controller
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'address' => 'required',
             'username' => 'required'
         ]);
 

@@ -148,7 +148,6 @@ class ParticipantController extends Controller
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'address' => 'required',
             'username' => 'required'
         ]);
         $request->merge(['password' => Hash::make(User::DEFAULT_PASSWORD)]);
@@ -198,7 +197,6 @@ class ParticipantController extends Controller
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->email = $request->email;
-        $user->address = $request->address;
         try{
             $user->save();
             $role = $request->role;

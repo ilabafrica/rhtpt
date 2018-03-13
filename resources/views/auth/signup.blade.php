@@ -105,13 +105,6 @@
                                 <span v-if="formErrors['email']" class="error text-danger">@{{ formErrors['email'] }}</span>
                             </div>
                         </div>
-						<div class="form-group row">
-                            <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('address') }" for="address">Address:</label>
-                            <div class="col-sm-8" :class="{ 'control': true }">
-                                <input class="form-control" :class="{'input': true, 'is-danger': errors.has('address') }" name="address" type="text" v-model="newParticipant.address"/>
-                                <span v-show="errors.has('address')" class="help is-danger">@{{ errors.first('address') }}</span>
-                            </div>
-                        </div>
                         <div class="form-group row">
                             <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('designation') }" for="designation">Designation:</label>
                             <div class="col-sm-8" :class="{ 'control': true }">
