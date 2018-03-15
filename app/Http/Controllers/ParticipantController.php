@@ -249,7 +249,8 @@ class ParticipantController extends Controller
     {
         $user = User::withTrashed()->where('id', $id)->restore();
         $user = User::find($id);
-        $message    = "Dear ".$user->name.", NPHL has enabled your account.";
+        $message    = "Dear ".$user->name.", NPHL has enabled your account. Once
+enrolled, you’ll receive a tester ID";
         try 
         {
             $smsHandler = new SmsHandler();
