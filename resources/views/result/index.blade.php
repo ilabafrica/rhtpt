@@ -325,6 +325,7 @@
                                         <div class="col-sm-7">
                                             <textarea name="comment" class="form-control"> @{{dt.response}}</textarea>
                                         </div>
+                                        <p>Once you verify, the document will be submitted to NPHL and you will not be able to change the results</p>
                                     </div>
                                     <hr v-if="viewFormData.pt.panel_status!=3">
                                     <div class="form-group row col-sm-offset-5 col-sm-7">
