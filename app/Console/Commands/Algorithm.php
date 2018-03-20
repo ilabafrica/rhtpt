@@ -75,10 +75,10 @@ class Algorithm extends Command
         * 2. Get all unchecked results and execute the algorithm.
         *
         */
-        $counter = Pt::where('panel_status', Pt::NOT_CHECKED)->count();
+        $counter = Pt::where('panel_status', Pt::CHECKED)->count();
         if($counter > 0);
         {
-            $pts = Pt::where('panel_status', Pt::NOT_CHECKED)->get();
+            $pts = Pt::where('panel_status', Pt::CHECKED)->get();
             $this->runAlgorithm($pts);
         }
         $this->info('Scheduled:Cron Command Run successfully!');
@@ -702,7 +702,7 @@ class Algorithm extends Command
             $pt->invalid_results = $invalid_results;
             $pt->wrong_algorithm = $wrong_algorithm;
             $pt->feedback = $overall;
-            $pt->panel_status = Pt::CHECKED;
+            $pt->panel_status = Pt::EVALUATED;
             $pt->save();
         }
         return response()->json('Done.');

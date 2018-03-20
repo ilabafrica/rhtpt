@@ -45,7 +45,7 @@
             <th>PT Round</th>
             <th>Participant</th>
             <th>Status</th>
-            <th>Feedback</th>
+            <th>Results</th>
             <th>Action</th>
         </tr>
         <tr v-for="result in results">
@@ -54,7 +54,7 @@
             <td>
                 <button v-if="result.panel_status==0" class="mbtn mbtn-raised mbtn-danger mbtn-xs">Not Checked</button>
                 <button v-if="result.panel_status==1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Checked</button>
-                <button v-if="result.panel_status==2" class="mbtn mbtn-raised mbtn-info mbtn-xs">Not Verified</button>
+                <button v-if="result.panel_status==2" class="mbtn mbtn-raised mbtn-info mbtn-xs">Evaluated</button>
                 <button v-if="result.panel_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
             </td>
             <td>
@@ -325,7 +325,7 @@
                                         <div class="col-sm-7">
                                             <textarea name="comment" class="form-control"> @{{dt.response}}</textarea>
                                         </div>
-                                        <p>Once you verify, the document will be submitted to NPHL and you will not be able to change the results</p>
+                                        <p class="form-control">Once you verify, the document will be submitted to NPHL and you will not be able to change the results</p>
                                     </div>
                                     <hr v-if="viewFormData.pt.panel_status!=3">
                                     <div class="form-group row col-sm-offset-5 col-sm-7">

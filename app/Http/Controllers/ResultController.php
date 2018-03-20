@@ -217,7 +217,7 @@ class ResultController extends Controller
 
         $result = Pt::find($id);
         $result->verified_by = $user_id;
-        $result->panel_status = Pt::VERIFIED;
+        $result->panel_status = Pt::CHECKED;
         if($request->comment)
             $result->comment = $request->comment;
         $result->save();
