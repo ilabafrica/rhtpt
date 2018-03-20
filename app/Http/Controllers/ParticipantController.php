@@ -866,12 +866,13 @@ enrolled, you’ll receive a tester ID";
         $max = $user->id; //change this to pick sequential unique ids
         $user->uid = $max;
         $user->username = $max;
+        $user->status = '';
         $user->save();
 
         //send mail
         $token = app('auth.password.broker')->createToken($user);
         $user->token = $token;
-        $user->notify(new WelcomeNote($user));
+        // $user->notify(new WelcomeNote($user));
         
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
@@ -884,15 +885,15 @@ enrolled, you’ll receive a tester ID";
         // Create a new instance of our awesome gateway class
         $gateway    = new Bulk($username, $apikey);
        
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+        // try 
+        // {
+        //     $smsHandler = new SmsHandler();
+        //     $smsHandler->sendMessage($user->phone, $message);
+        // }
+        // catch ( AfricasTalkingGatewayException $e )
+        // {
+        //     echo "Encountered an error while sending: ".$e->getMessage();
+        // }
     }
     public function denyUserVerification(Request $request, $id){
        
