@@ -53,7 +53,7 @@
             </div> 
             <div class="bs-callout bs-callout-info text-left">
                 <h6 class="md-18">Getting Started<span><a class="pull-right" style="color:#18bc9c;" href="http://nphls.or.ke/helpdesk/index.php?a=add"><strong>PT Help Desk</strong></a></span></h6>
-                <small>Login with your Username or PT Enrollment ID. Click on the Sign-up button to register as a new participant. If you have forgotten your password, you can reset it by clicking Lost password.</small>
+                <small>Login with your Email Address. Click on the Sign-up button to register as a new participant. If you have forgotten your password, you can reset it by clicking Lost password.</small>
             </div>
             <form class="mt form-signin" id="loginForm" Irole="form" method="POST" action="{{ route('login') }}">
                 <!-- CSRF Token -->
@@ -76,7 +76,7 @@
                     </div>
                 @endif     
                 <div class="form-group">
-                    <label :class="{'help is-danger': errors.has('username') }" for="username/TesterID"><h6>Username or PT Enrollment ID</h6></label>
+                    <label :class="{'help is-danger': errors.has('username') }" for="username/TesterID"><h6>Email</h6></label>
                     <input type="text" v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('username') }"  name="username" placeholder="eg. me@mymail.com or 11695" data-toggle="tooltip" title="Enter Username or PT Enrollment ID" data-placement="top" data-trigger="hover" autofocus="">
                     <span v-show="errors.has('username')" class="help is-danger">@{{ errors.first('username') }}</span>
                 </div>
@@ -129,7 +129,8 @@
     function confirmRegistration()
     {
         swal({
-            title: "Have you participated in PT before?",
+            title:"Have you been registered in the system before? All users\n" +
+            "should have received a message on log in details",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
