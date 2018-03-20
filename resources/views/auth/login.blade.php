@@ -129,7 +129,8 @@
     function confirmRegistration()
     {
         swal({
-            title: "Have you participated in PT before?",
+            title:"Have you been registered in the system before? All users\n" +
+            "should have received a message on log in details",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
