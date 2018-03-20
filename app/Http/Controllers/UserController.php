@@ -106,11 +106,11 @@ class UserController extends Controller
     {
         //dd($request);
         $this->validate($request, [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'address' => 'required',
             'username' => 'required'
         ]);
         $request->merge(['password' => Hash::make(User::DEFAULT_PASSWORD)]);
@@ -172,11 +172,11 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'address' => 'required',
             'username' => 'required'
         ]);
 

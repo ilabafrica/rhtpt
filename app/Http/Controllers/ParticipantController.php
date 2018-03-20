@@ -144,11 +144,11 @@ class ParticipantController extends Controller
     {
         //dd($request);
         $this->validate($request, [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'address' => 'required',
             'username' => 'required'
         ]);
         $request->merge(['password' => Hash::make(User::DEFAULT_PASSWORD)]);
@@ -195,10 +195,11 @@ class ParticipantController extends Controller
     {
         //dd($request->all());
         $user = User::find($id);
-        $user->name = $request->name;
+        $user->first_name = $request->first_name;
+        $user->middle_name = $request->middle_name;
+        $user->last_name = $request->last_name;
         $user->phone = $request->phone;
         $user->email = $request->email;
-        $user->address = $request->address;
         try{
             $user->save();
             $role = $request->role;
@@ -474,7 +475,6 @@ class ParticipantController extends Controller
             $user->gender = $request->gender;
             $user->email = $request->email;
             $user->phone = $request->phone;
-            $user->address = $request->address;
             $user->designation = $request->designation;
             $user->username = $request->name;
             $user->deleted_at = $now;

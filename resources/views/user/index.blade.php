@@ -51,7 +51,8 @@
             <th>Action</th>
         </tr>
         <tr v-for="user in users">
-            <td>@{{ user.name }}</td>
+            <td v-if="user.name!=''">@{{ user.name }}</td>
+            <td v-else>@{{ user.first_name }} @{{ user.middle_name }} @{{ user.last_name }}</td>
             <td>@{{ user.gender==0?'Male':'Female' }}</td>
             <td>@{{ user.phone }}</td>
             <td>@{{ user.username }}</td>
@@ -113,10 +114,39 @@
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createUser('create_user')" data-vv-scope="create_user">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.name') }" for="name">Name:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.first_name') }"
+                                        for="first_name">First Name:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.name') }" name="name" type="text" placeholder="" v-model="newUser.name" />
-                                        <span v-show="errors.has('create_user.name')" class="help is-danger">@{{ errors.first('create_user.name') }}</span>
+                                        <input v-validate="'required|alpha_spaces'" class="form-control"
+                                            :class="{'input': true,'is-danger': errors.has('create_user.first_name') }" name="first_name"
+                                            type="text" placeholder=""
+                                            v-model="newUser.first_name" />
+                                        <span v-show="errors.has('create_user.first_name')" class="help is-danger">
+                                            @{{ errors.first('create_user.first_name') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.middle_name') }"
+                                        for="middle_name">Middle Name:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'alpha_spaces'" class="form-control"
+                                            :class="{'input': true,'is-danger': errors.has('create_user.middle_name') }" name="middle_name"
+                                            type="text" placeholder=""
+                                            v-model="newUser.middle_name" />
+                                        <span v-show="errors.has('create_user.middle_name')" class="help is-danger">
+                                            @{{ errors.first('create_user.middle_name') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.last_name') }"
+                                        for="last_name">Last Name:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha_spaces'" class="form-control"
+                                            :class="{'input': true,'is-danger': errors.has('create_user.last_name') }" name="last_name"
+                                            type="text" placeholder=""
+                                            v-model="newUser.last_name" />
+                                        <span v-show="errors.has('create_user.last_name')" class="help is-danger">
+                                            @{{ errors.first('create_user.last_name') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -143,13 +173,6 @@
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <input v-validate="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.email') }" name="email" type="text" v-model="newUser.email"/>
                                         <span v-show="errors.has('create_user.email')" class="help is-danger">@{{ errors.first('create_user.email') }}</span>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.address') }" for="address">Address:</label>
-                                    <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.address') }" name="address" type="text" v-model="newUser.address"/>
-                                        <span v-show="errors.has('create_user.address')" class="help is-danger">@{{ errors.first('create_user.address') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -241,10 +264,39 @@
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateUser(fillUser.id, 'update_user')" data-vv-validate="update_user">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('name') }" for="name">Name:</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('first_name') }"
+                                        for="first_name">First Name:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('name') }" name="name" type="text" placeholder="" v-model="fillUser.name" />
-                                        <span v-show="errors.has('name')" class="help is-danger">@{{ errors.first('name') }}</span>
+                                        <input v-validate="'required|alpha_spaces'" class="form-control"
+                                            :class="{'input': true,'is-danger': errors.has('first_name') }" name="first_name"
+                                            type="text" placeholder=""
+                                            v-model="fillUser.first_name" />
+                                        <span v-show="errors.has('first_name')" class="help is-danger">
+                                            @{{ errors.first('first_name') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('middle_name') }"
+                                        for="middle_name">Middle Name:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'alpha_spaces'" class="form-control"
+                                            :class="{'input': true,'is-danger': errors.has('middle_name') }" name="middle_name"
+                                            type="text" placeholder=""
+                                            v-model="fillUser.middle_name" />
+                                        <span v-show="errors.has('middle_name')" class="help is-danger">
+                                            @{{ errors.first('middle_name') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
+                                        for="last_name">Last Name:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha_spaces'" class="form-control"
+                                            :class="{'input': true,'is-danger': errors.has('last_name') }" name="last_name"
+                                            type="text" placeholder=""
+                                            v-model="fillUser.last_name" />
+                                        <span v-show="errors.has('last_name')" class="help is-danger">
+                                            @{{ errors.first('last_name') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -271,13 +323,6 @@
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <input v-validate="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" v-model="fillUser.email"/>
                                         <span v-show="errors.has('email')" class="help is-danger">@{{ errors.first('email') }}</span>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('address') }" for="address">Address:</label>
-                                    <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('address') }" name="address" type="text" v-model="fillUser.address"/>
-                                        <span v-show="errors.has('address')" class="help is-danger">@{{ errors.first('address') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
