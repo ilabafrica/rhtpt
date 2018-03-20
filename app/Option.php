@@ -1,6 +1,7 @@
 <?php namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Log;
 class Option extends Model
 {
 	public $fillable = ['title', 'description'];
