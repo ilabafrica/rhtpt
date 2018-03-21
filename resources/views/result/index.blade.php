@@ -63,17 +63,22 @@
             </td>
             <td>
             @permission('view-result')
-                <button class="btn btn-sm btn-secondary" @click.prevent="viewResult(result)" ><i class="fa fa-reorder"></i> View</button>	
+                <button class="btn btn-sm btn-secondary" v-if="result.panel_status==0 || result.panel_status==1" @click.prevent="viewResult(result)" ><i class="fa fa-reorder"></i> View</button>	
             @endpermission
             @permission('update-result')
-                <button  v-if="result.panel_status!=3" class="btn btn-sm btn-primary" @click.prevent="editResult(result)" ><i class="fa fa-edit"></i> Edit</button>
+                <button  v-if="result.panel_status==0" class="btn btn-sm btn-primary" @click.prevent="editResult(result)" ><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('delete-result')
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteResult(result)"><i class="fa fa-power-off"></i> Disable</button>
-            @endpermission            
-            @permission('print-result')
+            @endpermission 
+
+            <button v-if="result.panel_status==2" class="btn btn-sm btn-primary" @click.prevent="showEvaluatedResults(result)"><i class="fa fa-list"></i> Review</button>
+            <button v-if="result.panel_status==2" class="btn btn-sm btn-success"><i class="fa fa-check-circle"></i> Verify</button>
+
+             @permission('print-result')
             <button v-if="result.panel_status==3" class="btn btn-sm btn-concrete" @click="printFeedback(result.id)"><i class="fa fa-print"></i> Print</button>
             @endpermission
+
             </td>
         </tr>
     </table>
@@ -320,20 +325,50 @@
                             <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyResult" id="verify_test_results">
                                 <div v-if="viewFormData.pt">
                                     <input type="hidden" class="form-control" name="pt_id" :value="viewFormData.pt.id">
-                                    <div class="form-group row" v-if="viewFormData.pt.panel_status!=3">
+                                    <div class="form-group row" v-if="viewFormData.pt.panel_status=0">
                                         <label class="col-sm-5 form-control-label" for="title"><b>Verification Comment:</b></label>
                                         <div class="col-sm-7">
                                             <textarea name="comment" class="form-control"> @{{dt.response}}</textarea>
                                         </div>
                                         <p class="form-control">Once you verify, the document will be submitted to NPHL and you will not be able to change the results</p>
                                     </div>
-                                    <hr v-if="viewFormData.pt.panel_status!=3">
+                                    <hr v-if="viewFormData.pt.panel_status=0">
                                     <div class="form-group row col-sm-offset-5 col-sm-7">
-                                        <button v-if="viewFormData.pt.panel_status!=3" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
+                                        <button v-if="viewFormData.pt.panel_status=0" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
                                         <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                     </div>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+       <!-- Verify Evaluted Results Modal -->
+    <div class="modal fade" id="view-evaluted-result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Evaluated Test Results</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                           <table class="table table-bordered">
+                                <tr>
+                                    <th>Panel</th>
+                                    <th>Result</th>
+                                    <th>Expected Result</th>
+                                </tr>
+                                <tr v-for="result in evaluated_results">
+                                    <td>@{{result.sample}}</td>
+                                    <td></td>
+                                    <td class="text-uppercase">@{{result.rslt}}</td>
+                                </tr> 
+                           </table>                           
+                            
                         </div>
                     </div>
                 </div>

@@ -275,16 +275,7 @@ class ResultController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        /*$this->validate($request, [
-            'round_id' => 'required',
-            'date_prepared' => 'required',
-            'date_shipped' => 'required',
-            'shipping_method' => 'required',
-            'shipper_id' => 'required',
-            'facility_id' => 'required',
-            'panels_shipped' => 'required',
-        ]);*/
+    {       
         $pt = Pt::find($id);
     
         //  Proceed to form-fields
@@ -385,6 +376,34 @@ class ResultController extends Controller
 
         return substr_replace($str, $replacement, $start, $end - $start);
     }
+     /**
+     * Verify results evaluted by a NON-Participant
+     *
+     * @param ID of the selected pt -  $id
+     */
+    public function show_evaluated_results($id)
+    {
+        //get actual results
+        $pt_results = Pt::find($id);
+        $round_id = $pt_results->enrolment->round->id;
+
+        //get expected results
+        $round = Round::find($round_id);
+        $user = $pt_results->enrolment->user;
+        $lot = $user->lot($round_id);
+
+        $expected_results = $lot->panels()->get();
+
+        foreach ($expected_results as $ex_rslts) {
+
+            $ex_rslts->sample = "PT-".$round->name."-S".$ex_rslts->panel;
+            $ex_rslts->rslt = $ex_rslts->result($ex_rslts->result);
+        }
+
+        //combine expected and actual result into one array
+
+        return response()->json($expected_results);        
+    }   
     /**
      * Fetch feedback for the given id
      *

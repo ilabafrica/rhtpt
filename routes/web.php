@@ -374,6 +374,12 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "ShipmentController@consignments"
     ));
 
+    //Show evaluted results
+    Route::get("/show_evaluated_results/{id}", array(
+        "as"   => "show_evaluated_results.fetch",
+        "uses" => "ResultController@show_evaluated_results"
+    ));
+
     //  Get feedback
     Route::get("/feedback/{id}", array(
         "as"   => "feedback.fetch",

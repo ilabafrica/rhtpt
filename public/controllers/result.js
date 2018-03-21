@@ -31,6 +31,7 @@ new Vue({
         roundsDone: [],
         frmData: {},
         viewFormData:{},
+        evaluated_results:[],
         loading: false,
         error: false,
         query: '',
@@ -194,6 +195,16 @@ new Vue({
             }, (response) => {
                 // console.log(response);
             });
+        },
+
+        // Verfiy the evaluated 
+        showEvaluatedResults: function(result){
+            //    Fetch the result using the id
+            let id = result.id;
+            this.$http.get('/show_evaluated_results/'+id).then((response) => {
+                this.evaluated_results = response.data;
+            });
+            $("#view-evaluted-result").modal('show');
         },
 
         printFeedback: function(id){
