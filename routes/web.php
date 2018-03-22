@@ -379,6 +379,10 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "show_evaluated_results.fetch",
         "uses" => "ResultController@show_evaluated_results"
     ));
+     Route::any("/verify_evaluated_results/{id}", array(
+        "as"   => "verify_evaluated_results",
+        "uses" => "ResultController@verify_evaluated_results"
+    ));
 
     //  Get feedback
     Route::get("/feedback/{id}", array(

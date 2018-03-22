@@ -207,6 +207,26 @@ new Vue({
             $("#view-evaluted-result").modal('show');
         },
 
+        //User reviews and saves the comments on the evaluated results
+        verifyEvaluatedResult: function(id){
+            let myForm = document.getElementById('verify_evaluated_test_results');
+            let formData = new FormData(myForm);
+            console.log(formData);
+            this.$http.post('/verify_evaluated_results/'+id, formData).then((response) => {
+                this.changePage(this.pagination.current_page);
+                $("#view-evaluted-result").modal('hide');
+                toastr.success('Result Verified Successfully.', 'Success Alert', {timeOut: 5000});
+            });
+        },
+
+        //A shortcut on quick verification on the satisfactory results
+        quickVerifyEvaluatedResult: function(id){
+            // let id = result.id;
+            this.$http.get('/verify_evaluated_results/'+id).then((response) => {
+                this.changePage(this.pagination.current_page);
+                toastr.success('Result Verified Successfully.', 'Success Alert', {timeOut: 5000});
+            });
+        },
         printFeedback: function(id){
             let feedback = [];
             //  Fetch data using the given id

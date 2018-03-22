@@ -16,6 +16,7 @@ use App\County;
 use App\SubCounty;
 use App\Facility;
 use App\Program;
+use App\Panel;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
@@ -384,26 +385,92 @@ class ResultController extends Controller
     public function show_evaluated_results($id)
     {
         //get actual results
-        $pt_results = Pt::find($id);
-        $round_id = $pt_results->enrolment->round->id;
+        $pt = Pt::find($id);
+        $round_id = $pt->enrolment->round->id;
+        $pt_results = $pt->results;
+        $option = new Option;
+
+        foreach ($pt_results as $rss) {
+
+            if($rss->field_id == Field::idByUID('PT Panel 1 Final Results'))
+                $pt_panel_1_final_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 2 Final Results'))
+                $pt_panel_2_final_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 3 Final Results'))
+                $pt_panel_3_final_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 4 Final Results'))
+                $pt_panel_4_final_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 5 Final Results'))
+                $pt_panel_5_final_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 6 Final Results'))
+                $pt_panel_6_final_results = $option::nameByID($rss->response);
+        }
+        $actual_results = array( "pt_panel_1_final_results"=>$pt_panel_1_final_results, 
+                                "pt_panel_2_final_results"=>$pt_panel_2_final_results,
+                                "pt_panel_3_final_results"=>$pt_panel_3_final_results,
+                                "pt_panel_4_final_results"=>$pt_panel_4_final_results,
+                                "pt_panel_5_final_results"=>$pt_panel_5_final_results,
+                                "pt_panel_6_final_results"=>$pt_panel_6_final_results
+                                );
 
         //get expected results
         $round = Round::find($round_id);
-        $user = $pt_results->enrolment->user;
+        $user = $pt->enrolment->user;
         $lot = $user->lot($round_id);
-
         $expected_results = $lot->panels()->get();
-
+        
         foreach ($expected_results as $ex_rslts) {
 
             $ex_rslts->sample = "PT-".$round->name."-S".$ex_rslts->panel;
-            $ex_rslts->rslt = $ex_rslts->result($ex_rslts->result);
+            $ex_rslts->rslt = $ex_rslts->result($ex_rslts->result); 
         }
 
         //combine expected and actual result into one array
+        $all_results = array();
+        $round_name = $round->name;
+        $feedback = $pt->outcome($pt->feedback);
+        $panel_status = $pt->panel_status;
 
-        return response()->json($expected_results);        
-    }   
+        $remark = '';
+        if($pt->feedback == Pt::UNSATISFACTORY)
+            $remark = 'Reason: '.$pt->unsatisfactory(); 
+        
+         $all_results = array( 
+                    'round_name'=> $round_name, 
+                    'feedback' => $feedback, 
+                    'remark' => $remark, 
+                    'panel_status' => $panel_status, 
+                    'pt_id' => $pt->id,
+                    'pt_approved_comment' => $pt->approved_comment,
+                    'expected_results' => $expected_results
+                );
+        // dd($all_results);
+
+        return response()->json($all_results);        
+    } 
+     /**
+     * Save the verification of evaluated results
+     *
+     * @param ID of the selected pt -  $id
+     */
+    public function verify_evaluated_results(Request $request, $id )
+    {
+        $pt_id = $request->pt_id;
+        $user_id = Auth::user()->id; 
+
+        $result = Pt::find($id);
+        $result->panel_status = Pt::VERIFIED;
+        if ($request) {
+            $result->approved_comment = $request->comment;            
+     
+            if($request->comment)
+                $result->approved_by = $user_id;
+        }
+        $result->save();
+        
+        return response()->json($result);
+    }
+        
     /**
      * Fetch feedback for the given id
      *
