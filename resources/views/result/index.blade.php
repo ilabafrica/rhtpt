@@ -369,19 +369,110 @@
                                     </div> 
                                 </div>
                             </div>
+                            <!-- Round details -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                        <tr class="text-center"><b>Participant Information </b></tr>
+                                        <tr class="col-md-12">
+                                            <td class="col-md-3"><b>Round</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.round_name}}</td>
+                                            <td class="col-md-3"><b>County</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.county}}</td>
+                                        </tr>
+                                         <tr>
+                                            <td class="col-md-3"><b>Tester ID</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.tester_id}}</td>
+                                            <td class="col-md-3"><b>Sub County</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.sub_county}}</td>
+                                        </tr>
+                                         <tr>
+                                            <td class="col-md-3"><b>Tester Name</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.user_name}}</td>
+                                            <td class="col-md-3"><b>Facility</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.facility}}</td>
+                                        </tr>
+                                         <tr>
+                                            <td class="col-md-3"><b>Program</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.program}}</td>
+                                            <td class="col-md-3"><b>Facility MFL</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.mfl}}</td>
+                                        </tr>
+                                   </table>   
+                                </div>
+                            </div>
+                            <!-- panel details -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                        <tr class="text-center"> <b>Panel Information</b></tr>
+                                        <tr>
+                                            <td><b>Receive Date</b></td>
+                                            <td>@{{evaluated_results.date_collected}}</td>                                            
+                                        </tr>
+                                         <tr>
+                                            <td><b>Constituted Date</b></td>
+                                            <td>@{{evaluated_results.date_prepared}}</td>
+                                        </tr>
+                                         <tr>
+                                            <td><b>Tested Date</b></td>
+                                            <td>@{{evaluated_results.expiry_date}}</td>
+                                        </tr>
+                                   </table>   
+                                </div>
+                            </div>
+                            <!-- kit details -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                        <tr> Kit Information</tr>
+                                        <tr>
+                                            <th>Kit Name</th>                                           
+                                            <th>Kit No</th>                                           
+                                            <th>Kit Expiry Date</th>                                           
+                                        </tr>
+                                         <tr>
+                                            <td>@{{evaluated_results.determine}}</td>
+                                            <td>@{{evaluated_results.determine_lot_no}}</td>
+                                            <td>@{{evaluated_results.determine_expiry_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.firstresponse}}</td>
+                                            <td>@{{evaluated_results.firstresponse_lot_no}}</td>
+                                            <td>@{{evaluated_results.firstresponse_expiry_date}}</td>
+                                        </tr>
+                                         
+                                   </table>   
+                                </div>
+                            </div>
+                            <!-- Results details -->                            
                             <div class="row">
                                 <div class="col-md-12">
                                    <table class="table table-bordered">
                                         <tr>
-                                            <th>Panel</th>
-                                            <th>Result</th>
+                                            <th>PT Sample ID</th>
+                                            <th>Determine</th>
+                                            <th>First Response</th>
+                                            <th>Final Result</th>
                                             <th>Expected Result</th>
                                         </tr>
                                         <tr v-for="result in evaluated_results.expected_results">
                                             <td>@{{result.sample}}</td>
                                             <td></td>
+                                            <td></td>
+                                            <td></td>
                                             <td class="text-uppercase">@{{result.rslt}}</td>
                                         </tr> 
+                                        <tr>
+                                            <td><b>Panel Results</b></td>
+                                            <td>@{{evaluated_results.feedback}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Overall Evaluation</b></td>
+                                            <td>@{{evaluated_results.feedback}}</td>
+                                        </tr>
+                                        <tr></tr>
+                                        <tr></tr> <!-- v-for="reason in reasons" -->
                                    </table>   
                                 </div>
                             </div>

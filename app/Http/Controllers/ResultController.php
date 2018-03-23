@@ -17,6 +17,7 @@ use App\SubCounty;
 use App\Facility;
 use App\Program;
 use App\Panel;
+use App\Material;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
@@ -404,6 +405,24 @@ class ResultController extends Controller
                 $pt_panel_5_final_results = $option::nameByID($rss->response);
             if($rss->field_id == Field::idByUID('PT Panel 6 Final Results'))
                 $pt_panel_6_final_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 6 Final Results'))
+                $pt_panel_6_final_results = $option::nameByID($rss->response);
+            
+            // //test kit 1 results
+            if($rss->field_id == Field::idByUID('Test 1 Kit Name'))
+                $determine = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('Test 1 Lot No.'))
+                $determine_lot_no = $rss->response;
+            if($rss->field_id == Field::idByUID('Test 1 Expiry Date'))
+                $determine_expiry_date = $rss->response;
+
+            // //test kit 2 results
+            if($rss->field_id == Field::idByUID('Test 2 Kit Name'))
+                $firstresponse = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('Test 2 Lot No.'))
+                $firstresponse_lot_no = $rss->response;
+            if($rss->field_id == Field::idByUID('Test 2 Expiry Date'))
+                $firstresponse_expiry_date = $rss->response;  
         }
         $actual_results = array( "pt_panel_1_final_results"=>$pt_panel_1_final_results, 
                                 "pt_panel_2_final_results"=>$pt_panel_2_final_results,
@@ -418,13 +437,27 @@ class ResultController extends Controller
         $user = $pt->enrolment->user;
         $lot = $user->lot($round_id);
         $expected_results = $lot->panels()->get();
-        
+        $material_id = $expected_results->first()->material_id;
+        $material = Material::find($material_id); 
+
         foreach ($expected_results as $ex_rslts) {
 
             $ex_rslts->sample = "PT-".$round->name."-S".$ex_rslts->panel;
             $ex_rslts->rslt = $ex_rslts->result($ex_rslts->result); 
         }
 
+        //get participant details
+        $user_name = $user->name;
+        $tester_id = $user->username;
+        $roleUser = $user->ru();
+        $facility = Facility::find($roleUser->tier);
+        $designation = $user->designation($roleUser->designation);
+        $program = Program::find($roleUser->program_id)->name;
+        $county = strtoupper($facility->subCounty->county->name);
+        $sub_county = $facility->subCounty->name;
+        $mfl = $facility->code;
+        $facility = $facility->name;
+        
         //combine expected and actual result into one array
         $all_results = array();
         $round_name = $round->name;
@@ -442,9 +475,27 @@ class ResultController extends Controller
                     'panel_status' => $panel_status, 
                     'pt_id' => $pt->id,
                     'pt_approved_comment' => $pt->approved_comment,
-                    'expected_results' => $expected_results
+                    'expected_results' => $expected_results,
+                    'user_name' => $user_name,
+                    'tester_id' => $tester_id,
+                    'designation' => $designation,
+                    'program' => $program,
+                    'county' => $county,
+                    'sub_county' => $sub_county,
+                    'facility' => $facility,
+                    'mfl' => $mfl,
+                    'date_collected' =>$material->date_collected,
+                    'date_prepared' =>$material->date_prepared,
+                    'expiry_date' =>$material->expiry_date,
+
+                    'determine' =>$determine,
+                    'determine_lot_no' =>$determine_lot_no,
+                    'determine_expiry_date' =>$determine_expiry_date,
+
+                    'firstresponse' =>$firstresponse,
+                    'firstresponse_lot_no' =>$firstresponse_lot_no,
+                    'firstresponse_expiry_date' =>$firstresponse_expiry_date
                 );
-        // dd($all_results);
 
         return response()->json($all_results);        
     } 
