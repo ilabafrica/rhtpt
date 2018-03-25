@@ -17,6 +17,7 @@ new Vue({
         subs: [],
         programs:[],
         facilities: [],
+        implementing_partners: [],
         pagination: {
             total: 0, 
             per_page: 2,
@@ -27,8 +28,8 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        newUser : {'first_name':'','middle_name':'','last_name':'','name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':''},
-        fillUser : {'first_name':'','middle_name':'','last_name':'','name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':'', 'id':''},
+        newUser : {'first_name':'','middle_name':'','last_name':'','name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':'', 'implementing_partner_id':''},
+        fillUser : {'first_name':'','middle_name':'','last_name':'','name':'','username': '','role': '','gender':'', 'phone':'', 'email':'', 'address':'', 'implementing_partner_id':'', 'id':''},
         transferUser : {'facility_id':'','program_id':'', 'id':''},
         loading: false,
         error: false,
@@ -73,6 +74,7 @@ new Vue({
         this.loadCounties();
         this.loadRoles();
         this.loadSexes();
+        this.loadImplementingPartners();
     },
 
     methods : {
@@ -89,7 +91,7 @@ new Vue({
                 var input = this.newUser;
                 this.$http.post('/vueusers',input).then((response) => {
                     this.changePage(this.pagination.current_page);
-                    this.newUser = {'name':'', 'username': '','gender':'', 'phone':'', 'email':'', 'address':''};
+                    this.newUser = {'name':'', 'username': '','gender':'', 'phone':'', 'email':'', 'address':'', 'implementing_partner_id':''};
                     $("#create-user").modal('hide');
                     toastr.success('User Created Successfully.', 'Success Alert', {timeOut: 5000});
                 }, (response) => {
@@ -125,12 +127,12 @@ new Vue({
             this.fillUser.gender = user.gender;
             this.fillUser.phone = user.phone;
             this.fillUser.email = user.email;
-            this.fillUser.address = user.address;
             this.fillUser.rl = user.rl;
             this.fillUser.role = user.role;
             this.fillUser.program = user.program;
             this.fillUser.uid = user.uid;
             this.fillUser.address = user.address;
+            this.fillUser.implementing_partner_id = user.implementing_partner_id;
             $("#edit-user").modal('show');
         },
 
@@ -202,6 +204,14 @@ new Vue({
         loadSexes: function() {
             this.$http.get('/sex').then((response) => {
                 this.sexes = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        loadImplementingPartners: function() {
+            this.$http.get('/vueimplementingpartners').then((response) => {
+                this.implementing_partners = response.data.data.data;
             }, (response) => {
                 // console.log(response);
             });

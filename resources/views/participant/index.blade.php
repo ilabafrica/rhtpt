@@ -484,7 +484,7 @@
                                 <tbody>
                                     <tr>
                                         <td><strong>Name</strong></td>
-                                        <td>@{{someUser.name}}</td>
+                                        <td>@{{someUser.first_name}} @{{someUser.middle_name}} @{{someUser.last_name}}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Gender</strong></td>

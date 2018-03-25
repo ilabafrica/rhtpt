@@ -15,6 +15,7 @@ use App\Program;
 use App\Round;
 use App\SmsHandler;
 use App\Designation;
+use App\ImplementingPartner;
 
 use DB;
 use Hash;
@@ -122,7 +123,7 @@ class UserController extends Controller
             $program_id = NULL;
             if($role == Role::idByName("Partner"))
             {
-                $tier = implode(", ", $request->jimbo);
+                // $tier = implode(", ", $request->implementing_partner_id);
             }
             else if($role == Role::idByName("County Coordinator"))
             {
@@ -188,7 +189,7 @@ class UserController extends Controller
             $program_id = NULL;
             if($role == Role::idByName("Partner"))
             {
-                $tier = implode(", ", $request->jimbo);
+                // $tier = implode(", ", $request->jimbo);
             }
             else if($role == Role::idByName("County Coordinator"))
             {
