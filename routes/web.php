@@ -417,6 +417,10 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "testers.download",
         "uses" => "RoundController@testerSummary"
     ));
+    Route::get("/loadparticipants/", array(
+        "as"   => "load.participants",
+        "uses" => "RoundController@loadparticipants"
+    ));
 
     Route::any("/approve/{id}", array(
         "as"   => "approve.participant",
