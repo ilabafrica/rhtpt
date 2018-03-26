@@ -1,4 +1,4 @@
-#@extends('app')
+@extends('app')
 @section('content')
 <div class="row">
     <div class="col-sm-12">
@@ -15,7 +15,7 @@
         <div class="col-lg-12 margin-tb">
             <div class="pull-left col-md-9">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.user', 2) !!}
-        
+   
                 @permission('create-user')
                     <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-user" >
                         <i class="fa fa-plus-circle"></i>
@@ -62,16 +62,16 @@
                 <button v-if="user.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
             </td>
             <td>
-            @permission('update-user')    
+            @permission('update-user')
                 <button v-bind="{ 'disabled': user.deleted_at }" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
-            @permission('restore-user') 
+            @permission('restore-user')
                 <button v-if="user.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)"><i class="fa fa-toggle-on"></i> Enable</button>
             @endpermission
-            @permission('delete-user') 
+            @permission('delete-user')
                 <button v-if="!user.deleted_at" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
-            @permission('transfer-user') 
+            @permission('transfer-user')
                 <button style="display: none;" v-if="user.uid" class="btn btn-sm btn-wet-asphalt"  @click.prevent="populateUser(user)"><i class="fa fa-send"></i> Transfer</button>
             @endpermission
                 <button v-if="user.sms_code" v-if="!user.deleted_at" class="btn btn-sm btn-nephritis"  @click.prevent="openUser(user)"><i class="fa fa-user-circle"></i> Approve</button>
@@ -188,10 +188,14 @@
                                     </div>
                                 </div>
                                 <div class="form-group row" v-if="newUser.role == 3">
-                                    <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                                    <label class="col-sm-4 form-control-label" for="title">
+                                        Implementing Partner:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control" name="jimbo" multiple v-model="newUser.jimbo">
-                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option> 
+                                        <select class="form-control" name="implementing_partner_id"
+                                            v-model="newUser.implementing_partner_id">
+                                            <option v-for="implementing_partner in implementing_partners"
+                                                :value="implementing_partner.id">
+                                                @{{ implementing_partner.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -200,7 +204,7 @@
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs()" v-model="newUser.county_id">
                                             <option selected></option>
-                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
+                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -209,7 +213,7 @@
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="sub_id" id="sub_id" @change="fetchFacilities" v-model="newUser.sub_id">
                                             <option selected></option>
-                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
+                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -218,7 +222,7 @@
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="facility_id" v-model="newUser.facility_id">
                                             <option selected></option>
-                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
+                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -227,7 +231,7 @@
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="program_id" v-model="newUser.program_id">
                                             <option selected></option>
-                                            <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
+                                            <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -337,11 +341,12 @@
                                         <span v-show="errors.has('role')" class="help is-danger">@{{ errors.first('role') }}</span>
                                     </div>
                                 </div>
+
                                 <div class="form-group row" v-if="fillUser.role == 3">
-                                    <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                                    <label class="col-sm-4 form-control-label" for="title">Implementing Partner:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control" name="jimbo" multiple v-model="fillUser.jimbo">
-                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option> 
+                                        <select class="form-control c-select" name="implementing_partner_id" v-model="fillUser.implementing_partner_id">
+                                            <option v-for="implementing_partner in implementing_partners" :value="implementing_partner.id">@{{ implementing_partner.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -350,7 +355,7 @@
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs()" v-model="fillUser.county_id">
                                             <option selected></option>
-                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
+                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -359,7 +364,7 @@
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="sub_id" id="sub_id" @change="fetchFacilities" v-model="fillUser.sub_id">
                                             <option selected></option>
-                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>   
+                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -368,7 +373,7 @@
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="facility_id" v-model="fillUser.facility_id">
                                             <option selected></option>
-                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>   
+                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -377,7 +382,7 @@
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="program_id" v-model="fillUser.program_id">
                                             <option selected></option>
-                                            <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
+                                            <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>
                                         </select>
                                     </div>
                                 </div>
