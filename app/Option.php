@@ -43,4 +43,26 @@ class Option extends Model
 			return null;
 		}
 	}
+
+	public static function nameByID($id=NULL)
+	{
+		if($id!=NULL)
+		{
+			try 
+			{
+				$option = Option::where('id', $id)->firstOrFail();
+				return $option->title;
+			} 
+			catch (ModelNotFoundException $e) 
+			{
+				Log::error("The option ` $title ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
 }
