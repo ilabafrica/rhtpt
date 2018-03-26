@@ -384,6 +384,12 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "ResultController@verify_evaluated_results"
     ));
 
+     //  Get feedback
+    Route::get("/print_result/{id}", array(
+        "as"   => "print_result.fetch",
+        "uses" => "ResultController@print_result"
+    ));
+
     //  Get feedback
     Route::get("/feedback/{id}", array(
         "as"   => "feedback.fetch",

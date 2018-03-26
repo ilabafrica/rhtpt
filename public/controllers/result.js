@@ -227,7 +227,8 @@ new Vue({
                 toastr.success('Result Verified Successfully.', 'Success Alert', {timeOut: 5000});
             });
         },
-        printFeedback: function(id){
+
+        printFeedback:function(id){
             let feedback = [];
             //  Fetch data using the given id
             this.$http.get('/feedback/'+id).then((response) => {
@@ -249,6 +250,8 @@ new Vue({
                 doc.writeText(0, 70, "P.O. BOX 20750 - 00202, NAIROBI", { align: 'center' });
                 doc.setFontSize(10);
                 doc.writeText(0, 80, "NATIONAL HIV SEROLOGY PROFICIENCY TESTING SCHEME", { align: 'center' });
+                doc.setFontSize(7);
+                doc.writeText(0, 80, "Final Report", { align: 'center' });
                 //  User details area
                 doc.setFontType("bold");
                 doc.writeText(22.5, 85, "Round: ");
@@ -280,6 +283,10 @@ new Vue({
                 doc.text(45, 122, feedback.verdict);
                 doc.setFontType("normal");
                 doc.writeText(22.5, 127, feedback.remark);
+
+                //results table
+
+
                 //  Footer
                 doc.writeText(22.5, 257, "Thank you for your participation.");
                 doc.writeText(22.5, 265, "NPHL HEAD:     Nancy Bowen");

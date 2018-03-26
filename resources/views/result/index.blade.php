@@ -73,13 +73,14 @@
                 <button class="btn btn-sm btn-danger" @click.prevent="deleteResult(result)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission 
 
+            @permission('verify-result')
             <button v-if="result.panel_status==2" class="btn btn-sm btn-primary" @click.prevent="showEvaluatedResults(result)"><i class="fa fa-list"></i> Review</button>
             <button v-if="result.panel_status==2 && result.feedback==0" class="btn btn-sm btn-success" @click.prevent="quickVerifyEvaluatedResult(result.id)"><i class="fa fa-check-circle"></i> Verify</button>
+            @endpermission 
 
-             @permission('print-result')
-            <button v-if="result.panel_status==3" class="btn btn-sm btn-concrete" @click="printFeedback(result.id)"><i class="fa fa-print"></i> Print</button>
-            @endpermission
-
+            @permission('print-result')
+            <a v-if="result.panel_status==3" class="btn btn-concrete" :href="'print_result/' +result.id"><i class="fa fa-print"></i> Print</a>
+            @endpermission 
             </td>
         </tr>
     </table>
@@ -354,25 +355,13 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 <h4 class="modal-title" id="myModalLabel">Evaluated Test Results</h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="printpdf">
                     <div class="row">
-                        <div class="col-md-12">                    
-                            <div class="row col-md-12">
-                                <div class="col-md-6 form-group">                            
-                                    <label class="col-md-3 form-control-label"><b>Round</b></label>
-                                    <label class="col-md-3 form-control-label"> @{{evaluated_results.round_name}}</label>
-                                </div>
-                                 <div class="col-md-6 form-group">
-                                    <label class="col-md-3 form-control-label"><b>Feedback</b></label> 
-                                    <div class="col-md-3">                          
-                                        <label class="form-control-label    "> @{{evaluated_results.feedback}}</label>
-                                    </div> 
-                                </div>
-                            </div>
+                        <div class="col-md-12">    
                             <!-- Round details -->
                             <div class="row">
                                 <div class="col-md-12">
-                                   <table class="table table-bordered">
+                                   <table class="table table-bordered" id="partinfo">
                                         <tr class="text-center"><b>Participant Information </b></tr>
                                         <tr class="col-md-12">
                                             <td class="col-md-3"><b>Round</b></td>
@@ -425,7 +414,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                    <table class="table table-bordered">
-                                        <tr> Kit Information</tr>
+                                        <tr> <b>Kit Information</b></tr>
                                         <tr>
                                             <th>Kit Name</th>                                           
                                             <th>Kit No</th>                                           
@@ -455,14 +444,49 @@
                                             <th>First Response</th>
                                             <th>Final Result</th>
                                             <th>Expected Result</th>
+                                        </tr>                                        
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_1}}</td>
+                                            <td>@{{evaluated_results.pt_panel_1_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_1_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_1_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_1}}</td>
                                         </tr>
-                                        <tr v-for="result in evaluated_results.expected_results">
-                                            <td>@{{result.sample}}</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="text-uppercase">@{{result.rslt}}</td>
-                                        </tr> 
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_2}}</td>
+                                            <td>@{{evaluated_results.pt_panel_2_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_2_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_2_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_2}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_3}}</td>
+                                            <td>@{{evaluated_results.pt_panel_3_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_3_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_3_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_3}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_4}}</td>
+                                            <td>@{{evaluated_results.pt_panel_4_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_4_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_4_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_4}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_5}}</td>
+                                            <td>@{{evaluated_results.pt_panel_5_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_5_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_5_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_5}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_6}}</td>
+                                            <td>@{{evaluated_results.pt_panel_6_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_6_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_6_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_6}}</td>
+                                        </tr>
                                         <tr>
                                             <td><b>Panel Results</b></td>
                                             <td>@{{evaluated_results.feedback}}</td>
@@ -471,33 +495,43 @@
                                             <td><b>Overall Evaluation</b></td>
                                             <td>@{{evaluated_results.feedback}}</td>
                                         </tr>
-                                        <tr></tr>
-                                        <tr></tr> <!-- v-for="reason in reasons" -->
-                                   </table>   
+                                   </table>
                                 </div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                       <tr><b>Reasons For Unsatisfactory:   </b></tr>
+                                       <tr>
+                                           @{{evaluated_results.remark}}
+                                       </tr>
+                                   </table>
+                                </div>
+                            </div>                           
+                            <div v-if="evaluated_results.panel_status==2">
+                                <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyEvaluatedResult(evaluated_results.pt_id)" id="verify_evaluated_test_results">
+                                    <div v-if="evaluated_results.feedback">
+                                        <input type="hidden" class="form-control" name="pt_id" :value="evaluated_results.pt_id">
+                                        <div class="form-group row" v-if="evaluated_results.panel_status==2">
+                                            <label class="col-sm-5 form-control-label" for="title"><b>Verification Comment:</b></label>
+                                            <div class="col-sm-7">
+                                                <textarea name="comment" class="form-control">@{{evaluated_results.feedback}}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row col-sm-offset-5 col-sm-7">
+                                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
+                                            <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="form-group row" v-if="evaluated_results.panel_status=3">
+                             <div class="form-group row" v-else-if="evaluated_results.panel_status=3">
                                 <label class="col-sm-5 form-control-label" for="title"><b>Comments:</b></label>
                                 <div class="col-sm-7 form-control">
                                     <p>@{{evaluated_results.pt_approved_comment}}</p>
-                                    <p>@{{evaluated_results.feedback}}</p>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>                                
                             </div>
-                            <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyEvaluatedResult(evaluated_results.pt_id)" id="verify_evaluated_test_results">
-                                <div v-if="evaluated_results.feedback">
-                                    <input type="hidden" class="form-control" name="pt_id" :value="evaluated_results.pt_id">
-                                    <div class="form-group row" v-if="evaluated_results.panel_status==2">
-                                        <label class="col-sm-5 form-control-label" for="title"><b>Verification Comment:</b></label>
-                                        <div class="col-sm-7">
-                                            <textarea name="comment" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row col-sm-offset-5 col-sm-7">
-                                        <button v-if="evaluated_results.panel_status==2" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
-                                        <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                                    </div>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>

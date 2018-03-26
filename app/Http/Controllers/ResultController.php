@@ -24,6 +24,7 @@ use App\Libraries\AfricasTalkingGateway as Bulk;
 use Auth;
 use Jenssegers\Date\Date as Carbon;
 use DB;
+use PDF;
 
 class ResultController extends Controller
 {
@@ -383,7 +384,7 @@ class ResultController extends Controller
      *
      * @param ID of the selected pt -  $id
      */
-    public function show_evaluated_results($id)
+    public function evaluated_results($id)
     {
         //get actual results
         $pt = Pt::find($id);
@@ -392,7 +393,35 @@ class ResultController extends Controller
         $option = new Option;
 
         foreach ($pt_results as $rss) {
+            //test kit 1 results
+            if($rss->field_id == Field::idByUID('PT Panel 1 Test 1 Results'))
+                $pt_panel_1_kit1_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 2 Test 1 Results'))
+                $pt_panel_2_kit1_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 3 Test 1 Results'))
+                $pt_panel_3_kit1_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 4 Test 1 Results'))
+                $pt_panel_4_kit1_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 5 Test 1 Results'))
+                $pt_panel_5_kit1_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 6 Test 1 Results'))
+                $pt_panel_6_kit1_results = $option::nameByID($rss->response);
 
+            //test kit 2 results
+            if($rss->field_id == Field::idByUID('PT Panel 1 Test 2 Results'))
+                $pt_panel_1_kit2_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 2 Test 2 Results'))
+                $pt_panel_2_kit2_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 3 Test 2 Results'))
+                $pt_panel_3_kit2_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 4 Test 2 Results'))
+                $pt_panel_4_kit2_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 5 Test 2 Results'))
+                $pt_panel_5_kit2_results = $option::nameByID($rss->response);
+            if($rss->field_id == Field::idByUID('PT Panel 6 Test 2 Results'))
+                $pt_panel_6_kit2_results = $option::nameByID($rss->response);
+           
+            //final results
             if($rss->field_id == Field::idByUID('PT Panel 1 Final Results'))
                 $pt_panel_1_final_results = $option::nameByID($rss->response);
             if($rss->field_id == Field::idByUID('PT Panel 2 Final Results'))
@@ -405,9 +434,7 @@ class ResultController extends Controller
                 $pt_panel_5_final_results = $option::nameByID($rss->response);
             if($rss->field_id == Field::idByUID('PT Panel 6 Final Results'))
                 $pt_panel_6_final_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 6 Final Results'))
-                $pt_panel_6_final_results = $option::nameByID($rss->response);
-            
+           
             // //test kit 1 results
             if($rss->field_id == Field::idByUID('Test 1 Kit Name'))
                 $determine = $option::nameByID($rss->response);
@@ -424,12 +451,7 @@ class ResultController extends Controller
             if($rss->field_id == Field::idByUID('Test 2 Expiry Date'))
                 $firstresponse_expiry_date = $rss->response;  
         }
-        $actual_results = array( "pt_panel_1_final_results"=>$pt_panel_1_final_results, 
-                                "pt_panel_2_final_results"=>$pt_panel_2_final_results,
-                                "pt_panel_3_final_results"=>$pt_panel_3_final_results,
-                                "pt_panel_4_final_results"=>$pt_panel_4_final_results,
-                                "pt_panel_5_final_results"=>$pt_panel_5_final_results,
-                                "pt_panel_6_final_results"=>$pt_panel_6_final_results
+        $actual_results = array( 
                                 );
 
         //get expected results
@@ -442,8 +464,24 @@ class ResultController extends Controller
 
         foreach ($expected_results as $ex_rslts) {
 
-            $ex_rslts->sample = "PT-".$round->name."-S".$ex_rslts->panel;
-            $ex_rslts->rslt = $ex_rslts->result($ex_rslts->result); 
+            if($ex_rslts->panel == 1)
+                $expected_result_1 = $ex_rslts->result($ex_rslts->result);
+                $sample_1 = "PT-".$round->name."-S1";
+            if($ex_rslts->panel == 2)
+                $expected_result_2 = $ex_rslts->result($ex_rslts->result);
+                $sample_2 = "PT-".$round->name."-S2";
+            if($ex_rslts->panel == 3)
+                $expected_result_3 = $ex_rslts->result($ex_rslts->result);
+                $sample_3 = "PT-".$round->name."-S3";
+            if($ex_rslts->panel == 4)
+                $expected_result_4 = $ex_rslts->result($ex_rslts->result);
+                $sample_4 = "PT-".$round->name."-S4";
+            if($ex_rslts->panel == 5)
+                $expected_result_5 = $ex_rslts->result($ex_rslts->result);
+                $sample_5 = "PT-".$round->name."-S5";
+            if($ex_rslts->panel == 6)
+                $expected_result_6 = $ex_rslts->result($ex_rslts->result);
+                $sample_6 = "PT-".$round->name."-S6";
         }
 
         //get participant details
@@ -464,18 +502,20 @@ class ResultController extends Controller
         $feedback = $pt->outcome($pt->feedback);
         $panel_status = $pt->panel_status;
 
-        $remark = '';
         if($pt->feedback == Pt::UNSATISFACTORY)
-            $remark = 'Reason: '.$pt->unsatisfactory(); 
+            $remark = $pt->unsatisfactory(); 
+        else
+            $remark = 'None';
         
+        // dd($remark);
          $all_results = array( 
+                    //user details
                     'round_name'=> $round_name, 
                     'feedback' => $feedback, 
                     'remark' => $remark, 
                     'panel_status' => $panel_status, 
                     'pt_id' => $pt->id,
                     'pt_approved_comment' => $pt->approved_comment,
-                    'expected_results' => $expected_results,
                     'user_name' => $user_name,
                     'tester_id' => $tester_id,
                     'designation' => $designation,
@@ -484,21 +524,77 @@ class ResultController extends Controller
                     'sub_county' => $sub_county,
                     'facility' => $facility,
                     'mfl' => $mfl,
+
+                    //material details
                     'date_collected' =>$material->date_collected,
                     'date_prepared' =>$material->date_prepared,
                     'expiry_date' =>$material->expiry_date,
 
+                    //panel info
                     'determine' =>$determine,
                     'determine_lot_no' =>$determine_lot_no,
                     'determine_expiry_date' =>$determine_expiry_date,
-
                     'firstresponse' =>$firstresponse,
                     'firstresponse_lot_no' =>$firstresponse_lot_no,
-                    'firstresponse_expiry_date' =>$firstresponse_expiry_date
+                    'firstresponse_expiry_date' =>$firstresponse_expiry_date,
+
+                    //results
+                    //test 1 results
+                    "pt_panel_1_kit1_results"=>$pt_panel_1_kit1_results, 
+                    "pt_panel_2_kit1_results"=>$pt_panel_2_kit1_results,
+                    "pt_panel_3_kit1_results"=>$pt_panel_3_kit1_results,
+                    "pt_panel_4_kit1_results"=>$pt_panel_4_kit1_results,
+                    "pt_panel_5_kit1_results"=>$pt_panel_5_kit1_results,
+                    "pt_panel_6_kit1_results"=>$pt_panel_6_kit1_results,
+
+                    //test 2 results
+                    "pt_panel_1_kit2_results"=>$pt_panel_1_kit2_results, 
+                    "pt_panel_2_kit2_results"=>$pt_panel_2_kit2_results,
+                    "pt_panel_3_kit2_results"=>$pt_panel_3_kit2_results,
+                    "pt_panel_4_kit2_results"=>$pt_panel_4_kit2_results,
+                    "pt_panel_5_kit2_results"=>$pt_panel_5_kit2_results,
+                    "pt_panel_6_kit2_results"=>$pt_panel_6_kit2_results,
+
+                    //final tested results
+                    "pt_panel_1_final_results"=>$pt_panel_1_final_results, 
+                    "pt_panel_2_final_results"=>$pt_panel_2_final_results,
+                    "pt_panel_3_final_results"=>$pt_panel_3_final_results,
+                    "pt_panel_4_final_results"=>$pt_panel_4_final_results,
+                    "pt_panel_5_final_results"=>$pt_panel_5_final_results,
+                    "pt_panel_6_final_results"=>$pt_panel_6_final_results,
+
+                    //expected results
+                    "expected_result_1"=>$expected_result_1, 
+                    "expected_result_2"=>$expected_result_2,
+                    "expected_result_3"=>$expected_result_3,
+                    "expected_result_4"=>$expected_result_4,
+                    "expected_result_5"=>$expected_result_5,
+                    "expected_result_6"=>$expected_result_6,
+                    
+                    //sample name
+                    "sample_1"=>$sample_1, 
+                    "sample_2"=>$sample_2,
+                    "sample_3"=>$sample_3,
+                    "sample_4"=>$sample_4,
+                    "sample_5"=>$sample_5,
+                    "sample_6"=>$sample_6
                 );
 
-        return response()->json($all_results);        
-    } 
+        // return response()->json($all_results); 
+        return $all_results;       
+    }
+/**
+     * Verify results evaluted by a NON-Participant
+     *
+     * @param ID of the selected pt -  $id
+     */
+    public function show_evaluated_results($id)
+    {
+        $data = $this->evaluated_results($id);
+        return response()->json($data);
+
+    }    
+
      /**
      * Save the verification of evaluated results
      *
@@ -527,6 +623,14 @@ class ResultController extends Controller
      *
      * @param ID of the selected pt -  $id
      */
+
+    public function print_result($id){
+      $data = $this->evaluated_results($id);
+
+      $pdf = PDF::loadView('result/print', compact('data'));
+      return $pdf->download('invoice.pdf');
+
+    }
     public function feedback($id)
     {
         $pt = Pt::find($id);
