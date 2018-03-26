@@ -320,7 +320,7 @@
                             <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyResult" id="verify_test_results">
                                 <div v-if="viewFormData.pt">
                                     <input type="hidden" class="form-control" name="pt_id" :value="viewFormData.pt.id">
-                                    <div class="form-group row" v-if="viewFormData.pt.panel_status!=3">
+                                    <div class="form-group row" v-if="viewFormData.pt.panel_status=0">
                                         <label class="col-sm-5 form-control-label" for="title"><b>Verification Comment:</b></label>
                                         <div class="col-sm-7">
                                             <textarea name="comment" class="form-control"> @{{dt.response}}</textarea>
@@ -329,7 +329,7 @@
                                     </div>
                                     <hr v-if="viewFormData.pt.panel_status!=3">
                                     <div class="form-group row col-sm-offset-5 col-sm-7">
-                                        <button v-if="viewFormData.pt.panel_status!=3" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
+                                        <button v-if="viewFormData.pt.panel_status=0" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
                                         <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                     </div>
                                 </div>

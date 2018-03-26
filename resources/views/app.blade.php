@@ -32,6 +32,10 @@
             .picha {
                 background-color: white;
             }
+
+	    .navigation .list-unstyled li a {
+		color: #FFFFFF;
+	    }
         </style>
         <!-- Sweet Alert Styling-->
         <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
