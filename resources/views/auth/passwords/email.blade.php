@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="resetpassword" style="padding-top:20px;">
-    <div class="card col-md-4" style="margin:auto; float:none">
+    <div class="card col-md-5" style="margin:auto; float:none">
         @if (session('status'))
              <div class="alert alert-success">
                 {{ session('status') }}
