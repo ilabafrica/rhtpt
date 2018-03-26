@@ -15,6 +15,8 @@ Route::get('login', 'Auth\LoginController@getLogin');
 
 Auth::routes();
 
+Route::get('/password/code', 'Auth\ForgotPasswordController@codeVerify');
+
 Route::get('signup', function () {
     return view('auth.signup');
 });

@@ -17,18 +17,18 @@
             </div> 
             <div class="bs-callout bs-callout-info text-left">
                 <h4 class="md-18">Password Recovery</h4>
-                <p> If you have forgotten your password, fill in your PT Enrollment ID below then click Reset Password button. You will receive an SMS with a password reset code.</p>
+                <p> If you have forgotten your password, fill in your PT Enrollment ID below and click send button. You will receive a verification code on your mobile phone.</p>
             </div>   
             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                <label for="email">PT Enrollment ID</label>
-                <input id="email" type="email" class="form-control" name="email" placeholder="eg. 023009" value="{{ old('email') }}" required>
-                @if ($errors->has('email'))
+                <label for="uid">PT Enrollment ID</label>
+                <input id="uid" type="text" class="form-control" name="uid" placeholder="eg. 12345" value="{{ old('uid') }}" required>
+                @if ($errors->has('uid'))
                     <span class="help-block">
-                        <strong>{{ $errors->first('email') }}</strong>
+                        <strong>{{ $errors->first('uid') }}</strong>
                     </span>
                 @endif
             </div>            
-            <button style="background-color: #3498db;border-color: #3498db" type="submit" class="btn btn-md btn-info btn-block">Reset Password</button>
+            <button style="background-color: #3498db;border-color: #3498db" type="submit" class="btn btn-md btn-info btn-block">Send</button>
             <br><a href="/login" style="color:#18bc9c">No, I remember my password.</a>
         </form>
       </div> 
