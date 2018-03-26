@@ -15,6 +15,7 @@ use App\Program;
 use App\Round;
 use App\SmsHandler;
 use App\Designation;
+use App\ImplementingPartner;
 
 use DB;
 use Hash;
@@ -106,11 +107,11 @@ class UserController extends Controller
     {
         //dd($request);
         $this->validate($request, [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'address' => 'required',
             'username' => 'required'
         ]);
         $request->merge(['password' => Hash::make(User::DEFAULT_PASSWORD)]);
@@ -122,7 +123,7 @@ class UserController extends Controller
             $program_id = NULL;
             if($role == Role::idByName("Partner"))
             {
-                $tier = implode(", ", $request->jimbo);
+                // $tier = implode(", ", $request->implementing_partner_id);
             }
             else if($role == Role::idByName("County Coordinator"))
             {
@@ -172,11 +173,11 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'gender' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'address' => 'required',
             'username' => 'required'
         ]);
 
@@ -188,7 +189,7 @@ class UserController extends Controller
             $program_id = NULL;
             if($role == Role::idByName("Partner"))
             {
-                $tier = implode(", ", $request->jimbo);
+                // $tier = implode(", ", $request->jimbo);
             }
             else if($role == Role::idByName("County Coordinator"))
             {
