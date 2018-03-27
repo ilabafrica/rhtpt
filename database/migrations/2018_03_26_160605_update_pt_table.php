@@ -13,7 +13,7 @@ class UpdatePtTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function(Blueprint $table)
+        Schema::table('pt', function(Blueprint $table)
         {
             $table->integer('approved_by')->nullable()->after('verified_by');
             $table->string('approved_comment', 250)->nullable()->after('verified_by');
@@ -27,7 +27,7 @@ class UpdatePtTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('pt', function (Blueprint $table) {
             $table->dropColumn('approved_by');
             $table->dropColumn('approved_comment');
         });  
