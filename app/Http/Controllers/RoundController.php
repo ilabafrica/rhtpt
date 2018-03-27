@@ -391,6 +391,101 @@ class RoundController extends Controller
             }
         }
     }
+   */
+     public function loadparticipants(Request $request)
+    {
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $participants = User::whereNotNull('uid')-> latest()->withTrashed()->paginate(5);
+        if(Auth::user()->isCountyCoordinator())
+        {
+            $participants = County::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+        }
+        else if(Auth::user()->isSubCountyCoordinator())
+        {
+           $participants = SubCounty::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+        }
+        else if(Auth::user()->isFacilityInCharge())
+        {
+           $participants = Facility::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+        }
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $participants = User::where('name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            if(Auth::user()->isCountyCoordinator())
+            {
+                $participants = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            }
+            else if(Auth::user()->isSubCountyCoordinator())
+            {
+                $participants = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            }
+            else if(Auth::user()->isFacilityInCharge())
+            {
+               $participants = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            }
+        }
+        if($request->has('filter')) 
+        {
+            $search = $request->get('q');
+            $participants = User::whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+            if(Auth::user()->isCountyCoordinator())
+            {
+                $participants = County::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+            }
+            else if(Auth::user()->isSubCountyCoordinator())
+            {
+                $participants = SubCounty::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+            }
+            else if(Auth::user()->isFacilityInCharge())
+            {
+               $participants = Facility::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+            }
+        }
+        foreach($participants as $participant)
+        {
+            if(!empty($participant->ru()->tier))
+            {
+                $facility = Facility::find($participant->ru()->tier);
+                $participant->facility = $participant->ru()->tier;
+                $participant->program = $participant->ru()->program_id;
+                $participant->sub_county = $facility->subCounty->id;
+                $participant->county = $facility->subCounty->county->id;
+
+                $participant->mfl = $facility->code;
+                $participant->fac = $facility->name;
+                $participant->prog = Program::find($participant->ru()->program_id)->name;
+                $participant->sub = $facility->subCounty->name;
+                $participant->kaunti = $facility->subCounty->county->name;
+                $participant->des = $participant->designation($participant->ru()->designation);
+                $participant->gndr = $participant->maleOrFemale((int)$participant->gender);
+                $participants->designation = $participant->ru()->designation;
+            }
+            else
+            {
+                $participant->facility = '';
+                $participant->program = '';
+            }
+            !empty($participant->ru())?$participant->role = $participant->ru()->role_id:$participant->role = '';
+            !empty($participant->ru())?$participant->rl = Role::find($participant->ru()->role_id)->name:$participant->rl = '';
+        }
+        $response = [
+            'pagination' => [
+                'total' => $participants->total(),
+                'per_page' => $participants->perPage(),
+                'current_page' => $participants->currentPage(),
+                'last_page' => $participants->lastPage(),
+                'from' => $participants->firstItem(),
+                'to' => $participants->lastItem()
+            ],
+            'data' => $participants
+        ];
+
+        return $participants->count() > 0 ? response()->json($response) : $error;
+           
+
+
+    }
     /**
      * Function to download the participants in the past round
      *
@@ -687,7 +782,7 @@ class RoundController extends Controller
             }
         })->download('xlsx');
     }
-
+    
     /**
      * Batch registration and enrollment
      *
