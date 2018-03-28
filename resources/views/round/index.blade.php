@@ -413,9 +413,12 @@
                 <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 <h4 class="modal-title" id="myModalLabel">Participants</h4>
+                <div class="bs-callout bs-callout-info text-left">                       
+                          <small>Uncheck the checkbox to exclude participant from list</small>
+                         </div>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    <div class="row">                    
                         <div class="col-md-4"></div>
                         <div class="col-md-4"></div>
                         <div class="col-md-4" style="padding-bottom:10px;">
@@ -439,7 +442,7 @@
                                         <th>Facility</th>
                                         <th>Phone</th>
                                         <th>Program</th>
-                                        <th>Remove</th>
+                                        <th>Enroll</th>
                                     </tr>
                                     <tr v-for="participant in testerparticipants">
                                         <td>                                        

@@ -200,8 +200,8 @@ class RoundController extends Controller
         $message = str_replace('] ', ' ', $message);
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
-        /*$username   = $api->username;
-        $apikey     = $api->api_key;*/
+        $username   = $api->username;
+        $apikey     = $api->api_key;
         if($recipients)
         {
             // Specified sender-id
@@ -218,7 +218,7 @@ class RoundController extends Controller
                 // status is either "Success" or "error message" and save.
                 $number = $result->number;
                 //  Save the results
-                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
+                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => bulk()->id]);
             }
             }
             catch ( AfricasTalkingGatewayException $e )
