@@ -58,7 +58,7 @@
                 <button v-if="result.panel_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
             </td>
             <td>
-                <button v-if="result.feedback==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Satisfactory</button>
+                <button v-if="result.feedback==0" class= "mbtn mbtn-raised mbtn-success mbtn-xs">Satisfactory</button>
                 <button v-if="result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">UnSatisfactory</button>
             </td>
             <td>
@@ -519,7 +519,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row col-sm-offset-5 col-sm-7">
-                                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
+                                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Evaluated Results</button>&nbsp;
                                             <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                         </div>
                                     </div>
