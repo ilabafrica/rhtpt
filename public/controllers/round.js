@@ -25,6 +25,7 @@ new Vue({
         fillRound : {'name':'','description':'','start_date':'','duration':'','end_date':'','id':''},
         loading: false,
         error: false,
+        disabled:true,
         checked:false,
         query: '',
         participants: [],
@@ -45,36 +46,21 @@ new Vue({
         isActived: function () {
             return this.pagination.current_page;
         },
-        /*isDeactivated: function(){
-            this.$http.get('/vuerounds?page=').then((response) => {
-                if(response.data.data)
-                {
-                    this.rounds = response.data.data.data;                    
-                    this.rounds.forEach(function(date){
-                        disabled =  false;
-                        console.log(date.end_date);
+        isDateCurrent: function(){
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
 
-                        return date.end_date;
-                        var today = new Date();
-                        var dd = today.getDate();
-                        var mm = today.getMonth()+1; 
-                        var yyyy = today.getFullYear();
-
-                       if(dd<10) {
-                              dd = '0'+dd
-                             } 
-
-                        if(mm<10) {
-                          mm = '0'+mm
-                            } 
-
-                           today = yyyy + '-' + mm + '-' + dd;
-                           console.log(today);
-                    });
-                }
-                
-            });
-        },*/
+            var yyyy = today.getFullYear();
+            if(dd<10){
+                dd='0'+dd;
+                } 
+            if(mm<10){
+              mm='0'+mm;
+                } 
+                return today = yyyy + '-' + mm + '-' + dd;
+                this.disabled = true;
+        },      
         pagesNumber: function () {
             if (!this.pagination.to) {
                 return [];
@@ -151,14 +137,7 @@ new Vue({
                 this.changePage(this.pagination.current_page);
                 toastr.success('Round Deleted Successfully.', 'Success Alert', {timeOut: 5000});
             });
-        },
-        deleteParticipant: function(participant){
-            this.$http.delete('/vueparticipants/'+ participant).then((response) => {
-                this.changePage(this.pagination.current_page);
-                toastr.success('Participant(s) Deleted Successfully.', 'Success Alert', {timeOut: 5000});
-            });
-        },
-
+        },        
         restoreRound: function(round){
             this.$http.patch('/vuerounds/'+round.id+'/restore').then((response) => {
                 this.changePage(this.pagination.current_page);

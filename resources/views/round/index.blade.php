@@ -75,8 +75,8 @@
             @permission('enrol-participants')
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" style="display:none;" :data-fk="round.id" @click.prevent="loadParticipants(1)"><i class="fa fa-send"></i> Enrol</button>                
                 <a v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" :href="'/download/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i> Summary Workbook</a>
-                <button v-if="!round.deleted_at" class="btn wisteria" data-toggle="modal" data-target="#load-participants" @click.prevent="Participants(round.id)" ><i class="fa fa-list"></i> Load Participants</button>
-                <button v-if="!round.deleted_at" :data-fk="round.id" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
+                <button v-if="!round.deleted_at" class="btn wisteria" v-show="round.end_date > isDateCurrent" data-toggle="modal" data-target="#load-participants" @click.prevent="Participants(round.id)" ><i class="fa fa-list"></i> Load Participants</button>
+                <button v-if="!round.deleted_at" v-show="round.end_date > isDateCurrent " :data-fk="round.id" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-new-participants" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id"   @click.prevent="loadParticipants(round.id)"><i class="fa fa-book"></i> New Participants</button>               
             @endpermission
             </td>
