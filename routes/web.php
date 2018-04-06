@@ -16,6 +16,7 @@ Route::get('login', 'Auth\LoginController@getLogin');
 Auth::routes();
 
 Route::get('/password/code', 'Auth\ForgotPasswordController@codeVerify');
+Route::post('/password/code/verify', 'Auth\ForgotPasswordController@passwordCodeVerification');
 
 Route::get('signup', function () {
     return view('auth.signup');
@@ -163,7 +164,7 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "role.assign",
         "uses" => "RoleController@manageAssignment"
     ));
-   
+
     Route::post("/assign", array(
         "as"   => "role.assign",
         "uses" => "RoleController@saveUserRoleAssignment"
@@ -232,13 +233,13 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "lots.fetch",
         "uses" => "LotController@lots"
     ));
-    
+
 
     Route::get('settings', 'BulkSMSController@manageSettings');
 
     Route::get('broadcast', 'BulkSMSController@manageBroadcast');
     Route::resource('vuebroadcasts','BulkSMSController');
-    
+
     //  Save sms gateway username and api-key
     Route::post("/bulk/api", array(
         "as"   => "bulk.api",
@@ -314,7 +315,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('assign', 'AssignmentController@manageAssignments');
     Route::resource('vueassigns','AssignmentController');
 
-     Route::any("/assignParticipantRole", array(
+    Route::any("/assignParticipantRole", array(
         "as"   => "assignParticipantRole",
         "uses" => "AssignmentController@assignParticipantRole"
     ));
@@ -382,12 +383,12 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "show_evaluated_results.fetch",
         "uses" => "ResultController@show_evaluated_results"
     ));
-     Route::any("/verify_evaluated_results/{id}", array(
+    Route::any("/verify_evaluated_results/{id}", array(
         "as"   => "verify_evaluated_results",
         "uses" => "ResultController@verify_evaluated_results"
     ));
 
-     //  Get feedback
+    //  Get feedback
     Route::get("/print_result/{id}", array(
         "as"   => "print_result.fetch",
         "uses" => "ResultController@print_result"
@@ -435,6 +436,10 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/download/{id}/{status?}", array(
         "as"   => "testers.download",
         "uses" => "RoundController@testerSummary"
+    ));
+    Route::get("/loadparticipants/", array(
+        "as"   => "load.participants",
+        "uses" => "RoundController@loadparticipants"
     ));
 
     Route::any("/approve/{id}", array(
