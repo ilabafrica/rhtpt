@@ -58,7 +58,7 @@
                 <button v-if="result.panel_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
             </td>
             <td>
-                <button v-if="result.feedback==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Satisfactory</button>
+                <button v-if="result.feedback==0" class= "mbtn mbtn-raised mbtn-success mbtn-xs">Satisfactory</button>
                 <button v-if="result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">UnSatisfactory</button>
             </td>
             <td>
@@ -78,7 +78,7 @@
             <button v-if="result.panel_status==2 && result.feedback==0" class="btn btn-sm btn-success" @click.prevent="quickVerifyEvaluatedResult(result.id)"><i class="fa fa-check-circle"></i> Verify</button>
             @endpermission 
 
-            @permission('print-result')
+            @permission('print-results')
             <a v-if="result.panel_status==3" class="btn btn-concrete" :href="'print_result/' +result.id"><i class="fa fa-print"></i> Print</a>
             @endpermission 
             </td>
@@ -327,7 +327,7 @@
                             <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyResult" id="verify_test_results">
                                 <div v-if="viewFormData.pt">
                                     <input type="hidden" class="form-control" name="pt_id" :value="viewFormData.pt.id">
-                                    <div class="form-group row" v-if="viewFormData.pt.panel_status=0">
+                                    <div class="form-group row" v-if="viewFormData.pt.panel_status==0">
                                         <label class="col-sm-5 form-control-label" for="title"><b>Verification Comment:</b></label>
                                         <div class="col-sm-7">
                                             <textarea name="comment" class="form-control"> @{{dt.response}}</textarea>
@@ -336,7 +336,7 @@
                                     </div>
                                     <hr v-if="viewFormData.pt.panel_status=0">
                                     <div class="form-group row col-sm-offset-5 col-sm-7">
-                                        <button v-if="viewFormData.pt.panel_status=0" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
+                                        <button v-if="viewFormData.pt.panel_status==0" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
                                         <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                     </div>
                                 </div>
@@ -519,14 +519,14 @@
                                             </div>
                                         </div>
                                         <div class="form-group row col-sm-offset-5 col-sm-7">
-                                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
+                                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Evaluated Results</button>&nbsp;
                                             <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
-                             <div class="form-group row" v-else-if="evaluated_results.panel_status=3">
-                                <label class="col-sm-5 form-control-label" for="title"><b>Comments:</b></label>
+                             <div class="form-group row" v-else-if="evaluated_results.panel_status==3">                                
+				<label class="col-sm-5 form-control-label" for="title"><b>Comments:</b></label>
                                 <div class="col-sm-7 form-control">
                                     <p>@{{evaluated_results.pt_approved_comment}}</p>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
