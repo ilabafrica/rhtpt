@@ -225,7 +225,7 @@
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <!-- Vue JS -->
     <script src="{{ asset('js/vue.js') }}"></script>
-    <script src="{{ asset('js/vue-resource.min.js') }}"></script>
+    <script src="{{ asset('js/vue-resou.rce.min.js') }}"></script>
     <script src="{{ asset('js/vee-validate.js') }}"></script>
 
     <script>
