@@ -91,13 +91,12 @@ class ResultController extends Controller
      */
     public function store(Request $request)
     {           
-                //return response()->json('Saved.');
         //Check if round has been         
         if ($request->get('round_id') =="") {
             return response()->json(['1']);            
         } else
-        {
-             //	Save pt first then proceed to save form fields
+        {   
+            //	Save pt first then proceed to save form fields
             $round_id = $request->get('round_id');
             $enrolment = Enrol::where('user_id', Auth::user()->id)->where('round_id', $round_id)->first();
             
@@ -205,7 +204,8 @@ class ResultController extends Controller
         $response = [
             'pt' => $pt,
             'round' => $round,
-            'results' => $results
+            'results' => $results,
+            'pt_id'=>$pt->id
         ];
         // dd($response);
         return response()->json($response);
@@ -223,7 +223,7 @@ class ResultController extends Controller
         $result->panel_status = Pt::CHECKED;
         if($request->comment)
             $result->comment = $request->comment;
-        $result->save();
+        // $result->save();
         // Send SMS
         $round = Round::find($result->enrolment->round->id)->description;
         $message = Notification::where('template', Notification::FEEDBACK_RELEASE)->first()->message;
@@ -280,7 +280,7 @@ class ResultController extends Controller
     public function update(Request $request, $id)
     {       
         $pt = Pt::find($id);
-    
+        
         //  Proceed to form-fields
         foreach ($request->all() as $key => $value)
         {
@@ -291,11 +291,16 @@ class ResultController extends Controller
                 $fieldId = $this->strip($key);
                 if(is_array($value))
                   $value = implode(', ', $value);
-                $result = new Result;
-                $result->pt_id = $pt->id;
-                $result->field_id = $fieldId;
-                $result->response = $value;
-                $result->save();
+
+                $results = Result::where('pt_id', $pt->id)->get();
+
+                foreach ($results as $result_key => $result) {
+
+                   if ($result->field_id ==$fieldId) {
+                        $result->response = $value;
+                        $result->save();
+                   }
+                }
             }
             else if(stripos($key, 'comment') !==FALSE)
             {
