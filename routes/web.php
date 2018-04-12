@@ -288,6 +288,11 @@ Route::group(['middleware' => 'auth'], function()
     ));
 
     Route::get('result', 'ResultController@manageResult');
+    
+    Route::post("/update_results/{id}", array(
+        "as"   => "update_results",
+        "uses" => "ResultController@update"
+    ));
     Route::resource('vueresults','ResultController');
     Route::any('vueresults/{id}/restore','ResultController@restore');
     Route::get("/pt/{id}", array(

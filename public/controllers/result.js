@@ -134,20 +134,24 @@ new Vue({
         },
 
         updateResult: function(id, scope){
-            this.$validator.validateAll(scope).then(() => {
-                var input = this.fillResult;
-                this.$http.put('/vueresults/'+id,input).then((response) => {
+            // this.$validator.validateAll(scope).then(() => {
+                // var input = this.fillResult;
+
+                let myForm = document.getElementById('update_test_results');
+                let input = new FormData(myForm);
+                console.log(...input);
+                this.$http.post('/update_results/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);
-                    this.fillResult = {'name':'','display_name':'','description':'','id':''};
+                    // this.fillResult = {'round_id':'','field_id[]':'','response[]':'','comment[]':'','id':''};
                     $("#edit-result").modal('hide');
                     toastr.success('Result Updated Successfully.', 'Success Alert', {timeOut: 5000});
                 }, (response) => {
                     this.formErrorsUpdate = response.data;
                 });
-            }).catch(() => {
-                toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
-                return false;
-            });
+            // }).catch(() => {
+            //     toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
+            //     return false;
+            // });
         },
 
         verifyResult: function(){
