@@ -58,18 +58,9 @@ class ForgotPasswordController extends Controller
             return $this->sendResetLinkFailedResponse($request, $e->getMessage());
         }
 
-//        // We will send the password reset link to this user. Once we have attempted
-//        // to send the link, we will examine the response then see the message we
-//        // need to show to the user. Finally, we'll send out a proper response.
-//        $response = $this->broker()->sendResetLink(
-//            $request->only('uid')
-//        );
+        $response = $this->broker()->createToken($user);
 
-        return redirect('/password/code');
-
-//        return $response == Password::RESET_LINK_SENT
-//            ? $this->sendResetLinkResponse($response)
-//            : $this->sendResetLinkFailedResponse($request, $response);
+        return redirect('/password/code/?id='.$user->id.'&token='.$response);
     }
 
     protected function sendResetLinkFailedResponse(Request $request, $response)
@@ -83,5 +74,25 @@ class ForgotPasswordController extends Controller
     {
 
         return view('auth.passwords.code');
+    }
+
+    public function passwordCodeVerification(Request $request)
+    {
+        $token = $request->code;
+        $userId = $request->id;
+        $resetToken = $request->token;
+
+        $check = User::where([
+            "id"=>$userId,
+            "sms_code"=>$token
+        ])->withTrashed()->first();
+
+        if(!is_null($check)){
+
+
+            return redirect('password/reset/'.$resetToken.'?email='.$check->email);
+        }
+        return back()->withErrors(['code' => 'Invalid Code Entered']);
+
     }
 }
