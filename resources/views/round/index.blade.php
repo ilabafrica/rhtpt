@@ -76,7 +76,9 @@
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" style="display:none;" :data-fk="round.id" @click.prevent="loadParticipants(1)"><i class="fa fa-send"></i> Enrol</button>                
                 <a v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" :href="'/download/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i>Participants List</a>
                 <button v-if="!round.deleted_at" class="btn wisteria" data-toggle="modal" data-target="#load-participants" @click.prevent="Participants(round.id)" ><i class="fa fa-list"></i> Enrol Participants</button>
+		@permission('upload-participants')
                 <button v-if="!round.deleted_at" :data-fk="round.id" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
+		@endpermission
                <!-- <button v-if="!round.deleted_at" class="btn btn-sm btn-new-participants" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id"   @click.prevent="loadParticipants(round.id)"><i class="fa fa-book"></i> New Participants</button>               -->
             @endpermission
             </td>
@@ -432,25 +434,25 @@
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="enrolParticipants" id="partFrms">
                             <div class="col-md-12">
                                 <input type="hidden" class="form-control" name="round_id" id="round-id" v-bind:value="roundId"/>
-                                <table class="table table-bordered">
+                                <table class="table table-bordered table-responsive">
                                     <tr>
+
+                                        <th>Remove</th>
                                         <th>Participant</th>
                                         <th>UID</th>
                                         <th>Facility</th>
                                         <th>Phone</th>
                                         <th>Program</th>
-                                        <th>Remove</th>
                                     </tr>
                                     <tr v-for="participant in testerparticipants">
-                                        <td>                                        
+                                        
+ <td><input type="checkbox" checked='false'  :value="participant.id" name="usrs[]" ></td>
+<td>                                        
                                         @{{ participant.name }}</td>
                                         <td>@{{ participant.uid }}</td>
                                         <td>@{{ participant.fac }}</td>
                                         <td>@{{participant.phone}}</td>
                                         <td>@{{ participant.prog }}</td>
-                                        <td>
-                                         <input type="checkbox" checked='false'  :value="participant.id" name="usrs[]" >               
-                                         </td>
                                                                                     
                                     </tr>
                                 </table>

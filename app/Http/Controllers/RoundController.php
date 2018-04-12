@@ -1029,6 +1029,7 @@ class RoundController extends Controller
                                     echo "Encountered an error while sending: ".$e->getMessage();
                                 }
                             }
+/*
                             //  Enrollment notifications
                             $round = Round::find($roundId)->name;
                             $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
@@ -1048,6 +1049,7 @@ class RoundController extends Controller
                             $user->round = $round;                        
                             $user->notify(new EnrollmentNote($user));
                             //  Bulk-sms settings
+*/
                             
                         }
                     }
