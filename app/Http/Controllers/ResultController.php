@@ -253,11 +253,11 @@ class ResultController extends Controller
             try
             {
             // Send messages
-            $results = $sms->sendMessage($recipients, $message, $from);
-            foreach($results as $result)
+            $send_messages = $sms->sendMessage($recipients, $message, $from);
+            foreach($send_messages as $send_message)
             {
                 // status is either "Success" or "error message" and save.
-                $number = $result->number;
+                $number = $send_message->number;
                 //  Save the results
                 DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
             }
