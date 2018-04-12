@@ -236,7 +236,10 @@ class ResultController extends Controller
         //  Time
         $now = Carbon::now('Africa/Nairobi');
         $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $result->enrolment->round->id, 'text' => $message, 'user_id' => $result->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
-     
+        
+        //get the last id inserted and use it in the broadcast table
+        $bulk_id = DB::getPdo()->lastInsertId(); 
+
         $recipients = NULL;
         $recipients = User::find($result->enrolment->user->id)->value('phone');
         //  Bulk-sms settings
@@ -259,7 +262,7 @@ class ResultController extends Controller
                 // status is either "Success" or "error message" and save.
                 $number = $result->number;
                 //  Save the results
-                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
+                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk_id]);
             }
             }
             catch ( AfricasTalkingGatewayException $e )
