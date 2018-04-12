@@ -5,7 +5,7 @@
         <ol class="breadcrumb">
             <li><a href="{!! url('home') !!}"><i class="fa fa-home"></i> {!! trans('messages.home') !!}</a></li>
             <li class="active"><i class="fa fa-users"></i> {!! trans('messages.user-management') !!}</li>
-            <li class="active"><i class="fa fa-cube"></i> {!! trans_choice('messages.user', 2) !!}</li>
+            <li class="active"><i class="fa fa-cube"></i> Participants</li>
         </ol>
     </div>
 </div>
@@ -14,12 +14,12 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left col-md-9">
-                <h5><i class="fa fa-book"></i> {!! trans_choice('messages.user', 2) !!}        
+                <h5><i class="fa fa-book"></i> Participants        
                 
-                    <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
+                <!--    <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
-                    </a>
+                    </a> -->
                 @permission('create-user')
                     <a class="btn btn-sm btn-nephritis" :href="'/workbook'">
                         <i class="fa fa-book"></i>
@@ -529,9 +529,9 @@
                                 </tbody>
                             </table>
                             <div class="form-group row col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Enroll</button>
-                                <button type="button" class="btn btn-sm btn-danger" @click="denyUser(someUser.id)"><i class='fa fa-ban'></i> Reject</button>
-                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+<!--                                <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Enroll</button>
+                                <button type="button" class="btn btn-sm btn-danger" @click="denyUser(someUser.id)"><i class='fa fa-ban'></i> Reject</button>-->
+                                <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button> 
                             </div>
                         </div>
                     </form>

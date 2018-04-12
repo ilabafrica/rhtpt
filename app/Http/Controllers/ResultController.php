@@ -223,7 +223,7 @@ class ResultController extends Controller
         $result->panel_status = Pt::CHECKED;
         if($request->comment)
             $result->comment = $request->comment;
-        // $result->save();
+        $result->save();
         // Send SMS
         $round = Round::find($result->enrolment->round->id)->description;
         $message = Notification::where('template', Notification::FEEDBACK_RELEASE)->first()->message;
