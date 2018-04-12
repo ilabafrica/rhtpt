@@ -203,7 +203,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateResult('update_results')" id="update_test_results" data-vv-validate="update_results">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateResult(frmData.pt_id, 'update_results')" id="update_test_results" data-vv-validate="update_results">
                             <input type="hidden"  name="id" :value="frmData.pt"> 
                             <div class="col-md-12">
                                 <div class="form-group row">

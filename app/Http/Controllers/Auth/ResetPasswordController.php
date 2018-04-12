@@ -67,4 +67,5 @@ class ResetPasswordController extends Controller
             ->withInput($request->only('email'))
             ->withErrors(['email' => trans($response)]);
     }
+
 }
