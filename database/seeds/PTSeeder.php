@@ -152,6 +152,9 @@ class PTSeeder extends DatabaseSeeder
             array("name" => "config", "display_name" => "Can manage Configurations"),
             array("name" => "view-report", "display_name" => "Can view report"),
             array("name" => "export-report", "display_name" => "Can export report")
+            array("name" => "print-results", "display_name" => "Can print result")
+            array("name" => "view-evaluated-results", "display_name" => " Can view evaluated results")
+            array("name" => "upload-participants", "display_name" => "Can upload participants worksheet")
         );
         foreach ($permissions as $permission) {
             Permission::create($permission);
@@ -258,10 +261,10 @@ class PTSeeder extends DatabaseSeeder
 
         /* Notifications table */
         $notifications = array(
-            array("template" => Notification::ENROLMENT, "message" => "Dear PT Participant, you have been enrolled into [round] of PT. If you are not participating, contact NPHL on 0722934622 or NPHLpt@gmail.com"),
-            array("template" => Notification::PANEL_DISPATCH, "message" => "Dear PT Participant, NPHL has dispatched your PT Panel for [round]. If not received within 7 days, contact NPHL on 0722934622 or NPHLpt@gmail.com"),
+            array("template" => Notification::ENROLMENT, "message" => "Dear PT Participant, you have been enrolled into [round] of PT. If you are not participating, contact your County or Sub-County Coordinator"),
+            array("template" => Notification::PANEL_DISPATCH, "message" => "Dear PT Participant, NPHL has dispatched your PT Panel for [round]. If not received within 7 days, contact your County or Sub-County Coordinator"),
             array("template" => Notification::RESULTS_RECEIVED, "message" => "Dear PT Participant, NPHL has received your PT Results for [round]. You will get your feedback shortly."),
-            array("template" => Notification::FEEDBACK_RELEASE, "message" => "Dear PT Participant, NPHL has released your PT Feedback for [round]. If not received within 7 days, contact NPHL on 0722934622 or NPHLpt@gmail.com"),            
+            array("template" => Notification::FEEDBACK_RELEASE, "message" => "Dear PT Participant, NPHL has released your PT Feedback for [round]. If not received within 7 days, contact your County or Sub-County Coordinator"),            
         );
         foreach ($notifications as $notification)
         {

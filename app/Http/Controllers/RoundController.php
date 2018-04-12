@@ -945,6 +945,7 @@ class RoundController extends Controller
                                 $duplicates[] = $duplicateParticapant;
                                 continue;
                             }
+                            $user->name = $tfname. " ".$toname. " ".$tsname;
                             $user->first_name = $tfname;
                             $user->middle_name = $toname;
                             $user->last_name = $tsname;
