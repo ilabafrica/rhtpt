@@ -45,6 +45,46 @@
     @if(session()->has('error'))
         <div class="alert alert-info">{!! session()->get('error') !!}</div>
     @endif
+     <div class="row">
+        <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter_by_region()"> -->
+            <div class="col-lg-12 margin-tb">
+                <div class="row">
+                    <div v-if = "role == 1" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="county" id="county_id" @change="fetchSubs()" v-model="county">
+                                <option selected></option>
+                               <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>                         
+                            </select>
+                        </div>
+                    </div>
+                    <div v-if = "role == 1 || role == 4" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="sub_county" id="sub_id" @change="fetchFacilities" v-model="sub_county">
+                                <option selected></option>
+                               <option  v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>                         
+                            </select>
+                        </div>
+                    </div>
+                    <div v-if = "role == 1 || role == 4 || role ==7" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="facility" v-model="facility">
+                                <option selected></option>
+                                <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-sm btn-alizarin" type="submit" @click="filter_by_region()" v-if="!loading">Filter </button>
+                        <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                    </div>                
+                </div>
+            </div>
+        <!-- </form> -->
+    </div>
+
     <table class="table table-bordered">
         <tr>
             <th>Name</th>
@@ -205,7 +245,7 @@
                                 <div class="form-group row" v-if="newUser.role == 4 || newUser.role == 6 || newUser.role == 7">
                                     <label class="col-sm-4 form-control-label" for="title">County:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs()" v-model="newUser.county_id">
+                                        <select class="form-control c-select" name="county_id" id="county_" @change="fetchSubs()" v-model="newUser.county_id">
                                             <option selected></option>
                                             <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
                                         </select>

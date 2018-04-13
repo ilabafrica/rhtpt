@@ -33,6 +33,11 @@ new Vue({
         loading: false,
         error: false,
         query: '',
+        facility: '',
+        sub_county: '',
+        county: '',
+        role: '',
+        tier: '',
         formTransErrors:{},
         uploadify: {id: '', excel: ''},
         someUser : {'first_name':'','middle_name':'','last_name':'','name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
@@ -85,7 +90,26 @@ new Vue({
                 if(response.data.data)
                 {
                 this.users = response.data.data.data;
+                this.role = response.data.role;
+                this.tier = response.data.tier;
                 this.pagination = response.data.pagination;
+
+                if (this.role == 4) {
+                    let id = this.tier;
+                    this.$http.get('/subs/'+id).then((response) => {
+                        this.subs = response.data;
+                    }, (response) => {
+                        // console.log(response);
+                    });
+                }
+                if (this.role == 7) {
+                    let id =this.tier;
+                    this.$http.get('/fclts/'+id).then((response) => {
+                        this.facilities = response.data;
+                    }, (response) => {
+                        // console.log(response);
+                    });
+                }
             }
             else
             {
@@ -187,7 +211,16 @@ new Vue({
             }, (response) => {
                 // console.log(response);
             });
-        },      
+        }, 
+        // fetch subcounties in after selecting a county
+        fetchSubs: function() {
+            let id = $('#county_id').val();
+            this.$http.get('/subs/'+id).then((response) => {
+                this.subs = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },     
         // Populate facilities from FacilityController
         loadFacilities: function() {
             let id = $('#sub_county').val();
@@ -195,6 +228,27 @@ new Vue({
                 this.facilities = response.data;
             }, (response) => {
                 // console.log(response);
+            });
+        },
+
+        // fetch facilities in one sub county
+        fetchFacilities: function() {
+            let id = $('#sub_id').val();
+            this.$http.get('/fclts/'+id).then((response) => {
+                this.facilities = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+        // fetch facility details
+        fetchFacility: function() {
+            let id = $('#mfl').val();
+            this.$http.get('/mfl/'+id).then((response) => {
+                this.fillUser.facility = response.data.name;
+                this.fillUser.sub_county = response.data.sub_county;
+                this.fillUser.county = response.data.county;
+                if(this.fillUser.facility.length == 0)
+                    swal("Facility not found!", "Enter a valid MFL Code.", "info");
             });
         },
         //    Populate programs from ProgramController
@@ -222,6 +276,15 @@ new Vue({
             });
         },
 
+        loadDesignations: function() {
+            this.$http.get('/des').then((response) => {
+                this.designations = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        
         uploadSheet: function(){
             $("#batch-registration").modal('show');
             console.log("Live on raw.");
@@ -305,32 +368,85 @@ new Vue({
             });
         },
 
-        loadCounties: function() {
-            this.$http.get('/cnts').then((response) => {
-                this.counties = response.data;
-            }, (response) => {
-                // console.log(response);
-            });
-        },
+        filter_by_region: function() {
+            // Clear the error message.
+            this.error = '';
+            // Empty the users array so we can fill it with the new users.
+            this.users = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
 
-        fetchSubs: function() {
-            let id = $('#county_id').val();
-            this.$http.get('/subs/'+id).then((response) => {
-                this.subs = response.data;
-            }, (response) => {
-                // console.log(response);
-            });
-        },
+            // Making a get request to our API and passing the query to it.
+             //get users filtered by facility
+             if (this.facility) {
+                this.$http.get('/api/search_participant?facility='+ this.facility).then((response) => {
+                    // If there was an error set the error message, if not fill the users array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.users = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+                    // Clear the query.
+                    this.facility = '';
+                });
+            }
+            
+            //get users filtered by sub county
 
-        fetchFacilities: function() {
-            let id = $('#sub_id').val();
-            this.$http.get('/fclts/'+id).then((response) => {
-                this.facilities = response.data;
-            }, (response) => {
-                // console.log(response);
-            });
-        },
+            else if (this.sub_county) {
+                this.$http.get('/api/search_participant?sub_county='+ this.sub_county).then((response) => {
+                    // If there was an error set the error message, if not fill the users array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.users = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+                    // Clear the query.
+                    this.sub_county = '';
+                });
+            }
 
+            //get users filtered by county
+
+            else if (this.county) {
+                this.$http.get('/api/search_participant?county=' + this.county ).then((response) => {
+                    // If there was an error set the error message, if not fill the users array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.users = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+                    // Clear the query.
+                    this.county = '';
+                });
+            }
+           
+        },
+     
         populateUser: function(user){
             this.transferUser.id = user.id;
             this.transferUser.facility_id = user.facility;
@@ -359,7 +475,7 @@ new Vue({
             this.loading = true;
 
             // Making a get request to our API and passing the query to it.
-            this.$http.get('/api/search_participant?filter=' + 'self').then((response) => {
+            this.$http.get('/api/search_participant?filter_by_region=' + 'self').then((response) => {
                 // If there was an error set the error message, if not fill the users array.
                 if(response.data.error)
                 {
@@ -370,7 +486,7 @@ new Vue({
                 {
                     this.users = response.data.data.data;
                     this.pagination = response.data.pagination;
-                    toastr.success('The results below were obtained.', 'Filter Notification', {timeOut: 5000});
+                    toastr.success('The results below were obtained.', 'Filter_by_region Notification', {timeOut: 5000});
                 }
                 // The request is finished, change the loading to false again.
                 this.loading = false;
@@ -446,23 +562,6 @@ new Vue({
             $(document).on('focusin.modal');
         },
 
-        loadDesignations: function() {
-            this.$http.get('/des').then((response) => {
-                this.designations = response.data;
-            }, (response) => {
-                // console.log(response);
-            });
-        },
-
-        fetchFacility: function() {
-            let id = $('#mfl').val();
-            this.$http.get('/mfl/'+id).then((response) => {
-                this.fillUser.facility = response.data.name;
-                this.fillUser.sub_county = response.data.sub_county;
-                this.fillUser.county = response.data.county;
-                if(this.fillUser.facility.length == 0)
-                    swal("Facility not found!", "Enter a valid MFL Code.", "info");
-            });
-        },
+        
     }
 });

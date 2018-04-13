@@ -154,7 +154,29 @@
                 }
                 else
                 {
-                    swal("PT Participation Prompt", "By getting to this page, you're already registered, please retrieve your enrollment ID from past reports or use the PT helpdesk above to proceed.", "success");
+                    swal("PT Participation Prompt", "By getting to this page, you're already registered, please retrieve your enrollment ID from past reports or use the PT helpdesk  to proceed.", "success");
+
+                    swal({
+                            title:"By getting to this page, you're already registered. Please retrieve your enrollment ID from past reports and proceed to log in. If it's your first time, click on the button below to set up your password.",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Setup Password",
+                            cancelButtonText: "Cancel",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        },
+                        function(isConfirm)
+                        {
+                            if (isConfirm)
+                            {
+                                window.location.replace("/password/reset");
+                            }
+                            else
+                            {
+                                window.location.replace("/login");                                
+                            }
+                        });
                 }
             });
     }
