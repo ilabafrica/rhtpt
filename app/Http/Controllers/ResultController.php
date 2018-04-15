@@ -58,6 +58,7 @@ class ResultController extends Controller
         else if(Auth::user()->isParticipant())
         {
             $results = Auth::user()->results()->latest()->withTrashed()->paginate(5);
+
         }
         if($request->has('q')) 
         {
@@ -68,6 +69,13 @@ class ResultController extends Controller
         {
             $result->rnd = $result->enrolment->round->name;
             $result->tester = $result->enrolment->user->name;
+
+            //particpants should not see the result feedback until it has been verified by the admin             
+            if(Auth::user()->isParticipant()){
+                if ($result->panel_status != 3) {
+                    $result->feedback = 2;
+                }                
+            }
         }
         $response = [
             'pagination' => [

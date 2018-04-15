@@ -43,7 +43,7 @@ class ParticipantController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
+    {        
         $error = ['error' => 'No results found, please try with different keywords.'];
         $users = User::whereNotNull('uid')-> latest()->withTrashed()->paginate(5);
         if(Auth::user()->isCountyCoordinator())
@@ -58,6 +58,7 @@ class ParticipantController extends Controller
         {
            $users = Facility::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
         }
+        //search users by user details
         if($request->has('q')) 
         {
             $search = $request->get('q');
@@ -111,6 +112,23 @@ class ParticipantController extends Controller
                $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
             }
         }
+        //filter users by region
+        if($request->has('county')) 
+        {            
+            $users = County::find($request->get('county'))->users()->latest()->withTrashed()->paginate(5);               
+            
+        }
+         if($request->has('sub_county')) 
+        {
+            $users = SubCounty::find($request->get('sub_county'))->users()->latest()->withTrashed()->paginate(5);
+
+        }
+        if($request->has('facility')) 
+        {
+            $users = Facility::find($request->get('facility'))->users()->latest()->withTrashed()->paginate(5);
+
+        }
+
         foreach($users as $user)
         {
             if(!empty($user->ru()->tier))
@@ -137,6 +155,7 @@ class ParticipantController extends Controller
             }
             !empty($user->ru())?$user->role = $user->ru()->role_id:$user->role = '';
             !empty($user->ru())?$user->rl = Role::find($user->ru()->role_id)->name:$user->rl = '';
+
         }
         $response = [
             'pagination' => [
@@ -147,7 +166,9 @@ class ParticipantController extends Controller
                 'from' => $users->firstItem(),
                 'to' => $users->lastItem()
             ],
-            'data' => $users
+            'data' => $users,
+            'role' => Auth::user()->ru()->role_id,
+            'tier' => Auth::user()->ru()->tier
         ];
 
         return $users->count() > 0 ? response()->json($response) : $error;

@@ -999,17 +999,17 @@ class RoundController extends Controller
                             $roleId = Role::idByName('Participant');
                             $user->detachAllRoles();
                             DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => Program::idByTitle($tprog), "designation" => $tdes]);
-                            //  Enrol the participant to the pt round
-                            $userId = $user->id;
-                            $roundId = $rId;
-                            $enrol = Enrol::where('round_id', $roundId)->where('user_id', $userId)->get();
-                            if(count($enrol) == 0)
-                            {
-                                $enrol = new Enrol;
-                                $enrol->round_id = $roundId;
-                                $enrol->user_id = $userId;
-                                $enrol->save();
-                            }
+                            // //  Enrol the participant to the pt round
+                            // $userId = $user->id;
+                            // $roundId = $rId;
+                            // $enrol = Enrol::where('round_id', $roundId)->where('user_id', $userId)->get();
+                            // if(count($enrol) == 0)
+                            // {
+                            //     $enrol = new Enrol;
+                            //     $enrol->round_id = $roundId;
+                            //     $enrol->user_id = $userId;
+                            //     $enrol->save();
+                            // }
                             //  send email and sms for registration
                             
                             if($user->date_registered)
@@ -1017,8 +1017,8 @@ class RoundController extends Controller
                                 //  send email and sms
                                 $token = app('auth.password.broker')->createToken($user);
                                 $user->token = $token;
-                                $user->notify(new WelcomeNote($user));
-                                $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
+                                // $user->notify(new WelcomeNote($user));
+                                $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Go to rhtpt.or.ke to get started.";
                                 try 
                                 {
                                     $smsHandler = new SmsHandler();
