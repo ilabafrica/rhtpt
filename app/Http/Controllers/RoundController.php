@@ -218,7 +218,7 @@ class RoundController extends Controller
                 // status is either "Success" or "error message" and save.
                 $number = $result->number;
                 //  Save the results
-                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
+//                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
             }
             }
             catch ( AfricasTalkingGatewayException $e )
@@ -940,7 +940,7 @@ class RoundController extends Controller
                         //  process user details
                         if($tfname && $tsname && $tphone && $temail && $tprog && $tdes)
                         {
-                            if(count(User::where('email', $temail)->orWhere('phone', $tphone)->get()) > 0){
+                            if(count(User::where('phone', $tphone)->get()) > 0){
                                 $duplicateParticapant = array($tfname, $tsname, $tphone, $temail);
                                 $duplicates[] = $duplicateParticapant;
                                 continue;
@@ -1011,7 +1011,7 @@ class RoundController extends Controller
                             //     $enrol->save();
                             // }
                             //  send email and sms for registration
-                            
+/*                   
                             if($user->date_registered)
                             {
                                 //  send email and sms

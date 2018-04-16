@@ -644,7 +644,7 @@ class ResultController extends Controller
       $data = $this->evaluated_results($id);
 
       $pdf = PDF::loadView('result/print', compact('data'));
-      return $pdf->download('invoice.pdf');
+      return $pdf->download('Round '.$data['round_name'].' Results.pdf');
 
     }
     public function feedback($id)

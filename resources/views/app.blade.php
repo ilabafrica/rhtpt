@@ -165,7 +165,7 @@
                         </ul>
                     </li>
                     @endpermission
-                    @permission('user-management')
+                    @permission('partner-management')
                     <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('agency'), strtolower('implementingpartner'), strtolower('partner')])?' '.strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-users"></i> {!! 'Partners' !!}</a>
                         <ul class="list-unstyled">

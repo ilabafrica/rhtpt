@@ -456,7 +456,7 @@
                                                                                     
                                     </tr>
                                 </table>
-                                <!-- Pagination -->
+                                <!-- Pagination 
                                 <nav>
                                     <ul class="pagination">
                                         <li v-if="pagination.current_page > 1" class="page-item">
@@ -477,7 +477,7 @@
                                             </a>
                                         </li>
                                     </ul>
-                                </nav>
+                                </nav>-->
 
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
                                     <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Enrol</button>

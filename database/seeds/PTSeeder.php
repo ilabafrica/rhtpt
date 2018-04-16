@@ -151,9 +151,9 @@ class PTSeeder extends DatabaseSeeder
             array("name" => "lot", "display_name" => "Can manage lots"),
             array("name" => "config", "display_name" => "Can manage Configurations"),
             array("name" => "view-report", "display_name" => "Can view report"),
-            array("name" => "export-report", "display_name" => "Can export report")
-            array("name" => "print-results", "display_name" => "Can print result")
-            array("name" => "view-evaluated-results", "display_name" => " Can view evaluated results")
+            array("name" => "export-report", "display_name" => "Can export report"),
+            array("name" => "print-results", "display_name" => "Can print result"),
+            array("name" => "view-evaluated-results", "display_name" => " Can view evaluated results"),
             array("name" => "upload-participants", "display_name" => "Can upload participants worksheet")
         );
         foreach ($permissions as $permission) {
