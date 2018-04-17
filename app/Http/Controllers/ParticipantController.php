@@ -382,7 +382,7 @@ enrolled, you’ll receive a tester ID";
         $response = $tier->save();
 
         return response()->json($response);
-    }
+    }    
     /**
      * Function for enrolling users to a round of testing
      *
