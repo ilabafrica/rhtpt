@@ -442,7 +442,8 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "testers.download",
         "uses" => "RoundController@testerSummary"
     ));
-    Route::get("/loadparticipants/", array(
+    Route::get('enrolparticipants/', 'RoundController@manageEnrolParticipant');
+    Route::get("/loadparticipants/{id}", array(
         "as"   => "load.participants",
         "uses" => "RoundController@loadparticipants"
     ));

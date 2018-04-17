@@ -392,92 +392,85 @@ class RoundController extends Controller
         }
     }
    */
-     public function loadparticipants(Request $request)
+
+    /**
+     * Function for load the view of participants to be enrolled
+     *
+     */
+    public function manageEnrolParticipant()
+    {
+        return view('round.enrolparticipantlist');
+    }
+
+    //get the list of users to be enrolled
+     public function loadparticipants($round, Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $participants = User::whereNotNull('uid')-> latest()->withTrashed()->paginate(5);
+        $participants = User::whereNotNull('uid')->get();
         if(Auth::user()->isCountyCoordinator())
         {
-            $participants = County::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+            $participants = County::find(Auth::user()->ru()->tier)->users()->get();
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $participants = SubCounty::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+           $participants = SubCounty::find(Auth::user()->ru()->tier)->users()->get();
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $participants = Facility::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+           $participants = Facility::find(Auth::user()->ru()->tier)->users()->get();
         }
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $participants = User::where('name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            $participants = User::where('name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->get();
             if(Auth::user()->isCountyCoordinator())
             {
-                $participants = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+                $participants = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->get();
             }
             else if(Auth::user()->isSubCountyCoordinator())
             {
-                $participants = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+                $participants = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->get();
             }
             else if(Auth::user()->isFacilityInCharge())
             {
-               $participants = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+               $participants = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->get();
             }
         }
-        if($request->has('filter')) 
-        {
-            $search = $request->get('q');
-            $participants = User::whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
-            if(Auth::user()->isCountyCoordinator())
-            {
-                $participants = County::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
-            }
-            else if(Auth::user()->isSubCountyCoordinator())
-            {
-                $participants = SubCounty::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
-            }
-            else if(Auth::user()->isFacilityInCharge())
-            {
-               $participants = Facility::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
-            }
-        }
+        
+        $enrolled_users = Enrol::where('round_id', $round)->pluck('user_id')->toArray();
+
         foreach($participants as $participant)
         {
-            if(!empty($participant->ru()->tier))
-            {
-                $facility = Facility::find($participant->ru()->tier);
-                $participant->facility = $participant->ru()->tier;
-                $participant->program = $participant->ru()->program_id;
-                $participant->sub_county = $facility->subCounty->id;
-                $participant->county = $facility->subCounty->county->id;
+            // if (in_array($participant->id, $enrolled_users) ) {                
+            
+                if(!empty($participant->ru()->tier))
+                {
+                    $facility = Facility::find($participant->ru()->tier);
+                    $participant->facility = $participant->ru()->tier;
+                    $participant->program = $participant->ru()->program_id;
+                    $participant->sub_county = $facility->subCounty->id;
+                    $participant->county = $facility->subCounty->county->id;
 
-                $participant->mfl = $facility->code;
-                $participant->fac = $facility->name;
-                $participant->prog = Program::find($participant->ru()->program_id)->name;
-                $participant->sub = $facility->subCounty->name;
-                $participant->kaunti = $facility->subCounty->county->name;
-                $participant->des = $participant->designation($participant->ru()->designation);
-                $participant->gndr = $participant->maleOrFemale((int)$participant->gender);
-                $participants->designation = $participant->ru()->designation;
-            }
-            else
-            {
-                $participant->facility = '';
-                $participant->program = '';
-            }
-            !empty($participant->ru())?$participant->role = $participant->ru()->role_id:$participant->role = '';
-            !empty($participant->ru())?$participant->rl = Role::find($participant->ru()->role_id)->name:$participant->rl = '';
+                    $participant->mfl = $facility->code;
+                    $participant->fac = $facility->name;
+                    $participant->prog = Program::find($participant->ru()->program_id)->name;
+                    $participant->sub = $facility->subCounty->name;
+                    $participant->kaunti = $facility->subCounty->county->name;
+                    $participant->des = $participant->designation($participant->ru()->designation);
+                    $participant->gndr = $participant->maleOrFemale((int)$participant->gender);
+                    $participants->designation = $participant->ru()->designation;
+                }
+                else
+                {
+                    $participant->facility = '';
+                    $participant->program = '';
+                }
+                !empty($participant->ru())?$participant->role = $participant->ru()->role_id:$participant->role = '';
+                !empty($participant->ru())?$participant->rl = Role::find($participant->ru()->role_id)->name:$participant->rl = '';
+            // }
         }
-        $response = [
-            'pagination' => [
-                'total' => $participants->total(),
-                'per_page' => $participants->perPage(),
-                'current_page' => $participants->currentPage(),
-                'last_page' => $participants->lastPage(),
-                'from' => $participants->firstItem(),
-                'to' => $participants->lastItem()
-            ],
+
+        $response = [           
             'data' => $participants
         ];
 

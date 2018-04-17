@@ -72,10 +72,9 @@
             @permission('delete-round')
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
-            @permission('enrol-participants')
-                <button v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" id="enrol" data-toggle="modal" data-target="#enrol-participants" style="display:none;" :data-fk="round.id" @click.prevent="loadParticipants(1)"><i class="fa fa-send"></i> Enrol</button>                
+            @permission('enrol-participants')                               
                 <a v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" :href="'/download/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i>Participants List</a>
-                <button v-if="!round.deleted_at" class="btn wisteria" data-toggle="modal" data-target="#load-participants" @click.prevent="Participants(round.id)" ><i class="fa fa-list"></i> Enrol Participants</button>
+                <a v-if="!round.deleted_at" :href="'/enrolparticipants/'" class="btn btn-sm btn-wisteria"><i class="fa fa-list"></i> Enrol Participants</a>
 		@permission('upload-participants')
                 <button v-if="!round.deleted_at" :data-fk="round.id" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
 		@endpermission
