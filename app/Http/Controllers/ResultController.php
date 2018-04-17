@@ -63,7 +63,7 @@ class ResultController extends Controller
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $results = Pt::where('pt_id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            $results = Pt::where('id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
         }
         foreach($results as $result)
         {
