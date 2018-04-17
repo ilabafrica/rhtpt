@@ -80,7 +80,7 @@
                     <div class="form-group row">
                         <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }" for="last_name">Last Name:</label>
                         <div class="col-sm-8" :class="{ 'control': true }">
-                            <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('last_name') }" name="last_name" type="text" v-model="newParticipant.last_name"/>
+                            <input v-validate="'required|alpha_spaces'" class="form-control" :class="{'input': true, 'is-danger': errors.has('last_name') }" name="last_name" type="text" v-model="newParticipant.surname"/>
                             <span v-show="errors.has('last_name')" class="help is-danger">@{{ errors.first('last_name') }}</span>
                         </div>
                     </div>
