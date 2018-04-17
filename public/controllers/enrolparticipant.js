@@ -116,11 +116,8 @@ new Vue({
         enrolParticipants: function(){
 		    let myForm = document.getElementById('partFrms');
             let formData = new FormData(myForm);
-            console.log(formData);
             this.$http.post('/enrol', formData).then((response) => {
-                this.changePage(this.pagination.current_page);
-                //$("#enrol-participants").modal('hide');
-                $("#load-participants").modal('hide');
+                window.location.replace("/round");
                 toastr.success('Participant(s) Enrolled Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
                 this.formErrors = response.data;
