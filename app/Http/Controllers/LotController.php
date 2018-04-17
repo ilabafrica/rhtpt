@@ -94,9 +94,14 @@ class LotController extends Controller
     {
         $request->request->add(['user_id' => Auth::user()->id]);
 
-        $edit = Lot::find($id)->update($request->all());
+        $lot =  Lot::find($id);
+                $lot->round_id = $request->round_id;
+                $lot->lot = $request->lot;
+                $lot->tester_id = implode(", ", $request->tester_id);
+                $lot->user_id = Auth::user()->id;
+                $lot->save();
 
-        return response()->json($edit);
+        return response()->json('Done');
     }
 
     /**
