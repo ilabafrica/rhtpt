@@ -43,7 +43,7 @@ class ParticipantController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {        
+    {
         $error = ['error' => 'No results found, please try with different keywords.'];
         $users = User::whereNotNull('uid')-> latest()->withTrashed()->paginate(5);
         if(Auth::user()->isCountyCoordinator())
@@ -133,20 +133,24 @@ class ParticipantController extends Controller
         {
             if(!empty($user->ru()->tier))
             {
-                $facility = Facility::find($user->ru()->tier);
-                $user->facility = $user->ru()->tier;
-                $user->program = $user->ru()->program_id;
-                $user->sub_county = $facility->subCounty->id;
-                $user->county = $facility->subCounty->county->id;
+                try{
+                    $facility = Facility::find($user->ru()->tier);
+                    $user->facility = $user->ru()->tier;
+                    $user->program = $user->ru()->program_id;
+                    $user->sub_county = $facility->subCounty->id;
+                    $user->county = $facility->subCounty->county->id;
 
-                $user->mfl = $facility->code;
-                $user->fac = $facility->name;
-                $user->prog = Program::find($user->ru()->program_id)->name;
-                $user->sub = $facility->subCounty->name;
-                $user->kaunti = $facility->subCounty->county->name;
-                $user->des = $user->designation($user->ru()->designation);
-                $user->gndr = $user->maleOrFemale((int)$user->gender);
-                $user->designation = $user->ru()->designation;
+                    $user->mfl = $facility->code;
+                    $user->fac = $facility->name;
+                    $user->prog = Program::find($user->ru()->program_id)->name;
+                    $user->sub = $facility->subCounty->name;
+                    $user->kaunti = $facility->subCounty->county->name;
+                    $user->des = $user->designation($user->ru()->designation);
+                    $user->gndr = $user->maleOrFemale((int)$user->gender);
+                    $user->designation = $user->ru()->designation;
+                }catch(\Exception $exp){
+                    \Log::error($exp);
+                }
             }
             else
             {

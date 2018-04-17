@@ -49,7 +49,7 @@ class ShipmentController extends Controller
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $shipments = Shipment::where('facility_id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            $shipments = Consignment::where('facility_id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
         }
         if(Auth::user()->isSubCountyCoordinator() || Auth::user()->isFacilityInCharge())
         {

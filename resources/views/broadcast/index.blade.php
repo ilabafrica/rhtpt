@@ -31,7 +31,7 @@
             <div class="col-md-2"></div>
             <div class="col-md-4">
                 <div class="input-group input-group-sm">
-                    <input type="text" class="form-control" placeholder="Search for..." v-model="query">
+                    <input type="text" class="form-control" placeholder="Search for..." v-model="query" v-on:keyup.enter="search()">
                     <span class="input-group-btn">
                         <button class="btn btn-secondary" type="button" @click="search()" v-if="!loading"><i class="fa fa-search"></i></button>
                         <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
@@ -142,7 +142,7 @@
                                         <label class="col-sm-4 form-control-label" for="title">Participant:</label>
                                         <div class="col-sm-8">
                                             <div class="input-group input-group-md">
-                                                <input type="text" class="form-control" placeholder="Search for..." v-model="srch">
+                                                <input type="text" class="form-control" placeholder="Search for..." v-model="srch" v-on:keyup.enter="find()">
                                                 <span class="input-group-btn">
                                                     <button class="btn btn-secondary" type="button" @click="find()" v-if="!loading"><i class="fa fa-search"></i></button>
                                                     <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
