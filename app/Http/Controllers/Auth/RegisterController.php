@@ -114,6 +114,9 @@ class RegisterController extends Controller
         {
             $user = new User;
             $user->name = $request->surname." ".$request->fname." ".$request->oname;
+            $user->first_name = $request->fname;
+            $user->middle_name = $request->oname;
+            $user->last_name = $request->surname;
             $user->gender = $request->gender;
             $user->email = $request->email;
             $user->phone = $request->phone;
