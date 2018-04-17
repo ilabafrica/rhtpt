@@ -25,6 +25,11 @@
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet">
     <!-- Sweet Alert Styling -->
     <link href="{{ asset('css/sweetalert.css') }}" rel="stylesheet">
+    <style type="text/css">
+        .no-link-underline:hover{
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -33,8 +38,10 @@
         <div class="card-block">
             <div class="row" style="padding:20px">
                 <div class="col-md-12  text-md-center">
-                    <img src="{{ '../'.Config::get('cms.logo') }}" height="50px">
-                    <h5 class="text-primary">{!! Config::get('cms.name') !!}</h5>
+                    <a href="/" class="no-link-underline" title="Home">
+                        <img src="{{ '../'.Config::get('cms.logo') }}" height="50px">
+                        <h5 class="text-primary">{!! Config::get('cms.name') !!}</h5>
+                    </a>
                 </div>
             </div>
             <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createParticipant" id="self_registration">
