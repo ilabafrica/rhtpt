@@ -900,13 +900,12 @@ enrolled, you’ll receive a tester ID";
     /**
      *   Function to approve participant
      */
-    public function approve(Request $request)
+    public function approve($id)
     {
-        $userId = $request->id;
-        $user = User::withTrashed()->where('id', $userId);
+       $user = User::withTrashed()->where('id', $id);
         //  Assign UID and restore
         $user->restore();
-        $user = User::find($userId);
+        $user = User::find($id);
         $max = $user->id; //change this to pick sequential unique ids
         $user->uid = $max;
         $user->username = $max;
@@ -916,7 +915,7 @@ enrolled, you’ll receive a tester ID";
         //send mail
         $token = app('auth.password.broker')->createToken($user);
         $user->token = $token;
-         $user->notify(new WelcomeNote($user));
+        $user->notify(new WelcomeNote($user));
         
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
@@ -931,7 +930,7 @@ enrolled, you’ll receive a tester ID";
        
          try 
          {
-             $smsHandler = new SmsHandler();
+            $smsHandler = new SmsHandler();
             $smsHandler->sendMessage($user->phone, $message);
          }
          catch ( AfricasTalkingGatewayException $e )

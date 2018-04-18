@@ -202,7 +202,7 @@ class RoundController extends Controller
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
         $apikey     = $api->api_key;
-        if($recipients)
+       if($recipients)
         {
             // Specified sender-id
             $from = $api->code;
@@ -439,37 +439,41 @@ class RoundController extends Controller
         
         $enrolled_users = Enrol::where('round_id', $round)->pluck('user_id')->toArray();
 
+        $participants = $participants->filter(function ($participant) use($enrolled_users){
+            if (!in_array($participant->id, $enrolled_users) ) {  
+                return $participant;
+            }
+        });
+        
         foreach($participants as $participant)
-        {
-            // if (in_array($participant->id, $enrolled_users) ) {                
+        {             
+            if(!empty($participant->ru()->tier))
+            {
+                $facility = Facility::find($participant->ru()->tier);
+                $participant->facility = $participant->ru()->tier;
+                $participant->program = $participant->ru()->program_id;
+                $participant->sub_county = $facility->subCounty->id;
+                $participant->county = $facility->subCounty->county->id;
+
+                $participant->mfl = $facility->code;
+                $participant->fac = $facility->name;
+                $participant->prog = Program::find($participant->ru()->program_id)->name;
+                $participant->sub = $facility->subCounty->name;
+                $participant->kaunti = $facility->subCounty->county->name;
+                $participant->des = $participant->designation($participant->ru()->designation);
+                $participant->gndr = $participant->maleOrFemale((int)$participant->gender);
+                $participants->designation = $participant->ru()->designation;
+            }
+            else
+            {
+                $participant->facility = '';
+                $participant->program = '';
+            }
+            !empty($participant->ru())?$participant->role = $participant->ru()->role_id:$participant->role = '';
+            !empty($participant->ru())?$participant->rl = Role::find($participant->ru()->role_id)->name:$participant->rl = '';
             
-                if(!empty($participant->ru()->tier))
-                {
-                    $facility = Facility::find($participant->ru()->tier);
-                    $participant->facility = $participant->ru()->tier;
-                    $participant->program = $participant->ru()->program_id;
-                    $participant->sub_county = $facility->subCounty->id;
-                    $participant->county = $facility->subCounty->county->id;
-
-                    $participant->mfl = $facility->code;
-                    $participant->fac = $facility->name;
-                    $participant->prog = Program::find($participant->ru()->program_id)->name;
-                    $participant->sub = $facility->subCounty->name;
-                    $participant->kaunti = $facility->subCounty->county->name;
-                    $participant->des = $participant->designation($participant->ru()->designation);
-                    $participant->gndr = $participant->maleOrFemale((int)$participant->gender);
-                    $participants->designation = $participant->ru()->designation;
-                }
-                else
-                {
-                    $participant->facility = '';
-                    $participant->program = '';
-                }
-                !empty($participant->ru())?$participant->role = $participant->ru()->role_id:$participant->role = '';
-                !empty($participant->ru())?$participant->rl = Role::find($participant->ru()->role_id)->name:$participant->rl = '';
-            // }
         }
-
+       
         $response = [           
             'data' => $participants
         ];

@@ -513,12 +513,9 @@ new Vue({
             $("#approve-user").modal('show');
         },
 
-        approveUser: function(id){
-            var input = this.someUser;
-            this.$http.put('/approve/'+id, input, 'confirm').then((response) => {
+        approveUser: function(user){
+            this.$http.put('/approve/'+user.id).then((response) => {
                 this.changePage(this.pagination.current_page);
-                this.someUser = {'first_name':'','middle_name':'','last_name':'','name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
-                $("#approve-user").modal('hide');
                 toastr.success('User Approved Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
                 // 
