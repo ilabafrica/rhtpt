@@ -113,7 +113,7 @@
                 <button v-bind="{ 'disabled': user.deleted_at }" class="btn btn-sm btn-primary"  @click.prevent="editUser(user)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('restore-user') 
-                <button v-if="user.deleted_at" class="btn btn-sm btn-success" @click.prevent="restoreUser(user)"><i class="fa fa-toggle-on"></i> Enable</button>
+                <button v-if="user.deleted_at" class="btn btn-sm btn-success" @click.prevent="approveUser(user)"><i class="fa fa-toggle-on"></i> Enable</button>
             @endpermission
             @permission('delete-user') 
                 <button v-if="!user.deleted_at" class="btn btn-sm btn-alizarin" @click.prevent="deleteUser(user)"><i class="fa fa-power-off"></i> Disable</button>
@@ -352,7 +352,7 @@
                                             @{{ errors.first('last_name') }}</span>
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <!-- <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('gender') }" for="tester id">Gender:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="sex in sexes">
@@ -363,7 +363,7 @@
                                         </div>
                                         <span v-show="errors.has('gender')" class="help is-danger">@{{ errors.first('gender') }}</span>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone number') }" for="phone number">Phone Number:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
