@@ -22,7 +22,7 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        newFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
+        newFacility : {'code':'', 'name':'','registration_number':'','mailing_address':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','sub_county_id':''},
         fillFacility : {'code':'','registration_number':'', 'name':'', 'sub_county':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','id':''},
         loading: false,
         error: false,
@@ -71,15 +71,18 @@ new Vue({
         },
 
         createFacility: function(){
+            
             var input = this.newFacility;
             this.$http.post('/vuefacilitys',input).then((response) => {
+                
                 this.changePage(this.pagination.current_page);
-                this.newFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':''};
+                this.newFacility = {'code':'', 'name':'','registration_number':'','mailing_address':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','sub_county_id':''};                
                 $("#create-facility").modal('hide');
                 toastr.success('Facility Created Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
                 this.formErrors = response.data;
-            });
+              });
+            
         },
 
         deleteFacility: function(facility){

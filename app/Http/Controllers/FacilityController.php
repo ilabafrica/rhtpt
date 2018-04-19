@@ -118,14 +118,7 @@ class FacilityController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'label' => 'required',
-            'description' => 'required',
-            'order' => 'required',
-            'tag' => 'required',
-            'options' => 'required',
-        ]);
+        
 
         $create = Facility::create($request->all());
 
