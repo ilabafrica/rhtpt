@@ -76,6 +76,7 @@ class ResultController extends Controller
                     $result->feedback = 2;
                 }                
             }
+	    $result->user_role = Auth::user()->ru()->role_id;
         }
         $response = [
             'pagination' => [
@@ -87,7 +88,7 @@ class ResultController extends Controller
                 'to' => $results->lastItem()
             ],
             'data' => $results
-        ];
+        ]; 
         return $results->count() > 0 ? response()->json($response) : $error;
     }
 
