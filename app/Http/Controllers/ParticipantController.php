@@ -906,9 +906,13 @@ enrolled, you’ll receive a tester ID";
         //  Assign UID and restore
         $user->restore();
         $user = User::find($id);
-        $max = $user->id; //change this to pick sequential unique ids
-        $user->uid = $max;
-        $user->username = $max;
+        
+        if (!$user->uid){
+            $max = $user->uid +1
+            $user->id = $max; //change this to pick sequential unique ids
+            $user->username = $max;
+        }
+
         $user->status = '';
         $user->save();
 
