@@ -265,7 +265,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="phone">In-Charge Phone:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|numeric'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone') }" name="phone" type="text" placeholder="" v-model="fillFacility.in_charge_phone" />
+                                        <input v-validate="'required|numeric|max:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone') }" name="phone" type="text" placeholder="" v-model="fillFacility.in_charge_phone" />
                                         <span v-show="errors.has('phone')" class="help is-danger">@{{ errors.first('phone') }}</span>
                                     </div>
                                 </div>
@@ -279,7 +279,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">County:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control c-select" name="county_id" id="county_id" @change="fetchSubs" v-model="fillFacility.county_id">
+                                        <select class="form-control c-select" name="county_id" id="county_ids" @change="fetchsSubs" v-model="fillFacility.county_id">
                                             <option selected></option>
                                             <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>   
                                         </select>

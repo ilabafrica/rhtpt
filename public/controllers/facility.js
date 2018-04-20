@@ -23,7 +23,7 @@ new Vue({
         formErrors:{},
         formErrorsUpdate:{},
         newFacility : {'code':'', 'name':'','registration_number':'','mailing_address':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','sub_county_id':''},
-        fillFacility : {'code':'','registration_number':'', 'name':'', 'sub_county':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','id':''},
+        fillFacility : {'registration_number':'', 'name':'', 'mailing_address':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','sub_id':''},
         loading: false,
         error: false,
         query: '',
@@ -110,7 +110,7 @@ new Vue({
                 var input = this.fillFacility;
                 this.$http.put('/vuefacilitys/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);
-                    this.fillFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''};
+                    this.fillFacility = {'registration_number':'', 'name':'', 'mailing_address':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','sub_id':''};
                     $("#edit-facility").modal('hide');
                     toastr.success('Facility Updated Successfully.', 'Success Alert', {timeOut: 5000});
                 }, (response) => {
@@ -194,7 +194,15 @@ new Vue({
 
         fetchSubs: function() {
             let id = $('#county_id').val();
-            this.$http.get('/subs/'+id).then((response) => {
+            this.$http.get('/subs/'+ id).then((response) => {
+                this.subs = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+        fetchsSubs: function() {
+            let id = $('#county_ids').val();
+            this.$http.get('/subs/'+ id).then((response) => {
                 this.subs = response.data;
             }, (response) => {
                 // console.log(response);
