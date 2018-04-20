@@ -67,7 +67,7 @@
                 <button class="btn btn-sm btn-secondary" v-if="(result.panel_status==0 && result.user_role !=2) || result.panel_status==1 " @click.prevent="viewResult(result)" ><i class="fa fa-reorder"></i> View</button>
                 <button class="btn btn-sm btn-success" v-if="result.panel_status==0 && result.user_role==2" @click.prevent="viewResult(result)" ><i class="fa fa-check-circle"></i> Verify</button>    
                 	
-                <button class="btn btn-sm btn-secondary" v-if="result.panel_status==3" @click.prevent="showEvaluatedResults(result)" ><i class="fa fa-reorder"></i> View</button>                   
+                <button class="btn btn-sm btn-secondary" v-if="result.panel_status==3" @click.prevent="showEvaluatedResults(result)" ><i class="fa fa-reorder"></i> View</button> 
             @endpermission
             @permission('update-result')
                 <button  v-if="result.panel_status==0" class="btn btn-sm btn-primary" @click.prevent="editResult(result)" ><i class="fa fa-edit"></i> Edit</button>
