@@ -47,34 +47,34 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $users = User::whereNull('uid')->whereNull('sms_code')->latest()->paginate(5);
+        $users = User::whereNull('uid')->whereNull('sms_code')->latest()->paginate(100);
         if(Auth::user()->isCountyCoordinator())
         {
-            $users = County::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+            $users = County::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $users = SubCounty::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+           $users = SubCounty::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+           $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
         }
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $users = User::where('name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+            $users = User::where('name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
             if(Auth::user()->isCountyCoordinator())
             {
-                $users = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+                $users = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isSubCountyCoordinator())
             {
-                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isFacilityInCharge())
             {
-               $users = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+               $users = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
             }
         }
         foreach($users as $user)
