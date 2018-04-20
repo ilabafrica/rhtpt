@@ -53,7 +53,7 @@
             <td>@{{ result.tester }}</td>
             <td>
                 <button v-if="result.panel_status==0" class="mbtn mbtn-raised mbtn-danger mbtn-xs">Not Checked</button>
-                <button v-if="result.panel_status==1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Checked</button>
+                <button v-if="result.panel_status==1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Submitted</button>
                 <button v-if="result.panel_status==2" class="mbtn mbtn-raised mbtn-info mbtn-xs">Evaluated</button>
                 <button v-if="result.panel_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
             </td>
@@ -63,8 +63,10 @@
                 <button v-if="result.feedback==2 || result.feedback==null " class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
             </td>
             <td>
-            @permission('view-result')
-                <button class="btn btn-sm btn-secondary" v-if="result.panel_status==0 || result.panel_status==1" @click.prevent="viewResult(result)" ><i class="fa fa-reorder"></i> View</button>	
+            @permission('view-result')               
+                <button class="btn btn-sm btn-secondary" v-if="(result.panel_status==0 && result.user_role !=2) || result.panel_status==1 " @click.prevent="viewResult(result)" ><i class="fa fa-reorder"></i> View</button>
+                <button class="btn btn-sm btn-success" v-if="result.panel_status==0 && result.user_role==2" @click.prevent="viewResult(result)" ><i class="fa fa-check-circle"></i> Verify</button>    
+                	
                 <button class="btn btn-sm btn-secondary" v-if="result.panel_status==3" @click.prevent="showEvaluatedResults(result)" ><i class="fa fa-reorder"></i> View</button>                   
             @endpermission
             @permission('update-result')
@@ -335,9 +337,9 @@
                                         </div>
                                         <p class="form-control">Once you verify, the document will be submitted to NPHL and you will not be able to change the results</p>
                                     </div>
-                                    <hr v-if="viewFormData.pt.panel_status=0">
+                                    <hr v-if="viewFormData.pt.panel_status==0">
                                     <div class="form-group row col-sm-offset-5 col-sm-7">
-                                        <button v-if="viewFormData.pt.panel_status==0" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Results</button>&nbsp;
+                                        <button v-if="viewFormData.pt.panel_status==0" class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Submit</button>&nbsp;
                                         <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                     </div>
                                 </div>

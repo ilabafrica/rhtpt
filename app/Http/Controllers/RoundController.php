@@ -202,7 +202,7 @@ class RoundController extends Controller
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
         $apikey     = $api->api_key;
-       if($recipients)
+        if($recipients)
         {
             // Specified sender-id
             $from = $api->code;
@@ -905,108 +905,86 @@ class RoundController extends Controller
                         if(strcmp($county, "THARAKA-NITHI") === 0)
                             $county = "Tharaka Nithi";
 
-                        //  process user details only if the name exists
-                        if($uid)
-                        {
-                            $user = User::find(User::idByUid($uid));
-                            if(!$user)
-                            {
-                                $user = new User;
-                                $user->uid = $uid;
-                            }
-                        }
-                        else
-                        {
-                            $userId = User::idByEmail($temail);
-                            if($userId)
-                            {
-                                $user = User::find($userId);
-                                $user->uid = $user->uid;
-                            }
-                            else
-                            {
-                                $user = new User;
-                                $user->date_registered = $today;
-                                $count = count(User::where('uid', User::MIN_UNIQUE_ID)->get());
-                                if($count > 0)
-                                    $user->uid = DB::table('users')->where('uid', '>=', User::MIN_UNIQUE_ID)->max('uid')+1;
-                                else
-                                    $user->uid = User::MIN_UNIQUE_ID;
-                            }
-                        }
-                        //  process user details
-                        if($tfname && $tsname && $tphone && $temail && $tprog && $tdes)
-                        {
-                            if(count(User::where('phone', $tphone)->get()) > 0){
-                                $duplicateParticapant = array($tfname, $tsname, $tphone, $temail);
-                                $duplicates[] = $duplicateParticapant;
-                                continue;
-                            }
-                            $user->name = $tfname. " ".$toname. " ".$tsname;
-                            $user->first_name = $tfname;
-                            $user->middle_name = $toname;
-                            $user->last_name = $tsname;
-                            $user->gender = $tgender;
-                            $user->email = $temail;
-                            $user->phone = $tphone;
-                            $user->address = $taddress;
-                            $user->username = uniqid();
-                            $user->phone_verified = 1;
-                            $user->email_verified = 1;
-                            $user->save();
-                            $user->username = $user->uid;
-                            $user->password = Hash::make(User::DEFAULT_PASSWORD);
-                            $user->save();
-                            $userId = $user->id;
+                         if ($mfl == 'NULL')
+                                $missing_facilities[] = array($tfname, $tsname, $mfl, 'Missing Facility');
+                                
+                             else
+                                $facilityId = Facility::idByCode($mfl);
 
-                            //  Prepare to save new facility details
-                            $facilityId = Facility::idByCode($mfl);
                             if(!$facilityId)
-                            {
-                                $fc = new Facility;
-                                $fc->code = $mfl;
-                                $fc->name = $facility;
-                                $fc->in_charge = $incharge;
-                                $fc->in_charge_phone = $iphone;
-                                $fc->in_charge_email = $iemail;
+                            {   
+                                $missing_facilities = array($tfname, $tsname, $mfl, 'Missing Facility');
+                                array_push($duplicates, $missing_facilities);
 
-                                //  Get sub-county
-                                $sub_county_id = SubCounty::idByName($sub_county);
-                                if(!$sub_county_id)
-                                {
-                                    $sb = new SubCounty;
-                                    $sb->name = $sub_county;
-                                    $sb->county_id = County::idByName($county);
-                                    $sb->save();
-                                    $sub_county_id = $sb->id;
-                                }
-                                $fc->sub_county_id = $sub_county_id;
-                                $fc->save();
-                                $facilityId = $fc->id;
                             }else{
-                                $fc = Facility::find($facilityId);
-                                $fc->code = $mfl;
-                                $fc->in_charge = $incharge;
-                                $fc->in_charge_phone = $iphone;
-                                $fc->in_charge_email = $iemail;
-                                $fc->save();
-                            }
+                                //  process user details only if the name exists
+                                if($uid)
+                                {
+                                    $user = User::find(User::idByUid($uid));
+                                    if(!$user)
+                                    {
+                                        $user = new User;
+                                        $user->uid = $uid;
+                                    }
+                                }
+                                else
+                                {
+                                    $userId = User::idByEmail($temail);
+                                    if($userId)
+                                    {
+                                        $user = User::find($userId);
+                                        $user->uid = $user->uid;
+                                    }
+                                    else
+                                    {
+                                        $user = new User;
+                                        $user->date_registered = $today;
+                                        $count = count(User::where('uid', User::MIN_UNIQUE_ID)->get());
+                                        if($count > 0)
+                                            $user->uid = DB::table('users')->where('uid', '>=', User::MIN_UNIQUE_ID)->max('uid')+1;
+                                        else
+                                            $user->uid = User::MIN_UNIQUE_ID;
+                                    }
+                                }
+                                //  process user details
+                                if($tfname && $tsname && $tphone && $temail && $tprog && $tdes)
+                                {
+                                    if(count(User::where('phone', $tphone)->get()) > 0){
+                                        $duplicateParticapant = array($tfname, $tsname, $tphone, 'Phone already taken');
+                                        $duplicates[] = $duplicateParticapant;
+                                        continue;
+                                    }
+                                    $user->name = $tfname. " ".$toname. " ".$tsname;
+                                    $user->first_name = $tfname;
+                                    $user->middle_name = $toname;
+                                    $user->last_name = $tsname;
+                                    $user->gender = $tgender;
+                                    $user->email = $temail;
+                                    $user->phone = $tphone;
+                                    $user->address = $taddress;
+                                    $user->username = uniqid();
+                                    $user->phone_verified = 1;
+                                    $user->email_verified = 1;
+                                    $user->save();
+                                    $user->username = $user->uid;
+                                    $user->password = Hash::make(User::DEFAULT_PASSWORD);
+                                    $user->save();
+                                    $userId = $user->id;
+
+                                    //  Prepare to save facility details
+                                    
+                                    $fc = Facility::find($facilityId);
+                                    $fc->in_charge = $incharge;
+                                    $fc->in_charge_phone = $iphone;
+                                    $fc->in_charge_email = $iemail;
+                                    $fc->save();
+                                    
+                                    //  Prepare to save role-user details
+                                    $roleId = Role::idByName('Participant');
+                                    $user->detachAllRoles();
+                                    DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => Program::idByTitle($tprog), "designation" => $tdes]);
+                        }
                             
-                            //  Prepare to save role-user details
-                            $roleId = Role::idByName('Participant');
-                            $user->detachAllRoles();
-                            DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => Program::idByTitle($tprog), "designation" => $tdes]);
-                            // //  Enrol the participant to the pt round
-                            // $userId = $user->id;
-                            // $roundId = $rId;
-                            // $enrol = Enrol::where('round_id', $roundId)->where('user_id', $userId)->get();
-                            // if(count($enrol) == 0)
-                            // {
-                            //     $enrol = new Enrol;
-                            //     $enrol->round_id = $roundId;
-                            //     $enrol->user_id = $userId;
-                            //     $enrol->save();
-                            // }
                             //  send email and sms for registration
 /*                   
                             if($user->date_registered)
@@ -1025,29 +1003,8 @@ class RoundController extends Controller
                                 {
                                     echo "Encountered an error while sending: ".$e->getMessage();
                                 }
-                            }
-/*
-                            //  Enrollment notifications
-                            $round = Round::find($roundId)->name;
-                            $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
-                            $message = ApiController::replace_between($message, '[', ']', $round);
-                            $message = str_replace(' [', ' ', $message);
-                            $message = str_replace('] ', ' ', $message);
-                            $message = "Dear ".$user->name.", you have been enrolled to PT round ".$round.". If you're not participating, please contact your Sub County lab coordinator.";
-                            try 
-                            {
-                                $smsHandler = new SmsHandler();
-                                $smsHandler->sendMessage($user->phone, $message);
-                            }
-                            catch ( AfricasTalkingGatewayException $e )
-                            {
-                                echo "Encountered an error while sending: ".$e->getMessage();
-                            }
-                            $user->round = $round;                        
-                            $user->notify(new EnrollmentNote($user));
-                            //  Bulk-sms settings
-*/
-                            
+                            }                            
+*/                            
                         }
                     }
                 }

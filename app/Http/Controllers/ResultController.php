@@ -76,7 +76,9 @@ class ResultController extends Controller
                     $result->feedback = 2;
                 }                
             }
-        }
+        } 
+
+        $results->user_role = Auth::user()->ru()->role_id;
         $response = [
             'pagination' => [
                 'total' => $results->total(),
@@ -407,6 +409,37 @@ class ResultController extends Controller
         $round_id = $pt->enrolment->round->id;
         $pt_results = $pt->results;
         $option = new Option;
+
+        $pt_panel_1_kit1_results = '';
+        $pt_panel_2_kit1_results = '';
+        $pt_panel_3_kit1_results = '';;
+        $pt_panel_4_kit1_results = '';
+        $pt_panel_5_kit1_results = '';
+        $pt_panel_6_kit1_results = '';
+
+        $pt_panel_1_kit2_results = '';
+        $pt_panel_2_kit2_results = '';
+        $pt_panel_3_kit2_results = '';;
+        $pt_panel_4_kit2_results = '';
+        $pt_panel_5_kit2_results = '';
+        $pt_panel_6_kit2_results = '';
+
+        $determine = '';
+        $determine_lot_no = '';
+        $determine_expiry_date = '';
+
+        $firstresponse = '';
+        $firstresponse_lot_no = '';
+        $firstresponse_expiry_date = '';
+
+        $expected_result_1 = '';
+        $expected_result_2 = '';
+        $expected_result_3 = '';
+        $expected_result_4 = '';
+        $expected_result_5 = '';
+        $expected_result_6 = '';
+
+
 
         foreach ($pt_results as $rss) {
             //test kit 1 results
