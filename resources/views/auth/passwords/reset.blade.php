@@ -17,15 +17,15 @@
             </div> 
             <div class="bs-callout bs-callout-info text-left">
                 <h4 class="md-18">Reset Passowrd</h4>
-                <p> Enter your email and your new password. Keep your password safe for your next login.</p>
+                <p> Enter your username and your new password. Keep your password safe for your next login.</p>
             </div>  
             <input type="hidden" name="token" value="{{ $token }}">
-            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                <label for="email" >E-Mail Address</label>
-                <input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}" required autofocus>
-                @if ($errors->has('email'))
+            <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
+                <label for="username" >PT Enrollment ID/E-Mail Address</label>
+                <input id="username" type="text" class="form-control" name="username" value="{{ $username or old('username') }}" required autofocus>
+                @if ($errors->has('username'))
                     <span class="help-block">
-                        <strong>{{ $errors->first('email') }}</strong>
+                        <strong>{{ $errors->first('username') }}</strong>
                     </span>
                 @endif
             </div>

@@ -299,6 +299,45 @@ EntrustUserTrait::restore insteadof SoftDeletes;
             return null;
         }
     }
+     /**
+    * Return User ID given the phone
+    *
+    */
+    public static function idByPhone($phone=NULL)
+    {
+        if($phone!=NULL)
+        {
+            try 
+            {
+                $count = User::where('phone', $phone)->count();
+                if($count > 0)
+                {
+                    $user = User::where('phone', $phone)->orderBy('name', 'asc')->first();
+                    
+                    if ($user->role ==2) {
+                      return $user->id;
+                    }
+                    else{
+                      return null;
+                    }                  
+                }
+                else
+                {
+                    return null;
+                }
+            } 
+            catch (ModelNotFoundException $e) 
+            {
+                Log::error("The user with phone ` $phone ` does not exist:  ". $e->getMessage());
+                //TODO: send email?
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
     /**
     * Return User ID given the email
     *

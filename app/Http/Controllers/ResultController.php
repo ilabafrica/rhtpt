@@ -173,7 +173,7 @@ class ResultController extends Controller
                     {
                         // Specified sender-id
                         // $from = $api->code;
-                        $from ='Nat-HIVPT';
+                        $from ='NPHL';
                         // Create a new instance of Bulk SMS gateway.
                         $sms    = new Bulk($username, $apikey);
                         // use try-catch to filter any errors.

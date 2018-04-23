@@ -36,7 +36,7 @@
                     <img src="{{ '../'.Config::get('cms.logo') }}" height="50px">
                     <h5 class="text-warning"><strong>{!! Config::get('cms.name') !!}</strong></h5>
                     <h5 class="text-primary"><strong>Password Reset Verification</strong></h5>
-                    <h6 class="text-muted"><strong>Enter the verification token sent to your phone number from Nat-HIVPT</strong></h6>
+                    <h6 class="text-muted"><strong>Enter the verification token sent to your phone number from NPHL</strong></h6>
                 </div>
             </div>
 

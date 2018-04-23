@@ -214,6 +214,11 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "FacilityController@facilities"
     ));
 
+    Route::get("/partners", array(
+        "as"   => "partners.fetch",
+        "uses" => "ImplementingPartnerController@partners"
+    ));
+
     Route::get("/shpprs/{id}", array(
         "as"   => "shippers.fetch",
         "uses" => "ShipperController@shippers"

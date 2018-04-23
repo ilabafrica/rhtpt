@@ -905,18 +905,22 @@ class RoundController extends Controller
                         if(strcmp($county, "THARAKA-NITHI") === 0)
                             $county = "Tharaka Nithi";
 
-                         if ($mfl == 'NULL')
-                                $missing_facilities[] = array($tfname, $tsname, $mfl, 'Missing Facility');
-                                
-                             else
-                                $facilityId = Facility::idByCode($mfl);
-
-                            if(!$facilityId)
-                            {   
+                            if ($mfl == 'NULL'&& ''){
+                                // $missing_facilities[] = array($tfname, $tsname, $mfl, 'Missing Facility');
+                                $facilityId = 0;
                                 $missing_facilities = array($tfname, $tsname, $mfl, 'Missing Facility');
                                 array_push($duplicates, $missing_facilities);
+                            }
+                            else{
+                                $facilityId = Facility::idByCode($mfl);
+                            }
 
-                            }else{
+                         //    if(!$facilityId)
+                         //    {   
+                         //        $missing_facilities = array($tfname, $tsname, $mfl, 'Missing Facility');
+                         //        array_push($duplicates, $missing_facilities);
+
+                         //    }else{
                                 //  process user details only if the name exists
                                 if($uid)
                                 {
@@ -929,7 +933,7 @@ class RoundController extends Controller
                                 }
                                 else
                                 {
-                                    $userId = User::idByEmail($temail);
+                                    $userId = User::idByPhone($tphone);
                                     if($userId)
                                     {
                                         $user = User::find($userId);
@@ -944,11 +948,16 @@ class RoundController extends Controller
                                             $user->uid = DB::table('users')->where('uid', '>=', User::MIN_UNIQUE_ID)->max('uid')+1;
                                         else
                                             $user->uid = User::MIN_UNIQUE_ID;
+                                        
                                     }
                                 }
                                 //  process user details
                                 if($tfname && $tsname && $tphone && $temail && $tprog && $tdes)
-                                {
+                                {   
+                                    if ($tphone == 'NULL' || $tphone == '') {
+                                        $duplicateParticapant = array($tfname, $tsname, $tphone, 'Missing Phone Number');
+                                        $duplicates[] = $duplicateParticapant;
+                                    }
                                     if(count(User::where('phone', $tphone)->get()) > 0){
                                         $duplicateParticapant = array($tfname, $tsname, $tphone, 'Phone already taken');
                                         $duplicates[] = $duplicateParticapant;
@@ -972,13 +981,14 @@ class RoundController extends Controller
                                     $userId = $user->id;
 
                                     //  Prepare to save facility details
-                                    
-                                    $fc = Facility::find($facilityId);
-                                    $fc->in_charge = $incharge;
-                                    $fc->in_charge_phone = $iphone;
-                                    $fc->in_charge_email = $iemail;
-                                    $fc->save();
-                                    
+                                    if ($facilityId >0) {
+                                        
+                                        $fc = Facility::find($facilityId);
+                                        $fc->in_charge = $incharge;
+                                        $fc->in_charge_phone = $iphone;
+                                        $fc->in_charge_email = $iemail;
+                                        $fc->save();
+                                    }
                                     //  Prepare to save role-user details
                                     $roleId = Role::idByName('Participant');
                                     $user->detachAllRoles();
@@ -1005,7 +1015,7 @@ class RoundController extends Controller
                                 }
                             }                            
 */                            
-                        }
+                        // }
                     }
                 }
             }

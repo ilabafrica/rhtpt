@@ -150,4 +150,16 @@ class ImplementingPartnerController extends Controller
 		$implementingPartner = ImplementingPartner::withTrashed()->find($id)->restore();
 		return response()->json(['done']);
 	}
+
+	public function partners(){
+		$partners = ImplementingPartner::pluck('name', 'id');
+
+		$categories = [];
+        foreach($partners as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+
+		return $categories;
+	}
 }
