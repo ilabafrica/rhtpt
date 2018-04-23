@@ -39,7 +39,45 @@
             </div>
         </div>
     </div>
-
+     <div class="row">
+        <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter_by_region()"> -->
+            <div class="col-lg-12 margin-tb">
+                <div class="row">
+                    <div v-if = "role == 1" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="county" id="county_id_" @change="fetchFilterSubs()" v-model="county">
+                                <option selected></option>
+                               <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>                         
+                            </select>
+                        </div>
+                    </div>
+                    <div v-if = "role == 1 || role == 4" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="sub_county" id="sub_id_" @change="fetchFilterFacilities" v-model="sub_county">
+                                <option selected></option>
+                               <option  v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>                         
+                            </select>
+                        </div>
+                    </div>
+                    <div v-if = "role == 1 || role == 4 || role ==7" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="facility" v-model="facility">
+                                <option selected></option>
+                                <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-sm btn-alizarin" type="submit" @click="filter_by_region()" v-if="!loading">Filter </button>
+                        <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                    </div>                
+                </div>
+            </div>
+        <!-- </form> -->
+    </div>
     <table class="table table-bordered">
         <tr>
             <th>Name</th>
@@ -47,6 +85,7 @@
             <th>Phone</th>
             <th>Username</th>
             <th>Role</th>
+            <th>Region</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -57,6 +96,7 @@
             <td>@{{ user.phone }}</td>
             <td>@{{ user.username }}</td>
             <td>@{{ user.rl }}</td>
+            <td>@{{ user.region }}</td>
             <td>
                 <button v-if="!user.deleted_at" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
                 <button v-if="user.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
@@ -166,6 +206,7 @@
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.phone number') }" name="phone number" type="text" v-model="newUser.phone"/>
                                         <span v-show="errors.has('create_user.phone number')" class="help is-danger">@{{ errors.first('create_user.phone number') }}</span>
+                                        <span v-if="formErrors['phone']" class="error text-danger">@{{ formErrors['phone'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -241,6 +282,7 @@
                                         <div class="col-sm-8">
                                             <input type="text" name="username" class="form-control" v-model="newUser.username" />
                                         </div>
+                                        <span v-if="formErrors['username']" class="error text-danger">@{{ formErrors['username'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
@@ -346,7 +388,7 @@
                                     <label class="col-sm-4 form-control-label" for="title">Implementing Partner:</label>
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="implementing_partner_id" v-model="fillUser.implementing_partner_id">
-                                            <option v-for="implementing_partner in implementing_partners" :value="implementing_partner.id">@{{ implementing_partner.name }}</option>
+                                            <option v-for="implementing_partner in implementing_partners" :value="implementing_partner.id">@{{ implementing_partner.value }}</option>
                                         </select>
                                     </div>
                                 </div>

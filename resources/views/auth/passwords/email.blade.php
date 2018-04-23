@@ -17,14 +17,14 @@
                 </div>
                 <div class="bs-callout bs-callout-info text-left">
                     <h4 class="md-18">Password Recovery</h4>
-                    <p> If you have forgotten your password, fill in your PT Enrollment ID below and click send button. You will receive a verification code on your mobile phone.</p>
+                    <p> If you have forgotten your password, fill in your PT Enrollment ID or username below and click send button. You will receive a verification code on your mobile phone.</p>
                 </div>
                 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                    <label for="uid">PT Enrollment ID</label>
-                    <input id="uid" type="text" class="form-control" name="uid" placeholder="eg. 12345" value="{{ old('uid') }}" required>
-                    @if ($errors->has('uid'))
+                    <label for="username">PT Enrollment ID/Username</label>
+                    <input id="username" type="text" class="form-control" name="username" placeholder="eg. 12345" value="{{ old('username') }}" required>
+                    @if ($errors->has('username'))
                         <span class="help-block">
-                        <strong>{{ $errors->first('uid') }}</strong>
+                        <strong>{{ $errors->first('username') }}</strong>
                     </span>
                     @endif
                 </div>

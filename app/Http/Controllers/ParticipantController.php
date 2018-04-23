@@ -908,7 +908,7 @@ enrolled, you’ll receive a tester ID";
         $user = User::find($id);
         
         if (!$user->uid){
-            $max = $user->uid +1
+            $max = $user->uid +1;
             $user->id = $max; //change this to pick sequential unique ids
             $user->username = $max;
         }
