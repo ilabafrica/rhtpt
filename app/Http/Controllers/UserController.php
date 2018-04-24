@@ -103,9 +103,10 @@ class UserController extends Controller
         foreach($users as $user)
         {
             !empty($user->ru())?$user->role = $user->ru()->role_id:$user->role = '';
-            !empty($user->ru())?$user->rl = Role::find($user->ru()->role_id)->name:$user->rl = '';
-
-            if ($user->role ==3) {
+            !empty($user->ru())?$user->tier = $user->ru()->tier:$user->tier = '';
+	    !empty($user->ru())?$user->rl = Role::find($user->ru()->role_id)->name:$user->rl = '';
+/*
+	    if ($user->role ==3) {
                     $region = ImplementingPartner::find($user->ru()->tier)->name;
                
             }
@@ -124,6 +125,8 @@ class UserController extends Controller
             else{
                 $region = 'Not Specified';
             }
+*/
+	    $region = '';
             !empty($user->ru())?$user->region = $region:$user->region = 'Not Specified';
         }
         $response = [
