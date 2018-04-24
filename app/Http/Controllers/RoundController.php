@@ -403,8 +403,12 @@ class RoundController extends Controller
     }
 
     //get the list of users to be enrolled
-     public function loadparticipants($round, Request $request)
+     public function loadparticipants(Request $request, $round=null)
     {
+        if ($request->has('round')) {
+            $round = $request->get('round');
+        }
+        $enrol_status=0;
         $error = ['error' => 'No results found, please try with different keywords.'];
         $participants = User::whereNotNull('uid')->get();
         if(Auth::user()->isCountyCoordinator())
@@ -436,17 +440,41 @@ class RoundController extends Controller
                $participants = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->get();
             }
         }
-        
-        $enrolled_users = Enrol::where('round_id', $round)->pluck('user_id')->toArray();
+        //filter users by region
+        if($request->has('county')) 
+        {            
+            $participants = County::find($request->get('county'))->users()->whereNull('uid')->latest()->withTrashed()->paginate(100);             
+        }
+         if($request->has('sub_county')) 
+        {
+            $participants = SubCounty::find($request->get('sub_county'))->users()->whereNull('uid')->latest()->withTrashed()->paginate(100);
+        }
+        if($request->has('facility')) 
+        {
+            $participants = Facility::find($request->get('facility'))->users()->whereNull('uid')->latest()->withTrashed()->paginate(100);
+        }
 
-        $participants = $participants->filter(function ($participant) use($enrolled_users){
-            if (!in_array($participant->id, $enrolled_users) ) {  
-                return $participant;
-            }
-        });
+        $enrolled_users = Enrol::where('round_id', $round)->pluck('user_id')->toArray();
+       
+
+        if ($request->has('enrolled')) {
+            $participants = $participants->filter(function ($participant) use($enrolled_users){
+                if (in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;
+                }
+            });
+
+            $enrol_status = 1;
+        } else {
+            $participants = $participants->filter(function ($participant) use($enrolled_users){
+                if (!in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;
+                }
+            });
+        }
         
         foreach($participants as $participant)
-        {             
+        {   
             if(!empty($participant->ru()->tier))
             {
                 $facility = Facility::find($participant->ru()->tier);
@@ -475,7 +503,10 @@ class RoundController extends Controller
         }
        
         $response = [           
-            'data' => $participants
+            'data' => $participants,
+            'role' => Auth::user()->ru()->role_id,
+            'tier' => Auth::user()->ru()->tier,
+            'enrol_status' =>$enrol_status
         ];
 
         return $participants->count() > 0 ? response()->json($response) : $error;
