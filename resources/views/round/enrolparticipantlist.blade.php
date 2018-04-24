@@ -22,7 +22,9 @@
                     <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
-                    </a>                
+                    </a>  
+                        <button class="btn btn-sm btn-primary" type="submit" @click="filter_enrolled_participants()" v-if="!loading">Enrolled Participants </button>
+                        <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
                 </h5>
             </div>
             <div class="col-md-4">
@@ -37,12 +39,51 @@
         </div>
     </div>
     <div class="row">
+        <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter_by_region()"> -->
+            <div class="col-lg-12 margin-tb">
+                <div class="row">
+                    <div v-if = "role == 1" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="county" id="county_id" @change="fetchSubs()" v-model="county">
+                                <option selected></option>
+                               <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>                         
+                            </select>
+                        </div>
+                    </div>
+                    <div v-if = "role == 1 || role == 4" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="sub_county" id="sub_id" @change="fetchFacilities" v-model="sub_county">
+                                <option selected></option>
+                               <option  v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>                         
+                            </select>
+                        </div>
+                    </div>
+                    <div v-if = "role == 1 || role == 4 || role ==7" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="facility" v-model="facility">
+                                <option selected></option>
+                                <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-sm btn-alizarin" type="submit" @click="filter_by_region()" v-if="!loading">Filter </button>
+                        <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                    </div>                
+                </div>
+            </div>
+        <!-- </form> -->
+    </div>
+    <div class="row">
         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="enrolParticipants" id="partFrms">
             <div class="col-md-12">
                 <input type="hidden" class="form-control" name="round_id" id="round-id" v-bind:value="roundId"/>
                 <table class="table table-bordered table-responsive">
                     <tr>
-                        <th>Remove</th>
+                        <th v-if = 'enrol_status ==0'>Remove</th>
                         <th>Participant</th>
                         <th>UID</th>
                         <th>Facility</th>
@@ -50,7 +91,7 @@
                         <th>Program</th>
                     </tr>
                     <tr v-for="participant in testerparticipants">                                        
-                        <td><input type="checkbox" checked='false'  :value="participant.id" name="usrs[]" ></td>
+                        <td v-if = 'enrol_status ==0'><input type="checkbox" checked='false'  :value="participant.id" name="usrs[]" ></td>
                         <td>@{{ participant.name }}</td>
                         <td>@{{ participant.uid }}</td>
                         <td>@{{ participant.fac }}</td>
