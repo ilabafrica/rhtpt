@@ -28,7 +28,8 @@
                     <button style="display:none" class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#batch-registration"><i class="fa fa-level-up"></i> Batch Reg.</button>
                     <button style="display:none" class="btn btn-sm btn-nephritis" id="import" data-toggle="modal" data-target="#import-user-list"><i class="fa fa-level-down"></i> Import Users</button>
                 @endpermission
-                	<button class="btn btn-sm btn-registered" @click="registered"><i class="fa fa-address-card"></i> Self Registered</button>
+                    <button class="btn btn-sm btn-registered" @click="registered"><i class="fa fa-address-card"></i> Self Registered</button>
+                	<button class="btn btn-sm btn-primary" @click="no_mfl"><i class="fa fa-address-card"></i> Participants Without Facilities</button>
                 </h5>
             </div>
             <div class="col-md-3">
@@ -42,6 +43,23 @@
             </div>
         </div>
     </div>
+    <br/>
+    <div class="row">
+        <div class="col-lg-12 margin-tb">
+            <div class="pull-left col-md-9">
+                <h6>Statistics:&nbsp;&nbsp;&nbsp;|
+                Total Users:
+                @{{total_users}}&nbsp;&nbsp;&nbsp;|
+                Active Users:
+                @{{active_users}}&nbsp;&nbsp;&nbsp;|
+                Inactive Users:
+                @{{inactive_users}}
+            </h6>
+                
+            </div>
+        </div>
+    </div>
+    <br/>
     @if(session()->has('error'))
         <div class="alert alert-info">{!! session()->get('error') !!}</div>
     @endif

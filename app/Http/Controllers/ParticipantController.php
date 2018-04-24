@@ -14,6 +14,7 @@ use App\County;
 use App\Program;
 use App\Round;
 use App\SmsHandler;
+use App\Enrol;
 
 use DB;
 use Hash;
@@ -45,18 +46,66 @@ class ParticipantController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
+        $active_users = 0;
+        $inactive_users = 0;
+        $users_without_mfl = 0;
+
         $users = User::whereNotNull('uid')-> latest()->withTrashed()->paginate(100);
+        
+        // //user statistics
+        $users_stats = User::whereNotNull('uid')->get();
+        foreach ($users_stats as  $user_stat) {
+            if ($user_stat->deleted_at == NULL) {
+                $active_users = $active_users + 1;
+            }
+            else{                
+                $inactive_users = $inactive_users + 1;
+            }            
+        }
+
         if(Auth::user()->isCountyCoordinator())
         {
             $users = County::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
+            
+            //user statistics
+            $users_stats = County::find(Auth::user()->ru()->tier)->users();
+            foreach ($users_stats as  $user_stat) {
+                if ($user_stat->deleted_at == NULL) {
+                    $active_users = $active_users + 1;
+                }
+                else{                
+                    $inactive_users = $inactive_users + 1;
+                }
+                
+            }
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
            $users = SubCounty::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
+           //user statistics
+            $users_stats = County::find(Auth::user()->ru()->tier)->users();
+            foreach ($users_stats as  $user_stat) {
+                if ($user_stat->deleted_at == NULL) {
+                    $active_users = $active_users + 1;
+                }
+                else{                
+                    $inactive_users = $inactive_users + 1;
+                }                
+            }
         }
         else if(Auth::user()->isFacilityInCharge())
         {
            $users = Facility::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
+           //user statistics
+            $users_stats = County::find(Auth::user()->ru()->tier)->users();
+            foreach ($users_stats as  $user_stat) {
+                if ($user_stat->deleted_at == NULL) {
+                    $active_users = $active_users + 1;
+                }
+                else{                
+                    $inactive_users = $inactive_users + 1;
+                }                
+            }
         }
         //search users by user details
         if($request->has('q')) 
@@ -112,6 +161,10 @@ class ParticipantController extends Controller
                $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(100);
             }
         }
+        if($request->has('no_mfl')) 
+        {
+            $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', '2')->Where('tier', null)->latest()->withTrashed()->paginate(100);
+        }
         //filter users by region
         if($request->has('county')) 
         {            
@@ -128,9 +181,8 @@ class ParticipantController extends Controller
             $users = Facility::find($request->get('facility'))->users()->latest()->withTrashed()->paginate(100);
 
         }
-
         foreach($users as $user)
-        {
+        {               
             if(!empty($user->ru()->tier))
             {
                 try{
@@ -160,7 +212,7 @@ class ParticipantController extends Controller
             !empty($user->ru())?$user->role = $user->ru()->role_id:$user->role = '';
             !empty($user->ru())?$user->rl = Role::find($user->ru()->role_id)->name:$user->rl = '';
 
-        }
+        }        
         $response = [
             'pagination' => [
                 'total' => $users->total(),
@@ -172,7 +224,11 @@ class ParticipantController extends Controller
             ],
             'data' => $users,
             'role' => Auth::user()->ru()->role_id,
-            'tier' => Auth::user()->ru()->tier
+            'tier' => Auth::user()->ru()->tier,
+            'total_users' => $users->total(),
+            'active_users' => $active_users,
+            'inactive_users' => $inactive_users,
+            'users_without_mfl' => $users_without_mfl,
         ];
 
         return $users->count() > 0 ? response()->json($response) : $error;

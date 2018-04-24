@@ -38,6 +38,10 @@ new Vue({
         county: '',
         role: '',
         tier: '',
+        total_users: '',
+        active_users: '',
+        inactive_users: '',
+        users_without_mfl: '',
         formTransErrors:{},
         uploadify: {id: '', excel: ''},
         someUser : {'first_name':'','middle_name':'','last_name':'','name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
@@ -92,6 +96,10 @@ new Vue({
                 this.users = response.data.data.data;
                 this.role = response.data.role;
                 this.tier = response.data.tier;
+                this.total_users = response.data.total_users;
+                this.active_users = response.data.active_users;
+                this.inactive_users = response.data.inactive_users;
+                this.users_without_mfl = response.data.users_without_mfl;
                 this.pagination = response.data.pagination;
 
                 if (this.role == 4) {
@@ -349,6 +357,63 @@ new Vue({
 
             // Making a get request to our API and passing the query to it.
             this.$http.get('/api/search_participant?q=' + this.query).then((response) => {
+                // If there was an error set the error message, if not fill the users array.
+                if(response.data.error)
+                {
+                    this.error = response.data.error;
+                    toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                }
+                else
+                {
+                    this.users = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                    toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                }
+                // The request is finished, change the loading to false again.
+                this.loading = false;
+                // Clear the query.
+                this.query = '';
+            });
+        },
+
+        filter: function() {
+            // Clear the error message.
+            this.error = '';
+            // Empty the users array so we can fill it with the new users.
+            this.users = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
+
+            // Making a get request to our API and passing the query to it.
+            this.$http.get('/api/search_participant?q=' + this.query).then((response) => {
+                // If there was an error set the error message, if not fill the users array.
+                if(response.data.error)
+                {
+                    this.error = response.data.error;
+                    toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                }
+                else
+                {
+                    this.users = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                    toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                }
+                // The request is finished, change the loading to false again.
+                this.loading = false;
+                // Clear the query.
+                this.query = '';
+            });
+        },
+        no_mfl: function() {
+            // Clear the error message.
+            this.error = '';
+            // Empty the users array so we can fill it with the new users.
+            this.users = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
+
+            // Making a get request to our API and passing the query to it.
+            this.$http.get('/api/search_participant?no_mfl='+ 'no_mfl').then((response) => {
                 // If there was an error set the error message, if not fill the users array.
                 if(response.data.error)
                 {
