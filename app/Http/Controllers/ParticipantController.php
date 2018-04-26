@@ -83,7 +83,7 @@ class ParticipantController extends Controller
         {
            $users = SubCounty::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
            //user statistics
-            $users_stats = County::find(Auth::user()->ru()->tier)->users();
+            $users_stats = SubCounty::find(Auth::user()->ru()->tier)->users();
             foreach ($users_stats as  $user_stat) {
                 if ($user_stat->deleted_at == NULL) {
                     $active_users = $active_users + 1;
@@ -97,7 +97,7 @@ class ParticipantController extends Controller
         {
            $users = Facility::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
            //user statistics
-            $users_stats = County::find(Auth::user()->ru()->tier)->users();
+            $users_stats = Facility::find(Auth::user()->ru()->tier)->users();
             foreach ($users_stats as  $user_stat) {
                 if ($user_stat->deleted_at == NULL) {
                     $active_users = $active_users + 1;
@@ -962,17 +962,15 @@ enrolled, you’ll receive a tester ID";
      */
     public function approve($id)
     {
-       $user = User::withTrashed()->where('id', $id);
-        //  Assign UID and restore
-        $user->restore();
-        $user = User::find($id);
-        
-        if (!$user->uid){
-            $max = $user->uid +1;
-            $user->id = $max; //change this to pick sequential unique ids
-            $user->username = $max;
+        $user = User::withTrashed()->where('id', $id)->first();
+        $max = User::max('uid');
+        $m = $max+1;
+        if ($user->uid==null ||$user->uid==''){
+            $user->uid = $m; //pick sequential unique ids
+            $user->username = $m;
         }
 
+        $user->deleted_at = null;
         $user->status = '';
         $user->save();
 

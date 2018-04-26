@@ -432,6 +432,10 @@ class ResultController extends Controller
         $firstresponse_lot_no = '';
         $firstresponse_expiry_date = '';
 
+        $date_received = '';
+        $date_constituted = '';
+        $date_tested = '';
+
         $expected_result_1 = '';
         $expected_result_2 = '';
         $expected_result_3 = '';
@@ -499,17 +503,24 @@ class ResultController extends Controller
                 $firstresponse_lot_no = $rss->response;
             if($rss->field_id == Field::idByUID('Test 2 Expiry Date'))
                 $firstresponse_expiry_date = $rss->response;  
+
+            //dates
+            if($rss->field_id == Field::idByUID('Date PT Panel Received'))
+                $date_received = $rss->response;
+            if($rss->field_id == Field::idByUID('Date PT Panel Constituted'))
+                $date_constituted = $rss->response;
+            if($rss->field_id == Field::idByUID('Date PT Panel Tested'))
+                $date_tested = $rss->response;
         }
-        $actual_results = array( 
-                                );
+        $actual_results = array();
 
         //get expected results
         $round = Round::find($round_id);
         $user = $pt->enrolment->user;
         $lot = $user->lot($round_id);
         $expected_results = $lot->panels()->get();
-        $material_id = $expected_results->first()->material_id;
-        $material = Material::find($material_id); 
+        // $material_id = $expected_results->first()->material_id;
+        // $material = Material::find($material_id); 
 
         foreach ($expected_results as $ex_rslts) {
 
@@ -575,9 +586,9 @@ class ResultController extends Controller
                     'mfl' => $mfl,
 
                     //material details
-                    'date_collected' =>$material->date_collected,
-                    'date_prepared' =>$material->date_prepared,
-                    'expiry_date' =>$material->expiry_date,
+                    'date_received' =>$date_received,
+                    'date_constituted' =>$date_constituted,
+                    'date_tested' =>$date_tested,
 
                     //panel info
                     'determine' =>$determine,

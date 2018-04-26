@@ -301,7 +301,7 @@ class Algorithm extends Command
     {
         if($field_id = Field::idByUID($field))
         {
-            if($field_id == Field::idByUID("Test 1 Kit Name") && $dmp == "Determine")
+            if($field_id == Field::idByUID("Test 1 Kit Name") && $dmp == "KHB")
             {
                 $comment = $dmp;
                 $dmp = "Other";
@@ -507,7 +507,7 @@ class Algorithm extends Command
          $non_reactive = Option::idByTitle('Non Reactive');
          $not_done = Option::idByTitle('Not Done');
          $fr = Option::idByTitle('First Response');
-         $det = Option::idByTitle('Determine');
+         $det = Option::idByTitle('KHB');
          //$unigold = Option::idByTitle('Unigold');
          if(
              ($pt_panel_1_test_1_results == $non_reactive && $pt_panel_1_test_2_results == $not_done) || ($pt_panel_1_test_1_results == $reactive && ($pt_panel_1_test_2_results == $non_reactive || $pt_panel_1_test_2_results == $reactive)) || 
