@@ -102,27 +102,31 @@ class UserController extends Controller
 
         foreach($users as $user)
         {
+            !empty($user->ru())?$user->tier = $user->ru()->tier:$user->tier = '';
             !empty($user->ru())?$user->role = $user->ru()->role_id:$user->role = '';
             !empty($user->ru())?$user->rl = Role::find($user->ru()->role_id)->name:$user->rl = '';
 
-            if ($user->role ==3) {
-                    $region = ImplementingPartner::find($user->ru()->tier)->name;
-               
-            }
-            elseif ($user->role ==4) {
-                    $region = County::find($user->ru()->tier)->name;
-               
-            }
-            elseif ($user->role ==6) {
-                    $region = Facility::find($user->ru()->tier)->name;
-               
-            }
-            elseif ($user->role ==7) {
-                    $region = SubCounty::find($user->ru()->tier)->name;
-               
-            }
-            else{
-                $region = 'Not Specified';
+            if ($user->tier) {
+
+                if ($user->role ==3) {
+                        $region = ImplementingPartner::find($user->tier)->name;
+                   
+                }
+                elseif ($user->role ==4) {
+                        $region = County::find($user->tier)->name;
+                   
+                }
+                elseif ($user->role ==6) {
+                        $region = Facility::find($user->tier)->name;
+                   
+                }
+                elseif ($user->role ==7) {
+                        $region = SubCounty::find($user->tier)->name;
+                   
+                }
+                else{
+                    $region = 'Not Specified';
+                }
             }
             !empty($user->ru())?$user->region = $region:$user->region = 'Not Specified';
         }
@@ -156,7 +160,8 @@ class UserController extends Controller
             'last_name' => 'required',
             'gender' => 'required',
             'phone' => 'required|unique:users,phone',
-            'email' => 'required',
+            'email' => 'required|unique:users,email',
+            'role' => 'required',
             'username' => 'required|unique:users,username'
         ]);
 

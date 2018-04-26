@@ -115,6 +115,7 @@ class ParticipantController extends Controller
 		    ->orWhere('first_name', 'LIKE', "%{$search}%")
                     ->orWhere('middle_name', 'LIKE', "%{$search}%")
                     ->orWhere('last_name', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%")
                     ->orWhere('phone', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             if(Auth::user()->isCountyCoordinator())
             {
@@ -123,6 +124,7 @@ class ParticipantController extends Controller
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
                     	->orWhere('last_name', 'LIKE', "%{$search}%")
                     	->orWhere('phone', 'LIKE', "%{$search}%")
+                        ->orWhere('email', 'LIKE', "%{$search}%")
 			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isSubCountyCoordinator())
@@ -131,7 +133,8 @@ class ParticipantController extends Controller
 			->orWhere('first_name', 'LIKE', "%{$search}%")
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
                    	->orWhere('last_name', 'LIKE', "%{$search}%")
-                    	->orWhere('phone', 'LIKE', "%{$search}%")
+                        ->orWhere('phone', 'LIKE', "%{$search}%")
+                    	->orWhere('email', 'LIKE', "%{$search}%")
 			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isFacilityInCharge())
@@ -141,6 +144,7 @@ class ParticipantController extends Controller
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
                     	->orWhere('last_name', 'LIKE', "%{$search}%")
                     	->orWhere('phone', 'LIKE', "%{$search}%")
+                        ->orWhere('email', 'LIKE', "%{$search}%")
 			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
         }
@@ -984,7 +988,7 @@ enrolled, you’ll receive a tester ID";
         //  Remove beginning 0 and append +254
         $phone = ltrim($user->phone, '0');
         $recipient = "+254".$phone;
-        $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
+        $message    = "Dear ".$user->name.", your Sub-county Coordinator has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
         // Create a new instance of our awesome gateway class
         $gateway    = new Bulk($username, $apikey);
        
