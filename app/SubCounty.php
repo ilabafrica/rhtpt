@@ -65,13 +65,21 @@ class SubCounty extends Model
     * Get users for a sub-county
     *
     */
-    public function users()
+    public function users($role = null)
     {
-        $prole = Role::idByName('Participant');
-        $fls = $this->facilities->pluck('id')->toArray();
-        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);
+        if ($role =='User') {
+            
+            $subcounty_role = Role::idByName('Sub-County Coordinator');
+            $subs = [$this->id];
+            $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                        ->where('role_id', $subcounty_role)->whereIn('tier', $subs);
+        }else{
+            $prole = Role::idByName('Participant');
+            $fls = $this->facilities->pluck('id')->toArray();
+            $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);
+          }
         return $users;
-    }        
+    }       
     /**
     * Get results for a sub-county
     *

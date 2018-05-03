@@ -509,6 +509,13 @@ new Vue({
                     this.county = '';
                 });
             }
+
+            //get default users
+            else{
+                this.getVueUsers(this.pagination.current_page);
+                // The request is finished, change the loading to false again.
+                this.loading = false;
+            }
            
         },
      
