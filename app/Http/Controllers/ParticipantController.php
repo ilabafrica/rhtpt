@@ -83,7 +83,7 @@ class ParticipantController extends Controller
         {
            $users = SubCounty::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
            //user statistics
-            $users_stats = County::find(Auth::user()->ru()->tier)->users();
+            $users_stats = SubCounty::find(Auth::user()->ru()->tier)->users();
             foreach ($users_stats as  $user_stat) {
                 if ($user_stat->deleted_at == NULL) {
                     $active_users = $active_users + 1;
@@ -97,7 +97,7 @@ class ParticipantController extends Controller
         {
            $users = Facility::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
            //user statistics
-            $users_stats = County::find(Auth::user()->ru()->tier)->users();
+            $users_stats = Facility::find(Auth::user()->ru()->tier)->users();
             foreach ($users_stats as  $user_stat) {
                 if ($user_stat->deleted_at == NULL) {
                     $active_users = $active_users + 1;
@@ -115,6 +115,7 @@ class ParticipantController extends Controller
 		    ->orWhere('first_name', 'LIKE', "%{$search}%")
                     ->orWhere('middle_name', 'LIKE', "%{$search}%")
                     ->orWhere('last_name', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%")
                     ->orWhere('phone', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             if(Auth::user()->isCountyCoordinator())
             {
@@ -123,6 +124,7 @@ class ParticipantController extends Controller
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
                     	->orWhere('last_name', 'LIKE', "%{$search}%")
                     	->orWhere('phone', 'LIKE', "%{$search}%")
+                        ->orWhere('email', 'LIKE', "%{$search}%")
 			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isSubCountyCoordinator())
@@ -131,7 +133,8 @@ class ParticipantController extends Controller
 			->orWhere('first_name', 'LIKE', "%{$search}%")
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
                    	->orWhere('last_name', 'LIKE', "%{$search}%")
-                    	->orWhere('phone', 'LIKE', "%{$search}%")
+                        ->orWhere('phone', 'LIKE', "%{$search}%")
+                    	->orWhere('email', 'LIKE', "%{$search}%")
 			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isFacilityInCharge())
@@ -141,6 +144,7 @@ class ParticipantController extends Controller
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
                     	->orWhere('last_name', 'LIKE', "%{$search}%")
                     	->orWhere('phone', 'LIKE', "%{$search}%")
+                        ->orWhere('email', 'LIKE', "%{$search}%")
 			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
         }
@@ -958,17 +962,15 @@ enrolled, you’ll receive a tester ID";
      */
     public function approve($id)
     {
-       $user = User::withTrashed()->where('id', $id);
-        //  Assign UID and restore
-        $user->restore();
-        $user = User::find($id);
-        
-        if (!$user->uid){
-            $max = $user->uid +1;
-            $user->id = $max; //change this to pick sequential unique ids
-            $user->username = $max;
+        $user = User::withTrashed()->where('id', $id)->first();
+        $max = User::max('uid');
+        $m = $max+1;
+        if ($user->uid==null ||$user->uid==''){
+            $user->uid = $m; //pick sequential unique ids
+            $user->username = $m;
         }
 
+        $user->deleted_at = null;
         $user->status = '';
         $user->save();
 
@@ -984,7 +986,7 @@ enrolled, you’ll receive a tester ID";
         //  Remove beginning 0 and append +254
         $phone = ltrim($user->phone, '0');
         $recipient = "+254".$phone;
-        $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
+        $message    = "Dear ".$user->name.", your Sub-county Coordinator has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
         // Create a new instance of our awesome gateway class
         $gateway    = new Bulk($username, $apikey);
        

@@ -400,15 +400,15 @@
                                         <tr class="text-center"> <b>Panel Information</b></tr>
                                         <tr>
                                             <td><b>Receive Date</b></td>
-                                            <td>@{{evaluated_results.date_collected}}</td>                                            
+                                            <td>@{{evaluated_results.date_received}}</td>                                            
                                         </tr>
                                          <tr>
                                             <td><b>Constituted Date</b></td>
-                                            <td>@{{evaluated_results.date_prepared}}</td>
+                                            <td>@{{evaluated_results.date_constituted}}</td>
                                         </tr>
                                          <tr>
                                             <td><b>Tested Date</b></td>
-                                            <td>@{{evaluated_results.expiry_date}}</td>
+                                            <td>@{{evaluated_results.date_tested}}</td>
                                         </tr>
                                    </table>   
                                 </div>

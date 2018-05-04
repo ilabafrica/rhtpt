@@ -89,7 +89,7 @@
             <th>Status</th>
             <th>Action</th>
         </tr>
-        <tr v-for="user in users">
+        <tr v-for="user in users" v-if="user.role != 2">
             <td v-if="user.name!=''">@{{ user.name }}</td>
             <td v-else>@{{ user.first_name }} @{{ user.middle_name }} @{{ user.last_name }}</td>
             <td>@{{ user.gender==0?'Male':'Female' }}</td>
@@ -199,6 +199,7 @@
                                             </label>
                                         </div>
                                         <span v-show="errors.has('create_user.gender')" class="help is-danger">@{{ errors.first('create_user.gender') }}</span>
+                                        <span v-if="formErrors['gender']" class="error text-danger">@{{ formErrors['gender'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -214,6 +215,7 @@
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <input v-validate="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.email') }" name="email" type="text" v-model="newUser.email"/>
                                         <span v-show="errors.has('create_user.email')" class="help is-danger">@{{ errors.first('create_user.email') }}</span>
+                                        <span v-if="formErrors['email']" class="error text-danger">@{{ formErrors['email'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -226,6 +228,7 @@
                                             </label>
                                         </div>
                                         <span v-show="errors.has('create_user.role')" class="help is-danger">@{{ errors.first('create_user.role') }}</span>
+                                        <span v-if="formErrors['role']" class="error text-danger">@{{ formErrors['role'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row" v-if="newUser.role == 3">
@@ -278,11 +281,12 @@
                                 </div>
                                 <div v-if="newUser.role != 2">
                                     <div class="form-group row">
-                                        <label class="col-sm-4 form-control-label" for="title">Username:</label>
+                                        <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('create_user.username') }" for="title">Username:</label>
                                         <div class="col-sm-8">
-                                            <input type="text" name="username" class="form-control" v-model="newUser.username" />
-                                        </div>
+                                            <input v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('create_user.username') }" type="text" name="username" class="form-control" v-model="newUser.username" />
+                                        <span v-show="errors.has('create_user.username')" class="help is-danger">@{{ errors.first('create_user.username') }}</span>
                                         <span v-if="formErrors['username']" class="error text-danger">@{{ formErrors['username'] }}</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
