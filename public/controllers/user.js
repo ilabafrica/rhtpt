@@ -358,8 +358,7 @@ new Vue({
                     }
                     // The request is finished, change the loading to false again.
                     this.loading = false;
-                    // Clear the query.
-                    this.facility = '';
+
                 });
             }
             
@@ -381,8 +380,7 @@ new Vue({
                     }
                     // The request is finished, change the loading to false again.
                     this.loading = false;
-                    // Clear the query.
-                    this.sub_county = '';
+
                 });
             }
 
@@ -404,9 +402,15 @@ new Vue({
                     }
                     // The request is finished, change the loading to false again.
                     this.loading = false;
-                    // Clear the query.
-                    this.county = '';
+
                 });
+            }
+
+            //get default users
+            else{
+                this.getVueUsers(this.pagination.current_page);
+                // The request is finished, change the loading to false again.
+                this.loading = false;
             }
            
         },
@@ -429,6 +433,10 @@ new Vue({
         // fetch subcounties in after selecting a county
         fetchFilterSubs: function() {
             let id = $('#county_id_').val();
+
+            this.sub_county = '';
+            this.facility = '';
+
             this.$http.get('/subs/'+id).then((response) => {
                 this.subs = response.data;
             }, (response) => {
@@ -446,6 +454,7 @@ new Vue({
         },
         fetchFilterFacilities: function() {
             let id = $('#sub_id_').val();
+            this.facility = '';
             this.$http.get('/fclts/'+id).then((response) => {
                 this.facilities = response.data;
             }, (response) => {

@@ -56,15 +56,15 @@ class UserController extends Controller
 
         if(Auth::user()->isCountyCoordinator())
         {
-            $users = County::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
+            $users = County::find(Auth::user()->ru()->tier)->users('User')->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $users = SubCounty::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
+           $users = SubCounty::find(Auth::user()->ru()->tier)->users('User')->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
+           $users = Facility::find(Auth::user()->ru()->tier)->users('User')->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
         }
         if($request->has('q')) 
         {
@@ -72,31 +72,31 @@ class UserController extends Controller
             $users = User::where('name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
             if(Auth::user()->isCountyCoordinator())
             {
-                $users = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->latest()->withTrashed()->paginate(100);
+                $users = County::find(Auth::user()->ru()->tier)->users('User')->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isSubCountyCoordinator())
             {
-                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->latest()->withTrashed()->paginate(100);
+                $users = SubCounty::find(Auth::user()->ru()->tier)->users('User')->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isFacilityInCharge())
             {
-               $users = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->latest()->withTrashed()->paginate(100);
+               $users = Facility::find(Auth::user()->ru()->tier)->users('User')->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->latest()->withTrashed()->paginate(100);
             }
         }
 
         //filter users by region
         if($request->has('county')) 
         {            
-            $users = County::find($request->get('county'))->users()->whereNull('uid')->latest()->withTrashed()->paginate(100);               
+            $users = County::find($request->get('county'))->users('User')->whereNull('uid')->latest()->withTrashed()->paginate(100);               
         }
          if($request->has('sub_county')) 
         {
-            $users = SubCounty::find($request->get('sub_county'))->users()->whereNull('uid')->latest()->withTrashed()->paginate(100);
+            $users = SubCounty::find($request->get('sub_county'))->users('User')->whereNull('uid')->latest()->withTrashed()->paginate(100);
 
         }
         if($request->has('facility')) 
         {
-            $users = Facility::find($request->get('facility'))->users()->whereNull('uid')->latest()->withTrashed()->paginate(100);
+            $users = Facility::find($request->get('facility'))->users('User')->whereNull('uid')->latest()->withTrashed()->paginate(100);
 
         }
 
