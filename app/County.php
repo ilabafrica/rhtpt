@@ -45,11 +45,25 @@ class County extends Model
     * Get users for a county
     *
     */
-    public function users()
+    public function users($role=null)
     {
-        $prole = Role::idByName('Participant');
-        $fls = $this->facilities()->pluck('id')->toArray();
-        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);
+        if ($role =='User') {
+            $county = [$this->id];
+            $county_role = Role::idByName('County Coordinator');
+
+            $subcounty_role = Role::idByName('Sub-County Coordinator');
+            $subs = $this->subCounties()->pluck('id')->toArray();
+            $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                        ->where(function($query) use ($subcounty_role, $subs){
+                            return $query->where('role_id', $subcounty_role)->whereIn('tier', $subs);
+                        })->orWhere(function($q) use ($county_role, $county){
+                            return $q->where('role_id', $county_role)->whereIn('tier', $county);
+                        });
+        }else{
+            $prole = Role::idByName('Participant');
+            $fls = $this->facilities()->pluck('id')->toArray();
+            $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);
+        }        
         return $users;
     }
     /**
