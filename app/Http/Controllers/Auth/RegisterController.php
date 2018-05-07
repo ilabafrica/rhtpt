@@ -101,7 +101,7 @@ class RegisterController extends Controller
     {
         $usr = NULL;
         $validator = $this->validate($request, [
-            'email' => 'required|unique:users,email',
+//            'email' => 'required|unique:users,email',
             'phone' => 'required|unique:users,phone',
         ]);
         $now = Carbon::now('Africa/Nairobi');
@@ -129,32 +129,8 @@ class RegisterController extends Controller
         }
         //  Prepare to save facility details
         $facilityId = Facility::idByCode($request->mfl_code);
-        if(!$facilityId)
-            $facilityId = Facility::idByName($request->facility);
-        if($facilityId)
-            $facility = Facility::find($facilityId);
-        else
-            $facility = new Facility;
-        $facility = new Facility;
-        $facility->code = $request->mfl_code;
-        $facility->name = $request->facility;
-        $facility->in_charge = $request->in_charge;
-        $facility->in_charge_phone = $request->in_charge_phone;
-        $facility->in_charge_email = $request->in_charge_email;
-        //  Get sub-county
-        $sub_county = SubCounty::idByName($request->sub_county);
-        if(!$sub_county)
-        {
-            $sb = new SubCounty;
-            $sb->name = $request->sub_county;
-            $sb->county_id = $request->county;
-            $sb->save();
-            $sub_county = $sb->id;
-        }
-        $facility->sub_county_id = $sub_county;
-        $facility->save();
-        $facilityId = $facility->id;
-        //  Prepare to save role-user details
+        
+	//  Prepare to save role-user details
         $roleId = Role::idByName('Participant');
         DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => $request->program, 'designation' => $request->designation]);
         /*

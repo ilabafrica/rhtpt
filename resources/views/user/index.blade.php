@@ -239,7 +239,7 @@
                                             v-model="newUser.implementing_partner_id">
                                             <option v-for="implementing_partner in implementing_partners"
                                                 :value="implementing_partner.id">
-                                                @{{ implementing_partner.name }}</option>
+                                                @{{ implementing_partner.value }}</option>
                                         </select>
                                     </div>
                                 </div>

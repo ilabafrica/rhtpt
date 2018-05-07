@@ -963,7 +963,7 @@ enrolled, you’ll receive a tester ID";
     public function approve($id)
     {
         $user = User::withTrashed()->where('id', $id)->first();
-        $max = User::max('uid');
+	$max = DB::table('users')->max('uid');
         $m = $max+1;
         if ($user->uid==null ||$user->uid==''){
             $user->uid = $m; //pick sequential unique ids

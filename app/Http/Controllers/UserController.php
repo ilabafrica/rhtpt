@@ -69,7 +69,7 @@ class UserController extends Controller
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $users = User::where('name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
+            $users = User::where('name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
             if(Auth::user()->isCountyCoordinator())
             {
                 $users = County::find(Auth::user()->ru()->tier)->users('User')->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->latest()->withTrashed()->paginate(100);
