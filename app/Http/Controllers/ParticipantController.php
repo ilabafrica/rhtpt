@@ -11,6 +11,7 @@ use App\Role;
 use App\Facility;
 use App\SubCounty;
 use App\County;
+use App\ImplementingPartner;
 use App\Program;
 use App\Round;
 use App\SmsHandler;
@@ -93,6 +94,19 @@ class ParticipantController extends Controller
                 }                
             }
         }
+        else if(Auth::user()->isPartner())
+        {
+           $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
+           //user statistics
+            foreach ($users_stats as  $user_stat) {
+                if ($user_stat->deleted_at == NULL) {
+                    $active_users = $active_users + 1;
+                }
+                else{                
+                    $inactive_users = $inactive_users + 1;
+                }                
+            }
+        }
         else if(Auth::user()->isFacilityInCharge())
         {
            $users = Facility::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
@@ -112,40 +126,51 @@ class ParticipantController extends Controller
         {
             $search = $request->get('q');
             $users = User::where('name', 'LIKE', "%{$search}%")
-		    ->orWhere('first_name', 'LIKE', "%{$search}%")
+		            ->orWhere('first_name', 'LIKE', "%{$search}%")
                     ->orWhere('middle_name', 'LIKE', "%{$search}%")
                     ->orWhere('last_name', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%")
-                    ->orWhere('phone', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
+                    ->orWhere('phone', 'LIKE', "%{$search}%")
+                    ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             if(Auth::user()->isCountyCoordinator())
             {
                 $users = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
-			->orWhere('first_name', 'LIKE', "%{$search}%")
+			            ->orWhere('first_name', 'LIKE', "%{$search}%")
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
                     	->orWhere('last_name', 'LIKE', "%{$search}%")
                     	->orWhere('phone', 'LIKE', "%{$search}%")
                         ->orWhere('email', 'LIKE', "%{$search}%")
-			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
+			            ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isSubCountyCoordinator())
             {
                 $users = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
-			->orWhere('first_name', 'LIKE', "%{$search}%")
+			            ->orWhere('first_name', 'LIKE', "%{$search}%")
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
-                   	->orWhere('last_name', 'LIKE', "%{$search}%")
+                   	    ->orWhere('last_name', 'LIKE', "%{$search}%")
                         ->orWhere('phone', 'LIKE', "%{$search}%")
                     	->orWhere('email', 'LIKE', "%{$search}%")
-			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
+			            ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isFacilityInCharge())
             {
                $users = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
-			->orWhere('first_name', 'LIKE', "%{$search}%")
+			            ->orWhere('first_name', 'LIKE', "%{$search}%")
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
                     	->orWhere('last_name', 'LIKE', "%{$search}%")
                     	->orWhere('phone', 'LIKE', "%{$search}%")
                         ->orWhere('email', 'LIKE', "%{$search}%")
-			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
+			            ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
+            }
+            else if(Auth::user()->isPartner())
+            {
+               $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
+                        ->orWhere('first_name', 'LIKE', "%{$search}%")
+                        ->orWhere('middle_name', 'LIKE', "%{$search}%")
+                        ->orWhere('last_name', 'LIKE', "%{$search}%")
+                        ->orWhere('phone', 'LIKE', "%{$search}%")
+                        ->orWhere('email', 'LIKE', "%{$search}%")
+                        ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
         }
         if($request->has('filter')) 
@@ -163,6 +188,10 @@ class ParticipantController extends Controller
             else if(Auth::user()->isFacilityInCharge())
             {
                $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(100);
+            }
+            else if(Auth::user()->isPartner())
+            {
+               $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(100);
             }
         }
         if($request->has('no_mfl')) 
