@@ -516,7 +516,7 @@ new Vue({
             }
            
         },
-     
+
         populateUser: function(user){
             this.transferUser.id = user.id;
             this.transferUser.facility_id = user.facility;

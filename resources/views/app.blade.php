@@ -33,9 +33,17 @@
                 background-color: white;
             }
 
-	    .navigation .list-unstyled li a {
-		color: #FFFFFF;
-	    }
+    	    .navigation .list-unstyled li a {
+        		color: #FFFFFF;
+    	    }
+            .my-loading-container{
+                position:fixed;
+                background-color:#f9f9f9;
+                z-index:9;
+                top: 50%;
+                left: 50%;
+                cursor:wait;
+            }
         </style>
         <!-- Sweet Alert Styling-->
         <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
@@ -208,9 +216,22 @@
                         </ul>
                     </li>
                     @endpermission
-                    @permission('facility-catalog')
+                    @permission('reports-catalog')
                     <li class="{!! Request::segment(1)==strtolower('report')?strtolower(trans('messages.active')):'' !!}">
-                        <a href="{!! url('report') !!}"><i class="fa fa-bar-chart-o"></i> {!! trans('messages.reports') !!}</a>
+                        <a href="#"><i class="fa fa-bar-chart-o"></i> {!! trans('messages.reports') !!}</a>
+                        <ul class="list-unstyled">
+                            @permission('read-general-report')
+                            <li class="{!! Request::segment(1)=='material'?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('report') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.reports') !!}</a>
+                            </li>
+                            @endpermission
+                            @permission('read-participant-registration-counts-report')
+                            <li class="{!! Request::segment(1)=='material'?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('participantcounts') !!}"><i class="fa fa-bookmark"></i> 
+                                {!! trans_choice('messages.registration',1) . ' ' . trans_choice('messages.count',2) !!}</a>
+                            </li>
+                            @endpermission
+                        </ul>
                     </li>
                     @endpermission
                     <li>
@@ -321,6 +342,8 @@
         <script src="{{ asset('controllers/user.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('participant'))
         <script src="{{ asset('controllers/participant.js') }}"></script>
+        @elseif(Request::segment(1)=='participantcounts')
+        <script src="{{ asset('controllers/participantreport.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('implementingpartner'))
         <script src="{{ asset('controllers/implementingpartner.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('agency'))
