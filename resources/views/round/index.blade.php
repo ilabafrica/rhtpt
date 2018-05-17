@@ -76,7 +76,7 @@
             @endpermission
             @permission('enrol-participants')                               
                 <a v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" :href="'/download/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i>Participants List</a>
-                <a v-if="!round.deleted_at && round.enrollment_date >= today" :href="'/enrolparticipants/'" class="btn btn-sm btn-wisteria"><i class="fa fa-list"></i> Enrol Participants</a>
+                <a v-if="!round.deleted_at && round.enrollment_date >= today" :href="'/enrolparticipants/' + round.id" class="btn btn-sm btn-wisteria"><i class="fa fa-list"></i> Enrol Participants</a>
 		@permission('upload-participants')
                 <button v-if="!round.deleted_at" :data-fk="round.id" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
 		@endpermission

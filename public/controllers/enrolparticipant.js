@@ -81,11 +81,12 @@ new Vue({
     },
 
     methods : {  
-        getParticipants: function(roundID) {            
-            this.$http.get('/loadparticipants/'+roundID ).then((response) => {
+        getParticipants: function() {  
+        var round_id = _.last( window.location.pathname.split( '/' ) ); 
+            this.$http.get('/loadparticipants/'+round_id ).then((response) => {
                 if(response.data.data){
                     this.testerparticipants = response.data.data;
-                    this.roundId = roundID;
+                    this.roundId = round_id;
                     this.checked = true;
                     this.role = response.data.role;
                     this.tier = response.data.tier;
