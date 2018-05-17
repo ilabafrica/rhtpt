@@ -45,6 +45,7 @@ class RoundController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
+        $today = Carbon::today();
         $rounds = Round::latest()->withTrashed()->paginate(5);
         if($request->has('q')) 
         {
@@ -61,7 +62,8 @@ class RoundController extends Controller
                 'from' => $rounds->firstItem(),
                 'to' => $rounds->lastItem()
             ],
-            'data' => $rounds
+            'data' => $rounds,
+            'today'=>$today
         ];
 
         return $rounds->count() > 0 ? response()->json($response) : $error;
@@ -87,12 +89,52 @@ class RoundController extends Controller
 
         }else
         {        
-
+            //save round
             $request->request->add(['user_id' => Auth::user()->id]);
 
-            $create = Round::create($request->all());
+            // $create = Round::create($request->all());
+            $round = new Round;
+            $round->name =$request->name;
+            $round->description =$request->description;
+            $round->start_date =$request->start_date;
+            $round->enrollment_date =$request->enrollment_date;
+            $round->end_date =$request->end_date;
+            $round->user_id =$request->user_id;
+            // $round->save();
 
-            return response()->json($create);
+            //send sms
+            $users = new User;
+            $county_coordinators = $users->county_coordinators()->pluck('phone')->toArray();
+            $subcounty_coordinators = $users->sub_county_coordinators()->pluck('phone')->toArray();
+            $phone_numbers = array_merge($county_coordinators, $subcounty_coordinators);
+            
+            $recipients = NULL;
+            $recipients = implode(",", $phone_numbers);
+            //  Send SMS
+            $message = 'Dear County/SubCounty Coordinator, NPHL has created Round'.$round->name.'. You have until'.$round->enrollment_date.' to enrol participants into this round.';            
+            //  Bulk-sms settings
+            $api = DB::table('bulk_sms_settings')->first();
+            $username   = $api->username;
+            $apikey     = $api->api_key;
+            if($recipients)
+            {
+                // Specified sender-id
+                $from = $api->code;
+                // Create a new instance of Bulk SMS gateway.
+                // use try-catch to filter any errors.
+                try
+                {
+                    // Send messages
+                    $sms    = new Bulk($username, $apikey);
+                    $results = $sms->sendMessage($recipients, $message, $from);
+                
+                }
+                catch ( AfricasTalkingGatewayException $e )
+                {
+                echo "Encountered an error while sending: ".$e->getMessage();
+                }
+            }
+            return response()->json($round);
         }
     }
 
@@ -107,9 +149,17 @@ class RoundController extends Controller
     {
         $request->request->add(['user_id' => Auth::user()->id]);
 
-        $edit = Round::find($id)->update($request->all());
+        // $edit = Round::find($id)->update($request->all());
+        $round = Round::find($id);
+        $round->name =$request->name;
+        $round->description =$request->description;
+        $round->start_date =$request->start_date;
+        $round->enrollment_date =$request->enrollment_date;
+        $round->end_date =$request->end_date;
+        $round->user_id =$request->user_id;
+        $round->save();
 
-        return response()->json($edit);
+        return response()->json($round);
     }
 
     /**

@@ -155,7 +155,6 @@ new Vue({
 
             // Making a get request to our API and passing the query to it.
             this.$http.get('/api/search_enroled_participant?round='+this.roundId+'&enrolled=enrolled').then((response) => {
-                console.log(response);
                 // If there was an error set the error message, if not fill the users array.
                 if(response.data.error)
                 {
