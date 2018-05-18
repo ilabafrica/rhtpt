@@ -52,7 +52,7 @@
          <div class="row"  v-if = "role == 1 || role == 3 || role == 4" >
             <div class="col-lg-12 margin-tb">
                 <div class="row">
-                    <div class="col-sm-3" v-if = "role == 1 || role == 3>
+                    <div class="col-sm-3" v-if = "role == 1 || role == 3">
                         <label class="col-sm-4 form-control-label" for="title">Counties:</label>
                         <div class="col-sm-6">
                             <select class="form-control" name="county" id="county_id_filter" @change="fetchFilterSubs()" v-model="county">

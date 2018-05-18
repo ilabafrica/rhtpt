@@ -30,6 +30,8 @@ new Vue({
         uploadify: {excel: ''},
         sub_county: '',
         county: '',
+        role: '',
+        tier: '',
         counties: [],
         subs: [],
     },
@@ -60,15 +62,35 @@ new Vue({
     },
 
     mounted : function(){
-        this.getVueFacilitys(this.pagination.current_page);
         this.loadCounties();
+        this.getVueFacilitys(this.pagination.current_page);
     },
 
     methods : {
         getVueFacilitys: function(page){
             this.$http.get('/vuefacilitys?page='+page).then((response) => {
                 this.facilitys = response.data.data.data;
+                this.role = response.data.role;
+                this.tier = response.data.tier;
                 this.pagination = response.data.pagination;
+
+                if (this.role == 3) {
+                    let id = this.tier;
+                    this.$http.get('/partner_counties/'+id).then((response) => {
+                        this.counties = response.data;
+                    }, (response) => {
+                        // console.log(response);
+                    });
+                }
+                if (this.role == 4) {
+                    let id = this.tier;
+                    this.$http.get('/subs/'+id).then((response) => {
+                        this.subs = response.data;
+                    }, (response) => {
+                        // console.log(response);
+                    });
+                }
+
             });
         },
 

@@ -71,15 +71,14 @@ class FacilityController extends Controller
         //filter facilitys by region
         if($request->has('county')) 
         {            
-            $facilitys = County::find($request->get('county'))->facilities()->latest()->withTrashed()->paginate(5);               
+            $facilitys = County::find($request->get('county'))->facilities()->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);               
             
         }
          if($request->has('sub_county')) 
         {
-            $facilitys = SubCounty::find($request->get('sub_county'))->facilities()->latest()->withTrashed()->paginate(5);
+            $facilitys = SubCounty::find($request->get('sub_county'))->facilities()->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
 
         }        
-
         foreach($facilitys as $facility)
         {
             $facility->sub = $facility->subCounty->name;
@@ -103,7 +102,9 @@ class FacilityController extends Controller
                 'from' => $facilitys->firstItem(),
                 'to' => $facilitys->lastItem()
             ],
-            'data' => $facilitys
+            'data' => $facilitys,
+            'role' => Auth::user()->ru()->role_id,
+            'tier' => Auth::user()->ru()->tier
         ];
 
         return $facilitys->count() > 0 ? response()->json($response) : $error;
