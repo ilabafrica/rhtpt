@@ -81,11 +81,12 @@ new Vue({
     },
 
     methods : {  
-        getParticipants: function(roundID) {            
-            this.$http.get('/loadparticipants/'+roundID ).then((response) => {
+        getParticipants: function() {  
+        var round_id = _.last( window.location.pathname.split( '/' ) ); 
+            this.$http.get('/loadparticipants/'+round_id ).then((response) => {
                 if(response.data.data){
                     this.testerparticipants = response.data.data;
-                    this.roundId = roundID;
+                    this.roundId = round_id;
                     this.checked = true;
                     this.role = response.data.role;
                     this.tier = response.data.tier;
@@ -155,7 +156,6 @@ new Vue({
 
             // Making a get request to our API and passing the query to it.
             this.$http.get('/api/search_enroled_participant?round='+this.roundId+'&enrolled=enrolled').then((response) => {
-                console.log(response);
                 // If there was an error set the error message, if not fill the users array.
                 if(response.data.error)
                 {
