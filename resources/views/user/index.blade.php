@@ -43,7 +43,7 @@
         <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter_by_region()"> -->
             <div class="col-lg-12 margin-tb">
                 <div class="row">
-                    <div v-if = "role == 1" class="col-sm-3">
+                    <div v-if = "role == 1 || role ==3" class="col-sm-3">
                         <label class="col-sm-4 form-control-label" for="title">Counties:</label>
                         <div class="col-sm-6">
                             <select class="form-control" name="county" id="county_id_" @change="fetchFilterSubs()" v-model="county">
@@ -51,8 +51,8 @@
                                <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>                         
                             </select>
                         </div>
-                    </div>
-                    <div v-if = "role == 1 || role == 4" class="col-sm-3">
+                    </div>                
+                    <div v-if = "role == 1 || role ==3 || role == 4" class="col-sm-3">
                         <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="sub_county" id="sub_id_" @change="fetchFilterFacilities" v-model="sub_county">
@@ -61,12 +61,21 @@
                             </select>
                         </div>
                     </div>
-                    <div v-if = "role == 1 || role == 4 || role ==7" class="col-sm-3">
+                    <div v-if = "role == 1 || role ==3 || role == 4 || role ==7" class="col-sm-3">
                         <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="facility" v-model="facility">
                                 <option selected></option>
                                 <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
+                            </select>
+                        </div>
+                    </div>
+                    <div v-if = "role == 1" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Partners:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="partner" id ="partner" v-model="partner">
+                                <option selected></option>
+                                <option v-for="partner in implementing_partners" :value="partner.id">@{{ partner.value }}</option> 
                             </select>
                         </div>
                     </div>

@@ -79,9 +79,9 @@ new Vue({
     },
 
     mounted : function(){
+        this.loadCounties(); // load before getVueUsers to check the counties a partner has
         this.getVueUsers(this.pagination.current_page);
         this.loadPrograms();
-        this.loadCounties();
         this.loadRoles();
         this.loadSexes();
         this.loadDesignations();
@@ -102,6 +102,14 @@ new Vue({
                 this.users_without_mfl = response.data.users_without_mfl;
                 this.pagination = response.data.pagination;
 
+                if (this.role == 3) {
+                    let id = this.tier;
+                    this.$http.get('/partner_counties/'+id).then((response) => {
+                        this.counties = response.data;
+                    }, (response) => {
+                        // console.log(response);
+                    });
+                }
                 if (this.role == 4) {
                     let id = this.tier;
                     this.$http.get('/subs/'+id).then((response) => {

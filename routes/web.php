@@ -43,7 +43,10 @@ Route::get("/cnts", array(
     "as"   => "cnts.fetch",
     "uses" => "FacilityController@counties"
 ));
-
+Route::get("/partner_counties/{id}", array(
+    "as"   => "cnts.fetch",
+    "uses" => "FacilityController@partner_counties"
+));
 Route::get("/progs", array(
     "as"   => "programs.fetch",
     "uses" => "ProgramController@programs"
@@ -447,7 +450,7 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "testers.download",
         "uses" => "RoundController@testerSummary"
     ));
-    Route::get('enrolparticipants/', 'RoundController@manageEnrolParticipant');
+    Route::get('enrolparticipants/{id}', 'RoundController@manageEnrolParticipant');
     Route::get("/loadparticipants/{id}", array(
         "as"   => "load.participants",
         "uses" => "RoundController@loadparticipants"

@@ -7,6 +7,7 @@ use App\County;
 use App\SubCounty;
 use App\Facility;
 use Input;
+use App\ImplementingPartner;
 
 use Auth;
 use DB;
@@ -216,6 +217,21 @@ class FacilityController extends Controller
         $facilities = SubCounty::find($id)->facilities->sortBy('name')->pluck('name', 'id');
         $categories = [];
         foreach($facilities as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
+
+    /**
+     * Function to return list of counties.
+     *
+     */
+    public function partner_counties($id)
+    {
+        $counties = ImplementingPartner::find($id)->counties()->orderBy('name')->pluck('name', 'id');
+        $categories = [];
+        foreach($counties as $key => $value)
         {
             $categories[] = ['id' => $key, 'value' => $value];
         }

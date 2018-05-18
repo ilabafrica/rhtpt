@@ -66,6 +66,10 @@ class UserController extends Controller
         {
            $users = Facility::find(Auth::user()->ru()->tier)->users('User')->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
         }
+        else if(Auth::user()->isPartner())
+        {
+           $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users('User')->whereNull('uid')->latest()->withTrashed()->paginate(100);           
+        }
         if($request->has('q')) 
         {
             $search = $request->get('q');
@@ -82,6 +86,10 @@ class UserController extends Controller
             {
                $users = Facility::find(Auth::user()->ru()->tier)->users('User')->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->latest()->withTrashed()->paginate(100);
             }
+            else if(Auth::user()->isPartner())
+            {
+               $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(100);
+            }
         }
 
         //filter users by region
@@ -97,6 +105,11 @@ class UserController extends Controller
         if($request->has('facility')) 
         {
             $users = Facility::find($request->get('facility'))->users('User')->whereNull('uid')->latest()->withTrashed()->paginate(100);
+
+        }
+        if($request->has('partner')) 
+        {
+            $users = ImplementingPartner::find($request->get('partner'))->users('User')->whereNull('uid')->latest()->withTrashed()->paginate(100);
 
         }
 
@@ -177,6 +190,7 @@ class UserController extends Controller
             $program_id = NULL;
             if($role == Role::idByName("Partner"))
             {
+                $tier = $request->implementing_partner_id;
                 // $tier = implode(", ", $request->implementing_partner_id);
             }
             else if($role == Role::idByName("County Coordinator"))
@@ -243,6 +257,7 @@ class UserController extends Controller
             $program_id = NULL;
             if($role == Role::idByName("Partner"))
             {
+                $tier = $request->implementing_partner_id;
                 // $tier = implode(", ", $request->jimbo);
             }
             else if($role == Role::idByName("County Coordinator"))

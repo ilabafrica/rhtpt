@@ -233,6 +233,30 @@ EntrustUserTrait::restore insteadof SoftDeletes;
         else
             return false;
     }
+     /**
+    * Get county coordinators
+    *
+    */
+    public function county_coordinators($role = null)
+    {
+      $role = Role::idByName('County Coordinator');            
+      $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->where('role_id', $role); 
+
+        return $users;
+    } 
+      /**
+    * Get subcounty coordinators
+    *
+    */
+    public function sub_county_coordinators($role = null)
+    {
+      $role = Role::idByName('Sub-County Coordinator');            
+      $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->where('role_id', $role); 
+                        
+        return $users;
+    } 
     /**
     * Return User ID given the name
     *
