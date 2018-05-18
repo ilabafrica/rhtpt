@@ -54,6 +54,7 @@
             <th>Title</th>
             <th>Description</th>
             <th>Start Date</th>
+            <th>End of Enrollment Date</th>
             <th>End Date</th>
             <th>Action</th>
         </tr>
@@ -61,6 +62,7 @@
             <td>@{{ round.name }}</td>
             <td>@{{ round.description }}</td>
             <td>@{{ round.start_date }}</td>
+            <td>@{{ round.enrollment_date }}</td>
             <td>@{{ round.end_date }}</td>
             <td>
             @permission('update-round')	
@@ -74,7 +76,7 @@
             @endpermission
             @permission('enrol-participants')                               
                 <a v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" :href="'/download/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i>Participants List</a>
-                <a v-if="!round.deleted_at" :href="'/enrolparticipants/'" class="btn btn-sm btn-wisteria"><i class="fa fa-list"></i> Enrol Participants</a>
+                <a v-if="!round.deleted_at && round.enrollment_date >= today" :href="'/enrolparticipants/' + round.id" class="btn btn-sm btn-wisteria"><i class="fa fa-list"></i> Enrol Participants</a>
 		@permission('upload-participants')
                 <button v-if="!round.deleted_at" :data-fk="round.id" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
 		@endpermission
@@ -143,6 +145,14 @@
                                 </div>
 
                                 <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('create_round.enrollment date') }" for="enrollment date">End of Enrollment Date:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_round.enrollment date') }" name="enrollment date" type="date" placeholder="" v-model="newRound.enrollment_date" id="start_date" />
+                                        <span v-show="errors.has('create_round.enrollment date')" class="help is-danger">@{{ errors.first('create_round.enrollment date') }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('create_round.end date') }" for="end date">End Date:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <input v-validate="'required|after:start date'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_round.end date') }" name="end date" type="date" placeholder="" v-model="newRound.end_date" id="end_date" />
@@ -195,6 +205,14 @@
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('update_round.start date') }" name="start date" type="date" placeholder="" v-model="fillRound.start_date" />
                                         <span v-show="errors.has('update_round.start date')" class="help is-danger">@{{ errors.first('update_round.start date') }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('update_round.enrollment date') }" for="enrollment date">End of Enrollment Date:</label>
+                                    <div class="col-sm-8" :class="{ 'control': true }">
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('update_round.enrollment date') }" name="enrollment date" type="date" placeholder="" v-model="fillRound.enrollment_date" />
+                                        <span v-show="errors.has('update_round.enrollment date')" class="help is-danger">@{{ errors.first('update_round.enrollment date') }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">

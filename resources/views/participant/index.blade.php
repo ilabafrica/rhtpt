@@ -20,7 +20,7 @@
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
                     </a> -->
-                @permission('create-user')
+                @permission('download-participants-list')
                     <a class="btn btn-sm btn-nephritis" :href="'/workbook'">
                         <i class="fa fa-book"></i>
                         Download Workbook
@@ -28,7 +28,8 @@
                     <button style="display:none" class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#batch-registration"><i class="fa fa-level-up"></i> Batch Reg.</button>
                     <button style="display:none" class="btn btn-sm btn-nephritis" id="import" data-toggle="modal" data-target="#import-user-list"><i class="fa fa-level-down"></i> Import Users</button>
                 @endpermission
-                	<button class="btn btn-sm btn-registered" @click="registered"><i class="fa fa-address-card"></i> Self Registered</button>
+                    <button class="btn btn-sm btn-registered" @click="registered"><i class="fa fa-address-card"></i> Self Registered</button>
+                	<button class="btn btn-sm btn-primary" @click="no_mfl"><i class="fa fa-address-card"></i> Participants Without Facilities</button>
                 </h5>
             </div>
             <div class="col-md-3">
@@ -42,6 +43,23 @@
             </div>
         </div>
     </div>
+    <br/>
+    <div class="row">
+        <div class="col-lg-12 margin-tb">
+            <div class="pull-left col-md-9">
+                <h6>Statistics:&nbsp;&nbsp;&nbsp;|
+                Total Users:
+                @{{total_users}}&nbsp;&nbsp;&nbsp;|
+                Active Users:
+                @{{active_users}}&nbsp;&nbsp;&nbsp;|
+                Inactive Users:
+                @{{inactive_users}}
+            </h6>
+                
+            </div>
+        </div>
+    </div>
+    <br/>
     @if(session()->has('error'))
         <div class="alert alert-info">{!! session()->get('error') !!}</div>
     @endif
@@ -49,7 +67,7 @@
         <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter_by_region()"> -->
             <div class="col-lg-12 margin-tb">
                 <div class="row">
-                    <div v-if = "role == 1" class="col-sm-3">
+                    <div v-if = "role == 1 || role ==3" class="col-sm-3">
                         <label class="col-sm-4 form-control-label" for="title">Counties:</label>
                         <div class="col-sm-6">
                             <select class="form-control" name="county" id="county_id" @change="fetchSubs()" v-model="county">
@@ -58,7 +76,7 @@
                             </select>
                         </div>
                     </div>
-                    <div v-if = "role == 1 || role == 4" class="col-sm-3">
+                    <div v-if = "role == 1 || role ==3 || role == 4" class="col-sm-3">
                         <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="sub_county" id="sub_id" @change="fetchFacilities" v-model="sub_county">
@@ -67,7 +85,7 @@
                             </select>
                         </div>
                     </div>
-                    <div v-if = "role == 1 || role == 4 || role ==7" class="col-sm-3">
+                    <div v-if = "role == 1 || role ==3 || role == 4 || role ==7" class="col-sm-3">
                         <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="facility" v-model="facility">
@@ -95,7 +113,7 @@
             <th>Status</th>
             <th>Action</th>
         </tr>
-        <tr v-for="user in users">
+        <tr v-for="user in users" v-if="user.role == 2">
             <td v-if="user.name!=''">@{{ user.name }}</td>
             <td v-else>@{{ user.first_name }} @{{ user.middle_name }} @{{ user.last_name }}</td>
             <td>@{{ user.fac}}</td>
@@ -352,7 +370,7 @@
                                             @{{ errors.first('last_name') }}</span>
                                     </div>
                                 </div>
-                                <!-- <div class="form-group row">
+                                <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('gender') }" for="tester id">Gender:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <div class="form-radio radio-inline" v-for="sex in sexes">
@@ -363,7 +381,7 @@
                                         </div>
                                         <span v-show="errors.has('gender')" class="help is-danger">@{{ errors.first('gender') }}</span>
                                     </div>
-                                </div> -->
+                                </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone number') }" for="phone number">Phone Number:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">

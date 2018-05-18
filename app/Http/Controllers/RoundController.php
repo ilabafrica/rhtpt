@@ -45,6 +45,7 @@ class RoundController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
+        $today = Carbon::today();
         $rounds = Round::latest()->withTrashed()->paginate(5);
         if($request->has('q')) 
         {
@@ -61,7 +62,8 @@ class RoundController extends Controller
                 'from' => $rounds->firstItem(),
                 'to' => $rounds->lastItem()
             ],
-            'data' => $rounds
+            'data' => $rounds,
+            'today'=>$today
         ];
 
         return $rounds->count() > 0 ? response()->json($response) : $error;
@@ -87,12 +89,52 @@ class RoundController extends Controller
 
         }else
         {        
-
+            //save round
             $request->request->add(['user_id' => Auth::user()->id]);
 
-            $create = Round::create($request->all());
+            // $create = Round::create($request->all());
+            $round = new Round;
+            $round->name =$request->name;
+            $round->description =$request->description;
+            $round->start_date =$request->start_date;
+            $round->enrollment_date =$request->enrollment_date;
+            $round->end_date =$request->end_date;
+            $round->user_id =$request->user_id;
+            // $round->save();
 
-            return response()->json($create);
+            //send sms
+            $users = new User;
+            $county_coordinators = $users->county_coordinators()->pluck('phone')->toArray();
+            $subcounty_coordinators = $users->sub_county_coordinators()->pluck('phone')->toArray();
+            $phone_numbers = array_merge($county_coordinators, $subcounty_coordinators);
+            
+            $recipients = NULL;
+            $recipients = implode(",", $phone_numbers);
+            //  Send SMS
+            $message = 'Dear County/SubCounty Coordinator, NPHL has created Round'.$round->name.'. You have until'.$round->enrollment_date.' to enrol participants into this round.';            
+            //  Bulk-sms settings
+            $api = DB::table('bulk_sms_settings')->first();
+            $username   = $api->username;
+            $apikey     = $api->api_key;
+            if($recipients)
+            {
+                // Specified sender-id
+                $from = $api->code;
+                // Create a new instance of Bulk SMS gateway.
+                // use try-catch to filter any errors.
+                try
+                {
+                    // Send messages
+                    $sms    = new Bulk($username, $apikey);
+                    $results = $sms->sendMessage($recipients, $message, $from);
+                
+                }
+                catch ( AfricasTalkingGatewayException $e )
+                {
+                echo "Encountered an error while sending: ".$e->getMessage();
+                }
+            }
+            return response()->json($round);
         }
     }
 
@@ -107,9 +149,17 @@ class RoundController extends Controller
     {
         $request->request->add(['user_id' => Auth::user()->id]);
 
-        $edit = Round::find($id)->update($request->all());
+        // $edit = Round::find($id)->update($request->all());
+        $round = Round::find($id);
+        $round->name =$request->name;
+        $round->description =$request->description;
+        $round->start_date =$request->start_date;
+        $round->enrollment_date =$request->enrollment_date;
+        $round->end_date =$request->end_date;
+        $round->user_id =$request->user_id;
+        $round->save();
 
-        return response()->json($edit);
+        return response()->json($round);
     }
 
     /**
@@ -202,7 +252,7 @@ class RoundController extends Controller
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
         $apikey     = $api->api_key;
-       if($recipients)
+        if($recipients)
         {
             // Specified sender-id
             $from = $api->code;
@@ -251,147 +301,6 @@ class RoundController extends Controller
         }
         return $response;
     }
-    /**
-     * Function to enrol participants using excel sheet uploaded
-     *
-     */
-    /*public function batchEnrolment(Request $request)
-    {
-        $rId = $request->id;
-        $id = Round::find($rId)->name;
-        $exploded = explode(',', $request->excel);
-        $decoded = base64_decode($exploded[1]);
-        if(str_contains($exploded[0], 'sheet'))
-            $extension = 'xlsx';
-        else
-            $extension = 'xls';
-        $fileName = uniqid().'.'.$extension;
-        $county = 0;
-        if(Auth::user()->isCountyCoordinator())
-        {
-            $county = County::find(Auth::user()->ru()->tier)->name;
-            $folder = '/batch/'.$id.'/enrolment/'.$county.'/';
-        }
-        else
-            $folder = '/batch/'.$id.'/enrolment/nphls/';
-        if(!is_dir(public_path().$folder))
-            File::makeDirectory(public_path().$folder, 0777, true);
-        file_put_contents(public_path().$folder.$fileName, $decoded);
-        // dd();
-        //  Handle the import
-        //  Get the results
-        //  Import a user provided file
-        //  Convert file to csv
-        if(Auth::user()->isCountyCoordinator())
-            $data = Excel::load('public/batch/'.$id.'/enrolment/'.$county.'/'.$fileName, function($reader) {})->get();
-        else
-            $data = Excel::load('public/batch/'.$id.'/enrolment/nphls/'.$fileName, function($reader) {$reader->ignoreEmpty();})->get();
-        if(!empty($data) && $data->count())
-        {
-            foreach ($data->toArray() as $key => $value) 
-            {
-                
-                    // dd($value);
-                    if(!empty($value))
-                    {
-                        $mfl = NULL;
-                        $uid = NULL;
-                        $tphone = NULL;
-                        $temail = NULL;
-                        $taddress = NULL;
-                        $tdes = NULL;
-                        $tprog = NULL;
-                        $incharge = NULL;
-                        $iphone = NULL;
-                        $iemail = NULL;
-                        foreach ($value as $mike => $ross) 
-                        {
-                            if(strcmp($mike, "mfl_code") === 0)
-                                $mfl = $ross;
-                            if(strcmp($mike, "tester_unique_id") === 0)
-                                $uid = $ross;
-                            if(strcmp($mike, "tester_phone") === 0)
-                                $tphone = $ross;
-                            if(strcmp($mike, "tester_email") === 0)
-                                $temail = $ross;
-                            if(strcmp($mike, "tester_address") === 0)
-                                $taddress = $ross;
-                            if(strcmp($mike, "designation") === 0)
-                                $tdes = $ross;
-                            if(strcmp($mike, "program") === 0)
-                                $tprog = $ross;
-                            if(strcmp($mike, "in_charge") === 0)
-                                $incharge = $ross;
-                            if(strcmp($mike, "in_charge_email") === 0)
-                                $iemail = $ross;
-                            if(strcmp($mike, "in_charge_phone") === 0)
-                                $iphone = $ross;
-                        }
-                        //  Update user details where necessary
-                        $user = User::find(User::idByUid($uid));
-                        $user->phone = $tphone;
-                        $user->email = $temail;
-                        $user->save();                    
-                        //  Update facility details where applicable
-                        $facility = Facility::find(Facility::idByCode((int)$mfl));
-                        $facility->in_charge = $incharge;
-                        $facility->in_charge_email = $iemail;
-                        $facility->in_charge_phone = $iphone;
-                        $facility->save();
-                        //  Update role-user
-                        //  Enrol the participant to the pt round
-                        $userId = $user->id;
-                        $roundId = $rId;
-                        $enrol = Enrol::where('round_id', $roundId)->where('user_id', $userId)->get();
-                        if(count($enrol) == 0)
-                        {
-                            $enrol = new Enrol;
-                            $enrol->round_id = $roundId;
-                            $enrol->user_id = $userId;
-                            $enrol->save();
-                        }
-                        //  Send SMS notification    
-                        $phone = ltrim($user->phone, '0');
-                        $recipients = "+254".trim($phone);          
-                        $round = Round::find($roundId)->name;
-                        $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
-                        $message = ApiController::replace_between($message, '[', ']', $round);
-                        $message = str_replace(' [', ' ', $message);
-                        $message = str_replace('] ', ' ', $message);
-                        //  Bulk-sms settings
-                        $api = DB::table('bulk_sms_settings')->first();
-                        $username   = $api->code;
-                        $apikey     = $api->api_key;
-                        if($recipients)
-                        {
-                            // Specified sender-id
-                            $from = $api->code;
-                            // Create a new instance of Bulk SMS gateway.
-                            $sms    = new Bulk($username, $apikey);
-                            // use try-catch to filter any errors.
-                            try
-                            {
-                            // Send messages
-                            $results = $sms->sendMessage($recipients, $message, $from);
-                            foreach($results as $result)
-                            {
-                                // status is either "Success" or "error message" and save.
-                                $number = $result->number;
-                                //  Save the results
-                                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
-                            }
-                            }
-                            catch ( AfricasTalkingGatewayException $e )
-                            {
-                            echo "Encountered an error while sending: ".$e->getMessage();
-                            }
-                        }
-                    }
-                
-            }
-        }
-    }
-   */
 
     /**
      * Function for load the view of participants to be enrolled
@@ -403,8 +312,12 @@ class RoundController extends Controller
     }
 
     //get the list of users to be enrolled
-     public function loadparticipants($round, Request $request)
+     public function loadparticipants(Request $request, $round=null)
     {
+        if ($request->has('round')) {
+            $round = $request->get('round');
+        }
+        $enrol_status=0;
         $error = ['error' => 'No results found, please try with different keywords.'];
         $participants = User::whereNotNull('uid')->get();
         if(Auth::user()->isCountyCoordinator())
@@ -436,17 +349,41 @@ class RoundController extends Controller
                $participants = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->get();
             }
         }
-        
-        $enrolled_users = Enrol::where('round_id', $round)->pluck('user_id')->toArray();
+        //filter users by region
+        if($request->has('county')) 
+        {            
+            $participants = County::find($request->get('county'))->users()->whereNull('uid')->latest()->withTrashed()->paginate(100);             
+        }
+         if($request->has('sub_county')) 
+        {
+            $participants = SubCounty::find($request->get('sub_county'))->users()->whereNull('uid')->latest()->withTrashed()->paginate(100);
+        }
+        if($request->has('facility')) 
+        {
+            $participants = Facility::find($request->get('facility'))->users()->whereNull('uid')->latest()->withTrashed()->paginate(100);
+        }
 
-        $participants = $participants->filter(function ($participant) use($enrolled_users){
-            if (!in_array($participant->id, $enrolled_users) ) {  
-                return $participant;
-            }
-        });
+        $enrolled_users = Enrol::where('round_id', $round)->pluck('user_id')->toArray();
+       
+
+        if ($request->has('enrolled')) {
+            $participants = $participants->filter(function ($participant) use($enrolled_users){
+                if (in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;
+                }
+            });
+
+            $enrol_status = 1;
+        } else {
+            $participants = $participants->filter(function ($participant) use($enrolled_users){
+                if (!in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;
+                }
+            });
+        }
         
         foreach($participants as $participant)
-        {             
+        {   
             if(!empty($participant->ru()->tier))
             {
                 $facility = Facility::find($participant->ru()->tier);
@@ -475,7 +412,10 @@ class RoundController extends Controller
         }
        
         $response = [           
-            'data' => $participants
+            'data' => $participants,
+            'role' => Auth::user()->ru()->role_id,
+            'tier' => Auth::user()->ru()->tier,
+            'enrol_status' =>$enrol_status
         ];
 
         return $participants->count() > 0 ? response()->json($response) : $error;
@@ -880,10 +820,10 @@ class RoundController extends Controller
                                 $iphone = $ross;
                         }
                         //  process gender
-                        if(strcmp($tgender, "Male") === 0)
-                            $tgender = User::MALE;
-                        else
-                            $tgender = User::FEMALE;
+                        // if(strcmp($tgender, "Male") === 0)
+                        //     $tgender = User::MALE;
+                        // else
+                        //     $tgender = User::FEMALE;
                         //  process designation
                         $testerDes = $tdes;
                         if($testerDes)
@@ -905,108 +845,96 @@ class RoundController extends Controller
                         if(strcmp($county, "THARAKA-NITHI") === 0)
                             $county = "Tharaka Nithi";
 
-                        //  process user details only if the name exists
-                        if($uid)
-                        {
-                            $user = User::find(User::idByUid($uid));
-                            if(!$user)
-                            {
-                                $user = new User;
-                                $user->uid = $uid;
+                            if ($mfl == 'NULL'&& ''){
+                                // $missing_facilities[] = array($tfname, $tsname, $mfl, 'Missing Facility');
+                                $facilityId = 0;
+                                $missing_facilities = array($tfname, $tsname, $mfl, 'Missing Facility');
+                                array_push($duplicates, $missing_facilities);
                             }
-                        }
-                        else
-                        {
-                            $userId = User::idByEmail($temail);
-                            if($userId)
-                            {
-                                $user = User::find($userId);
-                                $user->uid = $user->uid;
+                            else{
+                                $facilityId = Facility::idByCode($mfl);
                             }
-                            else
-                            {
-                                $user = new User;
-                                $user->date_registered = $today;
-                                $count = count(User::where('uid', User::MIN_UNIQUE_ID)->get());
-                                if($count > 0)
-                                    $user->uid = DB::table('users')->where('uid', '>=', User::MIN_UNIQUE_ID)->max('uid')+1;
-                                else
-                                    $user->uid = User::MIN_UNIQUE_ID;
-                            }
-                        }
-                        //  process user details
-                        if($tfname && $tsname && $tphone && $temail && $tprog && $tdes)
-                        {
-                            if(count(User::where('phone', $tphone)->get()) > 0){
-                                $duplicateParticapant = array($tfname, $tsname, $tphone, $temail);
-                                $duplicates[] = $duplicateParticapant;
-                                continue;
-                            }
-                            $user->name = $tfname. " ".$toname. " ".$tsname;
-                            $user->first_name = $tfname;
-                            $user->middle_name = $toname;
-                            $user->last_name = $tsname;
-                            $user->gender = $tgender;
-                            $user->email = $temail;
-                            $user->phone = $tphone;
-                            $user->address = $taddress;
-                            $user->username = uniqid();
-                            $user->phone_verified = 1;
-                            $user->email_verified = 1;
-                            $user->save();
-                            $user->username = $user->uid;
-                            $user->password = Hash::make(User::DEFAULT_PASSWORD);
-                            $user->save();
-                            $userId = $user->id;
 
-                            //  Prepare to save new facility details
-                            $facilityId = Facility::idByCode($mfl);
-                            if(!$facilityId)
-                            {
-                                $fc = new Facility;
-                                $fc->code = $mfl;
-                                $fc->name = $facility;
-                                $fc->in_charge = $incharge;
-                                $fc->in_charge_phone = $iphone;
-                                $fc->in_charge_email = $iemail;
+                         //    if(!$facilityId)
+                         //    {   
+                         //        $missing_facilities = array($tfname, $tsname, $mfl, 'Missing Facility');
+                         //        array_push($duplicates, $missing_facilities);
 
-                                //  Get sub-county
-                                $sub_county_id = SubCounty::idByName($sub_county);
-                                if(!$sub_county_id)
+                         //    }else{
+                                //  process user details only if the name exists
+                                if($uid)
                                 {
-                                    $sb = new SubCounty;
-                                    $sb->name = $sub_county;
-                                    $sb->county_id = County::idByName($county);
-                                    $sb->save();
-                                    $sub_county_id = $sb->id;
+                                    $user = User::find(User::idByUid($uid));
+                                    if(!$user)
+                                    {
+                                        $user = new User;
+                                        $user->uid = $uid;
+                                    }
                                 }
-                                $fc->sub_county_id = $sub_county_id;
-                                $fc->save();
-                                $facilityId = $fc->id;
-                            }else{
-                                $fc = Facility::find($facilityId);
-                                $fc->code = $mfl;
-                                $fc->in_charge = $incharge;
-                                $fc->in_charge_phone = $iphone;
-                                $fc->in_charge_email = $iemail;
-                                $fc->save();
-                            }
+                                else
+                                {
+                                    $userId = User::idByPhone($tphone);
+                                    if($userId)
+                                    {
+                                        $user = User::find($userId);
+                                        $user->uid = $user->uid;
+                                    }
+                                    else
+                                    {
+                                        $user = new User;
+                                        $user->date_registered = $today;
+                                        $count = count(User::where('uid', User::MIN_UNIQUE_ID)->get());
+                                        if($count > 0)
+                                            $user->uid = DB::table('users')->where('uid', '>=', User::MIN_UNIQUE_ID)->max('uid')+1;
+                                        else
+                                            $user->uid = User::MIN_UNIQUE_ID;
+                                        
+                                    }
+                                }
+                                //  process user details
+                                if($tfname && $tsname && $tphone && $temail && $tprog && $tdes)
+                                {   
+                                    if ($tphone == 'NULL' || $tphone == '') {
+                                        $duplicateParticapant = array($tfname, $tsname, $tphone, 'Missing Phone Number');
+                                        $duplicates[] = $duplicateParticapant;
+                                    }
+                                    if(count(User::where('phone', $tphone)->get()) > 0){
+                                        $duplicateParticapant = array($tfname, $tsname, $tphone, 'Phone already taken');
+                                        $duplicates[] = $duplicateParticapant;
+                                        continue;
+                                    }
+                                    $user->name = $tfname. " ".$toname. " ".$tsname;
+                                    $user->first_name = $tfname;
+                                    $user->middle_name = $toname;
+                                    $user->last_name = $tsname;
+                                    $user->gender = $tgender;
+                                    $user->email = $temail;
+                                    $user->phone = $tphone;
+                                    $user->address = $taddress;
+                                    $user->username = uniqid();
+                                    $user->phone_verified = 1;
+                                    $user->email_verified = 1;
+                                    $user->save();
+                                    $user->username = $user->uid;
+                                    $user->password = Hash::make(User::DEFAULT_PASSWORD);
+                                    $user->save();
+                                    $userId = $user->id;
+
+                                    //  Prepare to save facility details
+                                    if ($facilityId >0) {
+                                        
+                                        $fc = Facility::find($facilityId);
+                                        $fc->in_charge = $incharge;
+                                        $fc->in_charge_phone = $iphone;
+                                        $fc->in_charge_email = $iemail;
+                                        $fc->save();
+                                    }
+                                    //  Prepare to save role-user details
+                                    $roleId = Role::idByName('Participant');
+                                    $user->detachAllRoles();
+                                    DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => Program::idByTitle($tprog), "designation" => $tdes]);
+                        }
                             
-                            //  Prepare to save role-user details
-                            $roleId = Role::idByName('Participant');
-                            $user->detachAllRoles();
-                            DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => Program::idByTitle($tprog), "designation" => $tdes]);
-                            // //  Enrol the participant to the pt round
-                            // $userId = $user->id;
-                            // $roundId = $rId;
-                            // $enrol = Enrol::where('round_id', $roundId)->where('user_id', $userId)->get();
-                            // if(count($enrol) == 0)
-                            // {
-                            //     $enrol = new Enrol;
-                            //     $enrol->round_id = $roundId;
-                            //     $enrol->user_id = $userId;
-                            //     $enrol->save();
-                            // }
                             //  send email and sms for registration
 /*                   
                             if($user->date_registered)
@@ -1025,30 +953,9 @@ class RoundController extends Controller
                                 {
                                     echo "Encountered an error while sending: ".$e->getMessage();
                                 }
-                            }
-/*
-                            //  Enrollment notifications
-                            $round = Round::find($roundId)->name;
-                            $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
-                            $message = ApiController::replace_between($message, '[', ']', $round);
-                            $message = str_replace(' [', ' ', $message);
-                            $message = str_replace('] ', ' ', $message);
-                            $message = "Dear ".$user->name.", you have been enrolled to PT round ".$round.". If you're not participating, please contact your Sub County lab coordinator.";
-                            try 
-                            {
-                                $smsHandler = new SmsHandler();
-                                $smsHandler->sendMessage($user->phone, $message);
-                            }
-                            catch ( AfricasTalkingGatewayException $e )
-                            {
-                                echo "Encountered an error while sending: ".$e->getMessage();
-                            }
-                            $user->round = $round;                        
-                            $user->notify(new EnrollmentNote($user));
-                            //  Bulk-sms settings
-*/
-                            
-                        }
+                            }                            
+*/                            
+                        // }
                     }
                 }
             }

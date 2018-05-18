@@ -233,6 +233,30 @@ EntrustUserTrait::restore insteadof SoftDeletes;
         else
             return false;
     }
+     /**
+    * Get county coordinators
+    *
+    */
+    public function county_coordinators($role = null)
+    {
+      $role = Role::idByName('County Coordinator');            
+      $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->where('role_id', $role); 
+
+        return $users;
+    } 
+      /**
+    * Get subcounty coordinators
+    *
+    */
+    public function sub_county_coordinators($role = null)
+    {
+      $role = Role::idByName('Sub-County Coordinator');            
+      $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->where('role_id', $role); 
+                        
+        return $users;
+    } 
     /**
     * Return User ID given the name
     *
@@ -299,6 +323,45 @@ EntrustUserTrait::restore insteadof SoftDeletes;
             return null;
         }
     }
+     /**
+    * Return User ID given the phone
+    *
+    */
+    public static function idByPhone($phone=NULL)
+    {
+        if($phone!=NULL)
+        {
+            try 
+            {
+                $count = User::where('phone', $phone)->count();
+                if($count > 0)
+                {
+                    $user = User::where('phone', $phone)->orderBy('name', 'asc')->first();
+                    
+                    if ($user->role ==2) {
+                      return $user->id;
+                    }
+                    else{
+                      return null;
+                    }                  
+                }
+                else
+                {
+                    return null;
+                }
+            } 
+            catch (ModelNotFoundException $e) 
+            {
+                Log::error("The user with phone ` $phone ` does not exist:  ". $e->getMessage());
+                //TODO: send email?
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
     /**
     * Return User ID given the email
     *
@@ -355,7 +418,14 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     */
     public function designation($des)
     {
-        return $des?Designation::find($des)->name:'N/A';
+\Log::info($des);
+        $designation = 'N/A';
+        if($des){
+            $desig = Designation::find($des);
+            if($desig)$designation = $desig->name;
+        }
+\Log::info($designation);
+        return $designation;
     }
     /**
      * Return readable gender

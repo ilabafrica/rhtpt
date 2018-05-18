@@ -39,7 +39,54 @@
             </div>
         </div>
     </div>
-
+     <div class="row">
+        <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter_by_region()"> -->
+            <div class="col-lg-12 margin-tb">
+                <div class="row">
+                    <div v-if = "role == 1 || role ==3" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="county" id="county_id_" @change="fetchFilterSubs()" v-model="county">
+                                <option selected></option>
+                               <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>                         
+                            </select>
+                        </div>
+                    </div>                
+                    <div v-if = "role == 1 || role ==3 || role == 4" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="sub_county" id="sub_id_" @change="fetchFilterFacilities" v-model="sub_county">
+                                <option selected></option>
+                               <option  v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>                         
+                            </select>
+                        </div>
+                    </div>
+                    <div v-if = "role == 1 || role ==3 || role == 4 || role ==7" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="facility" v-model="facility">
+                                <option selected></option>
+                                <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
+                            </select>
+                        </div>
+                    </div>
+                    <div v-if = "role == 1" class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Partners:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="partner" id ="partner" v-model="partner">
+                                <option selected></option>
+                                <option v-for="partner in implementing_partners" :value="partner.id">@{{ partner.value }}</option> 
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-sm btn-alizarin" type="submit" @click="filter_by_region()" v-if="!loading">Filter </button>
+                        <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                    </div>                
+                </div>
+            </div>
+        <!-- </form> -->
+    </div>
     <table class="table table-bordered">
         <tr>
             <th>Name</th>
@@ -47,16 +94,18 @@
             <th>Phone</th>
             <th>Username</th>
             <th>Role</th>
+            <th>Region</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
-        <tr v-for="user in users">
+        <tr v-for="user in users" v-if="user.role != 2">
             <td v-if="user.name!=''">@{{ user.name }}</td>
             <td v-else>@{{ user.first_name }} @{{ user.middle_name }} @{{ user.last_name }}</td>
             <td>@{{ user.gender==0?'Male':'Female' }}</td>
             <td>@{{ user.phone }}</td>
             <td>@{{ user.username }}</td>
             <td>@{{ user.rl }}</td>
+            <td>@{{ user.region }}</td>
             <td>
                 <button v-if="!user.deleted_at" class="mbtn mbtn-raised mbtn-success mbtn-xs">Active</button>
                 <button v-if="user.deleted_at" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Inactive</button>
@@ -159,13 +208,15 @@
                                             </label>
                                         </div>
                                         <span v-show="errors.has('create_user.gender')" class="help is-danger">@{{ errors.first('create_user.gender') }}</span>
+                                        <span v-if="formErrors['gender']" class="error text-danger">@{{ formErrors['gender'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.phone number') }" for="phone number">Phone Number:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.phone number') }" name="phone number" type="text" v-model="newUser.phone"/>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.phone number') }" name="phone number" type="text" v-model="newUser.phone"/>
                                         <span v-show="errors.has('create_user.phone number')" class="help is-danger">@{{ errors.first('create_user.phone number') }}</span>
+                                        <span v-if="formErrors['phone']" class="error text-danger">@{{ formErrors['phone'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -173,6 +224,7 @@
                                     <div class="col-sm-8" :class="{ 'control': true }">
                                         <input v-validate="'required|email'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.email') }" name="email" type="text" v-model="newUser.email"/>
                                         <span v-show="errors.has('create_user.email')" class="help is-danger">@{{ errors.first('create_user.email') }}</span>
+                                        <span v-if="formErrors['email']" class="error text-danger">@{{ formErrors['email'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -185,6 +237,7 @@
                                             </label>
                                         </div>
                                         <span v-show="errors.has('create_user.role')" class="help is-danger">@{{ errors.first('create_user.role') }}</span>
+                                        <span v-if="formErrors['role']" class="error text-danger">@{{ formErrors['role'] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group row" v-if="newUser.role == 3">
@@ -195,7 +248,7 @@
                                             v-model="newUser.implementing_partner_id">
                                             <option v-for="implementing_partner in implementing_partners"
                                                 :value="implementing_partner.id">
-                                                @{{ implementing_partner.name }}</option>
+                                                @{{ implementing_partner.value }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -237,9 +290,11 @@
                                 </div>
                                 <div v-if="newUser.role != 2">
                                     <div class="form-group row">
-                                        <label class="col-sm-4 form-control-label" for="title">Username:</label>
+                                        <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('create_user.username') }" for="title">Username:</label>
                                         <div class="col-sm-8">
-                                            <input type="text" name="username" class="form-control" v-model="newUser.username" />
+                                            <input v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('create_user.username') }" type="text" name="username" class="form-control" v-model="newUser.username" />
+                                        <span v-show="errors.has('create_user.username')" class="help is-danger">@{{ errors.first('create_user.username') }}</span>
+                                        <span v-if="formErrors['username']" class="error text-danger">@{{ formErrors['username'] }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -346,7 +401,7 @@
                                     <label class="col-sm-4 form-control-label" for="title">Implementing Partner:</label>
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="implementing_partner_id" v-model="fillUser.implementing_partner_id">
-                                            <option v-for="implementing_partner in implementing_partners" :value="implementing_partner.id">@{{ implementing_partner.name }}</option>
+                                            <option v-for="implementing_partner in implementing_partners" :value="implementing_partner.id">@{{ implementing_partner.value }}</option>
                                         </select>
                                     </div>
                                 </div>

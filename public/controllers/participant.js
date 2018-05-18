@@ -38,6 +38,10 @@ new Vue({
         county: '',
         role: '',
         tier: '',
+        total_users: '',
+        active_users: '',
+        inactive_users: '',
+        users_without_mfl: '',
         formTransErrors:{},
         uploadify: {id: '', excel: ''},
         someUser : {'first_name':'','middle_name':'','last_name':'','name':'','gender':'', 'phone':'', 'email':'', 'address':'', 'id':'', 'county':'', 'sub_county':'', 'mfl':'', 'facility':'', 'program':'', 'designation':''},
@@ -75,9 +79,9 @@ new Vue({
     },
 
     mounted : function(){
+        this.loadCounties(); // load before getVueUsers to check the counties a partner has
         this.getVueUsers(this.pagination.current_page);
         this.loadPrograms();
-        this.loadCounties();
         this.loadRoles();
         this.loadSexes();
         this.loadDesignations();
@@ -92,8 +96,20 @@ new Vue({
                 this.users = response.data.data.data;
                 this.role = response.data.role;
                 this.tier = response.data.tier;
+                this.total_users = response.data.total_users;
+                this.active_users = response.data.active_users;
+                this.inactive_users = response.data.inactive_users;
+                this.users_without_mfl = response.data.users_without_mfl;
                 this.pagination = response.data.pagination;
 
+                if (this.role == 3) {
+                    let id = this.tier;
+                    this.$http.get('/partner_counties/'+id).then((response) => {
+                        this.counties = response.data;
+                    }, (response) => {
+                        // console.log(response);
+                    });
+                }
                 if (this.role == 4) {
                     let id = this.tier;
                     this.$http.get('/subs/'+id).then((response) => {
@@ -215,6 +231,8 @@ new Vue({
         // fetch subcounties in after selecting a county
         fetchSubs: function() {
             let id = $('#county_id').val();
+            this.sub_county = '';
+            this.facility = '';
             this.$http.get('/subs/'+id).then((response) => {
                 this.subs = response.data;
             }, (response) => {
@@ -234,6 +252,7 @@ new Vue({
         // fetch facilities in one sub county
         fetchFacilities: function() {
             let id = $('#sub_id').val();
+            this.facility = '';
             this.$http.get('/fclts/'+id).then((response) => {
                 this.facilities = response.data;
             }, (response) => {
@@ -368,6 +387,63 @@ new Vue({
             });
         },
 
+        filter: function() {
+            // Clear the error message.
+            this.error = '';
+            // Empty the users array so we can fill it with the new users.
+            this.users = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
+
+            // Making a get request to our API and passing the query to it.
+            this.$http.get('/api/search_participant?q=' + this.query).then((response) => {
+                // If there was an error set the error message, if not fill the users array.
+                if(response.data.error)
+                {
+                    this.error = response.data.error;
+                    toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                }
+                else
+                {
+                    this.users = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                    toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                }
+                // The request is finished, change the loading to false again.
+                this.loading = false;
+                // Clear the query.
+                this.query = '';
+            });
+        },
+        no_mfl: function() {
+            // Clear the error message.
+            this.error = '';
+            // Empty the users array so we can fill it with the new users.
+            this.users = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
+
+            // Making a get request to our API and passing the query to it.
+            this.$http.get('/api/search_participant?no_mfl='+ 'no_mfl').then((response) => {
+                // If there was an error set the error message, if not fill the users array.
+                if(response.data.error)
+                {
+                    this.error = response.data.error;
+                    toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                }
+                else
+                {
+                    this.users = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                    toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                }
+                // The request is finished, change the loading to false again.
+                this.loading = false;
+                // Clear the query.
+                this.query = '';
+            });
+        },
+
         filter_by_region: function() {
             // Clear the error message.
             this.error = '';
@@ -394,8 +470,6 @@ new Vue({
                     }
                     // The request is finished, change the loading to false again.
                     this.loading = false;
-                    // Clear the query.
-                    this.facility = '';
                 });
             }
             
@@ -417,8 +491,7 @@ new Vue({
                     }
                     // The request is finished, change the loading to false again.
                     this.loading = false;
-                    // Clear the query.
-                    this.sub_county = '';
+
                 });
             }
 
@@ -440,9 +513,14 @@ new Vue({
                     }
                     // The request is finished, change the loading to false again.
                     this.loading = false;
-                    // Clear the query.
-                    this.county = '';
                 });
+            }
+
+            //get default users
+            else{
+                this.getVueUsers(this.pagination.current_page);
+                // The request is finished, change the loading to false again.
+                this.loading = false;
             }
            
         },

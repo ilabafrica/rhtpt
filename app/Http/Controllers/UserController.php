@@ -47,40 +47,103 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $users = User::whereNull('uid')->whereNull('sms_code')->latest()->paginate(5);
+        $users = User::whereNull('uid')->whereNull('sms_code')->latest()->paginate(100);
+
+        $total_users =$users->total();
+        $counties ='';
+        $subcounties ='';
+        $partners ='';
+
         if(Auth::user()->isCountyCoordinator())
         {
-            $users = County::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+            $users = County::find(Auth::user()->ru()->tier)->users('User')->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $users = SubCounty::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+           $users = SubCounty::find(Auth::user()->ru()->tier)->users('User')->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+           $users = Facility::find(Auth::user()->ru()->tier)->users('User')->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
+        }
+        else if(Auth::user()->isPartner())
+        {
+           $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users('User')->whereNull('uid')->latest()->withTrashed()->paginate(100);           
         }
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $users = User::where('name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+            $users = User::where('name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(100);
             if(Auth::user()->isCountyCoordinator())
             {
-                $users = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+                $users = County::find(Auth::user()->ru()->tier)->users('User')->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isSubCountyCoordinator())
             {
-                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+                $users = SubCounty::find(Auth::user()->ru()->tier)->users('User')->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isFacilityInCharge())
             {
-               $users = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->whereNull('sms_code')->latest()->withTrashed()->paginate(5);
+               $users = Facility::find(Auth::user()->ru()->tier)->users('User')->where('users.name', 'LIKE', "%{$search}%")->whereNull('uid')->latest()->withTrashed()->paginate(100);
+            }
+            else if(Auth::user()->isPartner())
+            {
+               $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(100);
             }
         }
+
+        //filter users by region
+        if($request->has('county')) 
+        {            
+            $users = County::find($request->get('county'))->users('User')->whereNull('uid')->latest()->withTrashed()->paginate(100);               
+        }
+         if($request->has('sub_county')) 
+        {
+            $users = SubCounty::find($request->get('sub_county'))->users('User')->whereNull('uid')->latest()->withTrashed()->paginate(100);
+
+        }
+        if($request->has('facility')) 
+        {
+            $users = Facility::find($request->get('facility'))->users('User')->whereNull('uid')->latest()->withTrashed()->paginate(100);
+
+        }
+        if($request->has('partner')) 
+        {
+            $users = ImplementingPartner::find($request->get('partner'))->users('User')->whereNull('uid')->latest()->withTrashed()->paginate(100);
+
+        }
+
         foreach($users as $user)
         {
+            !empty($user->ru())?$user->tier = $user->ru()->tier:$user->tier = '';
             !empty($user->ru())?$user->role = $user->ru()->role_id:$user->role = '';
-            !empty($user->ru())?$user->rl = Role::find($user->ru()->role_id)->name:$user->rl = '';
+	    !empty($user->ru())?$user->rl = Role::find($user->ru()->role_id)->name:$user->rl = '';
+	    
+ 	    
+	    $region = '';
+            if ($user->tier>0) {
+
+                if ($user->role ==3) {
+                        $region = ImplementingPartner::find($user->tier)->name;
+                   
+                }
+                elseif ($user->role ==4) {
+                        $region = County::find($user->tier)->name;
+                   
+                }
+                elseif ($user->role ==6) {
+                        $region = Facility::find($user->tier)->name;
+                   
+                }
+                elseif ($user->role ==7) {
+                        $region = SubCounty::find($user->tier)->name;
+                   
+                }
+                else{
+                    $region = 'Not Specified';
+                }
+            }
+            !empty($user->ru())?$user->region = $region:$user->region = 'Not Specified';
         }
         $response = [
             'pagination' => [
@@ -91,7 +154,9 @@ class UserController extends Controller
                 'from' => $users->firstItem(),
                 'to' => $users->lastItem()
             ],
-            'data' => $users
+            'data' => $users,
+            'role' => Auth::user()->ru()->role_id,
+            'tier' => Auth::user()->ru()->tier
         ];
 
         return $users->count() > 0 ? response()->json($response) : $error;
@@ -105,16 +170,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
         $this->validate($request, [
             'first_name' => 'required',
             'last_name' => 'required',
             'gender' => 'required',
-            'phone' => 'required',
+            'phone' => 'required|unique:users,phone',
             'email' => 'required',
-            'username' => 'required'
+            'role' => 'required',
+            'username' => 'required|unique:users,username'
         ]);
+
         $request->merge(['password' => Hash::make(User::DEFAULT_PASSWORD)]);
+        $request->merge(['name' => $request->first_name.' '.$request->middle_name.' '.$request->last_name]);
         $create = User::create($request->all());
         if($request->role)
         {
@@ -123,6 +190,7 @@ class UserController extends Controller
             $program_id = NULL;
             if($role == Role::idByName("Partner"))
             {
+                $tier = $request->implementing_partner_id;
                 // $tier = implode(", ", $request->implementing_partner_id);
             }
             else if($role == Role::idByName("County Coordinator"))
@@ -189,6 +257,7 @@ class UserController extends Controller
             $program_id = NULL;
             if($role == Role::idByName("Partner"))
             {
+                $tier = $request->implementing_partner_id;
                 // $tier = implode(", ", $request->jimbo);
             }
             else if($role == Role::idByName("County Coordinator"))

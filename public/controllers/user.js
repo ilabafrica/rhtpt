@@ -33,6 +33,12 @@ new Vue({
         transferUser : {'facility_id':'','program_id':'', 'id':''},
         loading: false,
         error: false,
+        facility: '',
+        sub_county: '',
+        county: '',
+        partner: '',
+        role: '',
+        tier: '',
         query: '',
         formTransErrors:{},
         uploadify: {id: '', excel: ''},
@@ -69,9 +75,9 @@ new Vue({
     },
 
     mounted : function(){
+        this.loadCounties();
         this.getVueUsers(this.pagination.current_page);
         this.loadPrograms();
-        this.loadCounties();
         this.loadRoles();
         this.loadSexes();
         this.loadImplementingPartners();
@@ -81,8 +87,42 @@ new Vue({
 
         getVueUsers: function(page){
             this.$http.get('/vueusers?page='+page).then((response) => {
-                this.users = response.data.data.data;
-                this.pagination = response.data.pagination;
+                if(response.data.data)
+                {
+                    this.users = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                    this.role = response.data.role;
+                    this.tier = response.data.tier;
+                    
+                    if (this.role == 3) {
+                        let id = this.tier;
+                        this.$http.get('/partner_counties/'+id).then((response) => {
+                            this.counties = response.data;
+                        }, (response) => {
+                            // console.log(response);
+                        });
+                    }
+                    if (this.role == 4) {
+                        let id = this.tier;
+                        this.$http.get('/subs/'+id).then((response) => {
+                            this.subs = response.data;
+                        }, (response) => {
+                            // console.log(response);
+                        });
+                    }
+                    if (this.role == 7) {
+                        let id =this.tier;
+                        this.$http.get('/fclts/'+id).then((response) => {
+                            this.facilities = response.data;
+                        }, (response) => {
+                            // console.log(response);
+                        });
+                    }
+                }
+                else
+                {
+                    swal("No data found for Users.","","info");
+                }
             });
         },
 
@@ -92,10 +132,12 @@ new Vue({
                 this.$http.post('/vueusers',input).then((response) => {
                     this.changePage(this.pagination.current_page);
                     this.newUser = {'name':'', 'username': '','gender':'', 'phone':'', 'email':'', 'address':'', 'implementing_partner_id':''};
+                    this.phone = response.data.phone;
                     $("#create-user").modal('hide');
                     toastr.success('User Created Successfully.', 'Success Alert', {timeOut: 5000});
                 }, (response) => {
                     this.formErrors = response.data;
+                    console.log(this.formErrors);
                 });
             }).catch(() => {
                 toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
@@ -210,8 +252,8 @@ new Vue({
         },
 
         loadImplementingPartners: function() {
-            this.$http.get('/vueimplementingpartners').then((response) => {
-                this.implementing_partners = response.data.data.data;
+            this.$http.get('/partners').then((response) => {
+                this.implementing_partners = response.data;
             }, (response) => {
                 // console.log(response);
             });
@@ -299,7 +341,109 @@ new Vue({
                 this.query = '';
             });
         },
+        filter_by_region: function() {
+            // Clear the error message.
+            this.error = '';
+            // Empty the users array so we can fill it with the new users.
+            this.users = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
 
+            // Making a get request to our API and passing the query to it.
+             //get users filtered by facility
+             if (this.facility) {
+                this.$http.get('/api/search_user?facility='+ this.facility).then((response) => {
+                    // If there was an error set the error message, if not fill the users array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.users = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+
+                });
+            }
+            
+            //get users filtered by sub county
+
+            else if (this.sub_county) {
+                this.$http.get('/api/search_user?sub_county='+ this.sub_county).then((response) => {
+                    // If there was an error set the error message, if not fill the users array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.users = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+
+                });
+            }
+
+            //get users filtered by county
+
+            else if (this.county) {
+                this.$http.get('/api/search_user?county=' + this.county ).then((response) => {
+                    // If there was an error set the error message, if not fill the users array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.users = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+
+                });
+            }
+            //get users filtered by partner
+
+            else if (this.partner) {
+                this.$http.get('/api/search_user?partner=' + this.partner ).then((response) => {
+                    // If there was an error set the error message, if not fill the users array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.users = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+
+                });
+            }
+
+            //get default users
+            else{
+                this.getVueUsers(this.pagination.current_page);
+                // The request is finished, change the loading to false again.
+                this.loading = false;
+            }
+           
+        },
         loadCounties: function() {
             this.$http.get('/cnts').then((response) => {
                 this.counties = response.data;
@@ -316,9 +460,31 @@ new Vue({
                 // console.log(response);
             });
         },
+        // fetch subcounties in after selecting a county
+        fetchFilterSubs: function() {
+            let id = $('#county_id_').val();
+
+            this.sub_county = '';
+            this.facility = '';
+
+            this.$http.get('/subs/'+id).then((response) => {
+                this.subs = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
 
         fetchFacilities: function() {
             let id = $('#sub_id').val();
+            this.$http.get('/fclts/'+id).then((response) => {
+                this.facilities = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+        fetchFilterFacilities: function() {
+            let id = $('#sub_id_').val();
+            this.facility = '';
             this.$http.get('/fclts/'+id).then((response) => {
                 this.facilities = response.data;
             }, (response) => {

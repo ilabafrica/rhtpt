@@ -78,6 +78,7 @@ class ResultController extends Controller
             }
 	    $result->user_role = Auth::user()->ru()->role_id;
         }
+
         $response = [
             'pagination' => [
                 'total' => $results->total(),
@@ -172,7 +173,7 @@ class ResultController extends Controller
                     {
                         // Specified sender-id
                         // $from = $api->code;
-                        $from ='Nat-HIVPT';
+                        $from ='NPHL';
                         // Create a new instance of Bulk SMS gateway.
                         $sms    = new Bulk($username, $apikey);
                         // use try-catch to filter any errors.
@@ -409,6 +410,41 @@ class ResultController extends Controller
         $pt_results = $pt->results;
         $option = new Option;
 
+        $pt_panel_1_kit1_results = '';
+        $pt_panel_2_kit1_results = '';
+        $pt_panel_3_kit1_results = '';;
+        $pt_panel_4_kit1_results = '';
+        $pt_panel_5_kit1_results = '';
+        $pt_panel_6_kit1_results = '';
+
+        $pt_panel_1_kit2_results = '';
+        $pt_panel_2_kit2_results = '';
+        $pt_panel_3_kit2_results = '';;
+        $pt_panel_4_kit2_results = '';
+        $pt_panel_5_kit2_results = '';
+        $pt_panel_6_kit2_results = '';
+
+        $determine = '';
+        $determine_lot_no = '';
+        $determine_expiry_date = '';
+
+        $firstresponse = '';
+        $firstresponse_lot_no = '';
+        $firstresponse_expiry_date = '';
+
+        $date_received = '';
+        $date_constituted = '';
+        $date_tested = '';
+
+        $expected_result_1 = '';
+        $expected_result_2 = '';
+        $expected_result_3 = '';
+        $expected_result_4 = '';
+        $expected_result_5 = '';
+        $expected_result_6 = '';
+
+
+
         foreach ($pt_results as $rss) {
             //test kit 1 results
             if($rss->field_id == Field::idByUID('PT Panel 1 Test 1 Results'))
@@ -467,17 +503,24 @@ class ResultController extends Controller
                 $firstresponse_lot_no = $rss->response;
             if($rss->field_id == Field::idByUID('Test 2 Expiry Date'))
                 $firstresponse_expiry_date = $rss->response;  
+
+            //dates
+            if($rss->field_id == Field::idByUID('Date PT Panel Received'))
+                $date_received = $rss->response;
+            if($rss->field_id == Field::idByUID('Date PT Panel Constituted'))
+                $date_constituted = $rss->response;
+            if($rss->field_id == Field::idByUID('Date PT Panel Tested'))
+                $date_tested = $rss->response;
         }
-        $actual_results = array( 
-                                );
+        $actual_results = array();
 
         //get expected results
         $round = Round::find($round_id);
         $user = $pt->enrolment->user;
         $lot = $user->lot($round_id);
         $expected_results = $lot->panels()->get();
-        $material_id = $expected_results->first()->material_id;
-        $material = Material::find($material_id); 
+        // $material_id = $expected_results->first()->material_id;
+        // $material = Material::find($material_id); 
 
         foreach ($expected_results as $ex_rslts) {
 
@@ -543,9 +586,9 @@ class ResultController extends Controller
                     'mfl' => $mfl,
 
                     //material details
-                    'date_collected' =>$material->date_collected,
-                    'date_prepared' =>$material->date_prepared,
-                    'expiry_date' =>$material->expiry_date,
+                    'date_received' =>$date_received,
+                    'date_constituted' =>$date_constituted,
+                    'date_tested' =>$date_tested,
 
                     //panel info
                     'determine' =>$determine,

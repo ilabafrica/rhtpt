@@ -36,7 +36,7 @@
                     <img src="{{ '../'.Config::get('cms.logo') }}" height="50px">
                     <h5 class="text-warning"><strong>{!! Config::get('cms.name') !!}</strong></h5>
                     <h5 class="text-primary"><strong>Phone number Verification</strong></h5>
-                    <h6 class="text-muted"><strong>Enter the verification token sent to your phone number from Nat-HIVPT</strong></h6>
+                    <h6 class="text-muted"><strong>Enter the verification token sent to your phone number from NPHL</strong></h6>
                 </div>
             </div>
             <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="verifyPhone" id="phone_verification">
@@ -75,7 +75,7 @@
         <div class="card card-outline-success text-center">
             <div class="card-block">
                 <blockquote class="card-blockquote text-white">
-                    <strong>We've sent a welcome email to your email address with a link to activate your account. If you cannot fine the mail, check the Junk/Spam folder!</strong>
+                    <strong>We've sent a welcome email to your email address with a link to activate your account. If you cannot find the mail, check the Junk/Spam folder!</strong>
                 </blockquote>
             </div>
         </div>

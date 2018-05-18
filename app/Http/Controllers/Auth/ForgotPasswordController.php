@@ -39,9 +39,9 @@ class ForgotPasswordController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
 
-        $this->validate($request, ['uid' => 'required|numeric|min:1|exists:users,uid']);
+        $this->validate($request, ['username' => 'required|exists:users,username']);
 
-        $user = User::where('uid',$request->get('uid'))->first();
+        $user = User::where('username',$request->get('username'))->first();
         $phoneNumber = $user->phone;
 
         $token = mt_rand(100000, 999999);
@@ -66,7 +66,7 @@ class ForgotPasswordController extends Controller
     protected function sendResetLinkFailedResponse(Request $request, $response)
     {
         return back()->withErrors(
-            ['uid' => trans($response)]
+            ['username' => trans($response)]
         );
     }
 
@@ -89,10 +89,9 @@ class ForgotPasswordController extends Controller
 
         if(!is_null($check)){
 
-
-            return redirect('password/reset/'.$resetToken.'?email='.$check->email);
+            return redirect('password/reset/'.$resetToken.'?u='.$check->username);
         }
-        return back()->withErrors(['code' => 'Invalid Code Entered']);
+        return back()->withErrors(['code' => 'Invalid Username Entered']);
 
     }
 }

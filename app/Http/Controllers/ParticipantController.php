@@ -11,9 +11,11 @@ use App\Role;
 use App\Facility;
 use App\SubCounty;
 use App\County;
+use App\ImplementingPartner;
 use App\Program;
 use App\Round;
 use App\SmsHandler;
+use App\Enrol;
 
 use DB;
 use Hash;
@@ -45,92 +47,175 @@ class ParticipantController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $users = User::whereNotNull('uid')-> latest()->withTrashed()->paginate(5);
+        $active_users = 0;
+        $inactive_users = 0;
+        $users_without_mfl = 0;
+
+        $users = User::whereNotNull('uid')-> latest()->withTrashed()->paginate(100);
+        
+        // //user statistics
+        $users_stats = User::whereNotNull('uid')->get();
+        foreach ($users_stats as  $user_stat) {
+            if ($user_stat->deleted_at == NULL) {
+                $active_users = $active_users + 1;
+            }
+            else{                
+                $inactive_users = $inactive_users + 1;
+            }            
+        }
+
         if(Auth::user()->isCountyCoordinator())
         {
-            $users = County::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+            $users = County::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
+            
+            //user statistics
+            $users_stats = County::find(Auth::user()->ru()->tier)->users();
+            foreach ($users_stats as  $user_stat) {
+                if ($user_stat->deleted_at == NULL) {
+                    $active_users = $active_users + 1;
+                }
+                else{                
+                    $inactive_users = $inactive_users + 1;
+                }
+                
+            }
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $users = SubCounty::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+           $users = SubCounty::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
+           //user statistics
+            $users_stats = SubCounty::find(Auth::user()->ru()->tier)->users();
+            foreach ($users_stats as  $user_stat) {
+                if ($user_stat->deleted_at == NULL) {
+                    $active_users = $active_users + 1;
+                }
+                else{                
+                    $inactive_users = $inactive_users + 1;
+                }                
+            }
+        }
+        else if(Auth::user()->isPartner())
+        {
+           $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
+           //user statistics
+            foreach ($users_stats as  $user_stat) {
+                if ($user_stat->deleted_at == NULL) {
+                    $active_users = $active_users + 1;
+                }
+                else{                
+                    $inactive_users = $inactive_users + 1;
+                }                
+            }
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $users = Facility::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(5);
+           $users = Facility::find(Auth::user()->ru()->tier)->users()->latest()->withTrashed()->paginate(100);
+           //user statistics
+            $users_stats = Facility::find(Auth::user()->ru()->tier)->users();
+            foreach ($users_stats as  $user_stat) {
+                if ($user_stat->deleted_at == NULL) {
+                    $active_users = $active_users + 1;
+                }
+                else{                
+                    $inactive_users = $inactive_users + 1;
+                }                
+            }
         }
         //search users by user details
         if($request->has('q')) 
         {
             $search = $request->get('q');
             $users = User::where('name', 'LIKE', "%{$search}%")
-		    ->orWhere('first_name', 'LIKE', "%{$search}%")
+		            ->orWhere('first_name', 'LIKE', "%{$search}%")
                     ->orWhere('middle_name', 'LIKE', "%{$search}%")
                     ->orWhere('last_name', 'LIKE', "%{$search}%")
-                    ->orWhere('phone', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('phone', 'LIKE', "%{$search}%")
+                    ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             if(Auth::user()->isCountyCoordinator())
             {
                 $users = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
-			->orWhere('first_name', 'LIKE', "%{$search}%")
+			            ->orWhere('first_name', 'LIKE', "%{$search}%")
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
                     	->orWhere('last_name', 'LIKE', "%{$search}%")
                     	->orWhere('phone', 'LIKE', "%{$search}%")
-			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+                        ->orWhere('email', 'LIKE', "%{$search}%")
+			            ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isSubCountyCoordinator())
             {
                 $users = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
-			->orWhere('first_name', 'LIKE', "%{$search}%")
+			            ->orWhere('first_name', 'LIKE', "%{$search}%")
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
-                   	->orWhere('last_name', 'LIKE', "%{$search}%")
-                    	->orWhere('phone', 'LIKE', "%{$search}%")
-			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+                   	    ->orWhere('last_name', 'LIKE', "%{$search}%")
+                        ->orWhere('phone', 'LIKE', "%{$search}%")
+                    	->orWhere('email', 'LIKE', "%{$search}%")
+			            ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isFacilityInCharge())
             {
                $users = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
-			->orWhere('first_name', 'LIKE', "%{$search}%")
+			            ->orWhere('first_name', 'LIKE', "%{$search}%")
                     	->orWhere('middle_name', 'LIKE', "%{$search}%")
                     	->orWhere('last_name', 'LIKE', "%{$search}%")
                     	->orWhere('phone', 'LIKE', "%{$search}%")
-			->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+                        ->orWhere('email', 'LIKE', "%{$search}%")
+			            ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
+            }
+            else if(Auth::user()->isPartner())
+            {
+               $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
+                        ->orWhere('first_name', 'LIKE', "%{$search}%")
+                        ->orWhere('middle_name', 'LIKE', "%{$search}%")
+                        ->orWhere('last_name', 'LIKE', "%{$search}%")
+                        ->orWhere('phone', 'LIKE', "%{$search}%")
+                        ->orWhere('email', 'LIKE', "%{$search}%")
+                        ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
         }
         if($request->has('filter')) 
         {
             $search = $request->get('q');
-            $users = User::whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+            $users = User::whereNotNull('sms_code')->latest()->withTrashed()->paginate(100);
             if(Auth::user()->isCountyCoordinator())
             {
-                $users = County::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+                $users = County::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isSubCountyCoordinator())
             {
-                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(100);
             }
             else if(Auth::user()->isFacilityInCharge())
             {
-               $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(5);
+               $users = Facility::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(100);
             }
+            else if(Auth::user()->isPartner())
+            {
+               $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users()->whereNotNull('sms_code')->latest()->withTrashed()->paginate(100);
+            }
+        }
+        if($request->has('no_mfl')) 
+        {
+            $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', '2')->Where('tier', null)->latest()->withTrashed()->paginate(100);
         }
         //filter users by region
         if($request->has('county')) 
         {            
-            $users = County::find($request->get('county'))->users()->latest()->withTrashed()->paginate(5);               
+            $users = County::find($request->get('county'))->users()->latest()->withTrashed()->paginate(100);               
             
         }
          if($request->has('sub_county')) 
         {
-            $users = SubCounty::find($request->get('sub_county'))->users()->latest()->withTrashed()->paginate(5);
+            $users = SubCounty::find($request->get('sub_county'))->users()->latest()->withTrashed()->paginate(100);
 
         }
         if($request->has('facility')) 
         {
-            $users = Facility::find($request->get('facility'))->users()->latest()->withTrashed()->paginate(5);
+            $users = Facility::find($request->get('facility'))->users()->latest()->withTrashed()->paginate(100);
 
         }
-
         foreach($users as $user)
-        {
+        {               
             if(!empty($user->ru()->tier))
             {
                 try{
@@ -160,7 +245,7 @@ class ParticipantController extends Controller
             !empty($user->ru())?$user->role = $user->ru()->role_id:$user->role = '';
             !empty($user->ru())?$user->rl = Role::find($user->ru()->role_id)->name:$user->rl = '';
 
-        }
+        }        
         $response = [
             'pagination' => [
                 'total' => $users->total(),
@@ -172,7 +257,11 @@ class ParticipantController extends Controller
             ],
             'data' => $users,
             'role' => Auth::user()->ru()->role_id,
-            'tier' => Auth::user()->ru()->tier
+            'tier' => Auth::user()->ru()->tier,
+            'total_users' => $users->total(),
+            'active_users' => $active_users,
+            'inactive_users' => $inactive_users,
+            'users_without_mfl' => $users_without_mfl,
         ];
 
         return $users->count() > 0 ? response()->json($response) : $error;
@@ -902,13 +991,15 @@ enrolled, you’ll receive a tester ID";
      */
     public function approve($id)
     {
-       $user = User::withTrashed()->where('id', $id);
-        //  Assign UID and restore
-        $user->restore();
-        $user = User::find($id);
-        $max = $user->id; //change this to pick sequential unique ids
-        $user->uid = $max;
-        $user->username = $max;
+        $user = User::withTrashed()->where('id', $id)->first();
+	$max = DB::table('users')->max('uid');
+        $m = $max+1;
+        if ($user->uid==null ||$user->uid==''){
+            $user->uid = $m; //pick sequential unique ids
+            $user->username = $m;
+        }
+
+        $user->deleted_at = null;
         $user->status = '';
         $user->save();
 
@@ -924,7 +1015,7 @@ enrolled, you’ll receive a tester ID";
         //  Remove beginning 0 and append +254
         $phone = ltrim($user->phone, '0');
         $recipient = "+254".$phone;
-        $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
+        $message    = "Dear ".$user->name.", your Sub-county Coordinator has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
         // Create a new instance of our awesome gateway class
         $gateway    = new Bulk($username, $apikey);
        

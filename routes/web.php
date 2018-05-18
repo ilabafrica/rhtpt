@@ -43,7 +43,10 @@ Route::get("/cnts", array(
     "as"   => "cnts.fetch",
     "uses" => "FacilityController@counties"
 ));
-
+Route::get("/partner_counties/{id}", array(
+    "as"   => "cnts.fetch",
+    "uses" => "FacilityController@partner_counties"
+));
 Route::get("/progs", array(
     "as"   => "programs.fetch",
     "uses" => "ProgramController@programs"
@@ -217,6 +220,11 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "facilities.fetch",
         "uses" => "FacilityController@facilities"
     ));    
+
+    Route::get("/partners", array(
+        "as"   => "partners.fetch",
+        "uses" => "ImplementingPartnerController@partners"
+    ));
 
     Route::get("/shpprs/{id}", array(
         "as"   => "shippers.fetch",
@@ -446,7 +454,7 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "testers.download",
         "uses" => "RoundController@testerSummary"
     ));
-    Route::get('enrolparticipants/', 'RoundController@manageEnrolParticipant');
+    Route::get('enrolparticipants/{id}', 'RoundController@manageEnrolParticipant');
     Route::get("/loadparticipants/{id}", array(
         "as"   => "load.participants",
         "uses" => "RoundController@loadparticipants"
@@ -493,6 +501,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_facility',['as'=>'facility.search', 'uses'=>'FacilityController@index']);
     Route::get('api/search_expected',['as'=>'expected.search', 'uses'=>'ExpectedController@index']);
     Route::get('api/search_participant',['as'=>'participant.search', 'uses'=>'ParticipantController@index']);
+    Route::get('api/search_enroled_participant',['as'=>'participant.search', 'uses'=>'RoundController@loadparticipants']);
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
     Route::get('api/search_parts',['as'=>'participants.search', 'uses'=>'UserController@forEnrol']);
     Route::get('api/search_designation',['as'=>'designation.search', 'uses'=>'DesignationController@index']);

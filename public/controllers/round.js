@@ -21,8 +21,8 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        newRound : {'name':'','description':'','start_date':'','duration':'','end_date':''},
-        fillRound : {'name':'','description':'','start_date':'','duration':'','end_date':'','id':''},
+        newRound : {'name':'','description':'','start_date':'','enrollment_date':'','duration':'','end_date':''},
+        fillRound : {'name':'','description':'','start_date':'','enrollment_date':'','duration':'','end_date':'','id':''},
         loading: false,
         error: false,
         checked:false,
@@ -38,7 +38,8 @@ new Vue({
         durations: [],
         duplicates: [],
         roundId:'',
-        uploadify: {id: '', excel: ''}
+        uploadify: {id: '', excel: ''},
+        today:''
     },
 
     computed: {
@@ -108,6 +109,7 @@ new Vue({
                 {
                     this.rounds = response.data.data.data;
                     this.pagination = response.data.pagination;
+                    this.today = response.data.today.date;
                 }
                 else
                 {
@@ -323,7 +325,7 @@ new Vue({
   	    },
 
         loadEnrollments: function(round) {
-            this.$http.get('/enrolled/'+round.id).then((response) => {
+            this.$http.get('/enrolled/'+round).then((response) => {
                 this.testers = response.data.data.data;
                 $("#enrolled-participants").modal('show');
             }, (response) => {

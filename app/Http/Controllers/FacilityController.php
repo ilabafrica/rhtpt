@@ -7,6 +7,7 @@ use App\County;
 use App\SubCounty;
 use App\Facility;
 use Input;
+use App\ImplementingPartner;
 
 use Auth;
 use DB;
@@ -35,17 +36,19 @@ class FacilityController extends Controller
      */
     public function index(Request $request)
     {
-        $facilitys = Facility::latest()->paginate(5);
+        $ITEMS_PER_PAGE = 100;
+
+        $facilitys = Facility::latest()->paginate($ITEMS_PER_PAGE);
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $facilitys = Facility::latest()->withTrashed()->paginate(5);
+        $facilitys = Facility::latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
         //  Check user against roles assigned.        
         if(Auth::user()->isCountyCoordinator())
         {
-            $facilitys = County::find(Auth::user()->ru()->tier)->facilities()->latest()->withTrashed()->paginate(5);
+            $facilitys = County::find(Auth::user()->ru()->tier)->facilities()->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-            $facilitys = SubCounty::find(Auth::user()->ru()->tier)->facilities()->latest()->withTrashed()->paginate(5);
+            $facilitys = SubCounty::find(Auth::user()->ru()->tier)->facilities()->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
         }
         else if(Auth::user()->isFacilityInCharge())
         {
@@ -54,14 +57,14 @@ class FacilityController extends Controller
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $facilitys = Facility::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            $facilitys = Facility::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
             if(Auth::user()->isCountyCoordinator())
             {
-                $facilitys = County::find(Auth::user()->ru()->tier)->facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+                $facilitys = County::find(Auth::user()->ru()->tier)->facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
             }
             else if(Auth::user()->isSubCountyCoordinator())
             {
-                $facilitys = SubCounty::find(Auth::user()->ru()->tier)->facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+                $facilitys = SubCounty::find(Auth::user()->ru()->tier)->facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
             }
         }
 
@@ -115,7 +118,7 @@ class FacilityController extends Controller
         $results = array();
         
         $queries = Facility::where('name', 'LIKE', '%'.$term.'%')
-            ->take(5)->get();
+            ->take($ITEMS_PER_PAGE)->get();
         
         foreach ($queries as $query)
         {
@@ -194,7 +197,7 @@ class FacilityController extends Controller
      */
     public function counties()
     {
-        $counties = County::pluck('name', 'id');
+        $counties = County::orderBy('name')->pluck('name', 'id');
         $categories = [];
         foreach($counties as $key => $value)
         {
@@ -208,7 +211,7 @@ class FacilityController extends Controller
      */
     public function subs($id)
     {
-        $subs = County::find($id)->subCounties->pluck('name', 'id');
+        $subs = County::find($id)->subCounties->sortBy('name')->pluck('name', 'id');
         $categories = [];
         foreach($subs as $key => $value)
         {
@@ -222,9 +225,24 @@ class FacilityController extends Controller
      */
     public function facilities($id)
     {
-        $facilities = SubCounty::find($id)->facilities->pluck('name', 'id');
+        $facilities = SubCounty::find($id)->facilities->sortBy('name')->pluck('name', 'id');
         $categories = [];
         foreach($facilities as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
+
+    /**
+     * Function to return list of counties.
+     *
+     */
+    public function partner_counties($id)
+    {
+        $counties = ImplementingPartner::find($id)->counties()->orderBy('name')->pluck('name', 'id');
+        $categories = [];
+        foreach($counties as $key => $value)
         {
             $categories[] = ['id' => $key, 'value' => $value];
         }
