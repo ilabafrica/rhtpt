@@ -107,11 +107,11 @@ class RegisterController extends Controller
         $now = Carbon::now('Africa/Nairobi');
         //  Prepare to save user details
         //  Check if user exists
-        $userId = User::idByEmail($request->email);
-        if(!$userId)
-            $userId = User::idByUsername($request->username);
-        if(!$userId)
-        {
+     //   $userId = User::idByEmail($request->email);
+       // if(!$userId)
+         //   $userId = User::idByUsername($request->username);
+        //if(!$userId)
+        //{
             $user = new User;
             $user->name = $request->surname." ".$request->fname." ".$request->oname;
             $user->first_name = $request->fname;
@@ -121,12 +121,12 @@ class RegisterController extends Controller
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->address = $request->address;
-            $user->username = $request->email;
+            $user->username = $request->phone;
             $user->password = Hash::make(User::DEFAULT_PASSWORD);
             $user->deleted_at = $now;
             $user->save();
             $userId = $user->id;
-        }
+       // }
         //  Prepare to save facility details
         $facilityId = Facility::idByCode($request->mfl_code);
         

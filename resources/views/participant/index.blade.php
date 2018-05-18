@@ -20,7 +20,7 @@
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
                     </a> -->
-                @permission('create-user')
+                @permission('download-participants-list')
                     <a class="btn btn-sm btn-nephritis" :href="'/workbook'">
                         <i class="fa fa-book"></i>
                         Download Workbook

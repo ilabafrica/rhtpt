@@ -213,6 +213,9 @@
                         <a href="{!! url('report') !!}"><i class="fa fa-bar-chart-o"></i> {!! trans('messages.reports') !!}</a>
                     </li>
                     @endpermission
+		    <li>
+                        <a  href="http://nphls.or.ke/helpdesk/index.php?a=add" target="_blank"> <i class="fa fa-list" aria-hidden="true" ></i>PT Help Desk</a>
+                    </li>
                     <li>
                     <a  href="{{ route('logout') }}" onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();"><i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out</a>

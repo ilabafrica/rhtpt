@@ -205,7 +205,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_user.phone number') }" for="phone number">Phone Number:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|digits:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.phone number') }" name="phone number" type="text" v-model="newUser.phone"/>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_user.phone number') }" name="phone number" type="text" v-model="newUser.phone"/>
                                         <span v-show="errors.has('create_user.phone number')" class="help is-danger">@{{ errors.first('create_user.phone number') }}</span>
                                         <span v-if="formErrors['phone']" class="error text-danger">@{{ formErrors['phone'] }}</span>
                                     </div>

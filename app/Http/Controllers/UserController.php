@@ -108,7 +108,7 @@ class UserController extends Controller
 	    
  	    
 	    $region = '';
-            if ($user->tier) {
+            if ($user->tier>0) {
 
                 if ($user->role ==3) {
                         $region = ImplementingPartner::find($user->tier)->name;
@@ -123,7 +123,7 @@ class UserController extends Controller
                    
                 }
                 elseif ($user->role ==7) {
-            //            $region = SubCounty::find($user->tier)->name;
+                        $region = SubCounty::find($user->tier)->name;
                    
                 }
                 else{
@@ -162,7 +162,7 @@ class UserController extends Controller
             'last_name' => 'required',
             'gender' => 'required',
             'phone' => 'required|unique:users,phone',
-            'email' => 'required|unique:users,email',
+            'email' => 'required',
             'role' => 'required',
             'username' => 'required|unique:users,username'
         ]);
