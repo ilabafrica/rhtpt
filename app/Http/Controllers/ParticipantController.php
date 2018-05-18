@@ -432,6 +432,7 @@ enrolled, you’ll receive a tester ID";
                         ->where('name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")
                         ->orWhere('phone', 'LIKE', "%{$search}%")->latest()->paginate(5);
         }
+
         $response = [
             'pagination' => [
                 'total' => $users->total(),
@@ -992,7 +993,7 @@ enrolled, you’ll receive a tester ID";
     public function approve($id)
     {
         $user = User::withTrashed()->where('id', $id)->first();
-	$max = DB::table('users')->max('uid');
+    	$max = DB::table('users')->max('uid');
         $m = $max+1;
         if ($user->uid==null ||$user->uid==''){
             $user->uid = $m; //pick sequential unique ids
@@ -1216,6 +1217,60 @@ enrolled, you’ll receive a tester ID";
         {
             return redirect()->back()->with('error', 'No data for PT participants found');
         }
+    }
+
+    public function participantCounts(){
+
+        return view('report.participantregistrationcount');
+    }
+
+    public function getParticipantCounts(Request $request){
+
+        $ITEMS_PER_PAGE = 50;
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $PARTICIPANT_ROLE_ID = Role::idByName('Participant');
+        $role = Auth::user()->ru()->role_id;
+        $tier = Auth::user()->ru()->tier;
+        
+        $data = DB::table('counties')
+                    ->leftJoin('sub_counties', 'counties.id', '=', 'sub_counties.county_id')
+                    ->leftJoin('facilities', 'sub_counties.id', '=', 'facilities.sub_county_id')
+                    ->leftJoin('role_user', function($join) use ($PARTICIPANT_ROLE_ID){
+                        $join->on('facilities.id', '=', 'role_user.tier')
+                            ->where('role_user.role_id', '=', $PARTICIPANT_ROLE_ID);
+                    });
+
+        if(strcmp($request->county, '') != 0) $data = $data->where('counties.id', '=', $request->county);
+        if(strcmp($request->subcounty, '') != 0) $data = $data->where('sub_counties.id', '=', $request->subcounty);
+        if(strcmp($request->facility, '') != 0) $data = $data->where('facilities.id', '=', $request->facility);
+
+        if(Auth::user()->isCountyCoordinator()) $data = $data->where('counties.id', '=', $tier);
+        if(Auth::user()->isSubCountyCoordinator()) $data = $data->where('sub_counties.id', '=', $tier);
+
+        $data = $data->selectRaw('counties.name AS county, sub_counties.name AS subcounty, count(role_user.user_id) AS hits')
+                    ->groupBy('counties.id', 'sub_counties.id')
+                    ->orderBy('counties.name')
+                    ->orderBy('sub_counties.name');
+
+        $totalUsers = collect($data->pluck('hits'))->sum();
+
+        $data = $data->paginate($ITEMS_PER_PAGE);
+
+        $response = [
+            'pagination' => [
+                'total' => $data->total(),
+                'per_page' => $data->perPage(),
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'from' => $data->firstItem(),
+                'to' => $data->lastItem()
+            ],
+            'role' => $role,
+            'data' => $data,
+            'total_users' => $totalUsers
+        ];
+
+        return response()->json($response);
     }
 }
 $excel = App::make('excel');

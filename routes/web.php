@@ -469,6 +469,12 @@ Route::group(['middleware' => 'auth'], function()
     Route::resource('vuedesignations','DesignationController');
     Route::any('vuedesignations/{id}/restore','DesignationController@restore');
 
+    Route::get('/participantcounts', array(
+        "as"    => "report.participantregistrationcount",
+        "uses"  => 'ParticipantController@participantCounts'
+    ));
+    Route::any('/getparticipantcounts', 'ParticipantController@getParticipantCounts');
+
     Route::get('participant', 'ParticipantController@manageParticipant');
     Route::resource('vueparticipants','ParticipantController');
     Route::any('vueparticipants/{id}/restore','ParticipantController@restore');
