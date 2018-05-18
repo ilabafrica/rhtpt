@@ -36,6 +36,7 @@ new Vue({
         facility: '',
         sub_county: '',
         county: '',
+        partner: '',
         role: '',
         tier: '',
         query: '',
@@ -74,9 +75,9 @@ new Vue({
     },
 
     mounted : function(){
+        this.loadCounties();
         this.getVueUsers(this.pagination.current_page);
         this.loadPrograms();
-        this.loadCounties();
         this.loadRoles();
         this.loadSexes();
         this.loadImplementingPartners();
@@ -92,7 +93,15 @@ new Vue({
                     this.pagination = response.data.pagination;
                     this.role = response.data.role;
                     this.tier = response.data.tier;
-
+                    
+                    if (this.role == 3) {
+                        let id = this.tier;
+                        this.$http.get('/partner_counties/'+id).then((response) => {
+                            this.counties = response.data;
+                        }, (response) => {
+                            // console.log(response);
+                        });
+                    }
                     if (this.role == 4) {
                         let id = this.tier;
                         this.$http.get('/subs/'+id).then((response) => {
@@ -388,6 +397,27 @@ new Vue({
 
             else if (this.county) {
                 this.$http.get('/api/search_user?county=' + this.county ).then((response) => {
+                    // If there was an error set the error message, if not fill the users array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.users = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+
+                });
+            }
+            //get users filtered by partner
+
+            else if (this.partner) {
+                this.$http.get('/api/search_user?partner=' + this.partner ).then((response) => {
                     // If there was an error set the error message, if not fill the users array.
                     if(response.data.error)
                     {
