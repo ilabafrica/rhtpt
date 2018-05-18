@@ -67,6 +67,7 @@ return [
     'tester-id'             =>    'Tester ID',
     'tester-id-range'       =>    'Tester ID Range',
     'feedback'              =>    'Feedback',
+    'subcounties'           =>    'Sub County',
     //  Reports
 
     //  User Management

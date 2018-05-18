@@ -23,6 +23,11 @@ class FacilityController extends Controller
         return view('facility.index');
     }
 
+    public function managefacilities()
+    {
+        return view('facility.managefacilities');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -59,6 +64,19 @@ class FacilityController extends Controller
                 $facilitys = SubCounty::find(Auth::user()->ru()->tier)->facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
             }
         }
+
+        //filter facilitys by region
+        if($request->has('county')) 
+        {            
+            $facilitys = County::find($request->get('county'))->facilities()->latest()->withTrashed()->paginate(5);               
+            
+        }
+         if($request->has('sub_county')) 
+        {
+            $facilitys = SubCounty::find($request->get('sub_county'))->facilities()->latest()->withTrashed()->paginate(5);
+
+        }        
+
         foreach($facilitys as $facility)
         {
             $facility->sub = $facility->subCounty->name;
@@ -357,15 +375,16 @@ class FacilityController extends Controller
      */
     public function mfl($id)
     {
-        $data = ["name" => "", "sub_county" => "", "county" => ""];
+        $data = ["name" => "", "sub_county" => "", "county" => "", "code" => ""];
         $pk = Facility::idByCode($id);
         if($pk)
         {
             $facility = Facility::find($pk);
+            $code = $facility->code;
             $name = $facility->name;
             $subCounty = $facility->subCounty->name;
             $county = $facility->subCounty->county->name;
-            $data = ["name" => $name, "sub_county" => $subCounty, "county" => $county];
+            $data = ["name" => $name, "sub_county" => $subCounty, "county" => $county,"code" => $code];
         }
         return response()->json($data);
     }

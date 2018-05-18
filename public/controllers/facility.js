@@ -28,6 +28,8 @@ new Vue({
         error: false,
         query: '',
         uploadify: {excel: ''},
+        sub_county: '',
+        county: '',
         counties: [],
         subs: [],
     },
@@ -155,6 +157,64 @@ new Vue({
                 // Clear the query.
                 this.query = '';
             });
+        },
+
+         filter_by_region: function() {
+            // Clear the error message.
+            this.error = '';
+            // Empty the facilitys array so we can fill it with the new facilitys.
+            this.facilitys = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
+
+            // Making a get request to our API and passing the query to it.
+           
+            //get facilitys filtered by sub county
+
+             if (this.sub_county) {
+                this.$http.get('/api/search_facility?sub_county='+ this.sub_county).then((response) => {
+                    // If there was an error set the error message, if not fill the facilitys array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.facilitys = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+                    // Clear the query.
+                    this.sub_county = '';
+                });
+            }
+
+            //get facilitys filtered by county
+
+            else if (this.county) {
+                this.$http.get('/api/search_facility?county=' + this.county ).then((response) => {
+                    // If there was an error set the error message, if not fill the facilitys array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.facilitys = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+                    // Clear the query.
+                    this.county = '';
+                });
+            }
+           
         },        
 
         batchImport()
@@ -206,6 +266,22 @@ new Vue({
                 this.subs = response.data;
             }, (response) => {
                 // console.log(response);
+            });
+        },
+        fetchFilterSubs: function() {
+            let id = $('#county_id_filter').val();
+            this.$http.get('/subs/'+ id).then((response) => {
+                this.subs = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+        fetchFacility: function() {
+            let id = $('#codeMfl').val();
+            this.$http.get('/mfl/'+id).then((response) => {
+                if(this.newFacility.code == response.data.code)
+                 swal("Facility already exist!", "Enter another valid MFL Code.", "info");
+                 this.newFacility.code = '';                         
             });
         },
     }

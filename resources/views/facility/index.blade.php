@@ -14,8 +14,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left col-md-8">
-                <h5><i class="fa fa-book"></i> {!! trans_choice('messages.facility', 2) !!}      
-               
+                <h5><i class="fa fa-book"></i> {!! trans_choice('messages.facility', 2) !!}
                     <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
@@ -32,6 +31,9 @@
                     </a> -->
 
                     <button class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#upload-worksheet"><i class="fa fa-level-up"></i> Upload Worksheet</button>
+                    @permission('create-facility')
+                    <a :href="'/subcounty/'" class="btn btn-sm btn-wisteria"><i class="fa fa-list"></i> Sub Counties</a>
+                    @endpermission
                 </h5>
             </div>
             <div class="col-md-2"></div>
@@ -45,6 +47,36 @@
                 </div>
             </div>
         </div>
+    </div>
+
+         <div class="row"  v-if = "role == 1 || role == 3 || role == 4" >
+            <div class="col-lg-12 margin-tb">
+                <div class="row">
+                    <div class="col-sm-3" v-if = "role == 1 || role == 3>
+                        <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="county" id="county_id_filter" @change="fetchFilterSubs()" v-model="county">
+                                <option selected></option>
+                               <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>                         
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="sub_county" id="sub_id"  v-model="sub_county">
+                                <option selected></option>
+                               <option  v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>                         
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-sm btn-alizarin" type="submit" @click="filter_by_region()" v-if="!loading">Filter </button>
+                        <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                    </div>                
+                </div>
+            </div>
+        <!-- </form> -->
     </div>
     <table class="table table-bordered">
         <tr>
@@ -143,7 +175,7 @@
                             <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('create_facility.mfl') }" for="mfl">MFL Code:</label>
                                     <div class="col-sm-8" :class="{ 'control': true }">
-                                        <input v-validate="'required|numeric|max:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_facility.mfl') }" name="mfl" type="text" placeholder="" v-model="newFacility.code" />
+                                        <input v-validate="'required|numeric|max:10'" class="form-control" :class="{'input': true, 'is-danger': errors.has('create_facility.mfl') }" name="mfl" type="text" placeholder="" v-model="newFacility.code" @change="fetchFacility" id="codeMfl"/>
                                         <span v-show="errors.has('create_facility.mfl')" class="help is-danger">@{{ errors.first('create_facility.mfl') }}</span>
                                     </div>
                                 </div>                                
