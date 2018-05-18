@@ -63,7 +63,7 @@
             <td>@{{ round.description }}</td>
             <td>@{{ round.start_date }}</td>
             <td>@{{ round.enrollment_date }}</td>
-            <td>@{{ today }}</td>
+            <td>@{{ round.end_date }}</td>
             <td>
             @permission('update-round')	
                 <button v-bind="{ 'disabled': round.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editRound(round)"><i class="fa fa-edit"></i> Edit</button>
