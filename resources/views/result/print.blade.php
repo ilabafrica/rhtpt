@@ -1,4 +1,10 @@
-      
+<head>
+    <style>
+        footer .pagenum:before {
+            content: counter(page);
+        }
+    </style>
+</head>
 <table class="table table-bordered" cellspacing="0">
     <tr><td colspan="5"><center><img src="img/coa.png"></center></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>MINISTRY OF HEALTH</b></td></tr>
@@ -14,19 +20,19 @@
         <td><b>County</b></td>
         <td>{{$data['county']}}</td>
     </tr>
-     <tr>
+    <tr>
         <td><b>Tester ID</b></td>
         <td>{{$data['tester_id']}}</td>
         <td><b>Sub County</b></td>
         <td>{{$data['sub_county']}}</td>
     </tr>
-     <tr>
+    <tr>
         <td><b>Tester Name</b></td>
         <td>{{$data['user_name']}}</td>
         <td><b>Facility</b></td>
         <td>{{$data['facility']}}</td>
     </tr>
-     <tr>
+    <tr>
         <td><b>Program</b></td>
         <td>{{$data['program']}}</td>
         <td><b>Facility MFL</b></td>
@@ -37,7 +43,22 @@
     <tr class="text-center"> <td colspan="5">NHRL acknowledges receipt of your Proficiency Testing results for Round {{$data['round_name']}}</td></tr>
     <tr class="text-center"> <td colspan="5">Your result is <b> <i>{{$data['feedback']}}</i></b></td></tr>
     <tr> <td> &nbsp;</td> </tr>
-    <tr class="text-center"> 
+    <tr class="text-center"> <td colspan="5">The reason/s for fail is/are</td></tr>
+    <tr class="text-center">
+        <td ><input type="checkbox"> Incorrect Result </td>
+        <td ><input type="checkbox"> Incomplete Result</td>
+        <td ><input type="checkbox"> Use of Expired Kits</td>
+        <td ><input type="checkbox"> Wrong Algorithm</td>
+    </tr>
+    <tr class="text-center">
+        <td ><input type="checkbox"> Incomplete Kit Data</td>
+        <td ><input type="checkbox"> Deviation From Procedure</td>
+        <td ><input type="checkbox"> Incomplete Other Information</td>
+        <td ></td>
+    </tr>
+
+    <tr> <td> &nbsp;</td> </tr>
+    <tr class="text-center">
         <td style ="border:solid 1px black;" rowspan="2">PT Sample ID</td>
         <td style ="border:solid 1px black;" colspan="3">Your Results</td>
         <td style ="border:solid 1px black;">NHRL Results</td>
@@ -47,7 +68,7 @@
         <th style ="border:solid 1px black;">First Response</th>
         <th style ="border:solid 1px black;">Final Result</th>
         <th style ="border:solid 1px black;">Expected Result</th>
-    </tr>                                        
+    </tr>
     <tr>
         <td style ="border:solid 1px black;">{{$data['sample_1']}}</td>
         <td style ="border:solid 1px black;">{{$data['pt_panel_1_kit1_results']}}</td>
@@ -103,9 +124,11 @@
         <td colspan="5">Thank you for your participation</td>
     </tr>
     <tr> <td> &nbsp;</td> </tr>
-    <tr> <td> &nbsp;</td> </tr>
-    <tr> <td> &nbsp;</td> </tr>
     <tr>
         <td>PT Coordinator.</td>
     </tr>
-</table>   
+    <tr> <td> &nbsp;</td> </tr>
+    <tr> <td colspan="4"> </td> <td><img src="img/ukas.png" alt="" border="1" height="55" width="100" /></td> </tr>
+</table>
+<footer><p>End of the report</p><br><div class="pagenum-container">Page <span class="pagenum"></span></div></footer>
+
