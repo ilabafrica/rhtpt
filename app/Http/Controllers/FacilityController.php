@@ -24,6 +24,11 @@ class FacilityController extends Controller
         return view('facility.index');
     }
 
+    public function managefacilities()
+    {
+        return view('facility.managefacilities');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -49,6 +54,10 @@ class FacilityController extends Controller
         {
             $facilitys = Facility::find(Auth::user()->ru()->tier);
         }
+        else if(Auth::user()->isPartner())
+        {
+            $facilitys = ImplementingPartner::find(Auth::user()->ru()->tier)->all_facilities()->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
+        }
         if($request->has('q')) 
         {
             $search = $request->get('q');
@@ -61,6 +70,22 @@ class FacilityController extends Controller
             {
                 $facilitys = SubCounty::find(Auth::user()->ru()->tier)->facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
             }
+            else if(Auth::user()->isPartner())
+            {
+                $facilitys = ImplementingPartner::find(Auth::user()->ru()->tier)->all_facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
+            }
+        }
+
+        //filter facilitys by region
+        if($request->has('county')) 
+        {            
+            $facilitys = County::find($request->get('county'))->facilities()->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);               
+            
+        }
+         if($request->has('sub_county')) 
+        {
+            $facilitys = SubCounty::find($request->get('sub_county'))->facilities()->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
+
         }
         foreach($facilitys as $facility)
         {
@@ -85,7 +110,9 @@ class FacilityController extends Controller
                 'from' => $facilitys->firstItem(),
                 'to' => $facilitys->lastItem()
             ],
-            'data' => $facilitys
+            'data' => $facilitys,
+            'role' => Auth::user()->ru()->role_id,
+            'tier' => Auth::user()->ru()->tier
         ];
 
         return $facilitys->count() > 0 ? response()->json($response) : $error;
@@ -121,14 +148,7 @@ class FacilityController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'label' => 'required',
-            'description' => 'required',
-            'order' => 'required',
-            'tag' => 'required',
-            'options' => 'required',
-        ]);
+        
 
         $create = Facility::create($request->all());
 
@@ -382,15 +402,16 @@ class FacilityController extends Controller
      */
     public function mfl($id)
     {
-        $data = ["name" => "", "sub_county" => "", "county" => ""];
+        $data = ["name" => "", "sub_county" => "", "county" => "", "code" => ""];
         $pk = Facility::idByCode($id);
         if($pk)
         {
             $facility = Facility::find($pk);
+            $code = $facility->code;
             $name = $facility->name;
             $subCounty = $facility->subCounty->name;
             $county = $facility->subCounty->county->name;
-            $data = ["name" => $name, "sub_county" => $subCounty, "county" => $county];
+            $data = ["name" => $name, "sub_county" => $subCounty, "county" => $county,"code" => $code];
         }
         return response()->json($data);
     }

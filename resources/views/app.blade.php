@@ -387,6 +387,8 @@
         <script src="{{ asset('controllers/designation.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('enrolparticipants'))
         <script src="{{ asset('controllers/enrolparticipant.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('subcounty'))
+        <script src="{{ asset('controllers/subcounty.js') }}"></script>
         @endif
 </body>
 </html>

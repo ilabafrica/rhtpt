@@ -162,6 +162,10 @@ Route::group(['middleware' => 'auth'], function()
     //Route::get('manage-vue', 'VueItemController@manageVue');
     //Route::resource('vueitems','VueItemController');
 
+    Route::get('subcounty', 'SubCountyController@manageSubcounty');
+    Route::resource('vuesubcounty', 'SubCountyController');
+    Route::any('vuesubcounty/{id}/restore','SubCountyController@restore');
+    Route::get('search_subcounty',array('as'=>'search_subcounty','uses'=>'SubCountyController@search_subcounty'));
 
     Route::get("/assign", array(
         "as"   => "role.assign",
@@ -215,7 +219,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get("/fclts/{id}", array(
         "as"   => "facilities.fetch",
         "uses" => "FacilityController@facilities"
-    ));
+    ));    
 
     Route::get("/partners", array(
         "as"   => "partners.fetch",
@@ -507,6 +511,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
     Route::get('api/search_parts',['as'=>'participants.search', 'uses'=>'UserController@forEnrol']);
     Route::get('api/search_designation',['as'=>'designation.search', 'uses'=>'DesignationController@index']);
+    Route::get('api/search_subcounty', ['as' => 'subcounty.search', 'uses' => 'SubCountyController@index']);
 });
 
 Route::get("/subs/{id}", array(
