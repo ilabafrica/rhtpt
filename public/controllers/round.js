@@ -173,6 +173,7 @@ new Vue({
             this.fillRound.id = round.id;
             this.fillRound.description = round.description;
             this.fillRound.start_date = round.start_date;
+            this.fillRound.enrollment_date = round.enrollment_date;
             this.fillRound.end_date = round.end_date;
             $("#edit-round").modal('show');
         },
