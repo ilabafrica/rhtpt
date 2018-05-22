@@ -100,7 +100,7 @@ class RoundController extends Controller
             $round->enrollment_date =$request->enrollment_date;
             $round->end_date =$request->end_date;
             $round->user_id =$request->user_id;
-            // $round->save();
+            $round->save();
 
             //send sms
             $users = new User;
@@ -149,7 +149,6 @@ class RoundController extends Controller
     {
         $request->request->add(['user_id' => Auth::user()->id]);
 
-        // $edit = Round::find($id)->update($request->all());
         $round = Round::find($id);
         $round->name =$request->name;
         $round->description =$request->description;
@@ -158,6 +157,40 @@ class RoundController extends Controller
         $round->end_date =$request->end_date;
         $round->user_id =$request->user_id;
         $round->save();
+
+        //send sms
+        $users = new User;
+        $county_coordinators = $users->county_coordinators()->pluck('phone')->toArray();
+        $subcounty_coordinators = $users->sub_county_coordinators()->pluck('phone')->toArray();
+        // $phone_numbers = array_merge($county_coordinators, $subcounty_coordinators);
+        $phone_numbers = array(0=>'0723763026', 1=>'0723763026');
+        
+        $recipients = NULL;
+        $recipients = implode(",", $phone_numbers);
+        //  Send SMS
+        $message = 'Dear County/SubCounty Coordinator, Round '.$round->name.' is now open for enrollment. Please enroll your participants between'.$round->start_date.' and '.$round->enrollment_date.'. Deadline is 5pm'.$round->enrollment_date;            
+        //  Bulk-sms settings
+        $api = DB::table('bulk_sms_settings')->first();
+        $username   = $api->username;
+        $apikey     = $api->api_key;
+        if($recipients)
+        {
+            // Specified sender-id
+            $from = $api->code;
+            // Create a new instance of Bulk SMS gateway.
+            // use try-catch to filter any errors.
+            try
+            {
+                // Send messages
+                $sms    = new Bulk($username, $apikey);
+                $results = $sms->sendMessage($recipients, $message, $from);
+            
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+            echo "Encountered an error while sending: ".$e->getMessage();
+            }
+        }
 
         return response()->json($round);
     }
