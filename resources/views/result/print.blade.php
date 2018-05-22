@@ -58,6 +58,8 @@
     </tr>
 
     <tr> <td> &nbsp;</td> </tr>
+    <tr class="text-center"> <td colspan="5">Comments:</td></tr>
+    <tr class="text-center"> <td colspan="5">Please institute the necessary corrective measures before the next round of PT.</td></tr>
     <tr class="text-center">
         <td style ="border:solid 1px black;" rowspan="2">PT Sample ID</td>
         <td style ="border:solid 1px black;" colspan="3">Your Results</td>
@@ -130,5 +132,29 @@
     <tr> <td> &nbsp;</td> </tr>
     <tr> <td colspan="4"> </td> <td><img src="img/ukas.png" alt="" border="1" height="55" width="100" /></td> </tr>
 </table>
-<footer><p>End of the report</p><br><div class="pagenum-container">Page <span class="pagenum"></span></div></footer>
+<footer>
+    <div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>
+<div class="page_break"></div>
+<head>
+    <style>
+        footer .pagenum:before {
+            content: counter(page);
+        }
+    </style>
+</head>
+<tr><td colspan="5"><div style="text-align:center">Testing Scheme Information</td></tr></div>
+<table>
+    <tr class="text-center"><td style ="border:solid 2px black;" colspan="5">
+            <p>1.  The HIV-PT is a Qualitative scheme.</p>
+            <p>2. The scheme utilises dried tube plasma color coded in green.</p>
+            <p>3.  PT panel samples have been fully characterized for the assigned HIV Sero-status.</p>
+            <p>4.  Stability testing was done at 4 oC, 25 oC, 37 oC and 45 oC. The samples were stable for 90 days.</p>
+            <p>5.  Homogeneity was established by random sampling of 1% of samples ina batch (1 sample per 100 samples).</p>
+            <p>6.  Participants performance report will be treated confidentially and will be shared with Quality officers.</p>
+            <p>7.  Subcontracted services: Panle distribution, results submission and feedback distribution.</p>
+            <p>8.  A summary report will be shared at the NPHL website (www.nphls.or.ke) at the conclusion of every round.</p></td>
+    </tr>
+</table>
 
+<footer><div style="text-align:center"><p>End of the report</div></p><br>
+    <div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>
