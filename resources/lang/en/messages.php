@@ -38,6 +38,8 @@ return [
     'result'                =>    'Result|Results',
     'partner'               =>    'Partner|Partners',
     'lot'                   =>    'Lot|Lots',
+    'registration'          =>    'Registration|Registrations',
+    'count'                 =>    'Count|Counts',
     /* Views */
     'batch'                 =>    'Batch No.',
     'date-prepared'         =>    'Date Prepared',
