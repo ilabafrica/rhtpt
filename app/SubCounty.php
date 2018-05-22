@@ -3,6 +3,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class SubCounty extends Model
 {
+    public $fillable = ['name', 'county_id'];
   	/**
   	 * Enabling soft deletes for sub-counties.
   	 *
