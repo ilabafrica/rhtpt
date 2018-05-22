@@ -54,6 +54,10 @@ class FacilityController extends Controller
         {
             $facilitys = Facility::find(Auth::user()->ru()->tier);
         }
+        else if(Auth::user()->isPartner())
+        {
+            $facilitys = ImplementingPartner::find(Auth::user()->ru()->tier)->all_facilities()->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
+        }
         if($request->has('q')) 
         {
             $search = $request->get('q');
@@ -65,6 +69,10 @@ class FacilityController extends Controller
             else if(Auth::user()->isSubCountyCoordinator())
             {
                 $facilitys = SubCounty::find(Auth::user()->ru()->tier)->facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
+            }
+            else if(Auth::user()->isPartner())
+            {
+                $facilitys = ImplementingPartner::find(Auth::user()->ru()->tier)->all_facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
             }
         }
 
@@ -78,7 +86,7 @@ class FacilityController extends Controller
         {
             $facilitys = SubCounty::find($request->get('sub_county'))->facilities()->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
 
-        }        
+        }
         foreach($facilitys as $facility)
         {
             $facility->sub = $facility->subCounty->name;

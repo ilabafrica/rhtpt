@@ -58,7 +58,7 @@
         <th>Sub County</th>        
         <th>Action</th>
       </tr>  
-      <tr v-for="subcounty in subcounties"
+      <tr v-for="subcounty in subcounties">
         <td>@{{subcounty.counties}}</td>
         <td>@{{subcounty.name}}</td>
         <td>           

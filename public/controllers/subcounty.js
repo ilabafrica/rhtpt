@@ -116,17 +116,8 @@ methods: {
             this.pagination.current_page = page;
             this.getVueSubcounty(page);
         },
-
-      /*editSubcounty: function(subcounty){
-            this.fillSubcounty.name = subcounty.name; 
-            this.fillSubcounty.county_id = subcounty.counties;
-            console.log( this.fillSubcounty.name, this.fillSubcounty.county_id)           
-            $("#edit-subcounty").modal('show');
-        },*/
         editSubcounty: function(subcounty){        	
             this.fillSubcounty = subcounty;
-            // this.fillSubcounty.county_id = subcounty.counties;
-            // this.fillSubcounty.name = subcounty.name;
             $("#edit-subcounty").modal('show');
             console.log(subcounty);
             
@@ -169,7 +160,7 @@ methods: {
                 }
                 else
                 {
-                    this.subcounty = response.data.data.data;
+                    this.subcounties = response.data.data.data;
                    // this.pagination = response.data.pagination;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
