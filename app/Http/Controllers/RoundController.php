@@ -419,20 +419,38 @@ class RoundController extends Controller
         {   
             if(!empty($participant->ru()->tier))
             {
-                $facility = Facility::find($participant->ru()->tier);
                 $participant->facility = $participant->ru()->tier;
                 $participant->program = $participant->ru()->program_id;
-                $participant->sub_county = $facility->subCounty->id;
-                $participant->county = $facility->subCounty->county->id;
-
-                $participant->mfl = $facility->code;
-                $participant->fac = $facility->name;
-                $participant->prog = Program::find($participant->ru()->program_id)->name;
-                $participant->sub = $facility->subCounty->name;
-                $participant->kaunti = $facility->subCounty->county->name;
-                $participant->des = $participant->designation($participant->ru()->designation);
                 $participant->gndr = $participant->maleOrFemale((int)$participant->gender);
-                $participants->designation = $participant->ru()->designation;
+                $facility = Facility::find($participant->ru()->tier);
+                try{
+                    $participant->mfl = $facility->code;
+                    $participant->fac = $facility->name;
+
+                    $participant->sub_county = $facility->subCounty->id;
+                    $participant->county = $facility->subCounty->county->id;
+                    $participant->sub = $facility->subCounty->name;
+                    $participant->kaunti = $facility->subCounty->county->name;
+                }catch(\Exception $ex){
+                    \Log::error("Missing facility information!");
+                    \Log::error($participant);
+                    \Log::error($ex->getMessage());
+                }
+                try{
+                    $participant->prog = Program::find($participant->ru()->program_id)->name;
+                }catch(\Exception $ex){
+                    \Log::error("Participant does not have a program!");
+                    \Log::error($participant);
+                    \Log::error($ex->getMessage());
+                }
+                try{
+                    $participant->des = $participant->designation($participant->ru()->designation);
+                    $participants->designation = $participant->ru()->designation;
+                }catch(\Exception $ex){
+                    \Log::error("Participant does not have a designation!");
+                    \Log::error($participant);
+                    \Log::error($ex->getMessage());
+                }
             }
             else
             {
