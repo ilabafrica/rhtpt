@@ -61,7 +61,7 @@ class FacilityController extends Controller
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $facilitys = Facility::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
+            $facilitys = Facility::where('name', 'LIKE', "%{$search}%")->orWhere('code', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
             if(Auth::user()->isCountyCoordinator())
             {
                 $facilitys = County::find(Auth::user()->ru()->tier)->facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
