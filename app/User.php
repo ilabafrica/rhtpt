@@ -418,13 +418,11 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     */
     public function designation($des)
     {
-\Log::info($des);
         $designation = 'N/A';
         if($des){
             $desig = Designation::find($des);
             if($desig)$designation = $desig->name;
         }
-\Log::info($designation);
         return $designation;
     }
     /**

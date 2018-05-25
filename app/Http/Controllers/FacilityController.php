@@ -61,7 +61,7 @@ class FacilityController extends Controller
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $facilitys = Facility::where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
+            $facilitys = Facility::where('name', 'LIKE', "%{$search}%")->orWhere('code', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
             if(Auth::user()->isCountyCoordinator())
             {
                 $facilitys = County::find(Auth::user()->ru()->tier)->facilities()->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($ITEMS_PER_PAGE);
@@ -220,11 +220,16 @@ class FacilityController extends Controller
      */
     public function subs($id)
     {
-        $subs = County::find($id)->subCounties->sortBy('name')->pluck('name', 'id');
         $categories = [];
-        foreach($subs as $key => $value)
-        {
-            $categories[] = ['id' => $key, 'value' => $value];
+        try{
+            $subs = County::find($id)->subCounties->sortBy('name')->pluck('name', 'id');
+            foreach($subs as $key => $value)
+            {
+                $categories[] = ['id' => $key, 'value' => $value];
+            }
+        }catch(\Exception $ex){
+            \Log::error("No such county id: $id");
+            \Log::error($ex->getMessage());
         }
         return $categories;
     }

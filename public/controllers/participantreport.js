@@ -61,7 +61,7 @@ new Vue({
     },
 
     mounted : function(){
-        this.getRegisteredParticipants(this.pagination.current_page);
+        this.getRole();
         this.loadCounties();
 
     },
@@ -87,6 +87,22 @@ new Vue({
             });
         },
         
+        getRole: function(page){
+            this.$http.get('/userrole').then((response) => {
+                if(response.data){
+                    this.role = response.data.role_id;
+                    if (this.role == 4) { //County Role
+                        this.county = response.data.tier;
+                        this.loadSubcounties();
+                    }
+                    if (this.role == 7) {// Subcounty Role
+                        this.sub_county = response.data.tier;
+                        this.loadFacilities();
+                    }
+                }
+            })
+        },
+
         changePage: function (page) {
             this.pagination.current_page = page;
             this.getRegisteredParticipants(page);
@@ -103,7 +119,8 @@ new Vue({
 
         // Populate subcounties from FacilityController
         loadSubcounties: function() {
-            console.log('County ID: ' + this.county);
+            this.sub_county = "";
+            this.facility = "";
             this.$http.get('/subs/'+ this.county).then((response) => { 
                 this.subcounties = response.data;
             }, (response) => {
@@ -112,6 +129,7 @@ new Vue({
 
         // Populate facilities from FacilityController
         loadFacilities: function() {
+            this.facility = "";
             this.$http.get('/fclts/' + this.sub_county).then((response) => { 
                 this.facilities = response.data;
             }, (response) => {

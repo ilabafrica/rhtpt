@@ -218,24 +218,39 @@ class ParticipantController extends Controller
         {               
             if(!empty($user->ru()->tier))
             {
-                try{
                     $facility = Facility::find($user->ru()->tier);
                     $user->facility = $user->ru()->tier;
                     $user->program = $user->ru()->program_id;
-                    $user->sub_county = $facility->subCounty->id;
-                    $user->county = $facility->subCounty->county->id;
-
-                    $user->mfl = $facility->code;
-                    $user->fac = $facility->name;
-                    $user->prog = Program::find($user->ru()->program_id)->name;
-                    $user->sub = $facility->subCounty->name;
-                    $user->kaunti = $facility->subCounty->county->name;
-                    $user->des = $user->designation($user->ru()->designation);
                     $user->gndr = $user->maleOrFemale((int)$user->gender);
-                    $user->designation = $user->ru()->designation;
-                }catch(\Exception $exp){
-                    \Log::error($exp);
-                }
+                    try{
+                        $user->sub_county = $facility->subCounty->id;
+                        $user->county = $facility->subCounty->county->id;
+
+                        $user->mfl = $facility->code;
+                        $user->fac = $facility->name;
+
+                        $user->sub = $facility->subCounty->name;
+                        $user->kaunti = $facility->subCounty->county->name;
+                    }catch(\Exception $exp){
+                        \Log::error("Facility information not found!");
+                        \Log::error($user);
+                        \Log::error($exp->getMessage());
+                    }
+                    try{
+                        $user->prog = Program::find($user->ru()->program_id)->name;
+                    }catch(\Exception $exp){
+                        \Log::error("User has no program.");
+                        \Log::error($user);
+                        \Log::error($exp->getMessage());
+                    }
+                    try{
+                        $user->des = $user->designation($user->ru()->designation);
+                        $user->designation = $user->ru()->designation;
+                    }catch(\Exception $exp){
+                        \Log::error("User has no designation.");
+                        \Log::error($user);
+                        \Log::error($exp->getMessage());
+                    }
             }
             else
             {

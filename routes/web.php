@@ -32,6 +32,7 @@ Route::get('/email/verify/resend', 'Auth\RegisterController@resend');
 Route::get('/email/verify/{code}', 'UserController@emailVerification');
 
 Route::post('/token', 'UserController@phoneVerification');
+Route::get('/userrole', 'UserController@getRole');
 
 Route::get("/sex", array(
     "as"   => "sex.fetch",

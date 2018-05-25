@@ -961,5 +961,15 @@ class UserController extends Controller
         return redirect()->to('verified')
                 ->with('warning', "Your token is invalid.");
     }
+
+    
+    /**
+     * Get user's role ID and tier ID
+     *
+     * @return array 
+     */
+    public function getRole(){
+        return ["role_id" => Auth::user()->ru()->role_id, "tier" => Auth::user()->ru()->tier];
+    }
 }
 $excel = App::make('excel');
