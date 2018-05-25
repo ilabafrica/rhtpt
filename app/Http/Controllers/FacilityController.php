@@ -220,11 +220,16 @@ class FacilityController extends Controller
      */
     public function subs($id)
     {
-        $subs = County::find($id)->subCounties->sortBy('name')->pluck('name', 'id');
         $categories = [];
-        foreach($subs as $key => $value)
-        {
-            $categories[] = ['id' => $key, 'value' => $value];
+        try{
+            $subs = County::find($id)->subCounties->sortBy('name')->pluck('name', 'id');
+            foreach($subs as $key => $value)
+            {
+                $categories[] = ['id' => $key, 'value' => $value];
+            }
+        }catch(\Exception $ex){
+            \Log::error("No such county id: $id");
+            \Log::error($ex->getMessage());
         }
         return $categories;
     }
