@@ -162,13 +162,13 @@ class RoundController extends Controller
         $users = new User;
         $county_coordinators = $users->county_coordinators()->pluck('phone')->toArray();
         $subcounty_coordinators = $users->sub_county_coordinators()->pluck('phone')->toArray();
-        // $phone_numbers = array_merge($county_coordinators, $subcounty_coordinators);
-        $phone_numbers = array(0=>'0723763026', 1=>'0723763026');
+        $phone_numbers = array_merge($county_coordinators, $subcounty_coordinators);
+        // $phone_numbers = array(0=>'0723763026', 1=>'0723763026');
         
         $recipients = NULL;
         $recipients = implode(",", $phone_numbers);
         //  Send SMS
-        $message = 'Dear County/SubCounty Coordinator, Round '.$round->name.' is now open for enrollment. Please enroll your participants between'.$round->start_date.' and '.$round->enrollment_date.'. Deadline is 5pm'.$round->enrollment_date;            
+        $message = 'Dear County/SubCounty Coordinator, Round '.$round->name.' is now open for enrollment. Please enroll your participants between '.$round->start_date.' and '.$round->enrollment_date.'. Deadline is 5pm '.$round->enrollment_date;
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
