@@ -308,9 +308,10 @@ new Vue({
         fetchFacility: function() {
             let id = $('#codeMfl').val();
             this.$http.get('/mfl/'+id).then((response) => {
-                if(this.newFacility.code == response.data.code)
-                 swal("Facility already exist!", "Enter another valid MFL Code.", "info");
-                 this.newFacility.code = '';                         
+                if(this.newFacility.code == response.data.code){
+                    swal("Facility already exists!", "Enter another valid MFL Code.", "info");
+                    this.newFacility.code = '';
+                }
             });
         },
     }
