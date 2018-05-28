@@ -1253,7 +1253,8 @@ enrolled, you’ll receive a tester ID";
                     ->leftJoin('role_user', function($join) use ($PARTICIPANT_ROLE_ID){
                         $join->on('facilities.id', '=', 'role_user.tier')
                             ->where('role_user.role_id', '=', $PARTICIPANT_ROLE_ID);
-                    });
+                    })
+                    ->leftJoin('users', 'role_user.user_id', '=', 'users.id');
 
         if(strcmp($request->county, '') != 0) $data = $data->where('counties.id', '=', $request->county);
         if(strcmp($request->subcounty, '') != 0) $data = $data->where('sub_counties.id', '=', $request->subcounty);
@@ -1262,12 +1263,13 @@ enrolled, you’ll receive a tester ID";
         if(Auth::user()->isCountyCoordinator()) $data = $data->where('counties.id', '=', $tier);
         if(Auth::user()->isSubCountyCoordinator()) $data = $data->where('sub_counties.id', '=', $tier);
 
-        $data = $data->selectRaw('counties.name AS county, sub_counties.name AS subcounty, count(role_user.user_id) AS hits')
+        $data = $data->selectRaw('counties.name AS county, sub_counties.name AS subcounty, count(role_user.user_id) AS hits, count(IF(ISNULL(users.deleted_at),role_user.user_id,NULL)) AS active')
                     ->groupBy('counties.id', 'sub_counties.id')
                     ->orderBy('counties.name')
                     ->orderBy('sub_counties.name');
 
         $totalUsers = collect($data->pluck('hits'))->sum();
+        $activeUsers = collect($data->pluck('active'))->sum();
 
         $data = $data->paginate($ITEMS_PER_PAGE);
 
@@ -1282,6 +1284,7 @@ enrolled, you’ll receive a tester ID";
             ],
             'role' => $role,
             'data' => $data,
+            'active_users' => $activeUsers,
             'total_users' => $totalUsers
         ];
 
