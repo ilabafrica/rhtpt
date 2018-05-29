@@ -107,6 +107,9 @@ new Vue({
                             // console.log(response);
                         });
                     }
+                    if (this.testerparticipants.length == 0) {
+                        swal("There are no participants awaiting enrollment.","","info");
+                    }
                 }
                 else
                 {
@@ -167,7 +170,11 @@ new Vue({
                     this.testerparticipants = response.data.data;
                     this.pagination = response.data.pagination;
                     this.enrol_status = 1;
-                    toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    if (this.testerparticipants.length == 0) {
+                        swal("You have not yet enrolled any participants.","","info");
+                    }else{
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
                 }
                 // The request is finished, change the loading to false again.
                 this.loading = false;

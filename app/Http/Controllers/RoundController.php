@@ -469,7 +469,7 @@ class RoundController extends Controller
             'enrol_status' =>$enrol_status
         ];
 
-        return $participants->count() > 0 ? response()->json($response) : $error;
+        return response()->json($response);
            
 
 
