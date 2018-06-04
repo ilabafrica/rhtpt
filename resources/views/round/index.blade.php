@@ -82,6 +82,7 @@
 		@endpermission
                <!-- <button v-if="!round.deleted_at" class="btn btn-sm btn-new-participants" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id"   @click.prevent="loadParticipants(round.id)"><i class="fa fa-book"></i> New Participants</button>               -->
             @endpermission
+            <a v-if="!round.deleted_at" class="btn btn-sm btn-default" :href="'/participantinfo/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i>Enrolled Participants Info</a>
             </td>
         </tr>
     </table>

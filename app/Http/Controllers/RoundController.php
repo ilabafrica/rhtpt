@@ -15,6 +15,7 @@ use App\Role;
 use App\SmsHandler;
 use App\SubCounty;
 use App\Designation;
+use App\Pt;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
@@ -467,6 +468,130 @@ class RoundController extends Controller
             'role' => Auth::user()->ru()->role_id,
             'tier' => Auth::user()->ru()->tier,
             'enrol_status' =>$enrol_status
+        ];
+
+        return $participants->count() > 0 ? response()->json($response) : $error;
+           
+
+
+    }
+    /**
+     * Function for load the view of participants to be enrolled
+     *
+     */
+    public function manage_participant_info()
+    {
+        return view('round.participantinfo');
+    }
+
+    //get the list of users to be enrolled
+     public function participants_info(Request $request, $round=null)
+    {        
+        $result_status='';
+        $items_per_page = 100;
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        
+        //Get the enrolled users
+        $enrolled_users = Enrol::where('round_id', $round)->pluck('user_id')->toArray();
+
+        $users = new User;
+        $participants = $users->participants()->whereIn('id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+
+        if(Auth::user()->isCountyCoordinator())
+        {
+            $participants = County::find(Auth::user()->ru()->tier)->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+        }
+        else if(Auth::user()->isSubCountyCoordinator())
+        {
+           $participants = SubCounty::find(Auth::user()->ru()->tier)->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+        }
+        else if(Auth::user()->isPartner())
+        {
+           $participants = ImplementingPartner::find(Auth::user()->ru()->tier)->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+        }
+        else if(Auth::user()->isFacilityInCharge())
+        {
+           $participants = Facility::find(Auth::user()->ru()->tier)->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+        }
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $participants = $users->participants()->where('name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            if(Auth::user()->isCountyCoordinator())
+            {
+                $participants = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            }
+            else if(Auth::user()->isSubCountyCoordinator())
+            {
+                $participants = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            }
+            else if(Auth::user()->isFacilityInCharge())
+            {
+               $participants = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            }
+        }
+        //filter users by region
+        if($request->has('county')) {                 
+            $participants = County::find($request->get('county'))->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+        
+        }
+        
+         if($request->has('sub_county')) 
+        {
+            $participants = SubCounty::find($request->get('sub_county'))->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+        }
+        if($request->has('facility')) 
+        {
+            $participants = Facility::find($request->get('facility'))->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+        }
+     
+        foreach($participants as $participant)
+        {   
+            if(!empty($participant->ru()->tier))
+            {
+                $facility = Facility::find($participant->ru()->tier);
+                $participant->facility = $participant->ru()->tier;
+                $participant->sub_county = $facility->subCounty->id;
+                $participant->county = $facility->subCounty->county->id;
+
+                $participant->facility_name = $facility->name;
+                $participant->sub_county_name = $facility->subCounty->name;
+                $participant->county_name = $facility->subCounty->county->name;               
+            }
+            else
+            {
+                $participant->facility = '';
+            }            
+
+            $enrollment = Enrol::where('round_id', $round)->where('user_id', $participant->id)->first();
+            if ($enrollment) {            
+                $pt = Pt::where('enrolment_id', $enrollment->id)->first();
+
+                if ($pt) {
+                    $participant->result_status = $pt->panel_status;                
+                }else{
+
+                    $participant->result_status = 'N/A';                
+                }
+            }else
+            {
+                $participant->result_status = 'N/A';                
+            }            
+        }
+       
+        $response = [  
+            'pagination' => [
+                'total' => $participants->total(),
+                'per_page' => $participants->perPage(),
+                'current_page' => $participants->currentPage(),
+                'last_page' => $participants->lastPage(),
+                'from' => $participants->firstItem(),
+                'to' => $participants->lastItem()
+            ],         
+            'data' => $participants,
+            'role' => Auth::user()->ru()->role_id,
+            'tier' => Auth::user()->ru()->tier
+            // 'enrol_status' =>$enrol_status
         ];
 
         return $participants->count() > 0 ? response()->json($response) : $error;

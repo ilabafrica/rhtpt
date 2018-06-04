@@ -257,6 +257,18 @@ EntrustUserTrait::restore insteadof SoftDeletes;
                         
         return $users;
     } 
+       /**
+    * Get participants
+    *
+    */
+    public function participants()
+    {
+      $role = Role::idByName('Participant');            
+      $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->where('role_id', $role); 
+                        
+        return $users;
+    } 
     /**
     * Return User ID given the name
     *
