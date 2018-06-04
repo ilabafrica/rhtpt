@@ -1269,7 +1269,7 @@ enrolled, you’ll receive a tester ID";
         if(Auth::user()->isCountyCoordinator()) $data = $data->where('counties.id', '=', $tier);
         if(Auth::user()->isSubCountyCoordinator()) $data = $data->where('sub_counties.id', '=', $tier);
 
-        $data = $data->selectRaw('counties.name AS county, sub_counties.name AS subcounty, count(DISTINCT users.id) AS total, count(DISTINCT IF(ISNULL(users.deleted_at),users.id,NULL)) AS active, count(DISTINCT live_round.user_id) AS current_enrolment')
+        $data = $data->selectRaw('counties.name AS county, sub_counties.name AS subcounty, count(DISTINCT users.id) AS total, count(DISTINCT IF(ISNULL(users.deleted_at),users.id,NULL)) AS active, count(DISTINCT IF(ISNULL(users.deleted_at),live_round.user_id,NULL)) AS current_enrolment')
                     ->groupBy('counties.id', 'sub_counties.id')
                     ->orderBy('counties.name')
                     ->orderBy('sub_counties.name');

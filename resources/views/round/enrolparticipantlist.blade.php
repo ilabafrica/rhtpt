@@ -91,8 +91,8 @@
                         <th>Phone</th>
                         <th>Program</th>
                     </tr>
-                    <tr v-for="(participant, key) in testerparticipants">
-			<td>@{{key+1}}</td>
+                    <tr v-for="(participant, key, index) in testerparticipants">
+			<td>@{{index + 1}}</td>
                         <td v-if = 'enrol_status ==0'><input type="checkbox" checked='false'  :value="participant.id" name="usrs[]" ></td>
                         <td>@{{ participant.name }}</td>
                         <td>@{{ participant.uid }}</td>
