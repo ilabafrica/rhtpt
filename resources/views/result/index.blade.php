@@ -81,7 +81,7 @@
             <button v-if="result.panel_status==2 && result.feedback==0" class="btn btn-sm btn-success" @click.prevent="quickVerifyEvaluatedResult(result.id)"><i class="fa fa-check-circle"></i> Verify</button>
             @endpermission 
 
-            @permission('print-results')
+            @permission('print-result')
             <a v-if="result.panel_status==3" class="btn btn-concrete" :href="'print_result/' +result.id"><i class="fa fa-print"></i> Print</a>
             @endpermission 
             </td>

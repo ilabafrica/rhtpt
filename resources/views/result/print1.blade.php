@@ -43,21 +43,6 @@
     <tr class="text-center"> <td colspan="5">NHRL acknowledges receipt of your Proficiency Testing results for Round {{$data['round_name']}}</td></tr>
     <tr class="text-center"> <td colspan="5">Your result is <b> <i>{{$data['feedback']}}</i></b></td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
-    <tr >
-        <td><input type="checkbox" /> Incomplete Kit Data</td>
-        <td><input type="checkbox" /> Deviation From Procedure</td>
-        <td ><input type="checkbox" /> Incomplete Other Information</td>
-
-    </tr>
-    <tr >
-        <td style="display:inline">
-        <input type="checkbox" /> Incorrect Result
-        <input type="checkbox" /> Incomplete Result
-        <input type="checkbox" /> Use of Expired Kits
-        <input type="checkbox" /> Wrong Algorithm  </td>
-    </tr>
-
-
     <tr class="text-center"> <td colspan="5">Comments:</td></tr>
     <tr class="text-center">
         <td style ="border:solid 1px black;" rowspan="2">PT Sample ID</td>
