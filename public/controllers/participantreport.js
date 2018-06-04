@@ -27,6 +27,7 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
+        enrolled: '',
         active: '',
         total: '',
         facility: '',
@@ -77,6 +78,7 @@ new Vue({
                 {
                     this.usercounts = response.data.data.data;
                     this.role = response.data.role;
+                    this.enrolled = response.data.enrolled_users;
                     this.active = response.data.active_users;
                     this.total = response.data.total_users;
                     this.pagination = response.data.pagination;

@@ -20,7 +20,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left col-md-9">
-                <h6><b>Service Providers</b>: Total Registered - @{{total}} Active - @{{active}}</h6> 
+                <h6><b>Service Providers</b>: Total Registered - @{{total}} Active - @{{active}} Enrolled - @{{enrolled}}</h6> 
             </div>
         </div>
     </div>
@@ -84,18 +84,20 @@
             <th rowspan="2">#</th>
             <th rowspan="2">County</th>
             <th rowspan="2">Sub-county</th>
-            <th colspan="2">Service Providers</th>
+            <th colspan="3">Service Providers</th>
         </tr>
         <tr>
             <th>Total</th>
             <th>Active</th>
+            <th>Current Enrolment</th>
         </tr>
         <tr v-for="(subcounty, key) in usercounts">
             <td>@{{ key + 1 + ((pagination.current_page - 1) * pagination.per_page) }}</td>
             <td>@{{ subcounty.county }}</td>
             <td>@{{ subcounty.subcounty }}</td>
-            <td>@{{ subcounty.hits}}</td>
+            <td>@{{ subcounty.total}}</td>
             <td>@{{ subcounty.active}}</td>
+            <td>@{{ subcounty.current_enrolment}}</td>
         </tr>
     </table>
     <!-- Pagination -->
