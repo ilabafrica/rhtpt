@@ -50,11 +50,13 @@
 
     </tr>
     <tr >
-        <td style="display:inline">
-        <input type="checkbox" /> Incorrect Result
-        <input type="checkbox" /> Incomplete Result
-        <input type="checkbox" /> Use of Expired Kits
-        <input type="checkbox" /> Wrong Algorithm  </td>
+        <div style="display: inline;">
+            <input type="checkbox" /> Incorrect Result
+            <input type="checkbox" /> Incomplete Result
+            <input type="checkbox" /> Use of Expired Kits
+            <input type="checkbox" /> Wrong Algorithm
+        </div>
+
     </tr>
 
 
