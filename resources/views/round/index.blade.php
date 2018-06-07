@@ -75,14 +75,14 @@
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             @permission('enrol-participants')                               
-                <a v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" :href="'/download/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i>Participants List</a>
+                <!-- <a v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" :href="'/download/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i>Participants List</a> -->
                 <a v-if="!round.deleted_at" :href="'/enrolparticipants/' + round.id" class="btn btn-sm btn-wisteria"><i class="fa fa-list"></i> Enrol Participants</a>
 		@permission('upload-participants')
                 <button v-if="!round.deleted_at" :data-fk="round.id" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
 		@endpermission
                <!-- <button v-if="!round.deleted_at" class="btn btn-sm btn-new-participants" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id"   @click.prevent="loadParticipants(round.id)"><i class="fa fa-book"></i> New Participants</button>               -->
             @endpermission
-            <a v-if="!round.deleted_at" class="btn btn-sm btn-default" :href="'/participantinfo/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i>Enrolled Participants Info</a>
+            <a v-if="!round.deleted_at" class="btn btn-sm btn-default" :href="'/participantinfo/' + round.id" id="enrolled" ><i class="fa fa-user"></i> Enrolled Participants Info</a>
             </td>
         </tr>
     </table>

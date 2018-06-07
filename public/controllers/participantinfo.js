@@ -29,7 +29,10 @@ new Vue({
         counties: [],
         subs: [],
         facilities: [],        
-        roundId:'',        
+        roundId:'',
+        total_participants: '',        
+        active_participants: '',        
+        enrolled_participants: '',        
     },
 
     computed: {
@@ -70,6 +73,9 @@ new Vue({
                     this.roundId = round_id;
                     this.role = response.data.role;
                     this.tier = response.data.tier;
+                    this.total_participants = response.data.total_participants;
+                    this.active_participants = response.data.active_participants;
+                    this.enrolled_participants = response.data.enrolled_participants;
                     this.pagination = response.data.pagination;
                     
                     if (this.role == 4) {
@@ -150,6 +156,9 @@ new Vue({
                     {
                         this.participants = response.data.data.data;
                         this.pagination = response.data.pagination;
+                        this.total_participants = response.data.total_participants;
+                        this.active_participants = response.data.active_participants;
+                        this.enrolled_participants = response.data.enrolled_participants;
                         toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                     }
                     // The request is finished, change the loading to false again.
@@ -173,6 +182,9 @@ new Vue({
                     {
                         this.participants = response.data.data.data;
                         this.pagination = response.data.pagination;
+                        this.total_participants = response.data.total_participants;
+                        this.active_participants = response.data.active_participants;
+                        this.enrolled_participants = response.data.enrolled_participants;
                         toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                     }
                     // The request is finished, change the loading to false again.
@@ -196,6 +208,9 @@ new Vue({
                     {
                         this.participants = response.data.data.data;
                         this.pagination = response.data.pagination;
+                        this.total_participants = response.data.total_participants;
+                        this.active_participants = response.data.active_participants;
+                        this.enrolled_participants = response.data.enrolled_participants;
                         toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                     }
                     // The request is finished, change the loading to false again.

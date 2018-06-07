@@ -471,8 +471,7 @@ class RoundController extends Controller
         ];
 
         return $participants->count() > 0 ? response()->json($response) : $error;
-           
-
+    
 
     }
     /**
@@ -495,23 +494,43 @@ class RoundController extends Controller
         $enrolled_users = Enrol::where('round_id', $round)->pluck('user_id')->toArray();
 
         $users = new User;
-        $participants = $users->participants()->whereIn('id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+        $all_participants = $users->participants();
+        $active_participants = $all_participants->count();
+        $total_participants = $all_participants->withTrashed()->count();
+        $participants = $all_participants->whereIn('id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+        $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
 
         if(Auth::user()->isCountyCoordinator())
         {
-            $participants = County::find(Auth::user()->ru()->tier)->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $all_participants = County::find(Auth::user()->ru()->tier)->users();
+            $active_participants = $all_participants->count();
+            $total_participants = $all_participants->withTrashed()->count();
+            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $participants = SubCounty::find(Auth::user()->ru()->tier)->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $all_participants = SubCounty::find(Auth::user()->ru()->tier)->users();
+            $active_participants = $all_participants->count();
+            $total_participants = $all_participants->withTrashed()->count();
+            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
         }
         else if(Auth::user()->isPartner())
         {
-           $participants = ImplementingPartner::find(Auth::user()->ru()->tier)->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $all_participants = ImplementingPartner::find(Auth::user()->ru()->tier)->users();
+            $active_participants = $all_participants->count();
+            $total_participants = $all_participants->withTrashed()->count();
+            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $participants = Facility::find(Auth::user()->ru()->tier)->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $all_participants = Facility::find(Auth::user()->ru()->tier)->users();
+            $active_participants = $all_participants->count();
+            $total_participants = $all_participants->withTrashed()->count();
+            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
         }
         if($request->has('q')) 
         {
@@ -532,17 +551,29 @@ class RoundController extends Controller
         }
         //filter users by region
         if($request->has('county')) {                 
-            $participants = County::find($request->get('county'))->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $all_participants = County::find($request->get('county'))->users();
+            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $total_participants = $all_participants->withTrashed()->count();
+            $active_participants = $all_participants->count();
+            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
         
         }
         
          if($request->has('sub_county')) 
         {
-            $participants = SubCounty::find($request->get('sub_county'))->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $all_participants = SubCounty::find($request->get('sub_county'))->users();
+            $active_participants = $all_participants->count();
+            $total_participants = $all_participants->withTrashed()->count();
+            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
         }
         if($request->has('facility')) 
         {
-            $participants = Facility::find($request->get('facility'))->users()->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $all_participants = Facility::find($request->get('facility'))->users();
+            $active_participants = $all_participants->count();
+            $total_participants = $all_participants->withTrashed()->count();
+            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
+            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
         }
      
         foreach($participants as $participant)
@@ -590,8 +621,10 @@ class RoundController extends Controller
             ],         
             'data' => $participants,
             'role' => Auth::user()->ru()->role_id,
-            'tier' => Auth::user()->ru()->tier
-            // 'enrol_status' =>$enrol_status
+            'tier' => Auth::user()->ru()->tier,
+            'total_participants'=>$total_participants,
+            'active_participants' => $active_participants,
+            'enrolled_participants' => $enrolled_participants
         ];
 
         return $participants->count() > 0 ? response()->json($response) : $error;

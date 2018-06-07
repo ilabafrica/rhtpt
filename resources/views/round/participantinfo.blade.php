@@ -18,7 +18,9 @@
         <div class="col-lg-12 margin-tb">
             <div class="pull-left col-md-8">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.pt-round', 2) !!}
-        
+                    @permission('enrol-participants')                               
+                        <a class="btn btn-sm btn-wet-asphalt" :href="'/download/' + roundId" id="enrolled" ><i class="fa fa-level-down"></i> Download Participants List</a>
+                    @endpermission
                     <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
@@ -75,6 +77,23 @@
                 </div>
             </div>
         <!-- </form> -->
+    </div>  
+
+    <div class="row">
+        <div class="col-lg-12 margin-tb">
+            <div class="row">
+                <table class="table table-responsive">
+                    <tr>
+                        <th>Total Participants</th>
+                        <td>@{{total_participants}}</td>
+                        <th>Active Participants</th>
+                        <td>@{{active_participants}}</td>
+                        <th>Enrolled Participants</th>
+                        <td>@{{enrolled_participants}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-12">
