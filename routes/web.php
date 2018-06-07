@@ -48,6 +48,10 @@ Route::get("/partner_counties/{id}", array(
     "as"   => "cnts.fetch",
     "uses" => "FacilityController@partner_counties"
 ));
+Route::get("/partnercounties", array(
+    "as"   => "partner.counties",
+    "uses" => "ImplementingPartnerController@getCounties"
+));
 Route::get("/progs", array(
     "as"   => "programs.fetch",
     "uses" => "ProgramController@programs"

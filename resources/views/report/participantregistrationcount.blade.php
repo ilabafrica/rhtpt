@@ -20,7 +20,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left col-md-9">
-                <h6><b>Total Registered Service Providers</b>: @{{total}} </h6> 
+                <h6><b>Service Providers</b>: Total Registered - @{{total}} Active - @{{active}} Enrolled - @{{enrolled}}</h6> 
             </div>
         </div>
     </div>
@@ -32,16 +32,20 @@
             <div class="col-lg-12 margin-tb">
                 <div class="row">
                     <form @submit.prevent="getRegisteredParticipants(1)">
-                    <div v-if = "role == 1" class="col-sm-3">
+                    <div v-if = "role == 1 || role == 3" class="col-sm-3">
                         <label class="col-sm-4 form-control-label" for="title">Counties:</label>
                         <div class="col-sm-6">
-                            <select class="form-control" name="county" id="county_id" @change="loadSubcounties" v-model="county" required>
+                            <select v-if = "role == 1" class="form-control" name="county" id="county_id" @change="loadSubcounties" v-model="county" required>
+                                <option selected></option>
+                                <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>
+                            </select>
+                            <select v-if = "role == 3" class="form-control" name="county" id="county_id" @change="loadSubcounties" v-model="county" required>
                                 <option selected></option>
                                 <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>
                             </select>
                         </div>
                     </div>
-                    <div v-if = "role == 1 || role == 4" class="col-sm-3">
+                    <div v-if = "role == 1 || role == 3 || role == 4" class="col-sm-3">
                         <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="sub_county" id="sub_id" @change="loadFacilities" v-model="sub_county">
@@ -50,7 +54,7 @@
                             </select>
                         </div>
                     </div>
-                    <div v-if = "role == 1 || role == 4 || role ==7" class="col-sm-3">
+                    <div v-if = "role == 1 || role == 3 || role == 4 || role ==7" class="col-sm-3">
                         <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="facility" v-model="facility">
@@ -77,16 +81,23 @@
 
     <table class="table table-bordered">
         <tr>
-            <th>#</th>
-            <th>County</th>
-            <th>Sub-county</th>
-            <th>Participant Count</th>
+            <th rowspan="2">#</th>
+            <th rowspan="2">County</th>
+            <th rowspan="2">Sub-county</th>
+            <th colspan="3">Service Providers</th>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <th>Active</th>
+            <th>Current Enrolment</th>
         </tr>
         <tr v-for="(subcounty, key) in usercounts">
             <td>@{{ key + 1 + ((pagination.current_page - 1) * pagination.per_page) }}</td>
             <td>@{{ subcounty.county }}</td>
             <td>@{{ subcounty.subcounty }}</td>
-            <td>@{{ subcounty.hits}}</td>
+            <td>@{{ subcounty.total}}</td>
+            <td>@{{ subcounty.active}}</td>
+            <td>@{{ subcounty.current_enrolment}}</td>
         </tr>
     </table>
     <!-- Pagination -->

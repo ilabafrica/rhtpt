@@ -162,4 +162,19 @@ class ImplementingPartnerController extends Controller
 
 		return $categories;
 	}
+
+    /**
+     * Function to return list of counties.
+     *
+     */
+    public function getCounties()
+    {
+        $counties = ImplementingPartner::find(Auth::user()->ru()->tier)->counties->sortBy('name')->pluck('name', 'id');
+        $categories = [];
+        foreach($counties as $key => $value)
+        {
+            $categories[] = ['id' => $key, 'value' => $value];
+        }
+        return $categories;
+    }
 }

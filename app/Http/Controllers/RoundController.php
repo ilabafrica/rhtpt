@@ -470,8 +470,7 @@ class RoundController extends Controller
             'enrol_status' =>$enrol_status
         ];
 
-        return $participants->count() > 0 ? response()->json($response) : $error;
-    
+        return $participants->count() > 0 ? response()->json($response) : $error;   
 
     }
     /**
@@ -628,9 +627,6 @@ class RoundController extends Controller
         ];
 
         return $participants->count() > 0 ? response()->json($response) : $error;
-           
-
-
     }
     /**
      * Function to download the participants in the past round
