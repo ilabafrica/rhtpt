@@ -35,7 +35,7 @@
                     <div v-if = "role == 1 || role == 3" class="col-sm-3">
                         <label class="col-sm-4 form-control-label" for="title">Counties:</label>
                         <div class="col-sm-6">
-                            <select v-if = "role == 1" class="form-control" name="county" id="county_id" @change="loadSubcounties" v-model="county" required>
+                            <select v-if = "role == 1" class="form-control" name="county" id="county_id" @change="loadSubcounties" v-model="county">
                                 <option selected></option>
                                 <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>
                             </select>

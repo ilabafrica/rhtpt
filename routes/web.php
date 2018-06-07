@@ -44,6 +44,10 @@ Route::get("/cnts", array(
     "as"   => "cnts.fetch",
     "uses" => "FacilityController@counties"
 ));
+Route::get("/assign_uid", array(
+    "as"   => "assign_uid.fetch",
+    "uses" => "UserController@assign_uid"
+));
 Route::get("/partner_counties/{id}", array(
     "as"   => "cnts.fetch",
     "uses" => "FacilityController@partner_counties"

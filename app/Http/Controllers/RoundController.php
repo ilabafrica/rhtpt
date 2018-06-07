@@ -754,7 +754,7 @@ class RoundController extends Controller
                                     'Tester Mobile Number' => $tphone,
                                     'Tester Email' => $temail,
                                     'Tester Address' => $taddress,
-                                    'Designation' => Designation::find($tdes)->name,
+                                    //'Designation' => Designation::find($tdes)->name,
                                     'Program' => $tprog,
                                     'In Charge' => $icharge,
                                     'In Charge Email' => $iemail,
