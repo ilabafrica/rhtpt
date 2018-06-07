@@ -108,13 +108,16 @@
     <tr>
         <td colspan="5">Thank you for your participation</td>
     </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr>
         <td>PT Coordinator.</td>
     </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr> <td colspan="4"> </td> <td><img src="img/ukas.png" alt="" border="1" height="55" width="100" /></td> </tr>
-    <div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>
     <footer>
         <div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
     <div class="page_break"></div>
     <head>
         <style>
@@ -137,4 +140,5 @@
 </table>
 
 <footer><div style="text-align:center"><p>End of the report</div></p><br>
-    <div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>
+    {{--<div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div>--}}
+</footer>

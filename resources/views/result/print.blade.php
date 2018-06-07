@@ -44,9 +44,9 @@
     <tr class="text-center"> <td colspan="5">Your result is <b> <i>{{$data['feedback']}}</i></b></td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr >
-        <td><input type="checkbox" /> Incomplete Kit Data</td>
-        <td><input type="checkbox" /> Deviation From Procedure</td>
-        <td ><input type="checkbox" /> Incomplete Other Information</td>
+        <td><input type="checkbox" display:inline /> Incomplete Kit Data</td>
+        <td><input type="checkbox" display:inline /> Deviation From Procedure</td>
+        <td ><input type="checkbox" display:inline/> Incomplete Other Information</td>
 
     </tr>
     <tr >

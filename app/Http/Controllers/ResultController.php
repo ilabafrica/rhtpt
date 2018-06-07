@@ -687,7 +687,16 @@ class ResultController extends Controller
     public function print_result($id){
       $data = $this->evaluated_results($id);
 
-      $pdf = PDF::loadView('result/print', compact('data'));
+      if(\request('type') == 0){//satisfactory
+
+          $pdf = PDF::loadView('result/print1', compact('data'));
+      }
+
+        if(\request('type') == 1){//unsatisfactory
+
+            $pdf = PDF::loadView('result/print', compact('data'));
+        }
+
       return $pdf->download('Round '.$data['round_name'].' Results.pdf');
 
     }
