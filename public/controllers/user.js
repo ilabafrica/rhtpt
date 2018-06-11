@@ -44,6 +44,7 @@ new Vue({
         uploadify: {id: '', excel: ''},
         someUser : {'facility_id':'','program_id':'','sub_county_id':'','county_id':'','facility':'','program':'','sub_county':'','county':'','in_charge':'', 'id':''},
         jimbo: [],
+        assign_uid: [],
         sexes: [],
         uploadify: {excel: ''},
         upload: {list: ''}
@@ -81,6 +82,8 @@ new Vue({
         this.loadRoles();
         this.loadSexes();
         this.loadImplementingPartners();
+        this.assign_uids();
+
     },
 
     methods : {
@@ -208,6 +211,14 @@ new Vue({
                 // console.log(response);
             });
         },
+	assign_uids: function() {
+            console.log('Here');
+            this.$http.get('/assign_uid').then((response) => {
+                this.assign_uid = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        }, 
         // Populate subcounties from FacilityController
         loadSubcounties: function() {
             let id = $('#county').val();

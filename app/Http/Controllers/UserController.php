@@ -961,5 +961,45 @@ class UserController extends Controller
         return redirect()->to('verified')
                 ->with('warning', "Your token is invalid.");
     }
+
+    
+    /**
+     * Get user's role ID and tier ID
+     *
+     * @return array 
+     */
+    public function getRole(){
+        return ["role_id" => Auth::user()->ru()->role_id, "tier" => Auth::user()->ru()->tier];
+    }
+public function assign_uid(){
+
+        $response = '';
+        $users = User::select('users.id')
+                    ->where('uid', NULL)
+                    ->where('users.deleted_at', NULL)
+                    ->join('role_user', 'users.id', '=', 'role_user.user_id')
+                    ->where('role_id', 2)->get();
+         if ($users) {
+        
+             foreach ($users as $key => $user) {
+                 $response = '';
+                 $max = DB::table('users')->max('uid');
+                 $m = $max+1;
+                 if ($user->uid==null ||$user->uid==''){
+                     $user->uid = $m; //pick sequential unique ids
+                     $user->username = $m;
+                 }
+
+                 $user->deleted_at = null;
+                 $user->status = '';
+                 $user->save();
+                 $response = 'done';
+             }
+         }else {
+                 $response = 'no more';
+
+         }
+        return response()->json($response);
+    }
 }
 $excel = App::make('excel');

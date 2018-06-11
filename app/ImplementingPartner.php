@@ -19,7 +19,7 @@ class ImplementingPartner extends Model
       return $this->belongsToMany('App\County');
     }
     /**
-    * Get  facilites for this partner
+    * Get  details for this partner
     *
     */
     public function facilities()
@@ -34,8 +34,16 @@ class ImplementingPartner extends Model
 
       return $result;
     }
-
-
+    /**
+    * Get  facilities for this partner
+    *
+    */
+    public function all_facilities()
+    {
+        $result = $this->facilities();
+        $subs = $result['subcounties'];
+        return Facility::whereIn('sub_county_id', $subs);
+    }
     /**
     * Get users for a sub-county
     *

@@ -218,24 +218,39 @@ class ParticipantController extends Controller
         {               
             if(!empty($user->ru()->tier))
             {
-                try{
                     $facility = Facility::find($user->ru()->tier);
                     $user->facility = $user->ru()->tier;
                     $user->program = $user->ru()->program_id;
-                    $user->sub_county = $facility->subCounty->id;
-                    $user->county = $facility->subCounty->county->id;
-
-                    $user->mfl = $facility->code;
-                    $user->fac = $facility->name;
-                    $user->prog = Program::find($user->ru()->program_id)->name;
-                    $user->sub = $facility->subCounty->name;
-                    $user->kaunti = $facility->subCounty->county->name;
-                    $user->des = $user->designation($user->ru()->designation);
                     $user->gndr = $user->maleOrFemale((int)$user->gender);
-                    $user->designation = $user->ru()->designation;
-                }catch(\Exception $exp){
-                    \Log::error($exp);
-                }
+                    try{
+                        $user->sub_county = $facility->subCounty->id;
+                        $user->county = $facility->subCounty->county->id;
+
+                        $user->mfl = $facility->code;
+                        $user->fac = $facility->name;
+
+                        $user->sub = $facility->subCounty->name;
+                        $user->kaunti = $facility->subCounty->county->name;
+                    }catch(\Exception $exp){
+                        \Log::error("Facility information not found!");
+                        \Log::error($user);
+                        \Log::error($exp->getMessage());
+                    }
+                    try{
+                        $user->prog = Program::find($user->ru()->program_id)->name;
+                    }catch(\Exception $exp){
+                        \Log::error("User has no program.");
+                        \Log::error($user);
+                        \Log::error($exp->getMessage());
+                    }
+                    try{
+                        $user->des = $user->designation($user->ru()->designation);
+                        $user->designation = $user->ru()->designation;
+                    }catch(\Exception $exp){
+                        \Log::error("User has no designation.");
+                        \Log::error($user);
+                        \Log::error($exp->getMessage());
+                    }
             }
             else
             {
@@ -1232,12 +1247,19 @@ enrolled, you’ll receive a tester ID";
         $role = Auth::user()->ru()->role_id;
         $tier = Auth::user()->ru()->tier;
         
-        $data = DB::table('counties')
-                    ->leftJoin('sub_counties', 'counties.id', '=', 'sub_counties.county_id')
-                    ->leftJoin('facilities', 'sub_counties.id', '=', 'facilities.sub_county_id')
-                    ->leftJoin('role_user', function($join) use ($PARTICIPANT_ROLE_ID){
-                        $join->on('facilities.id', '=', 'role_user.tier')
+        $data = DB::table('users')
+                    ->join('role_user', function($join) use ($PARTICIPANT_ROLE_ID){
+                        $join->on('users.id', '=', 'role_user.user_id')
                             ->where('role_user.role_id', '=', $PARTICIPANT_ROLE_ID);
+                    })
+                    ->join('facilities', 'role_user.tier', '=', 'facilities.id')
+                    ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
+                    ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
+                    ->leftJoin(
+                        DB::raw('(SELECT enrolments.user_id, enrolments.deleted_at FROM enrolments INNER JOIN rounds ON enrolments.round_id = rounds.id WHERE rounds.start_date < now() AND rounds.end_date > now()) AS live_round'),
+                        function($join){
+                            $join->on('users.id', '=', 'live_round.user_id')
+                                ->whereNull('live_round.deleted_at');
                     });
 
         if(strcmp($request->county, '') != 0) $data = $data->where('counties.id', '=', $request->county);
@@ -1247,12 +1269,14 @@ enrolled, you’ll receive a tester ID";
         if(Auth::user()->isCountyCoordinator()) $data = $data->where('counties.id', '=', $tier);
         if(Auth::user()->isSubCountyCoordinator()) $data = $data->where('sub_counties.id', '=', $tier);
 
-        $data = $data->selectRaw('counties.name AS county, sub_counties.name AS subcounty, count(role_user.user_id) AS hits')
+        $data = $data->selectRaw('counties.name AS county, sub_counties.name AS subcounty, count(DISTINCT users.id) AS total, count(DISTINCT IF(ISNULL(users.deleted_at),users.id,NULL)) AS active, count(DISTINCT IF(ISNULL(users.deleted_at),live_round.user_id,NULL)) AS current_enrolment')
                     ->groupBy('counties.id', 'sub_counties.id')
                     ->orderBy('counties.name')
                     ->orderBy('sub_counties.name');
 
-        $totalUsers = collect($data->pluck('hits'))->sum();
+        $totalUsers = collect($data->pluck('total'))->sum();
+        $activeUsers = collect($data->pluck('active'))->sum();
+        $enrolledUsers = collect($data->pluck('current_enrolment'))->sum();
 
         $data = $data->paginate($ITEMS_PER_PAGE);
 
@@ -1267,6 +1291,8 @@ enrolled, you’ll receive a tester ID";
             ],
             'role' => $role,
             'data' => $data,
+            'active_users' => $activeUsers,
+            'enrolled_users' => $enrolledUsers,
             'total_users' => $totalUsers
         ];
 

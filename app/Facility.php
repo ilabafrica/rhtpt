@@ -3,6 +3,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Facility extends Model
 {
+	public $fillable = ['code', 'name','registration_number','mailing_address', 'in_charge', 'in_charge_phone', 'in_charge_email','sub_county_id'];
   	/**
   	 * Enabling soft deletes for facilities.
   	 *

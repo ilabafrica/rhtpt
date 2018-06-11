@@ -22,12 +22,16 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        newFacility : {'name':'','description':'', 'order':'', 'tag':'', 'options':''},
-        fillFacility : {'code':'','registration_number':'', 'name':'', 'sub_county':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','id':''},
+        newFacility : {'code':'', 'name':'','registration_number':'','mailing_address':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','sub_county_id':''},
+        fillFacility : {'registration_number':'', 'name':'', 'mailing_address':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','sub_id':''},
         loading: false,
         error: false,
         query: '',
         uploadify: {excel: ''},
+        sub_county: '',
+        county: '',
+        role: '',
+        tier: '',
         counties: [],
         subs: [],
     },
@@ -58,28 +62,58 @@ new Vue({
     },
 
     mounted : function(){
-        this.getVueFacilitys(this.pagination.current_page);
         this.loadCounties();
+        this.getVueFacilitys(this.pagination.current_page);
     },
 
     methods : {
         getVueFacilitys: function(page){
             this.$http.get('/vuefacilitys?page='+page).then((response) => {
-                this.facilitys = response.data.data.data;
-                this.pagination = response.data.pagination;
+                if(response.data.data)
+                {
+                    this.facilitys = response.data.data.data;
+                    this.role = response.data.role;
+                    this.tier = response.data.tier;
+                    this.pagination = response.data.pagination;
+
+                    if (this.role == 3) {
+                        let id = this.tier;
+                        this.$http.get('/partner_counties/'+id).then((response) => {
+                            this.counties = response.data;
+                        }, (response) => {
+                            console.log(response);
+                        });
+                    }
+                    if (this.role == 4) {
+                        let id = this.tier;
+                        this.$http.get('/subs/'+id).then((response) => {
+                            this.subs = response.data;
+                        }, (response) => {
+                            // console.log(response);
+                        });
+                    }
+                }
+                else
+                {
+                    swal("No data found for Facilities.","","info");
+                }
+
             });
         },
 
         createFacility: function(){
+            
             var input = this.newFacility;
             this.$http.post('/vuefacilitys',input).then((response) => {
+                
                 this.changePage(this.pagination.current_page);
-                this.newFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':''};
+                this.newFacility = {'code':'', 'name':'','registration_number':'','mailing_address':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','sub_county_id':''};                
                 $("#create-facility").modal('hide');
                 toastr.success('Facility Created Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
                 this.formErrors = response.data;
-            });
+              });
+            
         },
 
         deleteFacility: function(facility){
@@ -107,7 +141,7 @@ new Vue({
                 var input = this.fillFacility;
                 this.$http.put('/vuefacilitys/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);
-                    this.fillFacility = {'name':'','description':'', 'order':'', 'tag':'', 'options':'','id':''};
+                    this.fillFacility = {'registration_number':'', 'name':'', 'mailing_address':'', 'in_charge':'', 'in_charge_phone':'', 'in_charge_email':'','sub_id':''};
                     $("#edit-facility").modal('hide');
                     toastr.success('Facility Updated Successfully.', 'Success Alert', {timeOut: 5000});
                 }, (response) => {
@@ -152,6 +186,64 @@ new Vue({
                 // Clear the query.
                 this.query = '';
             });
+        },
+
+         filter_by_region: function() {
+            // Clear the error message.
+            this.error = '';
+            // Empty the facilitys array so we can fill it with the new facilitys.
+            this.facilitys = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
+
+            // Making a get request to our API and passing the query to it.
+           
+            //get facilitys filtered by sub county
+
+             if (this.sub_county) {
+                this.$http.get('/api/search_facility?sub_county='+ this.sub_county).then((response) => {
+                    // If there was an error set the error message, if not fill the facilitys array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.facilitys = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+                    // Clear the query.
+                    this.sub_county = '';
+                });
+            }
+
+            //get facilitys filtered by county
+
+            else if (this.county) {
+                this.$http.get('/api/search_facility?county=' + this.county ).then((response) => {
+                    // If there was an error set the error message, if not fill the facilitys array.
+                    if(response.data.error)
+                    {
+                        this.error = response.data.error;
+                        toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                    }
+                    else
+                    {
+                        this.facilitys = response.data.data.data;
+                        this.pagination = response.data.pagination;
+                        toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                    }
+                    // The request is finished, change the loading to false again.
+                    this.loading = false;
+                    // Clear the query.
+                    this.county = '';
+                });
+            }
+           
         },        
 
         batchImport()
@@ -191,10 +283,35 @@ new Vue({
 
         fetchSubs: function() {
             let id = $('#county_id').val();
-            this.$http.get('/subs/'+id).then((response) => {
+            this.$http.get('/subs/'+ id).then((response) => {
                 this.subs = response.data;
             }, (response) => {
                 // console.log(response);
+            });
+        },
+        fetchsSubs: function() {
+            let id = $('#county_ids').val();
+            this.$http.get('/subs/'+ id).then((response) => {
+                this.subs = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+        fetchFilterSubs: function() {
+            let id = $('#county_id_filter').val();
+            this.$http.get('/subs/'+ id).then((response) => {
+                this.subs = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+        fetchFacility: function() {
+            let id = $('#codeMfl').val();
+            this.$http.get('/mfl/'+id).then((response) => {
+                if(this.newFacility.code == response.data.code){
+                    swal("Facility already exists!", "Enter another valid MFL Code.", "info");
+                    this.newFacility.code = '';
+                }
             });
         },
     }

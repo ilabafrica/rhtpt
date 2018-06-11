@@ -234,8 +234,16 @@
                         </ul>
                     </li>
                     @endpermission
-		    <li>
-                        <a  href="http://nphls.or.ke/helpdesk/index.php?a=add" target="_blank"> <i class="fa fa-list" aria-hidden="true" ></i>PT Help Desk</a>
+		            <li class="{!! Request::segment(1)==strtolower('report')?strtolower(trans('messages.active')):'' !!}">
+                        <a href="#"><i class="fa fa-question-circle"></i> HELP</a>
+                        <ul class="list-unstyled">
+                            <li>
+                                <a  href="http://nphls.or.ke/helpdesk/index.php?a=add" target="_blank"> <i class="fa fa-list" aria-hidden="true" ></i>PT Help Desk</a>
+                            </li>
+                            <li>
+                                <a href="/download_guide/{!!Auth::user()->ru()->role_id!!}"> <i class="fa fa-question"></i> Download User Guide</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                     <a  href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -387,6 +395,8 @@
         <script src="{{ asset('controllers/designation.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('enrolparticipants'))
         <script src="{{ asset('controllers/enrolparticipant.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('subcounty'))
+        <script src="{{ asset('controllers/subcounty.js') }}"></script>
         @endif
 </body>
 </html>

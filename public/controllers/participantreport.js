@@ -27,6 +27,8 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
+        enrolled: '',
+        active: '',
         total: '',
         facility: '',
         sub_county: '',
@@ -61,8 +63,7 @@ new Vue({
     },
 
     mounted : function(){
-        this.getRegisteredParticipants(this.pagination.current_page);
-        this.loadCounties();
+        this.getRole();
 
     },
 
@@ -77,6 +78,8 @@ new Vue({
                 {
                     this.usercounts = response.data.data.data;
                     this.role = response.data.role;
+                    this.enrolled = response.data.enrolled_users;
+                    this.active = response.data.active_users;
                     this.total = response.data.total_users;
                     this.pagination = response.data.pagination;
                 }
@@ -87,6 +90,23 @@ new Vue({
             });
         },
         
+        getRole: function(page){
+            this.$http.get('/userrole').then((response) => {
+                if(response.data){
+                    this.role = response.data.role_id;
+                    this.loadCounties();
+                    if (this.role == 4) { //County Role
+                        this.county = response.data.tier;
+                        this.loadSubcounties();
+                    }
+                    if (this.role == 7) {// Subcounty Role
+                        this.sub_county = response.data.tier;
+                        this.loadFacilities();
+                    }
+                }
+            })
+        },
+
         changePage: function (page) {
             this.pagination.current_page = page;
             this.getRegisteredParticipants(page);
@@ -94,7 +114,9 @@ new Vue({
 
         //Populate counties from FacilityController
         loadCounties: function() {
-            this.$http.get('/cnts').then((response) => {
+            var url = '/cnts';
+            if(this.role == 3) url = '/partnercounties'
+            this.$http.get(url).then((response) => {
                 this.counties = response.data;
                 this.jimbo = response.data;
             }, (response) => {
@@ -103,7 +125,8 @@ new Vue({
 
         // Populate subcounties from FacilityController
         loadSubcounties: function() {
-            console.log('County ID: ' + this.county);
+            this.sub_county = "";
+            this.facility = "";
             this.$http.get('/subs/'+ this.county).then((response) => { 
                 this.subcounties = response.data;
             }, (response) => {
@@ -112,6 +135,7 @@ new Vue({
 
         // Populate facilities from FacilityController
         loadFacilities: function() {
+            this.facility = "";
             this.$http.get('/fclts/' + this.sub_county).then((response) => { 
                 this.facilities = response.data;
             }, (response) => {
