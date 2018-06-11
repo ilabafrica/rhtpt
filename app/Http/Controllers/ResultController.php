@@ -694,7 +694,10 @@ class ResultController extends Controller
 
         if(\request('type') == 1){//unsatisfactory
 
-            $pdf = PDF::loadView('result/print', compact('data'));
+            $pt = Pt::where('id',$id)->first();
+
+
+            $pdf = PDF::loadView('result/print', compact('data','pt'));
         }
 
       return $pdf->download('Round '.$data['round_name'].' Results.pdf');

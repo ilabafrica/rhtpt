@@ -42,19 +42,40 @@
     <tr class="text-center"> <td colspan="5"><u><b>RE: Proficiency Testing Results</b></u></td></tr>
     <tr class="text-center"> <td colspan="5">NHRL acknowledges receipt of your Proficiency Testing results for Round {{$data['round_name']}}</td></tr>
     <tr class="text-center"> <td colspan="5">Your result is <b> <i>{{$data['feedback']}}</i></b></td></tr>
-    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    {{--<tr> <td colspan="5"> &nbsp;</td> </tr>--}}
     <tr >
-        <td><input type="checkbox" display:inline /> Incomplete Kit Data</td>
-        <td><input type="checkbox" display:inline /> Deviation From Procedure</td>
-        <td ><input type="checkbox" display:inline/> Incomplete Other Information</td>
+        <td><input type="checkbox" width="200" style="display: inline"
+        @if($pt->incomplete_kit_data == 1)
+         checked
+        @endif /> Incomplete Kit Data</td>
+        <td><input type="checkbox" width="200" style="display: inline"
+        @if($pt->dev_from_procedure == 1)
+         checked
+        @endif  /> Deviation From Procedure</td>
+        <td><input type="checkbox" width="200" style="display: inline"
+        @if($pt->incomplete_other_information == 1)
+         checked
+        @endif /> Incomplete Other Information</td>
 
     </tr>
     <tr >
-        <div style="display: inline;">
-            <input type="checkbox" /> Incorrect Result
-            <input type="checkbox" /> Incomplete Result
-            <input type="checkbox" /> Use of Expired Kits
-            <input type="checkbox" /> Wrong Algorithm
+        {{--<div style="display: inline;">--}}
+        <td><input type="checkbox" style="display: inline"
+	    @if($pt->incorrect_results == 1)
+	    checked
+	    @endif /> Incorrect Result</td>
+        <td><input type="checkbox" style="display: inline"
+        @if($pt->incomplete_results == 1)
+         checked
+        @endif />Incomplete Results</td>
+        <td><input type="checkbox" style="display: inline"
+        @if($pt->use_of_expired_kits == 1)
+         checked
+        @endif /> Use of Expired Kits</td>
+        <td><input type="checkbox" style="display: inline"
+        @if($pt->wrong_algorithm == 1)
+         checked
+        @endif /> Wrong Algorithm</td>
         </div>
 
     </tr>
@@ -129,9 +150,9 @@
         <td>PT Coordinator.</td>
     </tr>
     <tr> <td colspan="4"> </td> <td><img src="img/ukas.png" alt="" border="1" height="55" width="100" /></td> </tr>
-    <div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>
-    <footer>
-        <div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>
+    {{--<div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>--}}
+    {{--<footer>--}}
+        {{--<div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>--}}
     <div class="page_break"></div>
     <head>
         <style>
@@ -140,7 +161,7 @@
             }
         </style>
     </head>
-    <tr><td colspan="5"><div style="text-align:center">Testing Scheme Information</td></tr></div>
+    <tr><td colspan="5"><b><div style="text-align:center">Testing Scheme Information</td></tr></div></b>
     <tr class="text-center"><td style ="border:solid 2px black;" colspan="5">
             <p>1.  The HIV-PT is a Qualitative scheme.</p>
             <p> 2. The scheme utilises dried tube plasma color coded in green.</p>
