@@ -182,6 +182,8 @@ return [
     'status'            =>  'Status',
     'compose'           =>  'Compose',
     'code'              =>  'Code',
+    'sms'               =>  'Sms',
+    'Messages'           =>  'Messages',
     /**
     *   Results
     */
