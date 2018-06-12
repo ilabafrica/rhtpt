@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\County;
-use App\Role;
+// use App\Role;
 use App\SmsHandler;
 use App\SubCounty;
-use App\Designation;
+use App\Facility;
+use App\ImplementingPartner;
+// use App\Designation;
 use App\Notification;
 use \stdClass;
 
@@ -139,142 +141,124 @@ class SmsController extends Controller
         return response()->json(['done']); 
     }
 
-    public function roles()
-    {
-        $error = ['errpr' => 'No results found.'];
-        $roles = DB::table('roles')
-                    ->select ('name', 'id')
-                    ->where('display_name','participant')
-                    ->orWhere('display_name', 'County Coordinator')
-                    ->orWhere('display_name', 'Sub-County Coordinator')
-                    ->orWhere('display_name', 'Partner')
-                    ->orWhere('display_name', 'All Users')
-                    ->latest()->paginate(5);
+    // public function roles()
+    // {
+    //     $error = ['errpr' => 'No results found.'];
+    //     $roles = DB::table('roles')
+    //                 ->select ('name', 'id')
+    //                 ->where('display_name','participant')
+    //                 ->orWhere('display_name', 'County Coordinator')
+    //                 ->orWhere('display_name', 'Sub-County Coordinator')
+    //                 ->orWhere('display_name', 'Partner')
+    //                 ->orWhere('display_name', 'All Users')
+    //                 ->latest()->paginate(5);
                   
-         $response = [
-            'pagination' => [
-                'total' => $roles->total(),
-                'per_page' => $roles->perPage(),
-                'current_page' => $roles->currentPage(),
-                'last_page' => $roles->lastPage(),
-                'from' => $roles->firstItem(),
-                'to' => $roles->lastItem()
-            ],
-            'data' => $roles
-        ];
+    //      $response = [
+    //         'pagination' => [
+    //             'total' => $roles->total(),
+    //             'per_page' => $roles->perPage(),
+    //             'current_page' => $roles->currentPage(),
+    //             'last_page' => $roles->lastPage(),
+    //             'from' => $roles->firstItem(),
+    //             'to' => $roles->lastItem()
+    //         ],
+    //         'data' => $roles
+    //     ];
        
-       return $roles->count() > 0 ? response()->json($response) : $error;
-    }
+    //    return $roles->count() > 0 ? response()->json($response) : $error;
+    // }
 
 
-    public function sendMessage(Request $request)
+    public function select_users_message(Request $request)
+    {           
+         $users = '';
 
-    {                    
-        $message_to_send = '';
-        $message =  $request->message;
-        $users = $request->users;
-        $county = $request->county_ids;
-        $cnt = $request->county;
-        $participant = $request->participant;
-        $type_of_message = $request->message_type;
-        $selected_county_id = $request->select_county;
-        $subcounty_checked =$request->check;
-
-        if($type_of_message == 7)
-        {
-          
-             if ($users == 3 )
-           {     
-                       $partners = DB::table('role_user')
-                                 ->leftJoin('users','role_user.user_id', '=', 'users.id')
-                                 ->select('users.phone')
-                                 ->where('role_user.role_id', '3')->get();
-
-                                 $api = DB::table('bulk_sms_settings')->first();
-                                $username   = $api->username;
-                                $apikey     = $api->api_key;
-                 foreach ($partners as $value) {
-                        
-                        try
-                        {                           
-                        
-                          /*$sms->sendMessage($value->phone, $message, $from);*/
-                       }
-                        
-                        catch ( AfricasTalkingGatewayException $e )
-                        {
-                        echo "Encountered an error while sending: ".$e->getMessage();
-                        }
-                      }
-          }
-          else if ($users ==2 &&  $participant== 1 )
-          {
-             $participants = DB::table('role_user')
-                                 ->leftJoin('users','role_user.user_id', '=', 'users.id')
-                                 ->select('users.phone','users.sms_code')
-                                 ->where('role_user.role_id', '2')->get();
-
-                                 $api = DB::table('bulk_sms_settings')->first();
-                                $username   = $api->username;
-                                $apikey     = $api->api_key;
-                 foreach ($participants as $value) {
-                        
-                        try
-                        {                           
-                            $message_to_send = $message . $value->sms_code;
-                          /*$sms->sendMessage($value->phone, $message_to_send, $from);*/
-                       }
-                        
-                        catch ( AfricasTalkingGatewayException $e )
-                        {
-                        echo "Encountered an error while sending: ".$e->getMessage();
-                        }
-                      }
-          }
-           else if ($users ==2 &&  $participant== 7 )
-           {
+        if ($request->user_type == 0) {
+            $users = User::all();
+        }
+        else if ($request->user_type == 2) {
             
-             $participants = DB::table('role_user')
-                                  ->leftjoin('users','role_user.user_id', '=', 'users.id')
-                                  ->select ('users.phone','sms_code')
-                                  
-                                  ->where('role_user.tier', $selected_county_id)->get();
-             
-                foreach ($participants as $value) {                    
+            if ($request->participant == 1) {
+                if ($request->facility_id) {
 
-                        try
-                        {                           
-                            $message_to_send = $message . $value->sms_code; 
+                    $users = Facility::find($request->facility_id)->users()->get();
 
-                          /*$sms->sendMessage($value->phone, $message_to_send, $from);*/
-                       }
-                        
-                        catch ( AfricasTalkingGatewayException $e )
-                        {
-                        echo "Encountered an error while sending: ".$e->getMessage();
-                        }
-                      }                   
-           
-             /*$sms->sendMessage($value->phone, $message_to_send, $from);*/
-            
+                }else if ($request->sub_county_id) {
+
+                    $users = SubCounty::find($request->sub_county_id)->users()->get();
+
+                }else if ($request->county_id) {
+
+                    $users = County::find($request->county_id)->users()->get();
+                }
+
+            } else if ($request->participant == 2) {
+                //convert to array for looping
+                $users = User::find($request->participant_id);
+              
+            }else{            
+                $user = new User;
+                $users = $user->participants()->get();
+            }
+        }
+        else if ($request->user_type == 3) {
+            $user = new User;
+           if ($request->partner == 1) {
+
+                $users = $user->partners($request->partner_id)->get();
+
+           } else{            
+                $users = $user->partners()->get();
            }
-           else if($users == 2 && $participant == 7 && $subcounty_checked == 1)
-           {
-           
-            $participants = SubCounty::find($request->sub_id)->pluck('name');
-            dd($participants);
-            
+        }
+        else if ($request->user_type == 4) {
+            $user = new User;
+            if ($request->user_group == 1) {
 
-           }
+                $users = $user->county_coordinators($request->partner_id)->get();
 
+            } else{            
+                $users = $user->county_coordinators()->get();
+            }
         }
 
-        /* foreach($request->part as $key => $value)
-        {
-            $phone = User::where('id', $value)->pluck('phone');
-        }*/
-       
-        
-                                                                                                                                                                                                     
+        else if ($request->user_type == 7) {
+            $user = new User;
+           if ($request->user_group == 1) {
+
+                $users = $user->sub_county_coordinators($request->sub_county_id)->get();
+
+           } else{            
+                $users = $user->sub_county_coordinators()->get();
+           }
+        } 
+        //get message to be sent
+        $message = Notification::find($request->message_id)->message;
+        $api = DB::table('bulk_sms_settings')->first();
+        $from   = $api->username;
+        $response =[
+            'users' =>$users,
+            'message' => $message,
+            'from' => $from,
+            'to' => 'All Users'
+        ];
+
+        return $users->count() > 0 ? response()->json($response) : $error;
+
+        //send SMS
+        // $api = DB::table('bulk_sms_settings')->first();
+        // $from   = $api->username;
+        // $apikey = $api->api_key;
+        // foreach ($users as $user) {                
+        //     try
+        //     {                           
+        //         print($user->phone .' '.$message.'<br/>');
+        //       /*$sms->sendMessage($user->phone, $message, $from);*/
+        //     }                
+        //     catch ( AfricasTalkingGatewayException $e )
+        //     {
+        //         echo "Encountered an error while sending: ".$e->getMessage();
+        //     }
+        // }               
     }
 }

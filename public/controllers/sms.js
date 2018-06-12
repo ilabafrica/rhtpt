@@ -24,27 +24,29 @@ new Vue({
         formErrorsUpdate:{},
         newMessage : {'message':''},
         fillMessage : {'message':''},  
+        sendMessage: {'message':''},
         loading: false,
-        error: false,
-        checked:false,
-        facility_checked:false,
-        query: '',      
-        error: false,
+        error: false,       
         query: '', 
         select_county:'',
-        roles: [],
-        users:'',  
-        county: '',
+        // roles: [],
+        user_type:'',  
+        user_group: '',
+        partner: '',
         subcounty:'',
         search_participant: '',
         participant:'',
         counties:[],
         participants: [],
-        subcounties:[],
         subs:[],
         facilities:[],
-        message: '',
+        implementing_partners: [],
+        // message: '',
         type:'',
+        users: [],
+        from:'',
+        to:'',
+        message_to_send:'',
        },
 
   computed: {
@@ -75,8 +77,7 @@ new Vue({
     mounted : function(){
     	
     	this.loadCounties();
-    	this.loadRoles();
-        this.loadMessages();
+        this.loadImplementingPartners();
         this.getVueMessages(this.pagination.current_page);
     },
 
@@ -99,16 +100,14 @@ new Vue({
         createMessages: function(){
             
             var input = this.newMessage;
-            this.$http.post('/vuesms',input).then((response) => {
-                
+            this.$http.post('/vuesms',input).then((response) => {                
                 this.changePage(this.pagination.current_page);
                 this.newMessage = {'message':''};
-                $("create-message").modal('hide');
+                $("#create-message").modal('hide');
                 toastr.success('Message Created Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
                 this.formErrors = response.data;
-              });
-            
+            });            
         },
 
         deleteMessages: function(message){
@@ -152,52 +151,44 @@ new Vue({
             this.getVueMessages(page);
         },
 
-        loadMessages: function() {
-            this.$http.get('/cnts').then((response) => {
-                this.messages = response.data;
-            }, (response) => {
-                // console.log(response);
-            });
-        },
-
-        loadRoles: function() {
-        	this.$http.get('/rls').then((response) => {
-
-        		this.roles = response.data.data.data;
-        		this.pagination = response.data.pagination;
-        	},(response) => {
-
-        	});
-        },
-
         loadmessagesoptions: function(message){
-             this.users = ''; 
-             this.county = '';
-             this.participant = '';
-             this.message = message.message;
-             this.type = message.template;
-            $("#resend-message").modal('show');           
+            this.sendMessage= message;
+            $("#select-users-message").modal('show');           
+        },
+
+        select_users_message : function() {
+            let myForm = document.getElementById('select_users_message');         
+            let formData = new FormData(myForm);
+
+            this.$http.post('/select_users_message', formData ).then((response) => {
+                $("#select-users-message").modal('hide');
+                $("#resend-message").modal('show');
+
+                this.users = response.data.users;
+                this.from = response.data.from;
+                this.to = response.data.to;
+                this.message_to_send = response.data.message;
+            }, (response) => {
+                this.formErrors = response.data;
+                
+            });        
         },
 
         resendMessages : function() {
-          let myForm = document.getElementById('resend_message');
-         
-          let formData = new FormData(myForm);
-          console.log(formData);
-          this.$http.post('/sendmessage', formData ).then((response) => {
-          console.log(response);
-          $("#resend-message").modal('hide');
-          toastr.success('Message Sent Successfully.', 'Success Alert', {timeOut: 5000});
-          }, (response) => {
-                 this.formErrors = response.data;
-          });
-        
+            let myForm = document.getElementById('resend_message');         
+            let formData = new FormData(myForm);
+
+            this.$http.post('/sendmessage', formData ).then((response) => {
+                $("#resend-message").modal('hide');
+                toastr.success('Message Sent Successfully.', 'Success Alert', {timeOut: 5000});
+            }, (response) => {
+                this.formErrors = response.data;
+            });        
         },
 
         loadCounties: function() {
             this.$http.get('/cnts').then((response) => {            	
                 this.counties = response.data;
-                /*this.checked = false;*/
             }, (response) => {
                 // console.log(response);
             }); 
@@ -206,18 +197,16 @@ new Vue({
         // Populate subcounties from FacilityController
         fetchSubs: function() {
             let id = $('#county_id').val();
-            /*this.checked = $("#subcounty").is(":checked");*/
-            
+
             this.$http.get('/subs/'+id).then((response) => {
                 this.subs = response.data;
                 this.facility_checked = false;
             }, (response) => {
-                // console.log(response);
             });
         },   
         // Populate facilities from FacilityController
         fetchFacilities: function() {
-            let id = $('#sub_id').val();
+            let id = $('#sub_county_id').val();
             this.$http.get('/fclts/'+id).then((response) => {
                 this.facilities = response.data;
             }, (response) => {
@@ -225,7 +214,15 @@ new Vue({
             });
         },
         
-         search: function() {
+        loadImplementingPartners: function() {
+            this.$http.get('/partners').then((response) => {
+                this.implementing_partners = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        search: function() {
             // Clear the error message.
             this.error = '';
             // Empty the testerparticipants array so we can fill it with the new participants.

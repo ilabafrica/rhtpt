@@ -137,44 +137,66 @@
         </div>
     </div>
 
-   <!-- Resend Messages-->
-    <div class="modal fade" id="resend-message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+   <!-- Select Users-->
+    <div class="modal fade" id="select-users-message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
              <div class="modal-content">
                 <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel">Message Users/Participants/Coordinators/Partners</h4>
+                <h4 class="modal-title" id="myModalLabel">Message Users</h4>
+                <h5 class="modal-title" id="myModalLabel">Step One: Select Users</h5>
                 </div>
                 <div class="modal-body">
                     <div class="row" >
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="resendMessages()" id="resend_message" data-vv-scope="resend_message">
-                         <textarea hidden="true" name="message" class="form-control" v-bind:value="message"></textarea>
-                         <input type="hidden" name="message_type" v-bind:value="type">
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="select_users_message()" id="select_users_message" data-vv-scope="select_users_message">
+                         <input type="hidden" name="message_id" v-bind:value="sendMessage.id">
                                <div class="col-md-12">                                
                                 <div class="form-group row" style="text-align:center;">
                                     <div class="form-radio radio-inline" >
                                     <label class="form-radio-label">
-                                        <input type="radio" :value="4" v-model="users" name="users" />County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="7" v-model="users" name="users" />Sub-County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="2" v-model="users" name="users" />Participant  <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="3" v-model="users" name="users" />Partners &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="8" v-model="users" name="users" />All users                                        
+                                        <input type="radio" :value="0" v-model="user_type" name="user_type" />All users   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" :value="3" v-model="user_type" name="user_type" />Partners &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" :value="4" v-model="user_type" name="user_type" />County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" :value="7" v-model="user_type" name="user_type" />Sub-County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" :value="2" v-model="user_type" name="user_type" />Participant
                                     </label>
                                    </div>
                                 </div>
-                                 <div class="form-group row" v-if="users == 4 || users==7">
-                                    <label class="col-sm-4 form-control-label" for="title" v-if="users == 4">
+                                 <div class="form-group row" v-if="user_type == 4 || user_type==7">
+                                    <label class="col-sm-4 form-control-label" for="title" v-if="user_type == 4">
                                         County Coordinators</label><br>
-                                         <label class="col-sm-4 form-control-label" for="title" v-if="users==7">
-                                        Sub Coordinators</label>
-                                        
+                                         <label class="col-sm-4 form-control-label" for="title" v-if="user_type==7">
+                                        Sub County Coordinators</label>                                        
                                     <div class="col-sm-8">
-                                       <input type="radio" :value="1" v-model="county" name="county" />ALL  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="2" v-model="county" name="county" />County Select 
+                                        <input type="radio" :value="0" v-model="user_group" name="user_group" />All &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" :value="1" v-model="user_group" name="user_group" /> Select County  
                                   </div>
                                  </div>
-                                 <div class="form-group row" v-if="county == 2">
-                                    <label class="col-sm-4 form-control-label" for="title">County:</label><br>
+                                 <div class="form-group row" v-if="user_type == 3">    
+                                    <div class="col-sm-8">
+                                        <input type="radio" :value="0" v-model="partner" name="partner" />All  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" :value="1" v-model="partner" name="partner" /> Select Partners  
+                                    </div>
+                                 </div>
+                                 <div class="form-group row" v-if="user_type == 2">
+                                    <label class="col-sm-4 form-control-label" for="title"> Participants</label>
+                                    <div class="col-sm-8">
+                                        <input type="radio" :value="0" v-model="participant" name="participant" /> All  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" :value="1" v-model="participant" name="participant" /> Select County  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" :value="2" v-model="participant" name="participant" /> Search                                         
+                                    </div>
+                                 </div>
+                                 <div class="form-group row" v-if="partner == 1">
+                                    <label class="col-sm-4 form-control-label" for="title"> Partners:</label><br>
+                                    <div class="col-sm-8">
+                                        <select class="form-control c-select" name="partner_id" id="partner_id">
+                                            <option selected></option>
+                                            <option v-for="implementing_partner in implementing_partners" :value="implementing_partner.id">@{{ implementing_partner.value }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-if="(user_type==7 && user_group ==1) ||(user_type== 4 && user_group ==1) || (user_type == 2 && participant == 1)">
+                                    <label class="col-sm-4 form-control-label" for="title"> County:</label><br>
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="county_id" id="county_id"  @change="fetchSubs()">
                                             <option selected></option>
@@ -182,93 +204,95 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group row" v-if="users==7 && county==2 ">
-                                  <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
+                                <div class="form-group row" v-if="(user_type==7 && user_group ==1) || (user_type==2 && participant ==1) ">
+                                  <label class="col-sm-4 form-control-label" for="title"> Sub County:</label>
                                     <div class="col-sm-8" >
-                                        <select class="form-control c-select" name="sub_id" id="sub_id"  >
+                                        <select class="form-control c-select" name="sub_county_id" id="sub_county_id"  @change="fetchFacilities()">
                                             <option selected></option>
                                             <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>
                                         </select>
                                    </div>
                                   </div>
-                                <div class="form-group row" v-if="users == 2">
-                                    <label class="col-sm-4 form-control-label" for="title">
-                                        Participants</label>
+                                  <div  class="form-group row" v-if="user_type == 2 && participant==1 ">
+                                    <label class="col-sm-4 form-control-label" for="title"> Facilities:</label>
                                     <div class="col-sm-8">
-                                       <input type="radio" :value="1" v-model="participant" name="participant" />ALL  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="7" v-model="participant" name="participant" />County Select &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="3" v-model="participant" name="participant" />Search  
-                                       
-                                  </div>
-                                 </div>
-                                  <div class="form-group row" v-if="participant == 7">
-                                    <label class="col-sm-4 form-control-label" for="title">County:</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control c-select" name="select_county" id="county_id"  v-model="select_county" @change="fetchSubs()" >
+                                        <select class="form-control" name="facility_id" >
                                             <option selected></option>
-                                            <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>
+                                            <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
                                         </select>
+                                   </div>
+                                </div>
+                                <div class="form-group row" v-show="user_type == 2 && participant == 2">
+                                    <div class="col-md-12" style="text-align: right;">
+                                        <label class="col-sm-4 form-control-label" for="title">Search</label>
+                                        <div class="col-md-4" style="padding-bottom:10px;">
+        		                            <div class="input-group input-group-sm">
+        		                                <input type="text" class="form-control" placeholder="Search for..." v-model="query" v-on:keyup.enter="search()">
+        		                                <span class="input-group-btn">
+        		                                    <button class="btn btn-secondary" type="button" @click="search()" v-if="!loading"><i class="fa fa-search"></i></button>
+        		                                    <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
+        		                                </span>
+        		                            </div>
+        		                        </div>
+                                        <table id ="table" class="table table-bordered table-responsive">
+                                            <tr>
+                                               
+                                                <th>Participant</th>
+                                                <th>UID</th>
+                                                <th>Facility</th>                                        
+                                                <th>Phone</th>                                        
+                                            </tr>
+                                            <tr v-for="participant in participants">
+                                                <td><input type="radio"  :value="participant.id" v-model="participant_id" name="participant_id" ></td>
+                                                <td>@{{ participant.name }}</td>
+                                                <td>@{{ participant.uid }}</td>
+                                                <td>@{{ participant.fac }}</td>                                       
+                                                <td>@{{ participant.phone }}</td>          
+                                            </tr>
+                                        </table>
                                     </div>
-                                     <label class="col-sm-4 form-control-label" for="title" >
-                                        Subcounties</label> <input type="checkbox" name="check" :value="1" checked="unchecked" id="subcounty" v-model="checked">
-                                 </div>
-                                 <div class="form-group row" v-if="users==2 && participant==7 && !(subcounty == checked)">
-                                  <label class="col-sm-4 form-control-label" for="title">Sub County:</label>
-                                    <div class="col-sm-8" >
-                                        <select class="form-control c-select" name="sub_id" id="sub_id" @change="fetchFacilities" >
-                                            <option selected></option>
-                                            <option v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>
-                                        </select>
-                                   </div>
-                                   <label class="col-sm-4 form-control-label" for="title" >Facilities</label> 
-                                   <input type="checkbox"  checked="unchecked" id="facilities"   v-model="facility_checked">
-                                  </div>
-                                   <div  class="form-group row" v-if="users==2 && participant==7 && !(facilities == facility_checked)">
-			                        <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
-			                           <div class="col-sm-8">
-			                            <select class="form-control" name="facility" >
-			                                <option selected></option>
-			                                <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
-			                            </select>
-			                        </div>
-			                    </div>
-                                <div class="form-group row" v-show="participant == 3">
-                                <div class="col-md-12" style="text-align: right;">
-                                <label class="col-sm-4 form-control-label" for="title">Search</label>
-                                <div class="col-md-4" style="padding-bottom:10px;">
-		                            <div class="input-group input-group-sm">
-		                                <input type="text" class="form-control" placeholder="Search for..." v-model="query" v-on:keyup.enter="search()">
-		                                <span class="input-group-btn">
-		                                    <button class="btn btn-secondary" type="button" @click="search()" v-if="!loading"><i class="fa fa-search"></i></button>
-		                                    <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
-		                                </span>
-		                            </div>
-		                        </div>
-                                <table id ="table" class="table table-bordered table-responsive">
-                                    <tr>
-                                       
-                                        <th>Participant</th>
-                                        <th>UID</th>
-                                        <th>Facility</th>                                        
-                                        <th>Phone</th>                                        
-                                    </tr>
-                                    <tr v-for="participant in participants">
-                                     <!-- <td><input type="hidden"  :value="participant.id" name="part[]" ></td> -->
-                                      <td> @{{ participant.name }}</td>
-                                        <td>@{{ participant.uid }}</td>
-                                        <td>@{{ participant.fac }}</td>                                       
-                                        <td>@{{ participant.phone }}</td>          
-                                    </tr>
-                                </table>
-                            </div>
-                            </div>
+                                </div>
                                  <div class="form-group row col-sm-offset-4 col-sm-8" >
-                                    <button  class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Send</button>
+                                    <button  class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Next</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                            </div>
                         </form>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resend Messages-->
+    <div class="modal fade" id="resend-message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Message Users</h4>
+                <h5 class="modal-title" id="myModalLabel">Step Two: Send Message</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="users" v-bind:value="users">
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label" for="title"> From</label>                                                               
+                        <div class="col-sm-8">@{{from}}</div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label" for="title"> To</label>                                                              
+                        <div class="col-sm-8">@{{to}}</div>                       
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label" for="title"> Message</label>                                                               
+                        <div class="col-sm-8">
+                            <textarea class="form-group form-control" v-model="message_to_send" name="message_to_send">@{{message_to_send}}</textarea>
+                        </div>
+                    </div> 
+                     <div class="form-group row col-sm-offset-4 col-sm-8" >
+                        <button  class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Send</button>
+                        <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                    </div>            
                 </div>
             </div>
         </div>
