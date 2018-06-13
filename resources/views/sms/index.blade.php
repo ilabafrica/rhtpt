@@ -186,7 +186,7 @@
                                         <input type="radio" :value="2" v-model="participant" name="participant" /> Search                                         
                                     </div>
                                  </div>
-                                 <div class="form-group row" v-if="partner == 1">
+                                 <div class="form-group row" v-if="user_type == 3 && partner == 1">
                                     <label class="col-sm-4 form-control-label" for="title"> Partners:</label><br>
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="partner_id" id="partner_id">
@@ -267,36 +267,41 @@
     <!-- Resend Messages-->
     <div class="modal fade" id="resend-message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-             <div class="modal-content">
+            <div class="modal-content">
                 <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel">Message Users</h4>
-                <h5 class="modal-title" id="myModalLabel">Step Two: Send Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Message Users</h4>
+                    <h5 class="modal-title" id="myModalLabel">Step Two: Send Message</h5>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="users" v-bind:value="users">
-                    <div class="form-group row">
-                        <label class="col-sm-4 form-control-label" for="title"> From</label>                                                               
-                        <div class="col-sm-8">@{{from}}</div>
+                    <div class="row" >
+                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="resendMessages()" id="resend_message" data-vv-scope="resend_message">
+                            <input type="hidden" name="phone_numbers[]" v-bind:value="phone_numbers">
+                            <div class="col-md-12">    
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title"> From</label>                                                               
+                                    <div class="col-sm-8">@{{from}}</div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title"> To</label>                                                              
+                                    <div class="col-sm-8">@{{to}}</div>                       
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title"> Message</label>                                                               
+                                    <div class="col-sm-8">
+                                        <textarea class="form-group form-control" v-model="message_to_send" name="message_to_send">@{{message_to_send}}</textarea>
+                                    </div>
+                                </div> 
+                                 <div class="form-group row col-sm-offset-4 col-sm-8" >
+                                    <button  class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Send</button>
+                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>            
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 form-control-label" for="title"> To</label>                                                              
-                        <div class="col-sm-8">@{{to}}</div>                       
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 form-control-label" for="title"> Message</label>                                                               
-                        <div class="col-sm-8">
-                            <textarea class="form-group form-control" v-model="message_to_send" name="message_to_send">@{{message_to_send}}</textarea>
-                        </div>
-                    </div> 
-                     <div class="form-group row col-sm-offset-4 col-sm-8" >
-                        <button  class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Send</button>
-                        <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
-                    </div>            
                 </div>
             </div>
         </div>
-    </div>
     </div>
 <style >
 td {border: 1px #DDD solid; padding: 5px; cursor: pointer;}

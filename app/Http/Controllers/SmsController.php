@@ -172,53 +172,71 @@ class SmsController extends Controller
     public function select_users_message(Request $request)
     {           
          $users = '';
+         $to = '';
+         $phone_numbers = array();
+         $error = 'No Users Found';
 
         if ($request->user_type == 0) {
             $users = User::all();
+            $to = 'All Users';
         }
         else if ($request->user_type == 2) {
             
             if ($request->participant == 1) {
                 if ($request->facility_id) {
+                    $facility = Facility::find($request->facility_id);
 
-                    $users = Facility::find($request->facility_id)->users()->get();
+                    $users = $facility->users()->get();
+                    $to = 'Participants in '. $facility->name;
 
                 }else if ($request->sub_county_id) {
+                    $sub_county = SubCounty::find($request->sub_county_id);
 
-                    $users = SubCounty::find($request->sub_county_id)->users()->get();
+                    $users = $sub_county->users()->get();
+                    $to = 'Participants in '. $sub_county->name;
 
                 }else if ($request->county_id) {
 
-                    $users = County::find($request->county_id)->users()->get();
+                    $county = County::find($request->county_id);
+                    $users = $county->users()->get();
+                    $to = 'Participants in '. $county->name;
                 }
 
             } else if ($request->participant == 2) {
                 //convert to array for looping
                 $users = User::find($request->participant_id);
+                $to = $users->name;
               
             }else{            
                 $user = new User;
                 $users = $user->participants()->get();
+                $to = 'All Participants';
             }
         }
         else if ($request->user_type == 3) {
             $user = new User;
            if ($request->partner == 1) {
 
+                $partner_name = ImplementingPartner::find($request->partner_id)->name;
                 $users = $user->partners($request->partner_id)->get();
+                $to = 'Partners in '.$partner_name;
 
            } else{            
                 $users = $user->partners()->get();
+                $to = 'All Partners';
            }
         }
         else if ($request->user_type == 4) {
             $user = new User;
             if ($request->user_group == 1) {
 
-                $users = $user->county_coordinators($request->partner_id)->get();
+                $county_name = County::find($request->county_id)->name;
+                $users = $user->county_coordinators($request->county_id)->get();
+                $to = 'County Coordinators in '.$county_name;
 
             } else{            
                 $users = $user->county_coordinators()->get();
+                $to = 'All County Coordinators';
             }
         }
 
@@ -226,39 +244,58 @@ class SmsController extends Controller
             $user = new User;
            if ($request->user_group == 1) {
 
+                $sub_county_name = SubCounty::find($request->sub_county_id)->name;
                 $users = $user->sub_county_coordinators($request->sub_county_id)->get();
+                $to = 'Sub County Coordinators in '.$sub_county_name;
 
            } else{            
                 $users = $user->sub_county_coordinators()->get();
+                $to = 'All Sub County Coordinators';
            }
         } 
+
+        // get users phone numbers
+
+        foreach ($users as $key => $user) {
+            array_push($phone_numbers ,$user->phone);
+        }
+
         //get message to be sent
         $message = Notification::find($request->message_id)->message;
         $api = DB::table('bulk_sms_settings')->first();
         $from   = $api->username;
         $response =[
-            'users' =>$users,
+            'phone_numbers' =>$phone_numbers,
             'message' => $message,
             'from' => $from,
-            'to' => 'All Users'
+            'to' => $to
         ];
 
-        return $users->count() > 0 ? response()->json($response) : $error;
+        return $users->count() > 0 ? response()->json($response) : $error;           
+    }
 
-        //send SMS
-        // $api = DB::table('bulk_sms_settings')->first();
-        // $from   = $api->username;
-        // $apikey = $api->api_key;
-        // foreach ($users as $user) {                
-        //     try
-        //     {                           
-        //         print($user->phone .' '.$message.'<br/>');
-        //       /*$sms->sendMessage($user->phone, $message, $from);*/
-        //     }                
-        //     catch ( AfricasTalkingGatewayException $e )
-        //     {
-        //         echo "Encountered an error while sending: ".$e->getMessage();
-        //     }
-        // }               
+    /*
+    * Send the SMS
+    */
+    public function sendMessage(Request $request){
+
+        $message = $request->message_to_send;
+
+        // send SMS
+        $api = DB::table('bulk_sms_settings')->first();
+        $from   = $api->username;
+        $apikey = $api->api_key;
+        foreach ($request->phone_numbers as $phone) {   
+
+            try
+            {                           
+                print($phone .' '.$message.'<br/>');
+              /*$sms->sendMessage($user->phone, $message, $from);*/
+            }                
+            catch ( AfricasTalkingGatewayException $e )
+            {
+                echo "Encountered an error while sending: ".$e->getMessage();
+            }
+        }       
     }
 }

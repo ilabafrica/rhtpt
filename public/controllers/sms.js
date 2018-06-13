@@ -43,7 +43,7 @@ new Vue({
         implementing_partners: [],
         // message: '',
         type:'',
-        users: [],
+        phone_numbers: [],
         from:'',
         to:'',
         message_to_send:'',
@@ -164,7 +164,7 @@ new Vue({
                 $("#select-users-message").modal('hide');
                 $("#resend-message").modal('show');
 
-                this.users = response.data.users;
+                this.phone_numbers = response.data.phone_numbers;
                 this.from = response.data.from;
                 this.to = response.data.to;
                 this.message_to_send = response.data.message;
