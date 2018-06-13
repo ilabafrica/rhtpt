@@ -5,7 +5,7 @@
         }
     </style>
 </head>
-<table class="table table-bordered" cellspacing="0">
+<table class="table table-bordered" cellspacing="0" style="font-size:15px">
     <tr><td colspan="5"><center><img src="img/coa.png"></center></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>MINISTRY OF HEALTH</b></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>NATIONAL PUBLIC HEALTH LABORATORY SERVICES (NPHLS)</b></td></tr>
@@ -43,6 +43,7 @@
     <tr class="text-center"> <td colspan="5">NHRL acknowledges receipt of your Proficiency Testing results for Round {{$data['round_name']}}</td></tr>
     <tr class="text-center"> <td colspan="5">Your result is <b> <i>{{$data['feedback']}}</i></b></td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
+
     <tr class="text-center"> <td colspan="5">Comments:</td></tr>
     <tr class="text-center">
         <td style ="border:solid 1px black;" rowspan="2">PT Sample ID</td>
@@ -108,25 +109,33 @@
     <tr>
         <td colspan="5">Thank you for your participation</td>
     </tr>
-    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr>
+        <td><img src="img/sign.png" alt="" height="20" width="80" /></td>
+    </tr>
+    <tr>
+        <td>Franklin Kitheka,</td>
+    </tr>
     <tr>
         <td>PT Coordinator.</td>
     </tr>
-    <tr> <td colspan="5"> &nbsp;</td> </tr>
-    <tr> <td colspan="4"> </td> <td><img src="img/ukas.png" alt="" border="1" height="55" width="100" /></td> </tr>
-    <footer>
-        <div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>
-    <tr> <td colspan="5"> &nbsp;</td> </tr>
-    <tr> <td colspan="5"> &nbsp;</td> </tr>
-    <div class="page_break"></div>
-    <head>
-        <style>
-            footer .pagenum:before {
-                content: counter(page);
-            }
-        </style>
-    </head>
-    <tr><td colspan="5"><div style="text-align:center">Testing Scheme Information</td></tr></div>
+
+    {{--<tr class="text-center"> <td colspan="5"></td></tr>--}}
+    <tr> <td colspan="4" ></td> <td><img src="img/ukas.png" alt="" border="1" height="55" width="100" /></td> </tr>
+
+    <tr>
+        <td colspan="2">NHRL Doc N0 105 V:0 </td>
+        <td colspan="3">
+            <footer>
+                <div>
+                    <div class="pagenum-container">
+                        <div style="text-align:left">Page <span class="pagenum"></span></div>
+                    </div>
+                </div>
+            </footer>
+        </td>
+    </tr>
+    <tr><td><div style="page-break-before: always"></div></td></tr>
+    <tr><td colspan="5"><b><div style="text-align:center">Testing Scheme Information</td></tr></div></b>
     <tr class="text-center"><td style ="border:solid 2px black;" colspan="5">
             <p>1.  The HIV-PT is a Qualitative scheme.</p>
             <p> 2. The scheme utilises dried tube plasma color coded in green.</p>
@@ -137,8 +146,7 @@
             <p>7.  Subcontracted services: Panle distribution, results submission and feedback distribution.</p>
             <p>8.  A summary report will be shared at the NPHL website (www.nphls.or.ke) at the conclusion of every round.</p></td>
     </tr>
+    <footer><div style="text-align:center"><p>End of the report</div></p><br>
+        <div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>
 </table>
 
-<footer><div style="text-align:center"><p>End of the report</div></p><br>
-    {{--<div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div>--}}
-</footer>
