@@ -468,6 +468,11 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "load.participants",
         "uses" => "RoundController@loadparticipants"
     ));
+    Route::get('participantinfo/{id}', 'RoundController@manage_participant_info');
+    Route::get("/loadparticipantsinfo/{id}", array(
+        "as"   => "load.participants",
+        "uses" => "RoundController@participants_info"
+    ));
 
     Route::any("/approve/{id}", array(
         "as"   => "approve.participant",
@@ -517,6 +522,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_expected',['as'=>'expected.search', 'uses'=>'ExpectedController@index']);
     Route::get('api/search_participant',['as'=>'participant.search', 'uses'=>'ParticipantController@index']);
     Route::get('api/search_enroled_participant',['as'=>'participant.search', 'uses'=>'RoundController@loadparticipants']);
+    Route::get('api/search_participant_info/{round}',['as'=>'participant.search', 'uses'=>'RoundController@participants_info']);
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
     Route::get('api/search_parts',['as'=>'participants.search', 'uses'=>'UserController@forEnrol']);
     Route::get('api/search_designation',['as'=>'designation.search', 'uses'=>'DesignationController@index']);
