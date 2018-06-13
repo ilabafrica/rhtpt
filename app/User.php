@@ -270,7 +270,7 @@ EntrustUserTrait::restore insteadof SoftDeletes;
         return $users;
     } 
       /**
-    * Get participants coordinators
+    * Get participants 
     *
     */
     public function participants()
@@ -282,7 +282,7 @@ EntrustUserTrait::restore insteadof SoftDeletes;
         return $users;
     } 
      /**
-    * Get partners coordinators
+    * Get partners 
     *
     */
     public function partners($id = null)
@@ -295,8 +295,8 @@ EntrustUserTrait::restore insteadof SoftDeletes;
       } else{             
         $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
                   ->where('role_id', $role); 
-      }                  
-        return $users;
+      }
+      return $users;
     } 
     /**
     * Return User ID given the name
