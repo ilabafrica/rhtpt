@@ -171,10 +171,11 @@ class SmsController extends Controller
 
     public function select_users_message(Request $request)
     {           
-         $users = '';
+         $users = array();
+         $participant_phone = '';
          $to = '';
          $phone_numbers = array();
-         $error = 'No Users Found';
+         $error =  ['error' => 'No Users Found'];
 
         if ($request->user_type == 0) {
             $users = User::all();
@@ -204,8 +205,9 @@ class SmsController extends Controller
 
             } else if ($request->participant == 2) {
                 //convert to array for looping
-                $users = User::find($request->participant_id);
-                $to = $users->name;
+                $participant = User::find($request->participant_id);
+                array_push($users, $participant);
+                $to = $participant->name;
               
             }else{            
                 $user = new User;
@@ -253,7 +255,6 @@ class SmsController extends Controller
                 $to = 'All Sub County Coordinators';
            }
         } 
-
         // get users phone numbers
 
         foreach ($users as $key => $user) {
@@ -271,7 +272,7 @@ class SmsController extends Controller
             'to' => $to
         ];
 
-        return $users->count() > 0 ? response()->json($response) : $error;           
+        return count($users) > 0 ? response()->json($response) : $error;           
     }
 
     /*
@@ -285,16 +286,24 @@ class SmsController extends Controller
         $api = DB::table('bulk_sms_settings')->first();
         $from   = $api->username;
         $apikey = $api->api_key;
-        foreach ($request->phone_numbers as $phone) {   
 
-            try
-            {                           
-                print($phone .' '.$message.'<br/>');
-              /*$sms->sendMessage($user->phone, $message, $from);*/
-            }                
-            catch ( AfricasTalkingGatewayException $e )
-            {
-                echo "Encountered an error while sending: ".$e->getMessage();
+        //phone numbers come as one array, loop throug it
+        foreach ($request->phone_numbers as $phone) {   
+            
+            //convert the phone number string to array then send sms by looping through the array
+            $phone_number = explode(',', $phone);
+
+            foreach ($phone_number as  $number) {
+                
+                try
+                {                           
+                    print($number .' '.$message.'<br/>');
+                  /*$sms->sendMessage($number, $message, $from);*/
+                }                
+                catch ( AfricasTalkingGatewayException $e )
+                {
+                    echo "Encountered an error while sending: ".$e->getMessage();
+                }
             }
         }       
     }

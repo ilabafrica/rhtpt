@@ -161,13 +161,19 @@ new Vue({
             let formData = new FormData(myForm);
 
             this.$http.post('/select_users_message', formData ).then((response) => {
-                $("#select-users-message").modal('hide');
-                $("#resend-message").modal('show');
 
-                this.phone_numbers = response.data.phone_numbers;
-                this.from = response.data.from;
-                this.to = response.data.to;
-                this.message_to_send = response.data.message;
+                if (response.data.error) {
+                    toastr.error('No users found.', 'Error', {timeOut: 5000});
+
+                }else{
+                    $("#select-users-message").modal('hide');
+                    $("#resend-message").modal('show');
+
+                    this.phone_numbers = response.data.phone_numbers;
+                    this.from = response.data.from;
+                    this.to = response.data.to;
+                    this.message_to_send = response.data.message;
+                }
             }, (response) => {
                 this.formErrors = response.data;
                 
