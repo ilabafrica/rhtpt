@@ -162,13 +162,13 @@ class RoundController extends Controller
         $users = new User;
         $county_coordinators = $users->county_coordinators()->pluck('phone')->toArray();
         $subcounty_coordinators = $users->sub_county_coordinators()->pluck('phone')->toArray();
-        // $phone_numbers = array_merge($county_coordinators, $subcounty_coordinators);
-        $phone_numbers = array(0=>'0723763026', 1=>'0723763026');
+        $phone_numbers = array_merge($county_coordinators, $subcounty_coordinators);
+        // $phone_numbers = array(0=>'0723763026', 1=>'0723763026');
         
         $recipients = NULL;
         $recipients = implode(",", $phone_numbers);
         //  Send SMS
-        $message = 'Dear County/SubCounty Coordinator, Round '.$round->name.' is now open for enrollment. Please enroll your participants between'.$round->start_date.' and '.$round->enrollment_date.'. Deadline is 5pm'.$round->enrollment_date;            
+        $message = 'Dear County/SubCounty Coordinator, Round '.$round->name.' is now open for enrollment. Please enroll your participants between '.$round->start_date.' and '.$round->enrollment_date.'. Deadline is 5pm '.$round->enrollment_date;
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
@@ -419,20 +419,38 @@ class RoundController extends Controller
         {   
             if(!empty($participant->ru()->tier))
             {
-                $facility = Facility::find($participant->ru()->tier);
                 $participant->facility = $participant->ru()->tier;
                 $participant->program = $participant->ru()->program_id;
-                $participant->sub_county = $facility->subCounty->id;
-                $participant->county = $facility->subCounty->county->id;
-
-                $participant->mfl = $facility->code;
-                $participant->fac = $facility->name;
-                $participant->prog = Program::find($participant->ru()->program_id)->name;
-                $participant->sub = $facility->subCounty->name;
-                $participant->kaunti = $facility->subCounty->county->name;
-                $participant->des = $participant->designation($participant->ru()->designation);
                 $participant->gndr = $participant->maleOrFemale((int)$participant->gender);
-                $participants->designation = $participant->ru()->designation;
+                $facility = Facility::find($participant->ru()->tier);
+                try{
+                    $participant->mfl = $facility->code;
+                    $participant->fac = $facility->name;
+
+                    $participant->sub_county = $facility->subCounty->id;
+                    $participant->county = $facility->subCounty->county->id;
+                    $participant->sub = $facility->subCounty->name;
+                    $participant->kaunti = $facility->subCounty->county->name;
+                }catch(\Exception $ex){
+                    \Log::error("Missing facility information!");
+                    \Log::error($participant);
+                    \Log::error($ex->getMessage());
+                }
+                try{
+                    $participant->prog = Program::find($participant->ru()->program_id)->name;
+                }catch(\Exception $ex){
+                    \Log::error("Participant does not have a program!");
+                    \Log::error($participant);
+                    \Log::error($ex->getMessage());
+                }
+                try{
+                    $participant->des = $participant->designation($participant->ru()->designation);
+                    $participants->designation = $participant->ru()->designation;
+                }catch(\Exception $ex){
+                    \Log::error("Participant does not have a designation!");
+                    \Log::error($participant);
+                    \Log::error($ex->getMessage());
+                }
             }
             else
             {
@@ -451,7 +469,7 @@ class RoundController extends Controller
             'enrol_status' =>$enrol_status
         ];
 
-        return $participants->count() > 0 ? response()->json($response) : $error;
+        return response()->json($response);
            
 
 
@@ -738,7 +756,7 @@ class RoundController extends Controller
                                     'Tester Mobile Number' => $tphone,
                                     'Tester Email' => $temail,
                                     'Tester Address' => $taddress,
-                                    'Designation' => Designation::find($tdes)->name,
+                                    //'Designation' => Designation::find($tdes)->name,
                                     'Program' => $tprog,
                                     'In Charge' => $icharge,
                                     'In Charge Email' => $iemail,

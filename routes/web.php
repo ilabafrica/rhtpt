@@ -44,9 +44,17 @@ Route::get("/cnts", array(
     "as"   => "cnts.fetch",
     "uses" => "FacilityController@counties"
 ));
+Route::get("/assign_uid", array(
+    "as"   => "assign_uid.fetch",
+    "uses" => "UserController@assign_uid"
+));
 Route::get("/partner_counties/{id}", array(
     "as"   => "cnts.fetch",
     "uses" => "FacilityController@partner_counties"
+));
+Route::get("/partnercounties", array(
+    "as"   => "partner.counties",
+    "uses" => "ImplementingPartnerController@getCounties"
 ));
 Route::get("/progs", array(
     "as"   => "programs.fetch",
@@ -570,3 +578,10 @@ Route::get("/new_participants/{id}/{}", array(
     "as"   => "new.participants",
     "uses" => "RoundController@testerSummary"
 ));
+Route::get('/download_guide/{usertype}', function ($usertype='') {
+    if ($usertype == 2) {
+        return response()->download(storage_path('app\public\HIV_PT_Database_Instructions_County_Version_2_Participants.pdf')); 
+    }else{
+        return response()->download(storage_path('app\public\HIV_PT_Database_Instructions_County_Version_2.pdf')); 
+    }
+});
