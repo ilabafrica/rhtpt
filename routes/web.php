@@ -168,6 +168,12 @@ Route::group(['middleware' => 'auth'], function()
     Route::resource('vuenonperfs','NonperformanceController');
     Route::any('vuenonperfs/{id}/restore','NonperformanceController@restore');
 
+    Route::get('sms', 'SmsController@manageSms');
+    Route::resource('vuesms','SmsController');
+    Route::any('vuesms/{id}/restore','SmsController@restore');   
+    Route::get('rls', 'SmsController@roles');
+    Route::post('select_users_message', 'SmsController@select_users_message');
+    Route::post('sendmessage', 'SmsController@sendMessage');
     //Route::get('manage-vue', 'VueItemController@manageVue');
     //Route::resource('vueitems','VueItemController');
 
