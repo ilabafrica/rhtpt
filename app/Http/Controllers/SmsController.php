@@ -180,6 +180,7 @@ class SmsController extends Controller
          $to = '';
          $phone_numbers = array();
          $error =  ['error' => 'No Users Found'];
+         $message = '';
 
         if ($request->user_type == 0) {
             $users = User::all();
@@ -207,13 +208,7 @@ class SmsController extends Controller
                     $to = 'Participants in '. $county->name;
                 }
 
-            } else if ($request->participant == 2) {
-                //convert to array for looping
-                $participant = User::find($request->participant_id);
-                array_push($users, $participant);
-                $to = $participant->name;
-              
-            }else{            
+            } else{            
                 $user = new User;
                 $users = $user->participants()->get();
                 $to = 'All Participants';
@@ -259,6 +254,13 @@ class SmsController extends Controller
                 $to = 'All Sub County Coordinators';
            }
         } 
+        else if ($request->user_type == 8) {
+                //convert to array for looping
+                $user = User::find($request->participant_id);
+                array_push($users, $user);
+                $to = $user->name;
+              
+            }
         // get users phone numbers
 
         foreach ($users as $key => $user) {
@@ -266,7 +268,6 @@ class SmsController extends Controller
         
 
             //get message to be sent
-            $message = '';
             if($request->message_id ){
                 $message_details = Notification::find($request->message_id);
                 //resend activation code

@@ -171,11 +171,14 @@
                                 <div class="form-group row" style="text-align:center;">
                                     <div class="form-radio radio-inline" >
                                     <label class="form-radio-label">
-                                        <input type="radio" :value="0" v-model="user_type" name="user_type" />All users   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="3" v-model="user_type" name="user_type" />Partners &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="4" v-model="user_type" name="user_type" />County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="7" v-model="user_type" name="user_type" />Sub-County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="2" v-model="user_type" name="user_type" />Participant
+                                        <div v-if="sendMessage.template != 7 && sendMessage.template != 8 && sendMessage.template != 9">
+                                            <input type="radio" :value="0" v-model="user_type" name="user_type" />All users   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" :value="3" v-model="user_type" name="user_type" />Partners &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" :value="4" v-model="user_type" name="user_type" />County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" :value="7" v-model="user_type" name="user_type" />Sub-County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" :value="2" v-model="user_type" name="user_type" />Participant &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </div>
+                                        <input type="radio" :value="8" v-model="user_type" name="user_type" />Search
                                     </label>
                                    </div>
                                 </div>
@@ -239,7 +242,7 @@
                                         </select>
                                    </div>
                                 </div>
-                                <div class="form-group row" v-show="user_type == 2 && participant == 2">
+                                <div class="form-group row" v-show="user_type == 8">
                                     <div class="col-md-12" style="text-align: right;">
                                         <label class="col-sm-4 form-control-label" for="title">Search</label>
                                         <div class="col-md-4" style="padding-bottom:10px;">
@@ -253,16 +256,19 @@
         		                        </div>
                                         <table id ="table" class="table table-bordered table-responsive">
                                             <tr>                                               
-                                                <th>Participant</th>
-                                                <th>UID</th>
-                                                <th>Facility</th>                                        
+                                                <th></th>
+                                                <th>User</th>
+                                                <th>Username</th>
+                                                <th>Role</th>                                        
+                                                <th>Region</th>                                        
                                                 <th>Phone</th>                                        
                                             </tr>
                                             <tr v-for="participant in participants">
                                                 <td><input type="radio"  :value="participant.id" v-model="participant_id" name="participant_id" ></td>
                                                 <td>@{{ participant.name }}</td>
-                                                <td>@{{ participant.uid }}</td>
-                                                <td>@{{ participant.fac }}</td>                                       
+                                                <td>@{{ participant.username }}</td>
+                                                <td>@{{ participant.rl }}</td>                                       
+                                                <td>@{{ participant.region }}</td>                                       
                                                 <td>@{{ participant.phone }}</td>          
                                             </tr>
                                         </table>
@@ -320,13 +326,4 @@
         </div>
     </div>
 </div>
-<style >
-td {border: 1px #DDD solid; padding: 5px; cursor: pointer;}
-
-.selected {
-    background-color: #808080;
-    color: #FFF;
-}
-</style>
-
 @endsection

@@ -1001,5 +1001,49 @@ public function assign_uid(){
          }
         return response()->json($response);
     }
+    public function all_users(Request $request){
+        $users = User::latest()->withTrashed()->paginate(100);
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $users = User::where('name', 'LIKE', "%{$search}%")->orWhere('username', 'LIKE', "%{$search}%")->where('phone', 'LIKE', "%{$search}%")->latest()->paginate(100);
+            
+        }
+        foreach($users as $user)
+        {
+            !empty($user->ru())?$user->tier = $user->ru()->tier:$user->tier = '';
+            !empty($user->ru())?$user->role = $user->ru()->role_id:$user->role = '';
+            !empty($user->ru())?$user->rl = Role::find($user->ru()->role_id)->name:$user->rl = '';
+            
+            
+            $region = '';
+            if ($user->tier>0) {
+                if ($user->role ==2) {
+                        $region = Facility::find($user->tier)->name;
+                   
+                }
+                elseif ($user->role ==3) {
+                        $region = ImplementingPartner::find($user->tier)->name;
+                   
+                }
+                elseif ($user->role ==4) {
+                        $region = County::find($user->tier)->name;
+                   
+                }
+                elseif ($user->role ==6) {
+                        $region = Facility::find($user->tier)->name;
+                   
+                }
+                elseif ($user->role ==7) {
+                        $region = SubCounty::find($user->tier)->name;
+                   
+                }
+                else{
+                    $region = 'Not Specified';
+                }
+            }
+            !empty($user->ru())?$user->region = $region:$user->region = 'Not Specified';
+        }
+    }
 }
 $excel = App::make('excel');

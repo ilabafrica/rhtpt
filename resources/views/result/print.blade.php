@@ -164,15 +164,17 @@
 
     <tr>
         <td colspan="2">MOH/NPHL/PT/HSER/TEC/01/F02 </td>
-        <td colspan="3">
+        <td colspan="2">
             <footer>
                 <div>
                     <div class="pagenum-container">
-                        <div style="text-align:left">Page <span class="pagenum"></span></div>
+                        <div style="text-align:center;">Page <span class="pagenum"></span></div>
                     </div>
                 </div>
             </footer>
         </td>
+        <td></td>
+
     </tr>
    <tr><td><div style="page-break-before: always"></div></td></tr>
     <tr><td colspan="5"><b><div style="text-align:center">Testing Scheme Information</td></tr></div></b>

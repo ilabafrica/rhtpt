@@ -522,6 +522,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_shipment',['as'=>'shipment.search', 'uses'=>'ShipmentController@index']);
     Route::get('api/search_shipper',['as'=>'shipper.search', 'uses'=>'ShipperController@index']);
     Route::get('api/search_user',['as'=>'user.search', 'uses'=>'UserController@index']);
+    Route::get('api/all_users',['as'=>'user.search', 'uses'=>'UserController@index']);    
     Route::get('api/search_panel',['as'=>'panel.search', 'uses'=>'PanelController@index']);
     Route::get('api/search_field',['as'=>'field.search', 'uses'=>'FieldController@index']);
     Route::get('api/search_facility',['as'=>'facility.search', 'uses'=>'FacilityController@index']);

@@ -238,7 +238,7 @@ new Vue({
             this.loading = true;
 
             // Making a get request to our API and passing the search_participant query to it.
-            this.$http.get('/api/search_participant?q=' + this.query).then((response) => {
+            this.$http.get('/api/all_users?q=' + this.query).then((response) => {
                 // If there was an error set the error message, if not fill the participant array.
                 if(response.data.error)
                 {
@@ -255,13 +255,7 @@ new Vue({
                 // Clear the search_participant query.
                 this.search_participant = '';
                 
-            });
-            $('#table').click(function(){
-			   $(this).addClass('selected').siblings().removeClass('selected');    
-			   var value=$(this).find('td:nth-child(4)').html();
-			   toastr.success('Message Sent Successfully.' + value, 'Success Alert', {timeOut: 5000});
-			});
-
+            });            
         },
 
     }
