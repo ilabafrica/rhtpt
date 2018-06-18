@@ -22,6 +22,9 @@
             <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-message"><i class="fa fa-plus-circle"></i>
             {!! trans('messages.add') !!}
             </button>
+            <button type="button" class="btn btn-sm btn-wisteria" data-toggle="modal" data-target="#select-users-message"><i class="fa fa-plus-circle"></i>
+            Custom Message
+            </button>
 		 </h5>			
 		</div> 
     <div class="col-md-4">
@@ -37,12 +40,12 @@
 	</div>
       <table class="table table-bordered">
         <tr>
-            <th>Type</th>
+            <th>Description</th>
             <th>Messages</th>
             <th>Action</th>  
         </tr>
         <tr v-for="message in messages">
-            <td>@{{message.template}}</td> 
+            <td>@{{message.description}}</td> 
             <td>@{{message.message}}</td>        
             <td>           
                 <button v-bind="{ 'disabled': message.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editMessages(message)"><i class="fa fa-edit"></i> Edit</button>
@@ -87,7 +90,14 @@
                 <div class="modal-body">
                     <div class="row">
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createMessages('create_message')" id="create_message" data-vv-scope="create_message">
-                            <div class="col-md-12">                                
+                            <div class="col-md-12"> 
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="description">Description:</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="description" type="text" placeholder="Activated Account" v-model="newMessage.description" />
+                                        <span v-if="formErrors['Message']" class="error text-danger">@{{ formErrors['Message'] }}</span>
+                                    </div>
+                                </div>                               
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="Message">Message</label>
                                     <div class="col-sm-8">
@@ -117,7 +127,14 @@
                 <div class="modal-body">
                     <div class="row">
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateMessages(fillMessage.id,'create_message')" id="create_message" data-vv-scope="create_message">
-                            <div class="col-md-12">                                
+                            <div class="col-md-12">     
+                                 <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="description">Description:</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="description" type="text" placeholder="" v-model="fillMessage.description" />
+                                        <span v-if="formErrors['Message']" class="error text-danger">@{{ formErrors['Message'] }}</span>
+                                    </div>
+                                </div>                              
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="Message">Message</label>
                                     <div class="col-sm-8">
@@ -235,8 +252,7 @@
         		                            </div>
         		                        </div>
                                         <table id ="table" class="table table-bordered table-responsive">
-                                            <tr>
-                                               
+                                            <tr>                                               
                                                 <th>Participant</th>
                                                 <th>UID</th>
                                                 <th>Facility</th>                                        

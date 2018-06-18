@@ -79,7 +79,10 @@ class SmsController extends Controller
      */
     public function store(Request $request)
     {
-        $create = Notification::create($request->all());
+        $create = new Notification;
+        $create->message = $request->message;
+        $create->description = $request->description;
+        $create->save();
 
         return response()->json($create);
     }
@@ -117,6 +120,7 @@ class SmsController extends Controller
     {
         $message = Notification::find($id);
         $message->message = $request->message;
+        $message->description = $request->description;
         $message->save();
 
         return response()->json($message);
@@ -259,10 +263,50 @@ class SmsController extends Controller
 
         foreach ($users as $key => $user) {
             array_push($phone_numbers ,$user->phone);
+        
+
+            //get message to be sent
+            $message = '';
+            if($request->message_id ){
+                $message_details = Notification::find($request->message_id);
+                //resend activation code
+                if ($message_details->template ==Notification::ACTIVATION_CODE) {                    
+                    // Send SMS
+                    $message = Notification::where('template', Notification::ACTIVATION_CODE)->first()->message;
+                    $message = $message .$user->sms_code;
+                }
+                //resend enabled account
+                else if ($message_details->template ==Notification::USER_ENABLED) {                    
+                    // Send SMS
+                    $message = Notification::where('template', Notification::USER_ENABLED)->first()->message;
+                    $message = $this->replace_between($message, '[', ']', $user->name);
+                    $message = str_replace(' [', ' ', $message);
+                    $message = str_replace(']', ' ', $message);   
+
+                    $message = $this->replace_between($message, '{', '}', $user->uid);
+                    $message = str_replace(' {', ' ', $message);
+                    $message = str_replace('}', ' ', $message);        
+                }
+
+                //resend created account
+                else if ($message_details->template ==Notification::USER_REGISTRATION) {                    
+                    // Send SMS
+                    $message = Notification::where('template', Notification::USER_REGISTRATION)->first()->message;
+                    $message = $this->replace_between($message, '[', ']', $user->name);
+                    $message = str_replace(' [', ' ', $message);
+                    $message = str_replace(']', ' ', $message);   
+                }
+                else{
+
+                    $message = Notification::find($request->message_id)->message;
+                }               
+            }
         }
 
-        //get message to be sent
-        $message = Notification::find($request->message_id)->message;
+        //process message
+
+
+
         $api = DB::table('bulk_sms_settings')->first();
         $from   = $api->username;
         $response =[

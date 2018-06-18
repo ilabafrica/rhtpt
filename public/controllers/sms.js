@@ -22,8 +22,8 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        newMessage : {'message':''},
-        fillMessage : {'message':''},  
+        newMessage : {'message':'','description':''},
+        fillMessage : {'message':'','description':''},  
         sendMessage: {'message':''},
         loading: false,
         error: false,       
@@ -36,6 +36,7 @@ new Vue({
         subcounty:'',
         search_participant: '',
         participant:'',
+        participant_id: '',
         counties:[],
         participants: [],
         subs:[],
@@ -102,7 +103,7 @@ new Vue({
             var input = this.newMessage;
             this.$http.post('/vuesms',input).then((response) => {                
                 this.changePage(this.pagination.current_page);
-                this.newMessage = {'message':''};
+                this.newMessage = {'message':'', description: ''};
                 $("#create-message").modal('hide');
                 toastr.success('Message Created Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
