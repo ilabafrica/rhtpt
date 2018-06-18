@@ -576,6 +576,7 @@ class ResultController extends Controller
                     'panel_status' => $panel_status, 
                     'pt_id' => $pt->id,
                     'pt_approved_comment' => $pt->approved_comment,
+                    'date_approved' => $pt->date_approved,
                     'user_name' => $user_name,
                     'tester_id' => $tester_id,
                     'designation' => $designation,
@@ -667,6 +668,7 @@ class ResultController extends Controller
 
         $result = Pt::find($id);
         $result->panel_status = Pt::VERIFIED;
+        $result->date_approved = Carbon::today()->toDateTimeString();
         if ($request) {
             $result->approved_comment = $request->comment;            
      
@@ -674,7 +676,50 @@ class ResultController extends Controller
                 $result->approved_by = $user_id;
         }
         $result->save();
-        
+
+         //  Send SMS
+        $round = Round::find($pt->enrolment->round->id)->description;
+        $message = Notification::where('template', Notification::FEEDBACK_RELEASE)->first()->message;
+        $message = $this->replace_between($message, '[', ']', $round);
+        $message = str_replace(' [', ' ', $message);
+        $message = str_replace(']', ' ', $message);
+
+        $created = Carbon::today()->toDateTimeString();
+        $updated = Carbon::today()->toDateTimeString();
+        //  Time
+        $now = Carbon::now('Africa/Nairobi');
+        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $pt->enrolment->round->id, 'text' => $message, 'user_id' => $pt->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
+        $recipients = NULL;
+        $recipients = User::find($pt->enrolment->user->id)->value('phone');
+        //  Bulk-sms settings
+        $api = DB::table('bulk_sms_settings')->first();
+        $username   = $api->code;
+        $apikey     = $api->api_key;
+        if($recipients)
+        {
+            // Specified sender-id
+            // $from = $api->code;
+            $from ='NPHL';
+            // Create a new instance of Bulk SMS gateway.
+            $sms    = new Bulk($username, $apikey);
+            // use try-catch to filter any errors.
+            try
+            {
+            // Send messages
+            $results = $sms->sendMessage($recipients, $message, $from);
+            foreach($results as $result)
+            {
+                // status is either "Success" or "error message" and save.
+                $number = $result->number;
+                //  Save the results
+                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
+            }
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+            echo "Encountered an error while sending: ".$e->getMessage();
+            }
+        }
         return response()->json($result);
     }
         

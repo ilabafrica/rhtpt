@@ -137,17 +137,20 @@
     </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr>
-        <td colspan="4"><b>Date Authorized:</b></td>
+        <td><b>Date Authorized:</b></td>
+        <td colspan="4">{{$data['date_approved']}}</td>
     </tr>
     <tr>
-        <td colspan="3">&nbsp;</td>
-        <td colspan="2"><b>Head of Virology:</b></td>
+        <td colspan="3">Thank you for your participation</td>
+        <td ><b>Head Virology:</b></td>
+        <td><img src="img/sign_bowen.png" alt="" height="20" width="80" /></td>
     </tr>
     <tr>
-        <td colspan="5">Thank you for your participation</td>
+        <td colspan="4"></td>
+        <td>Nancy Bowen</td>
     </tr>
     <tr>
-        <td><img src="img/sign.png" alt="" height="20" width="80" /></td>
+        <td><img src="img/sign_kitheka.png" alt="" height="20" width="80" /></td>
     </tr>
     <tr>
         <td>Franklin Kitheka,</td>
