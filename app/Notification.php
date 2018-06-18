@@ -23,6 +23,11 @@ class Notification extends Model
     const FEEDBACK_RELEASE = 3;
     const OTHER = 4;
     const ENROLMENT = 5;
+    const SIGN_UP_REGISTRATION = 6;
+    const ACTIVATION_CODE = 7;
+    const USER_REGISTRATION = 8;
+    const DISABLE_USER = 9;
+    const ROUND_CREATION =10;    
 
     /**
   	 * Return readable tag
@@ -39,5 +44,7 @@ class Notification extends Model
             return 'Other';
         else if($id == Notification::ENROLMENT)
             return 'Enrolment';
+        else if($id == Notification::ACTIVATION_CODE)
+            return  'Activation Code';
   	}
 }
