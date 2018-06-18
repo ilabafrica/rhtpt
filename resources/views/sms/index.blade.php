@@ -22,6 +22,9 @@
             <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-message"><i class="fa fa-plus-circle"></i>
             {!! trans('messages.add') !!}
             </button>
+            <button type="button" class="btn btn-sm btn-wisteria" data-toggle="modal" data-target="#select-users-message"><i class="fa fa-plus-circle"></i>
+            Custom Message
+            </button>
 		 </h5>			
 		</div> 
     <div class="col-md-4">
@@ -37,12 +40,12 @@
 	</div>
       <table class="table table-bordered">
         <tr>
-            <th>Type</th>
+            <th>Description</th>
             <th>Messages</th>
             <th>Action</th>  
         </tr>
         <tr v-for="message in messages">
-            <td>@{{message.template}}</td> 
+            <td>@{{message.description}}</td> 
             <td>@{{message.message}}</td>        
             <td>           
                 <button v-bind="{ 'disabled': message.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editMessages(message)"><i class="fa fa-edit"></i> Edit</button>
@@ -87,7 +90,14 @@
                 <div class="modal-body">
                     <div class="row">
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createMessages('create_message')" id="create_message" data-vv-scope="create_message">
-                            <div class="col-md-12">                                
+                            <div class="col-md-12"> 
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="description">Description:</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="description" type="text" placeholder="Activated Account" v-model="newMessage.description" />
+                                        <span v-if="formErrors['Message']" class="error text-danger">@{{ formErrors['Message'] }}</span>
+                                    </div>
+                                </div>                               
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="Message">Message</label>
                                     <div class="col-sm-8">
@@ -117,7 +127,14 @@
                 <div class="modal-body">
                     <div class="row">
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateMessages(fillMessage.id,'create_message')" id="create_message" data-vv-scope="create_message">
-                            <div class="col-md-12">                                
+                            <div class="col-md-12">     
+                                 <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="description">Description:</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="description" type="text" placeholder="" v-model="fillMessage.description" />
+                                        <span v-if="formErrors['Message']" class="error text-danger">@{{ formErrors['Message'] }}</span>
+                                    </div>
+                                </div>                              
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="Message">Message</label>
                                     <div class="col-sm-8">
@@ -154,11 +171,14 @@
                                 <div class="form-group row" style="text-align:center;">
                                     <div class="form-radio radio-inline" >
                                     <label class="form-radio-label">
-                                        <input type="radio" :value="0" v-model="user_type" name="user_type" />All users   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="3" v-model="user_type" name="user_type" />Partners &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="4" v-model="user_type" name="user_type" />County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="7" v-model="user_type" name="user_type" />Sub-County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" :value="2" v-model="user_type" name="user_type" />Participant
+                                        <div v-if="sendMessage.template != 7 && sendMessage.template != 8 && sendMessage.template != 9">
+                                            <input type="radio" :value="0" v-model="user_type" name="user_type" />All users   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" :value="3" v-model="user_type" name="user_type" />Partners &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" :value="4" v-model="user_type" name="user_type" />County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" :value="7" v-model="user_type" name="user_type" />Sub-County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" :value="2" v-model="user_type" name="user_type" />Participant &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </div>
+                                        <input type="radio" :value="8" v-model="user_type" name="user_type" />Search
                                     </label>
                                    </div>
                                 </div>
@@ -222,7 +242,7 @@
                                         </select>
                                    </div>
                                 </div>
-                                <div class="form-group row" v-show="user_type == 2 && participant == 2">
+                                <div class="form-group row" v-show="user_type == 8">
                                     <div class="col-md-12" style="text-align: right;">
                                         <label class="col-sm-4 form-control-label" for="title">Search</label>
                                         <div class="col-md-4" style="padding-bottom:10px;">
@@ -235,18 +255,20 @@
         		                            </div>
         		                        </div>
                                         <table id ="table" class="table table-bordered table-responsive">
-                                            <tr>
-                                               
-                                                <th>Participant</th>
-                                                <th>UID</th>
-                                                <th>Facility</th>                                        
+                                            <tr>                                               
+                                                <th></th>
+                                                <th>User</th>
+                                                <th>Username</th>
+                                                <th>Role</th>                                        
+                                                <th>Region</th>                                        
                                                 <th>Phone</th>                                        
                                             </tr>
                                             <tr v-for="participant in participants">
                                                 <td><input type="radio"  :value="participant.id" v-model="participant_id" name="participant_id" ></td>
                                                 <td>@{{ participant.name }}</td>
-                                                <td>@{{ participant.uid }}</td>
-                                                <td>@{{ participant.fac }}</td>                                       
+                                                <td>@{{ participant.username }}</td>
+                                                <td>@{{ participant.rl }}</td>                                       
+                                                <td>@{{ participant.region }}</td>                                       
                                                 <td>@{{ participant.phone }}</td>          
                                             </tr>
                                         </table>
@@ -304,13 +326,4 @@
         </div>
     </div>
 </div>
-<style >
-td {border: 1px #DDD solid; padding: 5px; cursor: pointer;}
-
-.selected {
-    background-color: #808080;
-    color: #FFF;
-}
-</style>
-
 @endsection

@@ -25,8 +25,9 @@ class Notification extends Model
     const ENROLMENT = 5;
     const SIGN_UP_REGISTRATION = 6;
     const ACTIVATION_CODE = 7;
-    const USER_REGISTRATION = 8;
-    const DISABLE_USER = 9;
+    const USER_ENABLED = 8;
+    const USER_REGISTRATION = 9;
+    // const DISABLE_USER = 9;
     const ROUND_CREATION =10;    
 
     /**

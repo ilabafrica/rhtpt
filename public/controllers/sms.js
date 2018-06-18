@@ -22,8 +22,8 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        newMessage : {'message':''},
-        fillMessage : {'message':''},  
+        newMessage : {'message':'','description':''},
+        fillMessage : {'message':'','description':''},  
         sendMessage: {'message':''},
         loading: false,
         error: false,       
@@ -36,6 +36,7 @@ new Vue({
         subcounty:'',
         search_participant: '',
         participant:'',
+        participant_id: '',
         counties:[],
         participants: [],
         subs:[],
@@ -102,7 +103,7 @@ new Vue({
             var input = this.newMessage;
             this.$http.post('/vuesms',input).then((response) => {                
                 this.changePage(this.pagination.current_page);
-                this.newMessage = {'message':''};
+                this.newMessage = {'message':'', description: ''};
                 $("#create-message").modal('hide');
                 toastr.success('Message Created Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
@@ -237,7 +238,7 @@ new Vue({
             this.loading = true;
 
             // Making a get request to our API and passing the search_participant query to it.
-            this.$http.get('/api/search_participant?q=' + this.query).then((response) => {
+            this.$http.get('/api/all_users?q=' + this.query).then((response) => {
                 // If there was an error set the error message, if not fill the participant array.
                 if(response.data.error)
                 {
@@ -254,13 +255,7 @@ new Vue({
                 // Clear the search_participant query.
                 this.search_participant = '';
                 
-            });
-            $('#table').click(function(){
-			   $(this).addClass('selected').siblings().removeClass('selected');    
-			   var value=$(this).find('td:nth-child(4)').html();
-			   toastr.success('Message Sent Successfully.' + value, 'Success Alert', {timeOut: 5000});
-			});
-
+            });            
         },
 
     }
