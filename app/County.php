@@ -59,6 +59,22 @@ class County extends Model
                         })->orWhere(function($q) use ($county_role, $county){
                             return $q->where('role_id', $county_role)->whereIn('tier', $county);
                         });
+        }else if (is_array($role)){
+
+            $search = $role['search'];
+            $prole = Role::idByName('Participant');
+            $fls = $this->facilities()->pluck('id')->toArray();
+            $users = User::select('users.*')
+                         ->where(function($query) use ($search){
+                            $query->where('users.name', 'LIKE', "%{$search}%");
+                            $query->orWhere('first_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('middle_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('last_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('phone', 'LIKE', "%{$search}%");
+                            $query->orWhere('email', 'LIKE', "%{$search}%");
+                            $query->orWhere('uid', 'LIKE', "%{$search}%");
+                        })
+                        ->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);
         }else{
             $prole = Role::idByName('Participant');
             $fls = $this->facilities()->pluck('id')->toArray();
