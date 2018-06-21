@@ -100,7 +100,7 @@ class ResultController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {           
+    {        
         //Check if round has been         
         if ($request->get('round_id') =="") {
             return response()->json(['1']);            
@@ -123,33 +123,37 @@ class ResultController extends Controller
                 //update enrollment status to 1
                 $enrolment->status = Enrol::DONE;        
                 $enrolment->save();     
+               
                 //	Proceed to form-fields
-                foreach ($request->all() as $key => $value)
-                {
-                    if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
-                        continue;
-                    else if(stripos($key, 'field') !==FALSE)
+                // get all fields and insert into results
+                $fields = Field::all();
+                $response = '';
+
+                foreach ($fields as $field) {
+                    $result = new Result;
+                    $result->pt_id = $pt->id;
+                    $result->field_id = $field->id;
+                   
+                   //loop through the results entered and get the response for each field
+                    foreach ($request->all() as $key => $value)
                     {
-                        $fieldId = $this->strip($key);
-                        if(is_array($value))
-                          $value = implode(', ', $value);
-                        $result = new Result;
-                        $result->pt_id = $pt->id;
-                        $result->field_id = $fieldId;
-                  		$result->response = $value;
-                        $result->save();
-                    }
-                    else if(stripos($key, 'comment') !==FALSE)
-                    {
-                        if($value)
+                        if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
+                            continue;
+                        else if(stripos($key, 'field') !==FALSE)
                         {
-                            $result = Result::where('field_id', $key)->first();
-                            $result->comment = $value;
-                            $result->save();
+                            $fieldId = (int)$this->strip($key);
+                            if(is_array($value))
+                              $value = implode(', ', $value);
+                            
+                            if ($field->id == $fieldId) {
+                                $response = $value;
+                            }                      
                         }
-                    }
-                }    
-                    
+                        // save the response for respective field
+                        $result->response = $response;
+                        $result->save();
+                    }    
+                }                    
                     //  Send SMS
                     $round = Round::find($pt->enrolment->round->id)->description;
                     $message = Notification::where('template', Notification::RESULTS_RECEIVED)->first()->message;
