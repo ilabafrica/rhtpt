@@ -27,7 +27,7 @@
             </button>
 		 </h5>			
 		</div> 
-    <div class="col-md-4">
+    <!-- <div class="col-md-4">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" placeholder="Search for..." v-model="query" v-on:keyup.enter="search()">
                     <span class="input-group-btn">
@@ -35,7 +35,7 @@
                         <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
                     </span>
                 </div>
-            </div> 
+            </div>  -->
             <!-- </form> -->  		
 	</div>
       <table class="table table-bordered">

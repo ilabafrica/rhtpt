@@ -42,28 +42,29 @@ class ResultController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
+        $items_per_page = 100;
         $results = Pt::latest()->withTrashed()->paginate(5);
         if(Auth::user()->isCountyCoordinator())
         {
-            $results = County::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate(5);
+            $results = County::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $results = SubCounty::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate(5);
+           $results = SubCounty::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $results = Facility::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate(5);
+           $results = Facility::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isParticipant())
         {
-            $results = Auth::user()->results()->latest()->withTrashed()->paginate(5);
+            $results = Auth::user()->results()->latest()->withTrashed()->paginate($items_per_page);
 
         }
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $results = Pt::where('id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            $results = Pt::where('id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($items_per_page);
         }
         foreach($results as $result)
         {
