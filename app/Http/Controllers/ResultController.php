@@ -102,6 +102,7 @@ class ResultController extends Controller
      */
     public function store(Request $request)
     {        
+        // dd($request->all());
         //Check if round has been         
         if ($request->get('round_id') =="") {
             return response()->json(['1']);            
@@ -146,14 +147,19 @@ class ResultController extends Controller
                             if(is_array($value))
                               $value = implode(', ', $value);
                             
+
                             if ($field->id == $fieldId) {
                                 $response = $value;
+                                break;
+                            }else if ($field->id != $fieldId) {
+                                $response = '';
+
                             }                      
-                        }
-                        // save the response for respective field
-                        $result->response = $response;
-                        $result->save();
-                    }    
+                        }                        
+                    } 
+                    // save the response for respective field
+                    $result->response = $response;
+                    $result->save();   
                 }                    
                     //  Send SMS
                     $round = Round::find($pt->enrolment->round->id)->description;
