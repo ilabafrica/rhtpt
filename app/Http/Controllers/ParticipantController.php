@@ -1256,7 +1256,9 @@ enrolled, you’ll receive a tester ID";
                     ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
                     ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
                     ->leftJoin(
-                        DB::raw('(SELECT enrolments.user_id, enrolments.deleted_at FROM enrolments INNER JOIN rounds ON enrolments.round_id = rounds.id WHERE rounds.start_date < now() AND rounds.end_date > now()) AS live_round'),
+//                        DB::raw('(SELECT enrolments.user_id, enrolments.deleted_at FROM enrolments INNER JOIN rounds ON enrolments.round_id = rounds.id WHERE rounds.start_date < now() AND rounds.end_date > now()) AS live_round'),
+//TODO: REMOVE DIRTY HACK TO SHOW ROUND 18 STATS - Place rounds drop down on view
+                        DB::raw('(SELECT enrolments.user_id, enrolments.deleted_at FROM enrolments INNER JOIN rounds ON enrolments.round_id = rounds.id WHERE rounds.id = 3) AS live_round'),
                         function($join){
                             $join->on('users.id', '=', 'live_round.user_id')
                                 ->whereNull('live_round.deleted_at');

@@ -616,8 +616,10 @@ class RoundController extends Controller
                                 $iphone = $ross;
                         }
                         $summary[] = [
-                            'County' => $tcounty,
-                            'Sub County' => $tsub_county,
+                            //'County' => $tcounty,
+                            //'Sub County' => $tsub_county,
+			    'County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->county->name,
+                            'Sub County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->name,
                             'Facility' => $facility,
                             'MFL Code' => $mfl,
                             'Tester Enrollment ID' => $tuid,
