@@ -587,8 +587,8 @@ Route::get("/new_participants/{id}/{}", array(
 ));
 Route::get('/download_guide/{usertype}', function ($usertype='') {
     if ($usertype == 2) {
-        return response()->download('img\HIV_PT_Database_Instructions_County_Version_2_Participants.pdf'); 
+        return response()->download(storage_path('app\public\HIV_PT_Database_Instructions_County_Version_2_Participants.pdf')); 
     }else{
-        return response()->download('img\HIV_PT_Database_Instructions_County_Version_2.pdf'); 
+        return response()->download(storage_path('app\public\HIV_PT_Database_Instructions_County_Version_2.pdf')); 
     }
 });

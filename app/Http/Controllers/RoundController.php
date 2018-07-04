@@ -486,50 +486,79 @@ class RoundController extends Controller
      public function participants_info(Request $request, $round=null)
     {        
         $result_status='';
+        $participants = '';
         $items_per_page = 100;
         $error = ['error' => 'No results found, please try with different keywords.'];
         
         //Get the enrolled users
         $enrolled_users = Enrol::where('round_id', $round)->pluck('user_id')->toArray();
-
         $users = new User;
         $all_participants = $users->participants();
         $active_participants = $all_participants->count();
         $total_participants = $all_participants->withTrashed()->count();
-        $participants = $all_participants->whereIn('id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
-        $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
 
+        //compare list of participants id  to enrolled users id-
+        $participants = $all_participants->get()->filter(function ($participant) use($enrolled_users){
+                if (in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;
+                   
+                }
+            });
+
+        $enrolled_participants = $participants->count();
+        
+       
         if(Auth::user()->isCountyCoordinator())
         {
             $all_participants = County::find(Auth::user()->ru()->tier)->users();
             $active_participants = $all_participants->count();
             $total_participants = $all_participants->withTrashed()->count();
-            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
-            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
+            $participants = $all_participants->get()->filter(function ($participant) use($enrolled_users){
+                if (in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;                   
+                }
+            });
+
+            $enrolled_participants = $participants->count();
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
             $all_participants = SubCounty::find(Auth::user()->ru()->tier)->users();
             $active_participants = $all_participants->count();
             $total_participants = $all_participants->withTrashed()->count();
-            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
-            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
+            $participants = $all_participants->get()->filter(function ($participant) use($enrolled_users){
+                if (in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;                   
+                }
+            });
+
+            $enrolled_participants = $participants->count();
         }
         else if(Auth::user()->isPartner())
         {
             $all_participants = ImplementingPartner::find(Auth::user()->ru()->tier)->users();
             $active_participants = $all_participants->count();
             $total_participants = $all_participants->withTrashed()->count();
-            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
-            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
+            $participants = $all_participants->get()->filter(function ($participant) use($enrolled_users){
+                if (in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;                   
+                }
+            });
+
+            $enrolled_participants = $participants->count();
         }
         else if(Auth::user()->isFacilityInCharge())
         {
             $all_participants = Facility::find(Auth::user()->ru()->tier)->users();
             $active_participants = $all_participants->count();
             $total_participants = $all_participants->withTrashed()->count();
-            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
-            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
+            $participants = $all_participants->get()->filter(function ($participant) use($enrolled_users){
+                if (in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;                   
+                }
+            });
+
+            $enrolled_participants = $participants->count();
         }
         if($request->has('q')) 
         {
@@ -551,10 +580,15 @@ class RoundController extends Controller
         //filter users by region
         if($request->has('county')) {                 
             $all_participants = County::find($request->get('county'))->users();
-            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
             $total_participants = $all_participants->withTrashed()->count();
             $active_participants = $all_participants->count();
-            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
+            $participants = $all_participants->get()->filter(function ($participant) use($enrolled_users){
+                if (in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;                   
+                }
+            });
+
+            $enrolled_participants = $participants->count();
         
         }
         
@@ -562,17 +596,27 @@ class RoundController extends Controller
         {
             $all_participants = SubCounty::find($request->get('sub_county'))->users();
             $active_participants = $all_participants->count();
-            $total_participants = $all_participants->withTrashed()->count();
-            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
-            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
+            $total_participants = $all_participants->withTrashed()->count();            
+            $participants = $all_participants->get()->filter(function ($participant) use($enrolled_users){
+                if (in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;                   
+                }
+            });
+
+            $enrolled_participants = $participants->count();
         }
         if($request->has('facility')) 
         {
             $all_participants = Facility::find($request->get('facility'))->users();
             $active_participants = $all_participants->count();
-            $total_participants = $all_participants->withTrashed()->count();
-            $participants = $all_participants->whereIn('users.id', $enrolled_users)->latest()->withTrashed()->paginate($items_per_page);
-            $enrolled_participants = $all_participants->whereIn('id', $enrolled_users)->count();
+            $total_participants = $all_participants->withTrashed()->count();            
+            $participants = $all_participants->get()->filter(function ($participant) use($enrolled_users){
+                if (in_array($participant->id, $enrolled_users) ) {  
+                    return $participant;                   
+                }
+            });
+
+            $enrolled_participants = $participants->count();
         }
      
         foreach($participants as $participant)
@@ -609,16 +653,8 @@ class RoundController extends Controller
             }            
         }
        
-        $response = [  
-            'pagination' => [
-                'total' => $participants->total(),
-                'per_page' => $participants->perPage(),
-                'current_page' => $participants->currentPage(),
-                'last_page' => $participants->lastPage(),
-                'from' => $participants->firstItem(),
-                'to' => $participants->lastItem()
-            ],         
-            'data' => $participants,
+        $response = [                      
+            'data' => $participants->sortBy('name'),
             'role' => Auth::user()->ru()->role_id,
             'tier' => Auth::user()->ru()->tier,
             'total_participants'=>$total_participants,

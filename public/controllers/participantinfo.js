@@ -69,7 +69,7 @@ new Vue({
         var round_id = _.last( window.location.pathname.split( '/' ) ); 
             this.$http.get('/loadparticipantsinfo/'+round_id ).then((response) => {
                 if(response.data.data){
-                    this.participants = response.data.data.data;
+                    this.participants = response.data.data;
                     this.roundId = round_id;
                     this.role = response.data.role;
                     this.tier = response.data.tier;
@@ -154,7 +154,7 @@ new Vue({
                     }
                     else
                     {
-                        this.participants = response.data.data.data;
+                        this.participants = response.data.data;
                         this.pagination = response.data.pagination;
                         this.total_participants = response.data.total_participants;
                         this.active_participants = response.data.active_participants;
@@ -180,7 +180,7 @@ new Vue({
                     }
                     else
                     {
-                        this.participants = response.data.data.data;
+                        this.participants = response.data.data;
                         this.pagination = response.data.pagination;
                         this.total_participants = response.data.total_participants;
                         this.active_participants = response.data.active_participants;
@@ -206,7 +206,7 @@ new Vue({
                     }
                     else
                     {
-                        this.participants = response.data.data.data;
+                        this.participants = response.data.data;
                         this.pagination = response.data.pagination;
                         this.total_participants = response.data.total_participants;
                         this.active_participants = response.data.active_participants;
