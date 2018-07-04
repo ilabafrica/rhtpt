@@ -125,52 +125,32 @@ class ParticipantController extends Controller
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $users = User::where('name', 'LIKE', "%{$search}%")
-		            ->orWhere('first_name', 'LIKE', "%{$search}%")
+            $search_ar = ['search'=>$search];
+            
+            if(Auth::user()->isCountyCoordinator())
+            {
+                $users = County::find(Auth::user()->ru()->tier)->users($search_ar)->latest()->withTrashed()->paginate(100);                
+            }
+            else if(Auth::user()->isSubCountyCoordinator())
+            {
+                $users = SubCounty::find(Auth::user()->ru()->tier)->users($search_ar)->latest()->withTrashed()->paginate(100);
+            }
+            else if(Auth::user()->isFacilityInCharge())
+            {
+               $users = Facility::find(Auth::user()->ru()->tier)->users($search_ar)->latest()->withTrashed()->paginate(100);
+            }
+            else if(Auth::user()->isPartner())
+            {
+               $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users($search_ar)->latest()->withTrashed()->paginate(100);
+            }
+            else{
+                $users = User::where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('first_name', 'LIKE', "%{$search}%")
                     ->orWhere('middle_name', 'LIKE', "%{$search}%")
                     ->orWhere('last_name', 'LIKE', "%{$search}%")
                     ->orWhere('email', 'LIKE', "%{$search}%")
                     ->orWhere('phone', 'LIKE', "%{$search}%")
                     ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
-            if(Auth::user()->isCountyCoordinator())
-            {
-                $users = County::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
-			            ->orWhere('first_name', 'LIKE', "%{$search}%")
-                    	->orWhere('middle_name', 'LIKE', "%{$search}%")
-                    	->orWhere('last_name', 'LIKE', "%{$search}%")
-                    	->orWhere('phone', 'LIKE', "%{$search}%")
-                        ->orWhere('email', 'LIKE', "%{$search}%")
-			            ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
-            }
-            else if(Auth::user()->isSubCountyCoordinator())
-            {
-                $users = SubCounty::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
-			            ->orWhere('first_name', 'LIKE', "%{$search}%")
-                    	->orWhere('middle_name', 'LIKE', "%{$search}%")
-                   	    ->orWhere('last_name', 'LIKE', "%{$search}%")
-                        ->orWhere('phone', 'LIKE', "%{$search}%")
-                    	->orWhere('email', 'LIKE', "%{$search}%")
-			            ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
-            }
-            else if(Auth::user()->isFacilityInCharge())
-            {
-               $users = Facility::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
-			            ->orWhere('first_name', 'LIKE', "%{$search}%")
-                    	->orWhere('middle_name', 'LIKE', "%{$search}%")
-                    	->orWhere('last_name', 'LIKE', "%{$search}%")
-                    	->orWhere('phone', 'LIKE', "%{$search}%")
-                        ->orWhere('email', 'LIKE', "%{$search}%")
-			            ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
-            }
-            else if(Auth::user()->isPartner())
-            {
-               $users = ImplementingPartner::find(Auth::user()->ru()->tier)->users()->where('users.name', 'LIKE', "%{$search}%")
-                        ->orWhere('first_name', 'LIKE', "%{$search}%")
-                        ->orWhere('middle_name', 'LIKE', "%{$search}%")
-                        ->orWhere('last_name', 'LIKE', "%{$search}%")
-                        ->orWhere('phone', 'LIKE', "%{$search}%")
-                        ->orWhere('email', 'LIKE', "%{$search}%")
-                        ->orWhere('uid', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(100);
             }
         }
         if($request->has('filter')) 

@@ -30,8 +30,8 @@
                         Worksheet
                     </a> -->
 
-                    <button class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#upload-worksheet"><i class="fa fa-level-up"></i> Upload Worksheet</button>
                     @permission('create-facility')
+                    <button class="btn btn-sm btn-nephritis" id="register" data-toggle="modal" data-target="#upload-worksheet"><i class="fa fa-level-up"></i> Upload Worksheet</button>
                     <a :href="'/subcounty/'" class="btn btn-sm btn-wisteria"><i class="fa fa-list"></i> Sub Counties</a>
                     @endpermission
                 </h5>

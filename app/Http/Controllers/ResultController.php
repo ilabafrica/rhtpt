@@ -42,28 +42,29 @@ class ResultController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
+        $items_per_page = 100;
         $results = Pt::latest()->withTrashed()->paginate(5);
         if(Auth::user()->isCountyCoordinator())
         {
-            $results = County::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate(5);
+            $results = County::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $results = SubCounty::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate(5);
+           $results = SubCounty::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $results = Facility::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate(5);
+           $results = Facility::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isParticipant())
         {
-            $results = Auth::user()->results()->latest()->withTrashed()->paginate(5);
+            $results = Auth::user()->results()->latest()->withTrashed()->paginate($items_per_page);
 
         }
         if($request->has('q')) 
         {
             $search = $request->get('q');
-            $results = Pt::where('id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(5);
+            $results = Pt::where('id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($items_per_page);
         }
         foreach($results as $result)
         {
@@ -100,7 +101,8 @@ class ResultController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {           
+    {        
+        // dd($request->all());
         //Check if round has been         
         if ($request->get('round_id') =="") {
             return response()->json(['1']);            
@@ -123,33 +125,42 @@ class ResultController extends Controller
                 //update enrollment status to 1
                 $enrolment->status = Enrol::DONE;        
                 $enrolment->save();     
+               
                 //	Proceed to form-fields
-                foreach ($request->all() as $key => $value)
-                {
-                    if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
-                        continue;
-                    else if(stripos($key, 'field') !==FALSE)
+                // get all fields and insert into results
+                $fields = Field::all();
+                $response = '';
+
+                foreach ($fields as $field) {
+                    $result = new Result;
+                    $result->pt_id = $pt->id;
+                    $result->field_id = $field->id;
+                   
+                   //loop through the results entered and get the response for each field
+                    foreach ($request->all() as $key => $value)
                     {
-                        $fieldId = $this->strip($key);
-                        if(is_array($value))
-                          $value = implode(', ', $value);
-                        $result = new Result;
-                        $result->pt_id = $pt->id;
-                        $result->field_id = $fieldId;
-                  		$result->response = $value;
-                        $result->save();
-                    }
-                    else if(stripos($key, 'comment') !==FALSE)
-                    {
-                        if($value)
+                        if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
+                            continue;
+                        else if(stripos($key, 'field') !==FALSE)
                         {
-                            $result = Result::where('field_id', $key)->first();
-                            $result->comment = $value;
-                            $result->save();
-                        }
-                    }
-                }    
-                    
+                            $fieldId = (int)$this->strip($key);
+                            if(is_array($value))
+                              $value = implode(', ', $value);
+                            
+
+                            if ($field->id == $fieldId) {
+                                $response = $value;
+                                break;
+                            }else if ($field->id != $fieldId) {
+                                $response = '';
+
+                            }                      
+                        }                        
+                    } 
+                    // save the response for respective field
+                    $result->response = $response;
+                    $result->save();   
+                }                    
                     //  Send SMS
                     $round = Round::find($pt->enrolment->round->id)->description;
                     $message = Notification::where('template', Notification::RESULTS_RECEIVED)->first()->message;

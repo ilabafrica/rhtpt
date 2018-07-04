@@ -151,6 +151,9 @@ new Vue({
                     {
                         this.error = response.data.error;
                         toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                        this.total_participants = '';
+                        this.active_participants = '';
+                        this.enrolled_participants = '';
                     }
                     else
                     {

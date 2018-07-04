@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-    <br/>
+    <!-- <br/>
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left col-md-9">
@@ -58,7 +58,7 @@
                 
             </div>
         </div>
-    </div>
+    </div> -->
     <br/>
     @if(session()->has('error'))
         <div class="alert alert-info">{!! session()->get('error') !!}</div>
