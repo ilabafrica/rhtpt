@@ -329,8 +329,10 @@ class SmsController extends Controller
 
         // send SMS
         $api = DB::table('bulk_sms_settings')->first();
-        $from   = $api->username;
+        $username   = $api->username;
         $apikey = $api->api_key;
+	$from = $api->code;
+	$sms    = new Bulk($username, $apikey);
 
         //phone numbers come as one array, loop throug it
         foreach ($request->phone_numbers as $phone) {   
@@ -342,8 +344,8 @@ class SmsController extends Controller
                 
                 try
                 {                           
-                    print($number .' '.$message.'<br/>');
-                  /*$sms->sendMessage($number, $message, $from);*/
+                    //print($number .' '.$message.'<br/>');
+                  $sms->sendMessage($number, $message, $from);
                 }                
                 catch ( AfricasTalkingGatewayException $e )
                 {
