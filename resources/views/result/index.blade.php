@@ -60,7 +60,7 @@
             <td>
                 <button v-if="result.feedback==0" class= "mbtn mbtn-raised mbtn-success mbtn-xs">Satisfactory</button>
                 <button v-if="result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">UnSatisfactory</button>
-                <button v-if="result.feedback==2 || result.feedback==null " class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
+                <button v-if="result.feedback==2 || result.feedback==null" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
             </td>
             <td>
             @permission('view-result')               
@@ -81,8 +81,8 @@
             <button v-if="result.panel_status==2 && result.feedback==0" class="btn btn-sm btn-success" @click.prevent="quickVerifyEvaluatedResult(result.id)"><i class="fa fa-check-circle"></i> Verify</button>
             @endpermission 
 
-            @permission('print-results')
-            <a v-if="result.panel_status==3" class="btn btn-concrete" :href="'print_result/' +result.id"><i class="fa fa-print"></i> Print</a>
+            @permission('print-result')
+            <a v-if="result.panel_status==3 && result.feedback !=null " class="btn btn-concrete" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print</a>
             @endpermission 
             </td>
         </tr>

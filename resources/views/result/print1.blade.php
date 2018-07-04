@@ -5,7 +5,7 @@
         }
     </style>
 </head>
-<table class="table table-bordered" cellspacing="0" style="font-size:13px">
+<table class="table table-bordered" cellspacing="0" style="font-size:15px">
     <tr><td colspan="5"><center><img src="img/coa.png"></center></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>MINISTRY OF HEALTH</b></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>NATIONAL PUBLIC HEALTH LABORATORY SERVICES (NPHLS)</b></td></tr>
@@ -42,46 +42,9 @@
     <tr class="text-center"> <td colspan="5"><u><b>RE: Proficiency Testing Results</b></u></td></tr>
     <tr class="text-center"> <td colspan="5">NHRL acknowledges receipt of your Proficiency Testing results for Round {{$data['round_name']}}</td></tr>
     <tr class="text-center"> <td colspan="5">Your result is <b> <i>{{$data['feedback']}}</i></b></td></tr>
-    <tr class="text-center"> <td colspan="5">The reason/s for fail is/are:</td></tr>
-    {{--<tr> <td colspan="5"> &nbsp;</td> </tr>--}}
-    <tr >
-        <td><input type="checkbox" width="200" style="display: inline"
-        @if($pt->incomplete_kit_data == 1)
-         checked
-        @endif /> Incomplete Kit Data</td>
-        <td><input type="checkbox" width="200" style="display: inline"
-        @if($pt->dev_from_procedure == 1)
-         checked
-        @endif  /> Deviation From Procedure</td>
-        <td><input type="checkbox" width="200" style="display: inline"
-        @if($pt->incomplete_other_information == 1)
-         checked
-        @endif /> Incomplete Other Information</td>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
 
-    </tr>
-    <tr >
-        {{--<div style="display: inline;">--}}
-        <td><input type="checkbox" style="display: inline"
-	    @if($pt->incorrect_results == 1)
-	    checked
-	    @endif /> Incorrect Result</td>
-        <td><input type="checkbox" style="display: inline"
-        @if($pt->incomplete_results == 1)
-         checked
-        @endif />Incomplete Results</td>
-        <td><input type="checkbox" style="display: inline"
-        @if($pt->use_of_expired_kits == 1)
-         checked
-        @endif /> Use of Expired Kits</td>
-        <td><input type="checkbox" style="display: inline"
-        @if($pt->wrong_algorithm == 1)
-         checked
-        @endif /> Wrong Algorithm</td>
-        </div>
-
-    </tr>
     <tr class="text-center"> <td colspan="5">Comments:</td></tr>
-    <tr class="text-center"> <td colspan="5">Please institute the necessary corrective measrures before the next round of PT</td></tr>
     <tr class="text-center">
         <td style ="border:solid 1px black;" rowspan="2">PT Sample ID</td>
         <td style ="border:solid 1px black;" colspan="3">Your Results</td>
@@ -142,7 +105,7 @@
     </tr>
     <tr>
         <td colspan="3">Thank you for your participation</td>
-        <td ><b>Head Virology:</b></td>
+        <td><b>Head of Virology:</b></td>
         <td><img src="img/sign_bowen.png" alt="" height="20" width="80" /></td>
     </tr>
     <tr>
@@ -150,7 +113,7 @@
         <td>Nancy Bowen</td>
     </tr>
     <tr>
-        <td><img src="img/sign_kitheka.png" alt="" height="20" width="80" /></td>
+        <td><img src="img/sign.png" alt="" height="20" width="80" /></td>
     </tr>
     <tr>
         <td>Franklin Kitheka,</td>
@@ -163,20 +126,18 @@
     <tr> <td colspan="4" ></td> <td><img src="img/ukas.png" alt="" border="1" height="55" width="100" /></td> </tr>
 
     <tr>
-        <td colspan="2">MOH/NPHL/PT/HSER/TEC/01/F02 </td>
-        <td colspan="2">
+        <td colspan="2">NHRL Doc N0 105 V:0 </td>
+        <td colspan="3">
             <footer>
                 <div>
                     <div class="pagenum-container">
-                        <div style="text-align:center;">Page <span class="pagenum"></span></div>
+                        <div style="text-align:left">Page <span class="pagenum"></span></div>
                     </div>
                 </div>
             </footer>
         </td>
-        <td></td>
-
     </tr>
-   <tr><td><div style="page-break-before: always"></div></td></tr>
+    <tr><td><div style="page-break-before: always"></div></td></tr>
     <tr><td colspan="5"><b><div style="text-align:center">Testing Scheme Information</td></tr></div></b>
     <tr class="text-center"><td style ="border:solid 2px black;" colspan="5">
             <p>1.  The HIV-PT is a Qualitative scheme.</p>

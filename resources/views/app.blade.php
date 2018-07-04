@@ -162,7 +162,7 @@
                     @endpermission
                     @permission('bulk-sms')
                     <li class="has-submenu{!! in_array(Request::segment(1), [strtolower('sms'), strtolower('settings'), strtolower('bulk'), strtolower('broadcast')])?' '.strtolower(trans('messages.active')):'' !!}">
-                        <a href="#"><i class="fa fa-envelope"></i> {!! trans('messages.bulk-sms') !!}</a>
+                        <a href="#"><i class="fa fa-envelope"></i> {!! trans('messages.sms') !!}</a>
                         <ul class="list-unstyled">
                             <li class="{!! Request::segment(1)==strtolower('settings')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('settings') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.settings') !!}</a>
@@ -170,6 +170,9 @@
                             <!-- <li class="{!! Request::segment(2)==strtolower('broadcast')?strtolower(trans('messages.active')):'' !!}">
                                 <a href="{!! url('broadcast') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.broadcast') !!}</a>
                             </li> -->
+                            <li class="{!! Request::segment(1)==strtolower('sms')?strtolower(trans('messages.active')):'' !!}">
+                                <a href="{!! url('sms') !!}"><i class="fa fa-bookmark"></i> {!! trans('messages.Messages') !!}</a>
+                            </li>
                         </ul>
                     </li>
                     @endpermission
@@ -234,8 +237,16 @@
                         </ul>
                     </li>
                     @endpermission
-		    <li>
-                        <a  href="http://nphls.or.ke/helpdesk/index.php?a=add" target="_blank"> <i class="fa fa-list" aria-hidden="true" ></i>PT Help Desk</a>
+		            <li class="{!! Request::segment(1)==strtolower('report')?strtolower(trans('messages.active')):'' !!}">
+                        <a href="#"><i class="fa fa-question-circle"></i> HELP</a>
+                        <ul class="list-unstyled">
+                            <li>
+                                <a  href="http://nphls.or.ke/helpdesk/index.php?a=add" target="_blank"> <i class="fa fa-list" aria-hidden="true" ></i>PT Help Desk</a>
+                            </li>
+                            <li>
+                                <a href="/download_guide/{!!Auth::user()->ru()->role_id!!}"> <i class="fa fa-question"></i> Download User Guide</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                     <a  href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -386,9 +397,13 @@
         @elseif(Request::segment(1)==strtolower('designation'))
         <script src="{{ asset('controllers/designation.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('enrolparticipants'))
-        <script src="{{ asset('controllers/enrolparticipant.js') }}"></script>
+        <script src="{{ asset('controllers/enrolparticipant.js') }}"></script>        
+        @elseif(Request::segment(1)==strtolower('participantinfo'))
+        <script src="{{ asset('controllers/participantinfo.js') }}"></script>
         @elseif(Request::segment(1)==strtolower('subcounty'))
         <script src="{{ asset('controllers/subcounty.js') }}"></script>
+        @elseif(Request::segment(1)==strtolower('sms'))
+        <script src="{{ asset('controllers/sms.js') }}"></script>
         @endif
 </body>
 </html>

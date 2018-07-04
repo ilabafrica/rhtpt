@@ -237,11 +237,17 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     * Get county coordinators
     *
     */
-    public function county_coordinators($role = null)
+    public function county_coordinators($id = null)
     {
-      $role = Role::idByName('County Coordinator');            
-      $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+      $role = Role::idByName('County Coordinator'); 
+
+      if ($id) {
+        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->where('role_id', $role)->where('tier', $id);              
+      } else{          
+        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
                   ->where('role_id', $role); 
+      }
 
         return $users;
     } 
@@ -249,13 +255,48 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     * Get subcounty coordinators
     *
     */
-    public function sub_county_coordinators($role = null)
+    public function sub_county_coordinators($id = null)
     {
       $role = Role::idByName('Sub-County Coordinator');            
+      
+      if ($id) {
+        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->where('role_id', $role)->where('tier', $id);              
+      } else{  
+        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->where('role_id', $role); 
+      }
+                        
+        return $users;
+    } 
+      /**
+    * Get participants 
+    *
+    */
+    public function participants()
+    {
+      $role = Role::idByName('Participant');            
       $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
                   ->where('role_id', $role); 
                         
         return $users;
+    } 
+     /**
+    * Get partners 
+    *
+    */
+    public function partners($id = null)
+    {
+      $role = Role::idByName('Partner'); 
+
+      if ($id) {
+        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->where('role_id', $role)->where('tier', $id);              
+      } else{             
+        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->where('role_id', $role); 
+      }
+      return $users;
     } 
     /**
     * Return User ID given the name

@@ -168,6 +168,12 @@ Route::group(['middleware' => 'auth'], function()
     Route::resource('vuenonperfs','NonperformanceController');
     Route::any('vuenonperfs/{id}/restore','NonperformanceController@restore');
 
+    Route::get('sms', 'SmsController@manageSms');
+    Route::resource('vuesms','SmsController');
+    Route::any('vuesms/{id}/restore','SmsController@restore');   
+    Route::get('rls', 'SmsController@roles');
+    Route::post('select_users_message', 'SmsController@select_users_message');
+    Route::post('sendmessage', 'SmsController@sendMessage');
     //Route::get('manage-vue', 'VueItemController@manageVue');
     //Route::resource('vueitems','VueItemController');
 
@@ -468,6 +474,11 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "load.participants",
         "uses" => "RoundController@loadparticipants"
     ));
+    Route::get('participantinfo/{id}', 'RoundController@manage_participant_info');
+    Route::get("/loadparticipantsinfo/{id}", array(
+        "as"   => "load.participants",
+        "uses" => "RoundController@participants_info"
+    ));
 
     Route::any("/approve/{id}", array(
         "as"   => "approve.participant",
@@ -511,12 +522,14 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_shipment',['as'=>'shipment.search', 'uses'=>'ShipmentController@index']);
     Route::get('api/search_shipper',['as'=>'shipper.search', 'uses'=>'ShipperController@index']);
     Route::get('api/search_user',['as'=>'user.search', 'uses'=>'UserController@index']);
+    Route::get('api/all_users',['as'=>'user.search', 'uses'=>'UserController@index']);    
     Route::get('api/search_panel',['as'=>'panel.search', 'uses'=>'PanelController@index']);
     Route::get('api/search_field',['as'=>'field.search', 'uses'=>'FieldController@index']);
     Route::get('api/search_facility',['as'=>'facility.search', 'uses'=>'FacilityController@index']);
     Route::get('api/search_expected',['as'=>'expected.search', 'uses'=>'ExpectedController@index']);
     Route::get('api/search_participant',['as'=>'participant.search', 'uses'=>'ParticipantController@index']);
     Route::get('api/search_enroled_participant',['as'=>'participant.search', 'uses'=>'RoundController@loadparticipants']);
+    Route::get('api/search_participant_info/{round}',['as'=>'participant.search', 'uses'=>'RoundController@participants_info']);
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
     Route::get('api/search_parts',['as'=>'participants.search', 'uses'=>'UserController@forEnrol']);
     Route::get('api/search_designation',['as'=>'designation.search', 'uses'=>'DesignationController@index']);
@@ -572,3 +585,10 @@ Route::get("/new_participants/{id}/{}", array(
     "as"   => "new.participants",
     "uses" => "RoundController@testerSummary"
 ));
+Route::get('/download_guide/{usertype}', function ($usertype='') {
+    if ($usertype == 2) {
+        return response()->download(storage_path('app\public\HIV_PT_Database_Instructions_County_Version_2_Participants.pdf')); 
+    }else{
+        return response()->download(storage_path('app\public\HIV_PT_Database_Instructions_County_Version_2.pdf')); 
+    }
+});
