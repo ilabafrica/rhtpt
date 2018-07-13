@@ -624,9 +624,15 @@ class RoundController extends Controller
             if(!empty($participant->ru()->tier))
             {
                 $facility = Facility::find($participant->ru()->tier);
-                $participant->facility = $participant->ru()->tier;
-                $participant->sub_county = $facility->subCounty->id;
-                $participant->county = $facility->subCounty->county->id;
+                if ($facility) {
+                    $participant->facility = $participant->ru()->tier;
+                    $participant->sub_county = $facility->subCounty->id;
+                    $participant->county = $facility->subCounty->county->id;
+                }else{
+                    $participant->facility = '';
+                    $participant->sub_county = '';
+                    $participant->county = '';   
+                }               
 
                 $participant->facility_name = $facility->name;
                 $participant->sub_county_name = $facility->subCounty->name;

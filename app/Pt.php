@@ -24,6 +24,7 @@ class Pt extends Model
   	*/
   	const SATISFACTORY = 0;
   	const UNSATISFACTORY = 1;
+    const DOWNLOAD_STATUS = 1;
 
   	/**
   	* The database table used by the model.

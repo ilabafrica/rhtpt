@@ -43,6 +43,7 @@
     <table class="table table-bordered">
         <tr>
             <th>PT Round</th>
+            <th>Tester ID</th>
             <th>Participant</th>
             <th>Status</th>
             <th>Results</th>
@@ -50,6 +51,7 @@
         </tr>
         <tr v-for="result in results">
             <td>@{{ result.rnd }}</td>
+            <td>@{{ result.uid }}</td>
             <td>@{{ result.tester }}</td>
             <td>
                 <button v-if="result.panel_status==0" class="mbtn mbtn-raised mbtn-danger mbtn-xs">Not Checked</button>
@@ -82,7 +84,8 @@
             @endpermission 
 
             @permission('print-result')
-            <a v-if="result.panel_status==3 && result.feedback !=null " class="btn btn-concrete" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print</a>
+            <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==0" class="btn btn-wisteria" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print</a>
+             <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==1" class="btn btn-concrete" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print Again</a>
             @endpermission 
             </td>
         </tr>
