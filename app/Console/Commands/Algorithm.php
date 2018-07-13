@@ -363,9 +363,7 @@ class Algorithm extends Command
         return false; 
     }
     public function dates($date){
-        $value = '';
-        var_dump($this->is_a_date($date));
-        var_dump($date);
+        $value = '';        
         if($this->is_a_date($date) ==true){
             if (strpos($date, '/') !== false)
             {
@@ -373,8 +371,7 @@ class Algorithm extends Command
             }else{
                 $value = $date;
             }
-        }
-        var_dump($value);
+        }        
         return $value;
     }
     /**
