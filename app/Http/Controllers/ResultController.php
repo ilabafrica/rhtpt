@@ -43,7 +43,7 @@ class ResultController extends Controller
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
         $items_per_page = 100;
-        $results = Pt::latest()->withTrashed()->paginate(5);
+        $results = Pt::latest()->withTrashed()->paginate($items_per_page);
         if(Auth::user()->isCountyCoordinator())
         {
             $results = County::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
@@ -180,7 +180,7 @@ class ResultController extends Controller
                     $api = DB::table('bulk_sms_settings')->first();
                     $username   = $api->code;
                     $apikey     = $api->api_key;
-                    if($recipients)
+                    /*if($recipients)
                     {
                         // Specified sender-id
                         // $from = $api->code;
@@ -204,7 +204,7 @@ class ResultController extends Controller
                         {
                         echo "Encountered an error while sending: ".$e->getMessage();
                         }
-                    }
+                    }*/
                 return response()->json('Saved.');
 
              }
@@ -247,7 +247,7 @@ class ResultController extends Controller
         $result->save();
         // Send SMS
         $round = Round::find($result->enrolment->round->id)->description;
-        $message = Notification::where('template', Notification::FEEDBACK_RELEASE)->first()->message;
+        $message = Notification::where('template', Notification::RESULTS_RECEIVED)->first()->message;
         $message = $this->replace_between($message, '[', ']', $round);
         $message = str_replace(' [', ' ', $message);
         $message = str_replace(']', ' ', $message);
@@ -256,13 +256,13 @@ class ResultController extends Controller
         $updated = Carbon::today()->toDateTimeString();
         //  Time
         $now = Carbon::now('Africa/Nairobi');
-        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $result->enrolment->round->id, 'text' => $message, 'user_id' => $result->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
+        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::RESULTS_RECEIVED, 'round_id' => $result->enrolment->round->id, 'text' => $message, 'user_id' => $result->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
         
         //get the last id inserted and use it in the broadcast table
         $bulk_id = DB::getPdo()->lastInsertId(); 
 
         $recipients = NULL;
-        $recipients = User::find($result->enrolment->user->id)->value('phone');
+        $recipients = User::find($result->enrolment->user->id)->phone;
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
