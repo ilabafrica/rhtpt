@@ -70,6 +70,7 @@ class ResultController extends Controller
         {
             $result->rnd = $result->enrolment->round->name;
             $result->tester = $result->enrolment->user->name;
+            $result->uid = $result->enrolment->user->uid;
 
             //particpants should not see the result feedback until it has been verified by the admin             
             if(Auth::user()->isParticipant()){
@@ -761,6 +762,13 @@ class ResultController extends Controller
 
 
             $pdf = PDF::loadView('result/print', compact('data','pt'));
+        }
+
+        $pt = Pt::find($id);
+        $user = User::find($pt->enrolment->user_id)->id;
+        if ($pt->download_status == 0 && Auth::user()->id==$user) {
+            $pt->download_status = Pt::DOWNLOAD_STATUS;
+            $pt->save();
         }
 
       return $pdf->download('Round '.$data['round_name'].' Results.pdf');

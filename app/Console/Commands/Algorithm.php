@@ -351,6 +351,29 @@ class Algorithm extends Command
         if(($pos = strpos($field, '/')) !== FALSE)
             return substr($field, $pos+1);
     }
+
+    public function is_a_date($str){ 
+        $stamp = strtotime($str);
+        if (is_numeric($stamp) ){  
+            $month = date( 'm', $stamp ); 
+            $day   = date( 'd', $stamp ); 
+            $year  = date( 'Y', $stamp ); 
+            return checkdate($month, $day, $year); 
+        } 
+        return false; 
+    }
+    public function dates($date){
+        $value = '';        
+        if($this->is_a_date($date) ==true){
+            if (strpos($date, '/') !== false)
+            {
+                $value = Carbon::createFromFormat ('d/m/Y', $date)->toDateString();
+            }else{
+                $value = $date;
+            }
+        }        
+        return $value;
+    }
     /**
      * Begin algorithm to mark test results
      */
@@ -604,11 +627,11 @@ class Algorithm extends Command
             {
                 //  Get all variables first to be used after the loop
                 if($rss->field_id == Field::idByUID('Date PT Panel Received'))
-                    $date_pt_panel_received = $rss->response;
+                    $date_pt_panel_received = $this->dates($rss->response);
                 if($rss->field_id == Field::idByUID('Date PT Panel Constituted'))
-                    $date_pt_panel_constituted = $rss->response;
+                    $date_pt_panel_constituted = $this->dates($rss->response);
                 if($rss->field_id == Field::idByUID('Date PT Panel Tested'))
-                    $date_pt_panel_tested = $rss->response;
+                    $date_pt_panel_tested = $this->dates($rss->response);
                 if($rss->field_id == Field::idByUID('Test 1 Kit Name')){
                     $test_1_kit_name = $rss->response;
                     $kit_1 = $rss->response;
@@ -623,12 +646,13 @@ class Algorithm extends Command
                     $test_1_kit_lot_no = $rss->response;
                 if($rss->field_id == Field::idByUID('Test 2 Lot No.'))
                     $test_2_kit_lot_no = $rss->response;
+                
                 if($rss->field_id == Field::idByUID('Test 1 Expiry Date'))
-                    $test_1_expiry_date = $rss->response;
+                    $test_1_expiry_date = $this->dates($rss->response); 
                 if($rss->field_id == Field::idByUID('Test 2 Expiry Date'))
-                    $test_2_expiry_date = $rss->response;
+                    $test_2_expiry_date = $this->dates($rss->response);
                 if($rss->field_id == Field::idByUID('Test 3 Expiry Date'))
-                    $test_3_expiry_date = $rss->response;
+                    $test_3_expiry_date = $this->dates($rss->response);
 
                 if($rss->field_id == Field::idByUID('PT Panel 1 Test 1 Results'))
                     $pt_panel_1_test_1_results = $rss->response;

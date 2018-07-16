@@ -106,11 +106,11 @@
     <tr>
         <td colspan="3">Thank you for your participation</td>
         <td><b>Head of Virology:</b></td>
-        <td><img src="img/sign_bowen.png" alt="" height="20" width="80" /></td>
+        <td><img src="img/sophie.png" alt="" height="20" width="80" /></td>
     </tr>
     <tr>
         <td colspan="4"></td>
-        <td>Nancy Bowen</td>
+        <td>Sophie Mwanyumba</td>
     </tr>
     <tr>
         <td><img src="img/sign.png" alt="" height="20" width="80" /></td>
