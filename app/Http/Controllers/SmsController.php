@@ -35,13 +35,13 @@ class SmsController extends Controller
      */
     public function index(Request $request)
     {
-        
+        $items_per_page = 100;
         $error = ['error' => 'No results found, please try with different keywords.'];        
-        $messages = Notification::latest()->withTrashed()->paginate(5);
+        $messages = Notification::latest()->withTrashed()->paginate($items_per_page);
         if($request->has('q')) 
         {
             
-            $messages = Notification::where('message', $request->get('q'))->latest()->withTrashed()->paginate(5);           
+            $messages = Notification::where('message', $request->get('q'))->latest()->withTrashed()->paginate($items_per_page);           
            
         }
 
@@ -331,8 +331,8 @@ class SmsController extends Controller
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
         $apikey = $api->api_key;
-	$from = $api->code;
-	$sms    = new Bulk($username, $apikey);
+        $from = $api->code;
+        $sms    = new Bulk($username, $apikey);
 
         //phone numbers come as one array, loop throug it
         foreach ($request->phone_numbers as $phone) {   

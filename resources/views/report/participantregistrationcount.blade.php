@@ -19,9 +19,14 @@
     <br/>
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="pull-left col-md-9">
-                <h6><b>Service Providers</b>: Total Registered - @{{total}} Active - @{{active}} Enrolled - @{{enrolled}}</h6> 
-            </div>
+            <h6>
+                <span class="col-md-2"><b>SERVICE PROVIDER COUNTS</b></span>
+		<span class="col-md-2"><b>Total</b>: @{{total}}</span>
+		<span class="col-md-2"><b>Active</b>: @{{active}}</span>
+		<span class="col-md-2"><b>Enrolled</b>: @{{enrolled}}</span>
+                <span class="col-md-2"><b>Replies</b>: @{{replies}} (@{{(replies/enrolled*100).toFixed(2)}}%)</span>
+                <span class="col-md-2"><b>Round</b>: @{{getRoundName(round)}}</span>
+            </h6>
         </div>
     </div>
     <br/>
@@ -32,6 +37,15 @@
             <div class="col-lg-12 margin-tb">
                 <div class="row">
                     <form @submit.prevent="getRegisteredParticipants(1)">
+                    <div class="col-sm-2">
+                        <label class="col-sm-4 form-control-label" for="round">Round:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="round" v-model="round">
+                                <option selected></option>
+                                <option v-for="round in rounds" :value="round.id">@{{ round.value }}</option>
+                            </select>
+                        </div>
+                    </div>
                     <div v-if = "role == 1 || role == 3" class="col-sm-3">
                         <label class="col-sm-4 form-control-label" for="title">Counties:</label>
                         <div class="col-sm-6">
@@ -63,7 +77,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-1">
                         <button class="btn btn-sm btn-alizarin" type="submit" v-if="!loading">Filter </button>
                         <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
                     </div>
@@ -84,12 +98,13 @@
             <th rowspan="2">#</th>
             <th rowspan="2">County</th>
             <th rowspan="2">Sub-county</th>
-            <th colspan="3">Service Providers</th>
+            <th colspan="4">Service Providers</th>
         </tr>
         <tr>
             <th>Total</th>
             <th>Active</th>
-            <th>Current Enrolment</th>
+            <th>Enrolled</th>
+            <th>Replies</th>
         </tr>
         <tr v-for="(subcounty, key) in usercounts">
             <td>@{{ key + 1 + ((pagination.current_page - 1) * pagination.per_page) }}</td>
@@ -98,6 +113,7 @@
             <td>@{{ subcounty.total}}</td>
             <td>@{{ subcounty.active}}</td>
             <td>@{{ subcounty.current_enrolment}}</td>
+            <td>@{{ subcounty.replied}}</td>
         </tr>
     </table>
     <!-- Pagination -->

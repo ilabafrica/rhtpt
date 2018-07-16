@@ -71,7 +71,23 @@ class ImplementingPartner extends Model
                         })->orWhere(function($qry) use ($partner_role, $partner){
                             return $qry->where('role_id', $partner_role)->whereIn('tier', $partner);
                         });
-        }else{
+         }else if (is_array($role)){
+
+            $search = $role['search'];
+            $prole = Role::idByName('Participant');
+            $fls = $result['facilities'];;
+            $users = User::select('users.*')
+                         ->where(function($query) use ($search){
+                            $query->where('users.name', 'LIKE', "%{$search}%");
+                            $query->orWhere('first_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('middle_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('last_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('phone', 'LIKE', "%{$search}%");
+                            $query->orWhere('email', 'LIKE', "%{$search}%");
+                            $query->orWhere('uid', 'LIKE', "%{$search}%");
+                        })
+                        ->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);
+       }else{
             $prole = Role::idByName('Participant');
             $fls = $result['facilities'];
             $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);

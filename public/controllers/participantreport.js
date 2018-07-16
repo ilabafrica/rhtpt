@@ -16,6 +16,7 @@ new Vue({
         counties: [],
         subcounties: [],
         facilities: [],
+        rounds: [],
         loading: false,
         pagination: {
             total: 0, 
@@ -27,9 +28,11 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
+        replies: '',
         enrolled: '',
         active: '',
         total: '',
+        round: '3',
         facility: '',
         sub_county: '',
         county: '',
@@ -64,13 +67,14 @@ new Vue({
 
     mounted : function(){
         this.getRole();
+        this.loadRounds();
 
     },
 
     methods : {
 
         getRegisteredParticipants: function(page){
-            var input = {'page': page, 'county': this.county, 'subcounty': this.sub_county, 'facility': this.facility};
+            var input = {'page': page, 'county': this.county, 'subcounty': this.sub_county, 'facility': this.facility, 'round': this.round};
             this.loading = true;
 
             this.$http.post('/getparticipantcounts',input).then((response) => {
@@ -78,6 +82,7 @@ new Vue({
                 {
                     this.usercounts = response.data.data.data;
                     this.role = response.data.role;
+                    this.replies = response.data.replied_users;
                     this.enrolled = response.data.enrolled_users;
                     this.active = response.data.active_users;
                     this.total = response.data.total_users;
@@ -141,6 +146,18 @@ new Vue({
             }, (response) => {
             });
         },
+        loadRounds: function() {
+            this.$http.get('/rnds').then((response) => {
+                this.rounds = response.data;
+            }, (response) => {
+            });
+        },
 
+        getRoundName(key) {
+	    for(i = 0; i < this.rounds.length; i++){
+	        if(this.rounds[i].id == key) return this.rounds[i].value;
+	    }
+            return '';
+        },
     }
 });

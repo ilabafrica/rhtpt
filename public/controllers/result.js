@@ -118,7 +118,7 @@ new Vue({
             //    Fetch the result using the id
             let id = result.id;
             this.$http.get('/pt/'+id).then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.frmData = response.data;
             });
             $("#edit-result").modal('show');
@@ -139,7 +139,7 @@ new Vue({
 
                 let myForm = document.getElementById('update_test_results');
                 let input = new FormData(myForm);
-                console.log(...input);
+                // console.log(...input);
                 this.$http.post('/update_results/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);
                     // this.fillResult = {'round_id':'','field_id[]':'','response[]':'','comment[]':'','id':''};
@@ -215,7 +215,7 @@ new Vue({
         verifyEvaluatedResult: function(id){
             let myForm = document.getElementById('verify_evaluated_test_results');
             let formData = new FormData(myForm);
-            console.log(formData);
+            // console.log(formData);
             this.$http.post('/verify_evaluated_results/'+id, formData).then((response) => {
                 this.changePage(this.pagination.current_page);
                 $("#view-evaluted-result").modal('hide');

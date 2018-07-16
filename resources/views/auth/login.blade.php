@@ -53,7 +53,7 @@
         </div>
         <div class="bs-callout bs-callout-info text-left">
             <h6 class="md-18">Getting Started</h6>
-            <small>Login with your Email Address or PT Enrollment ID.</small>
+            <small>Login with your PT Enrollment ID.</small>
         </div>
         <form class="mt form-signin" id="loginForm" Irole="form" method="POST" action="{{ route('login') }}">
             <!-- CSRF Token -->
@@ -76,8 +76,8 @@
                 </div>
             @endif
             <div class="form-group">
-                <label :class="{'help is-danger': errors.has('username') }" for="username/TesterID"><h6>Email / PT Enrollment ID</h6></label>
-                <input type="text" v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('username') }"  name="username" placeholder="eg. me@mymail.com or 11695" data-toggle="tooltip" title="Enter Username or PT Enrollment ID" data-placement="top" data-trigger="hover" autofocus="">
+                <label :class="{'help is-danger': errors.has('username') }" for="username/TesterID"><h6>PT Enrollment ID</h6></label>
+                <input type="text" v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('username') }"  name="username" placeholder="eg. 11695" data-toggle="tooltip" title="Enter your PT Enrollment ID" data-placement="top" data-trigger="hover" autofocus="">
                 <span v-show="errors.has('username')" class="help is-danger">@{{ errors.first('username') }}</span>
             </div>
             <div class="form-group">

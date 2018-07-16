@@ -42,13 +42,15 @@
     </div>
     <table class="table table-bordered">
         <tr>
+            <th>#</th>
             <th>PT Round</th>
             <th>Participant</th>
             <th>Status</th>
             <th>Results</th>
             <th>Action</th>
         </tr>
-        <tr v-for="result in results">
+        <tr v-for="(result, key) in results">
+            <td>@{{ key + 1 + ((pagination.current_page - 1) * pagination.per_page) }}</td>
             <td>@{{ result.rnd }}</td>
             <td>@{{ result.tester }}</td>
             <td>

@@ -103,7 +103,7 @@ new Vue({
             var input = this.newMessage;
             this.$http.post('/vuesms',input).then((response) => {                
                 this.changePage(this.pagination.current_page);
-                this.newMessage = {'message':'', description: ''};
+                this.newMessage = {'message':'', 'description': ''};
                 $("#create-message").modal('hide');
                 toastr.success('Message Created Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
@@ -187,6 +187,10 @@ new Vue({
 
             this.$http.post('/sendmessage', formData ).then((response) => {
                 $("#resend-message").modal('hide');
+                this.phone_numbers = '';
+                this.from = '';
+                this.to = '';
+                this.message_to_send ='';
                 toastr.success('Message Sent Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
                 this.formErrors = response.data;
