@@ -498,14 +498,14 @@ class RoundController extends Controller
         $total_participants = $all_participants->withTrashed()->count();
 
         //compare list of participants id  to enrolled users id-
-        $participants = $all_participants->get()->filter(function ($participant) use($enrolled_users){
+        $participants = $all_participants->limit(1000)->get()->filter(function ($participant) use($enrolled_users){
                 if (in_array($participant->id, $enrolled_users) ) {  
                     return $participant;
                    
                 }
             });
 
-        $enrolled_participants = $participants->count();
+        $enrolled_participants = count(array_unique($enrolled_users));
         
        
         if(Auth::user()->isCountyCoordinator())
@@ -624,20 +624,19 @@ class RoundController extends Controller
             if(!empty($participant->ru()->tier))
             {
                 $facility = Facility::find($participant->ru()->tier);
-                if ($facility) {
-                    $participant->facility = $participant->ru()->tier;
-                    $participant->sub_county = $facility->subCounty->id;
-                    $participant->county = $facility->subCounty->county->id;
-                }else{
+                //$participant->facility = $participant->ru()->tier;
+                //$participant->sub_county = $facility->subCounty->id;
+                //$participant->county = $facility->subCounty->county->id;
+                
+		if ($facility) {
+		    $participant->facility_name = $facility->name;
+        	    $participant->sub_county_name = $facility->subCounty->name;
+                    $participant->county_name = $facility->subCounty->county->name;               
+		}else{
                     $participant->facility = '';
                     $participant->sub_county = '';
                     $participant->county = '';   
-                }               
-
-                $participant->facility_name = $facility->name;
-                $participant->sub_county_name = $facility->subCounty->name;
-                $participant->county_name = $facility->subCounty->county->name;               
-            }
+                } 
             else
             {
                 $participant->facility = '';
@@ -812,7 +811,8 @@ class RoundController extends Controller
                                 $iphone = $ross;
                         }
                         $summary[] = [
-                            // 'County' => $tcounty,
+                            
+			     // 'County' => $tcounty,
                             // 'Sub County' => $tsub_county,
                             'County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->county->name,
                             'Sub County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->name,

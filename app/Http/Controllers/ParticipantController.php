@@ -425,7 +425,7 @@ enrolled, you’ll receive a tester ID";
             $search = $request->get('q');
             $users = User::join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $participant)
                         ->where('name', 'LIKE', "%{$search}%")->orWhere('uid', 'LIKE', "%{$search}%")
-                        ->orWhere('phone', 'LIKE', "%{$search}%")->latest()->paginate(5);
+                        ->orWhere('phone', 'LIKE', "%{$search}%")->latest()->paginate(50);
         }
 
         $response = [
@@ -1226,6 +1226,8 @@ enrolled, you’ll receive a tester ID";
         $PARTICIPANT_ROLE_ID = Role::idByName('Participant');
         $role = Auth::user()->ru()->role_id;
         $tier = Auth::user()->ru()->tier;
+	$round = 1;
+	if(strcmp($request->round, '') != 0) $round = $request->round;
         
         $data = DB::table('users')
                     ->join('role_user', function($join) use ($PARTICIPANT_ROLE_ID){
@@ -1236,7 +1238,7 @@ enrolled, you’ll receive a tester ID";
                     ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
                     ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
                     ->leftJoin(
-                        DB::raw('(SELECT enrolments.user_id, enrolments.deleted_at FROM enrolments INNER JOIN rounds ON enrolments.round_id = rounds.id WHERE rounds.start_date < now() AND rounds.end_date > now()) AS live_round'),
+                        DB::raw('(SELECT enrolments.user_id, enrolments.deleted_at, pt.id AS pt_id FROM enrolments INNER JOIN rounds ON enrolments.round_id = rounds.id LEFT JOIN pt ON enrolments.id = pt.enrolment_id WHERE rounds.id = '.$round.') AS live_round'),
                         function($join){
                             $join->on('users.id', '=', 'live_round.user_id')
                                 ->whereNull('live_round.deleted_at');
@@ -1249,7 +1251,7 @@ enrolled, you’ll receive a tester ID";
         if(Auth::user()->isCountyCoordinator()) $data = $data->where('counties.id', '=', $tier);
         if(Auth::user()->isSubCountyCoordinator()) $data = $data->where('sub_counties.id', '=', $tier);
 
-        $data = $data->selectRaw('counties.name AS county, sub_counties.name AS subcounty, count(DISTINCT users.id) AS total, count(DISTINCT IF(ISNULL(users.deleted_at),users.id,NULL)) AS active, count(DISTINCT IF(ISNULL(users.deleted_at),live_round.user_id,NULL)) AS current_enrolment')
+        $data = $data->selectRaw('counties.name AS county, sub_counties.name AS subcounty, count(DISTINCT users.id) AS total, count(DISTINCT IF(ISNULL(users.deleted_at),users.id,NULL)) AS active, count(DISTINCT IF(ISNULL(users.deleted_at),live_round.user_id,NULL)) AS current_enrolment, count(DISTINCT IF(ISNULL(live_round.pt_id),NULL,users.id)) AS replied')
                     ->groupBy('counties.id', 'sub_counties.id')
                     ->orderBy('counties.name')
                     ->orderBy('sub_counties.name');
@@ -1257,6 +1259,7 @@ enrolled, you’ll receive a tester ID";
         $totalUsers = collect($data->pluck('total'))->sum();
         $activeUsers = collect($data->pluck('active'))->sum();
         $enrolledUsers = collect($data->pluck('current_enrolment'))->sum();
+        $repliedUsers = collect($data->pluck('replied'))->sum();
 
         $data = $data->paginate($ITEMS_PER_PAGE);
 
@@ -1270,7 +1273,9 @@ enrolled, you’ll receive a tester ID";
                 'to' => $data->lastItem()
             ],
             'role' => $role,
+            'round' => $round,
             'data' => $data,
+            'replied_users' => $repliedUsers,
             'active_users' => $activeUsers,
             'enrolled_users' => $enrolledUsers,
             'total_users' => $totalUsers

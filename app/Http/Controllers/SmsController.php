@@ -344,8 +344,8 @@ class SmsController extends Controller
                 
                 try
                 {                           
-                    print($number .' '.$message.'<br/>');
-                    $sms->sendMessage($number, $message, $from);
+                    //print($number .' '.$message.'<br/>');
+                  $sms->sendMessage($number, $message, $from);
                 }                
                 catch ( AfricasTalkingGatewayException $e )
                 {

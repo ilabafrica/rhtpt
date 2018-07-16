@@ -181,6 +181,7 @@ class ResultController extends Controller
                     $api = DB::table('bulk_sms_settings')->first();
                     $username   = $api->code;
                     $apikey     = $api->api_key;
+
                     /*if($recipients)
                     {
                         // Specified sender-id
@@ -271,27 +272,34 @@ class ResultController extends Controller
         if($recipients)
         {
             // Specified sender-id
-            $from = $api->code;
+            $from = $api->code; //Mapesa: this still picks the wrong code. Nat-HivPT instead of NPHL
+            $from = "NPHL";
             // Create a new instance of Bulk SMS gateway.
             $sms    = new Bulk($username, $apikey);
+\Log::info(Auth::user()->email);
+\Log::info(Auth::user()->phone);
+\Log::info($from);
+\Log::info($recipients);
+\Log::info($message);
             // use try-catch to filter any errors.
             try
             {
-            // Send messages
-            $send_messages = $sms->sendMessage($recipients, $message, $from);
-            foreach($send_messages as $send_message)
-            {
-                // status is either "Success" or "error message" and save.
-                $number = $send_message->number;
-                //  Save the results
-                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk_id]);
-            }
+                // Send messages
+                $send_messages = $sms->sendMessage($recipients, $message, $from);
+                foreach($send_messages as $send_message)
+                {
+                    // status is either "Success" or "error message" and save.
+                    $number = $send_message->number;
+                    //  Save the results
+                    DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk_id]);
+                }
             }
             catch ( AfricasTalkingGatewayException $e )
             {
-            echo "Encountered an error while sending: ".$e->getMessage();
+                echo "Encountered an error while sending: ".$e->getMessage();
             }
-        }
+ 
+       }
         return response()->json($result);
     }
 

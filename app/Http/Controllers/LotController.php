@@ -98,8 +98,8 @@ class LotController extends Controller
         $lot->tester_id = implode(", ", $request->tester_id);
         $lot->user_id = Auth::user()->id;
         $lot->save();
-
-        return response()->json($lot);
+        
+	return response()->json($lot);
     }
 
     /**
