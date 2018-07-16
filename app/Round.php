@@ -10,6 +10,27 @@ class Round extends Model
   	 */
   	use SoftDeletes;
   	protected $dates = ['deleted_at'];
+    /**
+   * Override parent boot and Call deleting event
+   *
+   * @return void
+   */
+   protected static function boot() 
+    {
+      parent::boot();
+
+      static::deleting(function($rounds) {
+         foreach ($rounds->lots()->get() as $lot) {
+            $lot->delete();
+         }
+      });
+      static::restoring(function ($rounds) {
+        $rounds->lots()->restore();
+        foreach ($rounds->lots()->get() as $lot) {
+            $lot->panels()->restore();
+         }
+      });
+    }
 
   	/**
   	 * The database table used by the model.
@@ -24,6 +45,14 @@ class Round extends Model
     public function enrolments()
     {
          return $this->hasMany('App\Enrol');
+    }
+    /**
+    * Lots relationship
+    *
+    */
+    public function lots()
+    {
+         return $this->hasMany('App\Lot');
     }
 	/**
 	* Return round ID given the uid
