@@ -637,7 +637,7 @@ class RoundController extends Controller
                     $participant->sub_county = '';
                     $participant->county = '';   
                 } 
-            else
+            }else
             {
                 $participant->facility = '';
             }            

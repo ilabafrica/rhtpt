@@ -562,22 +562,22 @@ class Algorithm extends Command
      public function runAlgorithm($pts)
      {
         foreach($pts as $pt)
-        {
+        { 
             //  Fetch expected results
             $round = $pt->enrolment->round_id;
             $user = $pt->enrolment->user;
             if($pt->enrolment->user->registration)
                 $user = User::where('uid', $user->registration->uid)->first();
             $lot = $user->lot($round);
-
-            $res_1 = $lot->panels()->where('panel', 1)->first();
+            
+	    $res_1 = $lot->panels()->where('panel', 1)->first();
             $res_2 = $lot->panels()->where('panel', 2)->first();
             $res_3 = $lot->panels()->where('panel', 3)->first();
             $res_4 = $lot->panels()->where('panel', 4)->first();
             $res_5 = $lot->panels()->where('panel', 5)->first();
             $res_6 = $lot->panels()->where('panel', 6)->first();
-
-            $ex_1 = Option::idByTitle($res_1->result($res_1->result));
+	    
+	    $ex_1 = Option::idByTitle($res_1->result($res_1->result));
             $ex_2 = Option::idByTitle($res_2->result($res_2->result));
             $ex_3 = Option::idByTitle($res_3->result($res_3->result));
             $ex_4 = Option::idByTitle($res_4->result($res_4->result));
@@ -728,6 +728,7 @@ class Algorithm extends Command
             $pt->feedback = $overall;
             $pt->panel_status = Pt::EVALUATED;
             $pt->save();
+	
         }
         return response()->json('Done.');
     }
