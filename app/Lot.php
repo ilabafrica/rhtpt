@@ -25,6 +25,27 @@ class Lot extends Model
   	 * @var string
   	 */
   	protected $table = 'lots';
+
+    /**
+   * Override parent boot and Call deleting event
+   *
+   * @return void
+   */
+   protected static function boot() 
+    {
+      parent::boot();
+
+      static::deleting(function($lots) {
+         foreach ($lots->panels()->get() as $panel) {
+            $panel->delete();
+         }
+      });
+
+      static::restoring(function ($lots) {        
+         $lots->panels()->restore();        
+
+      });
+    }
     /**
   	 * User relationship
   	 *
