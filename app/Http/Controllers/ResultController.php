@@ -181,7 +181,8 @@ class ResultController extends Controller
                     $api = DB::table('bulk_sms_settings')->first();
                     $username   = $api->code;
                     $apikey     = $api->api_key;
-/*                    if($recipients)
+
+                    /*if($recipients)
                     {
                         // Specified sender-id
                         // $from = $api->code;

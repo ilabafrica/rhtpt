@@ -628,16 +628,16 @@ class RoundController extends Controller
                 //$participant->sub_county = $facility->subCounty->id;
                 //$participant->county = $facility->subCounty->county->id;
                 
-		if ($facility) {
-		    $participant->facility_name = $facility->name;
-        	    $participant->sub_county_name = $facility->subCounty->name;
-                    $participant->county_name = $facility->subCounty->county->name;               
-		}else{
+    		if ($facility) {
+    		    $participant->facility_name = $facility->name;
+            	    $participant->sub_county_name = $facility->subCounty->name;
+                        $participant->county_name = $facility->subCounty->county->name;               
+    		}else{
                     $participant->facility = '';
                     $participant->sub_county = '';
                     $participant->county = '';   
                 } 
-            else
+            }else
             {
                 $participant->facility = '';
             }            

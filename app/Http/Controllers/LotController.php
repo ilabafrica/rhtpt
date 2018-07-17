@@ -24,7 +24,8 @@ class LotController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $lots = Lot::latest()->withTrashed()->paginate(5);
+        $active_rounds = Round::pluck('id');
+        $lots = Lot::whereIn('round_id', $active_rounds)->latest()->withTrashed()->paginate(5);
         if($request->has('q')) 
         {
             $search = $request->get('q');
@@ -98,8 +99,8 @@ class LotController extends Controller
         $lot->tester_id = implode(", ", $request->tester_id);
         $lot->user_id = Auth::user()->id;
         $lot->save();
-        
-	return response()->json($lot);
+
+        return response()->json($lot);
     }
 
     /**
