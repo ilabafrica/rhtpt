@@ -40,6 +40,85 @@
             </div>
         </div>
     </div>
+    <div class="row" v-if = "role != 2" >
+        <div class="col-lg-12 margin-tb">
+            <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter()"> -->
+                <div class="pull-left col-md-6">
+                    <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#region">Filter by Region</button>
+                    <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#result_status_">Filter by Submission Status</button>
+                    <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#feedback_status_">Filter by Feedback</button>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-sm-4">
+                    <button class="btn btn-sm btn-alizarin" type="submit" @click="filter()" v-if="!loading">Filter </button>
+                    <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                </div>    
+                    <div id="region" class="collapse">
+                        <div class="row">
+                            <div v-if = "role == 1 || role ==3" class="col-sm-3">
+                                <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="county" id="county_id" @change="fetchSubs()" v-model="county">
+                                        <option selected></option>
+                                       <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>                         
+                                    </select>
+                                </div>
+                            </div>
+                            <div v-if = "role == 1 || role ==3 || role == 4" class="col-sm-3">
+                                <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="sub_county" id="sub_id" @change="fetchFacilities()" v-model="sub_county">
+                                        <option selected></option>
+                                       <option  v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>                         
+                                    </select>
+                                </div>
+                            </div>
+                            <div v-if = "role == 1 || role ==3 || role == 4 || role ==7" class="col-sm-3">
+                                <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="facility" v-model="facility">
+                                        <option selected></option>
+                                        <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
+                                    </select>
+                                </div>
+                            </div>                                
+                        </div>
+                    </div> 
+                    <div id="result_status_" class="collapse">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="col-sm-4 form-control-label" for="title">Submission Status:</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="result_status" v-model = "result_status" >
+                                        <option selected></option>
+                                       <option :value="0">Not Checked</option>                         
+                                       <option :value="1">Submitted</option>                         
+                                       <option :value="2">Evaluated</option>                         
+                                       <option :value="3">Verified</option>                         
+                                    </select>
+                                </div>
+                            </div>        
+                        </div>
+                    </div> 
+                    <div id="feedback_status_" class="collapse">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="col-sm-4 form-control-label" for="title">Feedback:</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="feedback_status" v-model = "feedback_status">
+                                        <option selected></option>
+                                       <option :value="0">Pending</option>                         
+                                       <option :value="1">Satisfactory</option>                         
+                                       <option :value="2">Unsatisfactory</option>                         
+                                    </select>
+                                </div>
+                            </div>                    
+                                           
+                        </div>
+                    </div>
+            <!-- </form>  -->
+        </div>
+    </div>
     <table class="table table-bordered">
         <tr>
             <th>#</th>
@@ -495,6 +574,17 @@
                                             <td>@{{evaluated_results.pt_panel_6_final_results}}</td>
                                             <td class="text-uppercase">@{{evaluated_results.expected_result_6}}</td>
                                         </tr>
+                                        
+                                   </table>
+                                </div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                        <tr>
+                                            <td><b>PT Participant's Comments</b></td>
+                                            <td>@{{evaluated_results.tester_comments}}</td>
+                                        </tr>
                                         <tr>
                                             <td><b>Panel Results</b></td>
                                             <td>@{{evaluated_results.feedback}}</td>
@@ -502,13 +592,13 @@
                                         <tr>
                                             <td><b>Overall Evaluation</b></td>
                                             <td>@{{evaluated_results.feedback}}</td>
-                                        </tr>
+                                        </tr>                                       
                                    </table>
                                 </div>
-                            </div>  
+                            </div>         
                             <div class="row">
                                 <div class="col-md-12">
-                                   <table class="table table-bordered">
+                                   <table class="table table-bordered">                                        
                                        <tr><b>Reasons For Unsatisfactory:   </b></tr>
                                        <tr>
                                            @{{evaluated_results.remark}}
@@ -528,13 +618,14 @@
                                         </div>
                                         <div class="form-group row col-sm-offset-5 col-sm-7">
                                             <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Evaluated Results</button>&nbsp;
+                                            <button  class="btn btn-sm btn-wisteria" type="button" @click="show_update_evaluated_results()"><i class='fa fa-pencil-square-o'></i> Update Evaluated Results</button>&nbsp;
                                             <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                              <div class="form-group row" v-else-if="evaluated_results.panel_status==3">                                
-				<label class="col-sm-5 form-control-label" for="title"><b>Comments:</b></label>
+				                <label class="col-sm-5 form-control-label" for="title"><b>Comments:</b></label>
                                 <div class="col-sm-7 form-control">
                                     <p>@{{evaluated_results.pt_approved_comment}}</p>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
@@ -542,6 +633,43 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Update Evaluated Test Results Modal -->
+    <div class="modal fade" id="update-evaluated-result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Update Evaluated Test Results</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="update_evaluated_results(evaluated_results.pt_id)" id="update_evaluated_results">
+                        <table class="table table-bordered">
+                            <tr>
+                                <td><input type="checkbox" value="1" name="incorrect_results"> Incorrect Results</td>
+                                <td><input type="checkbox" value="1" name="incomplete_kit_data"> Incomplete Kit Data</td>
+                                <td><input type="checkbox" value="1" name="dev_from_procedure"> Deviation from Procedure</td>
+                                <td><input type="checkbox" value="1" name="incomplete_other_information"> Incomplete Other Information</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" value="1" name="use_of_expired_kits"> Use of Expired Kits</td>
+                                <td><input type="checkbox" value="1" name="invalid_results"> Invalid Results</td>
+                                <td><input type="checkbox" value="1" name="wrong_algorithm"> Wrong Algorithm</td>
+                                <td><input type="checkbox" value="1" name="incomplete_results"> Incomplete Results</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><input type="radio" value="0" name="feedback"><b> Satisfactory</b></td>
+                                <td colspan="2"><input type="radio" value="1" name="feedback"><b> Unsatisfactory</b></td>                               
+                            </tr>
+                        </table>                        
+                        <div class="form-group row col-sm-offset-5 col-sm-7">
+                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Update Evaluated Results</button>&nbsp;
+                            <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
