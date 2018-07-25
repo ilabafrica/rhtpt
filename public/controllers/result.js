@@ -87,7 +87,7 @@ new Vue({
 
     methods : {
         getVueResults: function(page){
-            this.$http.get('/vueresults?page='+page).then((response) => {
+            this.$http.get('/vueresults').then((response) => {
                 if(response.data.data)
                 {
                     this.results = response.data.data.data;
@@ -258,7 +258,7 @@ new Vue({
             // console.log(formData);
             this.$http.post('/update_evaluated_results/'+id, formData).then((response) => {
                 this.changePage(this.pagination.current_page);
-                $("#update-evaluted-result").modal('hide');
+                $("#update-evaluated-result").modal('hide');
                 toastr.success('Result Changed Successfully.', 'Success Alert', {timeOut: 5000});
             });
         },
@@ -366,7 +366,7 @@ new Vue({
                 else
                 { 
                     this.results = response.data.data.data;
-                    this.pagination = response.data.pagination;
+                    // this.pagination = response.data.pagination;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
                 // The request is finished, change the loading to false again.
@@ -419,7 +419,7 @@ new Vue({
                 else
                 { 
                     this.results = response.data.data.data;
-                    this.pagination = response.data.data.pagination;
+                    this.pagination = response.data.pagination;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
                 // The request is finished, change the loading to false again.
@@ -462,7 +462,29 @@ new Vue({
                 $(className).hide();
             else
                 $(className).show();
-        }
+        },
+        toggle_checkboxes: function() {
+            var checkedNum = $('.unsatisfactory_group:checked').length;
+             if (!checkedNum) {
+                $('#satisfactory').prop('checked',true);
 
+            }else if(checkedNum>0){
+
+                $('#unsatisfactory').prop('checked',true);
+                  
+            }
+        },
+        toggle_selects: function() {
+            
+            // // console.log($('#feedback_status_id').val());
+            // if (($('#feedback_status_id').val() != null) || ($('#feedback_status_id').val() != 4)) {
+            //     $('#result_status_id').prop('disabled','disabled');
+            //     this.result_status = '';                   
+            // }
+            //  if ($('#result_status_id').val() != null || $('#result_status_id').val() != 4) {
+            //     $('#feedback_status_id').prop('disabled','disabled');
+            //     this.feedback_status = '';               
+            // }                
+        },
     },
 });

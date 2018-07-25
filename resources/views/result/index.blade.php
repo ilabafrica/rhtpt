@@ -89,7 +89,7 @@
                             <div class="col-sm-3">
                                 <label class="col-sm-4 form-control-label" for="title">Submission Status:</label>
                                 <div class="col-sm-6">
-                                    <select class="form-control" name="result_status" v-model = "result_status" >
+                                    <select class="form-control" name="result_status" v-model = "result_status" id="result_status_id" @change="toggle_selects()">
                                         <option selected></option>
                                        <option :value="0">Not Checked</option>                         
                                        <option :value="1">Submitted</option>                         
@@ -105,11 +105,10 @@
                             <div class="col-sm-3">
                                 <label class="col-sm-4 form-control-label" for="title">Feedback:</label>
                                 <div class="col-sm-6">
-                                    <select class="form-control" name="feedback_status" v-model = "feedback_status">
+                                    <select class="form-control" name="feedback_status" v-model = "feedback_status" id="feedback_status_id" @change="toggle_selects()">
                                         <option selected></option>
-                                       <option :value="0">Pending</option>                         
-                                       <option :value="1">Satisfactory</option>                         
-                                       <option :value="2">Unsatisfactory</option>                         
+                                       <option :value="0">Satisfactory</option>                         
+                                       <option :value="1">Unsatisfactory</option>                         
                                     </select>
                                 </div>
                             </div>                    
@@ -616,8 +615,8 @@
                                                 <textarea name="comment" class="form-control">@{{evaluated_results.feedback}}</textarea>
                                             </div>
                                         </div>
-                                        <div class="form-group row col-sm-offset-5 col-sm-7">
-                                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Evaluated Results</button>&nbsp;
+                                        <div class="form-group row col-sm-offset-1">
+                                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Evaluated Results</button>
                                             <button  class="btn btn-sm btn-wisteria" type="button" @click="show_update_evaluated_results()"><i class='fa fa-pencil-square-o'></i> Update Evaluated Results</button>&nbsp;
                                             <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                         </div>
@@ -646,33 +645,38 @@
                 <h4 class="modal-title" id="myModalLabel">Update Evaluated Test Results</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="update_evaluated_results(evaluated_results.pt_id)" id="update_evaluated_results">
-                        <table class="table table-bordered">
-                            <tr>
-                                <td><input type="checkbox" value="1" name="incorrect_results"> Incorrect Results</td>
-                                <td><input type="checkbox" value="1" name="incomplete_kit_data"> Incomplete Kit Data</td>
-                                <td><input type="checkbox" value="1" name="dev_from_procedure"> Deviation from Procedure</td>
-                                <td><input type="checkbox" value="1" name="incomplete_other_information"> Incomplete Other Information</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" value="1" name="use_of_expired_kits"> Use of Expired Kits</td>
-                                <td><input type="checkbox" value="1" name="invalid_results"> Invalid Results</td>
-                                <td><input type="checkbox" value="1" name="wrong_algorithm"> Wrong Algorithm</td>
-                                <td><input type="checkbox" value="1" name="incomplete_results"> Incomplete Results</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><input type="radio" value="0" name="feedback"><b> Satisfactory</b></td>
-                                <td colspan="2"><input type="radio" value="1" name="feedback"><b> Unsatisfactory</b></td>                               
-                            </tr>
-                        </table>                        
-                        <div class="form-group row col-sm-offset-5 col-sm-7">
-                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Update Evaluated Results</button>&nbsp;
-                            <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                    <div class="row">
+                        <div class="col-md-12">  
+                            <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="update_evaluated_results(evaluated_results.pt_id)" id="update_evaluated_results">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incorrect_results" v-bind="{ 'checked': evaluated_results.incorrect_results ==1}"> Incorrect Results</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incomplete_kit_data" v-bind="{ 'checked': evaluated_results.incomplete_kit_data ==1}"> Incomplete Kit Data</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="dev_from_procedure" v-bind="{ 'checked': evaluated_results.dev_from_procedure ==1}"> Deviation from Procedure</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incomplete_other_information" v-bind="{ 'checked': evaluated_results.incomplete_other_information ==1}"> Incomplete Other Information</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="use_of_expired_kits" v-bind="{ 'checked': evaluated_results.use_of_expired_kits ==1}"> Use of Expired Kits</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="invalid_results" v-bind="{ 'checked': evaluated_results.invalid_results ==1}"> Invalid Results</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="wrong_algorithm" v-bind="{ 'checked': evaluated_results.wrong_algorithm ==1}"> Wrong Algorithm</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incomplete_results" v-bind="{ 'checked': evaluated_results.incomplete_results ==1}"> Incomplete Results</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><input type="radio" value="0" id="satisfactory" name="feedback"><b> Satisfactory</b></td>
+                                        <td colspan="2"><input type="radio" value="1" id="unsatisfactory" name="feedback"><b> Unsatisfactory</b></td>                               
+                                    </tr>
+                                </table>                        
+                                <div class="form-group row col-sm-offset-2">
+                                    <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Update Evaluated Results</button>&nbsp;
+                                    <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @endsection

@@ -126,21 +126,31 @@ class ResultController extends Controller
                    // ->latest()->withTrashed()->paginate($items_per_page);
 
             }
-            if($request->has('result_status')) 
-            {
-                // dd($results);
-                $results = $results->where('panel_status', $request->get('result_status'));
+            if ($request->has('result_status')|| $request->has('feedback_status')) {               
+            
+                if($request->has('result_status')) 
+                {
+                    if ($request->has('county') ||$request->has('sub_county')||$request->has('facility')) {
+                        $results = $results->where('panel_status', $request->get('result_status'))->latest()->withTrashed()->paginate($items_per_page);
+                        
+                    }else{
+                        $results = Pt::where('panel_status', $request->get('result_status'))->latest()->withTrashed()->paginate($items_per_page);
 
+                    }
+                }
+                if($request->has('feedback_status')) 
+                {     
+                    if ($request->has('county') ||$request->has('sub_county')||$request->has('facility')) {
+                        $results = $results->where('feedback', $request->get('feedback_status'))->latest()->withTrashed()->paginate($items_per_page);
+                        
+                    }else{
+                        $results = Pt::where('feedback', $request->get('feedback_status'))->latest()->withTrashed()->paginate($items_per_page);
+                    }
+                }
+            }else{
+
+                $results = $results->latest()->withTrashed()->paginate($items_per_page);
             }
-            if($request->has('feedback_status')) 
-            {
-                dd($request->has('feedback_status'));
-                $results = $results->where('feedback_status', $request->get('feedback_status'));
-
-            }
-
-            $results = $results->latest()->withTrashed()->paginate($items_per_page);
-
         }
 
         foreach($results as $result)
@@ -665,6 +675,16 @@ class ResultController extends Controller
         $feedback = $pt->outcome($pt->feedback);
         $panel_status = $pt->panel_status;
 
+        //get reasons for unsatisfactory
+        $incorrect_results = $pt->incorrect_results;
+        $incomplete_kit_data = $pt->incomplete_kit_data;
+        $dev_from_procedure = $pt->dev_from_procedure;
+        $incomplete_other_information = $pt->incomplete_other_information;
+        $use_of_expired_kits = $pt->use_of_expired_kits;
+        $invalid_results = $pt->invalid_results;
+        $wrong_algorithm = $pt->wrong_algorithm;
+        $incomplete_results = $pt->incomplete_results;
+
         if($pt->feedback == Pt::UNSATISFACTORY)
             $remark = $pt->unsatisfactory(); 
         else
@@ -741,7 +761,16 @@ class ResultController extends Controller
                     "sample_3"=>$sample_3,
                     "sample_4"=>$sample_4,
                     "sample_5"=>$sample_5,
-                    "sample_6"=>$sample_6
+                    "sample_6"=>$sample_6,
+
+                    'incorrect_results' => $incorrect_results,
+                    'incomplete_kit_data' => $incomplete_kit_data,
+                    'dev_from_procedure' => $dev_from_procedure,
+                    'incomplete_other_information' => $incomplete_other_information,
+                    'use_of_expired_kits' => $use_of_expired_kits,
+                    'invalid_results' => $invalid_results,
+                    'wrong_algorithm' => $wrong_algorithm,
+                    'incomplete_results' => $incomplete_results
                 );
 
         // return response()->json($all_results); 
@@ -876,16 +905,18 @@ class ResultController extends Controller
             $result->wrong_algorithm = $request->wrong_algorithm;
         }else{
             $result->wrong_algorithm = 0;
-
         }
+
         if ($request->incomplete_results) {
             $result->incomplete_results = $request->incomplete_results;
         }else{
             $result->incomplete_results =0;
         }
 
-        if ($request->feedback) {            
+        if ($request->feedback==1) {        //cannot check if value is 0.    
             $result->feedback = $request->feedback;
+        }else{
+            $result->feedback = 0; 
         }
         
         $result->save();
