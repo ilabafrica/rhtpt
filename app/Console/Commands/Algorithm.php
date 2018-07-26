@@ -353,6 +353,9 @@ class Algorithm extends Command
     }
 
     public function is_a_date($str){ 
+	if (strpos($str, '/') !== false){
+            $str = str_replace('/', '-', $str);
+        }
         $stamp = strtotime($str);
         if (is_numeric($stamp) ){  
             $month = date( 'm', $stamp ); 
@@ -364,10 +367,27 @@ class Algorithm extends Command
     }
     public function dates($date){
         $value = '';        
-        if($this->is_a_date($date) ==true){
+        print($date);
+	if($this->is_a_date($date) ==true){
             if (strpos($date, '/') !== false)
             {
-                $value = Carbon::createFromFormat ('d/m/Y', $date)->toDateString();
+	      	if ($date == date('d/m/Y',strtotime(str_replace('/', '-', $date))) ) {
+                   
+                    $value = Carbon::createFromFormat ('d/m/Y', $date)->toDateString();
+                }            
+                else if ($date == date('Y/m/d',strtotime(str_replace('/', '-', $date)))) {
+                
+                    $value = Carbon::createFromFormat ('Y/m/d', $date)->toDateString();
+                }
+                else if ($date == date('m/d/Y',strtotime(str_replace('/', '-', $date)))) {                
+
+                    $value = Carbon::createFromFormat ('m/d/Y', $date)->toDateString();      
+
+                } 
+                else{
+
+                    $value = '';
+                }   
             }else{
                 $value = $date;
             }
@@ -403,7 +423,7 @@ class Algorithm extends Command
      {
          // Check Dates
          $incomplete_other_info = 0;
-         if($date_pt_panel_tested === NULL || $date_pt_panel_constituted === NULL || $date_pt_panel_tested === NULL)
+         if($date_pt_panel_received === NULL || $date_pt_panel_constituted === NULL || $date_pt_panel_tested === NULL)
             $incomplete_other_info = 1;
          return $incomplete_other_info;
      }
@@ -530,15 +550,15 @@ class Algorithm extends Command
          $non_reactive = Option::idByTitle('Non Reactive');
          $not_done = Option::idByTitle('Not Done');
          $fr = Option::idByTitle('First Response');
-         $det = Option::idByTitle('KHB');
-         //$unigold = Option::idByTitle('Unigold');
+         $det = Option::idByTitle('Determine');
+         $duo = Option::idByTitle('SDBioline');
          if(
              ($pt_panel_1_test_1_results == $non_reactive && $pt_panel_1_test_2_results == $not_done) || ($pt_panel_1_test_1_results == $reactive && ($pt_panel_1_test_2_results == $non_reactive || $pt_panel_1_test_2_results == $reactive)) || 
              ($pt_panel_2_test_1_results == $non_reactive && $pt_panel_2_test_2_results == $not_done) || ($pt_panel_2_test_1_results == $reactive && ($pt_panel_2_test_2_results == $non_reactive || $pt_panel_2_test_2_results == $reactive)) || 
              ($pt_panel_3_test_1_results == $non_reactive && $pt_panel_3_test_2_results == $not_done) || ($pt_panel_3_test_1_results == $reactive && ($pt_panel_3_test_2_results == $non_reactive || $pt_panel_3_test_2_results == $reactive)) || 
              ($pt_panel_4_test_1_results == $non_reactive && $pt_panel_4_test_2_results == $not_done) || ($pt_panel_4_test_1_results == $reactive && ($pt_panel_4_test_2_results == $non_reactive || $pt_panel_4_test_2_results == $reactive)) || 
              ($pt_panel_5_test_1_results == $non_reactive && $pt_panel_5_test_2_results == $not_done) || ($pt_panel_5_test_1_results == $reactive && ($pt_panel_5_test_2_results == $non_reactive || $pt_panel_5_test_2_results == $reactive)) || 
-             ($pt_panel_6_test_1_results == $non_reactive && $pt_panel_6_test_2_results == $not_done) || ($pt_panel_6_test_1_results == $reactive && ($pt_panel_6_test_2_results == $non_reactive || $pt_panel_6_test_2_results == $reactive)) || (($kit_1 == $det ) && ($kit_2 == $fr ))    
+             ($pt_panel_6_test_1_results == $non_reactive && $pt_panel_6_test_2_results == $not_done) || ($pt_panel_6_test_1_results == $reactive && ($pt_panel_6_test_2_results == $non_reactive || $pt_panel_6_test_2_results == $reactive)) || ((($kit_1 == $det) || ($kit_1 == $duo ) ) && ($kit_2 == $fr ))    
             )
             $wrong_algorithm = 0;
          return $wrong_algorithm;

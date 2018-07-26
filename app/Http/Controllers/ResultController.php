@@ -73,7 +73,7 @@ class ResultController extends Controller
             $result->uid = $result->enrolment->user->uid;
 
             //particpants should not see the result feedback until it has been verified by the admin             
-            if(Auth::user()->isParticipant()){
+            if(Auth::user()->isParticipant()||Auth::user()->isSubCountyCoordinator()||Auth::user()->isCountyCoordinator()||Auth::user()->isPartner()){
                 if ($result->panel_status != 3) {
                     $result->feedback = 2;
                 }                

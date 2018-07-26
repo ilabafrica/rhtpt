@@ -52,13 +52,14 @@ class ForgotPasswordController extends Controller
             $user->save();
         }catch( \Exception $e){
 \Log::info($e->getMessage());
+\Log::info("Message already sent to user.");
             return $this->sendResetLinkFailedResponse($request, "We've already sent you a password reset token. Please wait for 3 minutes before retrying.");
         }
 
         $message    = "Your Password Reset Verification Code is: ".$token;
         try
         {
-\Log::info("Send reset token $token to ".$user->phone);
+\Log::info("Send reset token $token to ".$user->phone . " ". $user->first_name);
             $smsHandler = new SmsHandler();
 
             //Replace +254 prefix (if it exists) with 0
