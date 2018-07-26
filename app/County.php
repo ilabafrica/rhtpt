@@ -127,9 +127,15 @@ class County extends Model
     * Get results for a county
     *
     */
-    public function results()
+    public function results($search = null)
     {
-        $users = $this->users()->pluck('id');
+        if($search){
+            $users = $this->users($search)->pluck('id');
+
+        }else{
+            $users = $this->users()->pluck('id');
+
+        }
         $enrolments = Enrol::whereIn('user_id', $users)->pluck('id');
         $results = Pt::whereIn('enrolment_id', $enrolments);
         return $results;
