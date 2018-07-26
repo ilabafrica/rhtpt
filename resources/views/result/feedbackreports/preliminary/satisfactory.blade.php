@@ -8,11 +8,12 @@
 <table class="table table-bordered" cellspacing="0" style="font-size:15px">
     <tr><td colspan="5"><center><img src="img/coa.png"></center></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>MINISTRY OF HEALTH</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>NATIONAL PUBLIC HEALTH LABORATORY SERVICES (NPHLS)</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>NATIONAL HIV REFERENCE LABORATORY (NHRL)</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>P.O Box 20750 - 00202, NAIROBI, nhrlpt@nphls.or.ke</b></td></tr>
+    <tr style="text-align:center"><td colspan="5"><b>NATIONAL PUBLIC HEALTH LABORATORY (NPHL)</b></td></tr>
+    <tr style="text-align:center"><td colspan="5"><b>NPHL-CENTRE OF EXCELLENCE FOR QUALITY ASSUARANCE</b></td></tr>
+    <tr style="text-align:center"><td colspan="5"><b>P.O Box 20750 - 00202, NAIROBI, nphlpt@nphls.or.ke</b></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>NATIONAL HIV SEROLOGY PROFICIENCY TESTING SCHEME</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>Final Report</b></td></tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr style="text-align:center"><td colspan="5"><b>Preliminary Report</b></td></tr>
     <tr> <td colspan="5" style="border-top:solid 2px black;"> &nbsp;</td> </tr>
     <tr>
         <td><b>Round</b></td>
@@ -40,21 +41,19 @@
     </tr>
     <tr> <td> &nbsp;</td> </tr>
     <tr class="text-center"> <td colspan="5"><u><b>RE: Proficiency Testing Results</b></u></td></tr>
-    <tr class="text-center"> <td colspan="5">NHRL acknowledges receipt of your Proficiency Testing results for Round {{$data['round_name']}}</td></tr>
-    <tr class="text-center"> <td colspan="5">Your result is <b> <i>{{$data['feedback']}}</i></b></td></tr>
+    <tr class="text-center"> <td colspan="5">NPHL acknowledges receipt of your Proficiency Testing results for Round {{$data['round_name']}}.</td></tr>
+    <tr class="text-center"> <td colspan="5">Your overall performance is <b>{{$data['feedback']}}</b>.</td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
 
-    <tr class="text-center"> <td colspan="5">Comments:</td></tr>
     <tr class="text-center">
         <td style ="border:solid 1px black;" rowspan="2">PT Sample ID</td>
         <td style ="border:solid 1px black;" colspan="3">Your Results</td>
-        <td style ="border:solid 1px black;">NHRL Results</td>
+        <td style ="border:solid 1px black;" rowspan="2">Expected Results</td>
     </tr>
     <tr>
         <th style ="border:solid 1px black;">Determine</th>
         <th style ="border:solid 1px black;">First Response</th>
         <th style ="border:solid 1px black;">Final Result</th>
-        <th style ="border:solid 1px black;">Expected Result</th>
     </tr>
     <tr>
         <td style ="border:solid 1px black;">{{$data['sample_1']}}</td>
@@ -98,36 +97,82 @@
         <td style ="border:solid 1px black;">{{$data['pt_panel_6_final_results']}}</td>
         <td style ="border:solid 1px black; text-transform: uppercase;">{{$data['expected_result_6']}}</td>
     </tr>
+    <tr>
+        <td colspan="5">Expert Comment</td>
+    </tr>
+     <tr>
+        <td colspan="5"></td>
+    </tr>
+     <tr>
+        <td colspan="5">Please institute the necessary corrective measures before the next round of PT.</td>
+    </tr>
+   <tr>
+        <td colspan="2">MOH/NPHL/EQA/COE FORM 09 &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
+        <td>
+            <footer>
+                <div>
+                    <div class="pagenum-container">
+                        <div>Page <span class="pagenum"></span></div>
+                    </div>
+                </div>
+            </footer>
+        </td>
+        <td style="text-align:right"><img src="img/ukas.png" alt="" border="1" height="55" width="100" /></td> 
+    </tr>    
+    <tr><td><div style="page-break-before: always"></div></td></tr>
+    <tr><td colspan="5"><b><div style="text-align:center">Testing Scheme Information</div></b></td></tr>
+    <tr class="text-center"><td style ="border:solid 2px black;" colspan="5">
+            <p>1.  The HIV-PT is a Qualitative scheme.</p>
+            <p>2.  The scheme utilizes greenish color coded dried tube plasma.</p>
+            <p>3.  PT panel samples have been fully characterized for the assigned HIV Sero-status.</p>
+            <p>4.  Stability testing was done at 4 oC, 25 oC, 37 oC and 45 oC.  Samples were found stable until the return of results.</p>
+            <p>5.  Homogeneity was done using systematic random sampling and the results were the same as those of expected results.</p>
+            <p>6.  Participant’s performance report is confidential and will ONLY be shared with responsible County Quality officers for purposes of corrective interventions</p>
+            <p>7.  Subcontracted services: Panle distribution, results submission and feedback distribution.</p>
+            <p>8.  Scheme Final report with round summary will be shared on the web within one month and will be available on the NPHL website (www.nphls.or.ke) at the conclusion of every round.</p></td>
+    </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr style="text-align:center"><td colspan="5"><b>PT Scheme Summary Performance.</b></td></tr>
+    <tr style="text-align:center"> <td colspan="5"> (Will be available on your final report)</td> </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr>
-        <td><b>Date Authorized:</b></td>
-        <td colspan="4">{{$data['date_approved']}}</td>
+        <td style ="border:solid 1px black;"><b>Date Authorized:</b></td>
+        <td style ="border:solid 1px black;" colspan="4">{{$data['date_approved']}}</td>
     </tr>
-    <tr>
-        <td colspan="3">Thank you for your participation</td>
-        <td><b>Head of Virology:</b></td>
-        <td><img src="img/sophie.png" alt="" height="20" width="80" /></td>
-    </tr>
-    <tr>
-        <td colspan="4"></td>
-        <td>Sophie Mwanyumba</td>
-    </tr>
-    <tr>
-        <td><img src="img/sign.png" alt="" height="20" width="80" /></td>
-    </tr>
-    <tr>
-        <td>Franklin Kitheka,</td>
-    </tr>
-    <tr>
-        <td>PT Coordinator.</td>
-    </tr>
-
-    {{--<tr class="text-center"> <td colspan="5"></td></tr>--}}
-    <tr> <td colspan="4" ></td> <td><img src="img/ukas.png" alt="" border="1" height="55" width="100" /></td> </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
 
     <tr>
-        <td colspan="2">NHRL Doc N0 105 V:0 </td>
-        <td colspan="3">
+        <td colspan="3"><img src="img/sign_kitheka.png" alt="" height="20" width="80" /></td>
+        <td colspan="2"><img src="img/sophie.png" alt="" height="20" width="80" /></td>
+    </tr>
+    <tr>
+        <td colspan="3">Franklin Kitheka</td>
+        <td colspan="2">Sophie Mwanyumba</td>        
+    </tr>
+    <tr>
+        <td colspan="3">National HIV Proficiency Testing Scheme,</td>
+        <td colspan="2">Centre of Excellence for Quality Assurance,</td>        
+    </tr>
+    <tr>
+        <td colspan="3">Coordinator,</td>
+        <td colspan="2">Manager,</td>        
+    </tr>
+    <tr>
+        <td colspan="3">Tel: 0722934622.</td>
+        <td colspan="2">Tel: 0720203712.</td>        
+    </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr style="text-align:center"><td colspan="5">Thank you for your participation.</td></tr>
+    <tr style="text-align:center"><td colspan="5">End of the report.</td></tr>
+    <tr>
+        <td colspan="2">MOH/NPHL/EQA/COE FORM 09 &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
+        <td>
             <footer>
                 <div>
                     <div class="pagenum-container">
@@ -136,20 +181,7 @@
                 </div>
             </footer>
         </td>
-    </tr>
-    <tr><td><div style="page-break-before: always"></div></td></tr>
-    <tr><td colspan="5"><b><div style="text-align:center">Testing Scheme Information</td></tr></div></b>
-    <tr class="text-center"><td style ="border:solid 2px black;" colspan="5">
-            <p>1.  The HIV-PT is a Qualitative scheme.</p>
-            <p> 2. The scheme utilises dried tube plasma color coded in green.</p>
-            <p>3.  PT panel samples have been fully characterized for the assigned HIV Sero-status.</p>
-            <p>4.  Stability testing was done at 4 oC, 25 oC, 37 oC and 45 oC. The samples were stable for 90 days.</p>
-            <p>5.  Homogeneity was established by random sampling of 1% of samples ina batch (1 sample per 100 samples).</p>
-            <p>6.  Participants performance report will be treated confidentially and will be shared with Quality officers.</p>
-            <p>7.  Subcontracted services: Panle distribution, results submission and feedback distribution.</p>
-            <p>8.  A summary report will be shared at the NPHL website (www.nphls.or.ke) at the conclusion of every round.</p></td>
-    </tr>
-    <footer><div style="text-align:center"><p>End of the report</div></p><br>
-        <div class="pagenum-container"><div style="text-align:center">Page <span class="pagenum"></div></span></div></footer>
+        <td style="text-align:right"><img src="img/ukas.png" alt="" border="1" height="55" width="100" /></td> 
+    </tr>    
 </table>
 
