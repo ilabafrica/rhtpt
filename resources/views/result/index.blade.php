@@ -40,7 +40,7 @@
             </div>
         </div>
     </div>
-    <div class="row" v-if = "role =1" >
+    <div class="row" v-if = "role ==1" >
         <div class="col-lg-12 margin-tb">
             <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter()"> -->
                 <div class="pull-left col-md-6">
@@ -137,12 +137,14 @@
                 <button v-if="result.panel_status==0" class="mbtn mbtn-raised mbtn-danger mbtn-xs">Not Checked</button>
                 <button v-if="result.panel_status==1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Submitted</button>
                 <button v-if="result.panel_status==2" class="mbtn mbtn-raised mbtn-info mbtn-xs">Evaluated</button>
-                <button v-if="result.panel_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
+                <button v-if="role ==1 && result.panel_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
+                <button v-if="role !=1 && result.panel_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Pending Approval</button>
             </td>
             <td>
-                <button v-if="result.feedback==0" class= "mbtn mbtn-raised mbtn-success mbtn-xs">Satisfactory</button>
-                <button v-if="result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">UnSatisfactory</button>
-                <button v-if="role !=1 && (result.feedback==2 || result.feedback==null)" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
+                <button v-if="role ==1 && result.feedback==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Satisfactory</button>
+                <button v-if="role ==1 && result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Unsatisfactory</button>
+                <button v-if="role !=1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
+                <!-- <button v-if="result.feedback==2 || result.feedback==null" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button> -->
             </td>
             <td>
             @permission('view-result')               
@@ -161,9 +163,7 @@
             @permission('verify-result')
             <button v-if="result.panel_status==2" class="btn btn-sm btn-primary" @click.prevent="showEvaluatedResults(result)"><i class="fa fa-list"></i> Review</button>
             <button v-if="result.panel_status==2 && result.feedback==0" class="btn btn-sm btn-success" @click.prevent="quickVerifyEvaluatedResult(result.id)"><i class="fa fa-check-circle"></i> Verify</button>
-            @endpermission 
-
-            @permission('print-result')
+            
             <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==0" class="btn btn-wisteria" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print</a>
              <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==1" class="btn btn-concrete" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print Again</a>
             @endpermission 
