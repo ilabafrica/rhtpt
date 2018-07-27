@@ -66,7 +66,7 @@ class ResultController extends Controller
         }
 
         //search results by user details
-        if ($request->all()) {        
+        if ($request->has('q')||$request->has('cpunty')||$request->has('sub_county')||$request->has('facility')||$request->has('feedback_status')||$request->has('result_status')) {        
             if($request->has('q')) 
             {
                 $search = $request->get('q');

@@ -47,7 +47,7 @@ new Vue({
         facility:'',
         result_status:'',
         feedback_status: '',
-        filters:[],
+        filters:'',
         toggle: {}
     },
 
@@ -87,7 +87,7 @@ new Vue({
 
     methods : {
         getVueResults: function(page){
-            this.$http.get('/vueresults').then((response) => {
+            this.$http.get('/vueresults?page='+page).then((response) => {
                 if(response.data.data)
                 {
                     this.results = response.data.data.data;
@@ -179,7 +179,12 @@ new Vue({
 
         changePage: function (page) {
             this.pagination.current_page = page;
-            this.getVueResults(page);
+            if (this.filters ==1) {
+                this.filter(page);
+            }else{
+
+                this.getVueResults(page);
+            }
         },
 
         getForm: function(){
@@ -375,26 +380,26 @@ new Vue({
                 this.query = '';
             });
         },
-        filter: function() {
+        filter: function(page) {
             // Clear the error message.
             this.error = '';
             // Empty the results array so we can fill it with the new results.
             this.results = [];
             // Set the loading property to true, this will display the "Searching..." button.
             this.loading = true;
-            var link = '/api/search_result?';
+            var link = '/api/search_result?page='+page;
 
             //if county
             if (this.facility) {
-                link = link +'facility='+this.facility;
+                link = link +'&facility='+this.facility;
 
             }else if (this.sub_county) {
-                link = link +'sub_county='+this.sub_county;
+                link = link +'&sub_county='+this.sub_county;
             
 
             }else if (this.county) {
 
-                link= link +'county='+this.county;
+                link= link +'&county='+this.county;
             }
 
             if (this.result_status>=0) {
@@ -425,7 +430,7 @@ new Vue({
                 // The request is finished, change the loading to false again.
                 this.loading = false;
                 // Clear the query.
-                this.filters = '';
+                this.filters = 1;
             });
         },
         //Populate counties from FacilityController
@@ -445,9 +450,9 @@ new Vue({
                 // console.log(response);
             });
         },
-        fetchFacility: function() {
+        fetchFacilities: function() {
             let id = $('#sub_id').val();
-            this.$http.get('/subs/'+id).then((response) => {
+            this.$http.get('/fclts/'+id).then((response) => {
                 this.facilities = response.data;
             }, (response) => {
                 // console.log(response);
