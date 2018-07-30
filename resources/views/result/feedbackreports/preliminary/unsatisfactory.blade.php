@@ -138,8 +138,11 @@
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr class="text-center"> <td colspan="5">Please institute the necessary corrective measures before the next round of PT</td></tr>
 
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
     <tr>
-        <td colspan="2">MOH/NPHL/EQA/COE FORM 09 &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
+        <td colspan="3">MOH/NPHL/EQA/COE FORM 09 &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
         <td>
             <footer>
                 <div>
@@ -173,6 +176,20 @@
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
     <tr>
         <td style ="border:solid 1px black;"><b>Date Authorized:</b></td>
         <td style ="border:solid 1px black;" colspan="4">{{$data['date_approved']}}</td>
@@ -203,8 +220,10 @@
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr style="text-align:center"><td colspan="5">Thank you for your participation.</td></tr>
     <tr style="text-align:center"><td colspan="5">End of the report.</td></tr>
+
+    
     <tr>
-        <td colspan="2">MOH/NPHL/EQA/COE FORM 09 &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
+        <td colspan="3">MOH/NPHL/EQA/COE FORM 09 &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
         <td>
             <footer>
                 <div>

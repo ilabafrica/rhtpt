@@ -592,7 +592,7 @@ class ResultController extends Controller
          $all_results = array( 
                     //user details
                     'round_name'=> $round_name,
-                    'round_status'=>$round_status 
+                    'round_status'=>$round_status, 
                     'feedback' => $feedback, 
                     'remark' => $remark, 
                     'panel_status' => $panel_status, 
@@ -755,7 +755,7 @@ class ResultController extends Controller
       $data = $this->evaluated_results($id);
 
       //display final report when the round is over
-      if ($data->round_status ==0) {      
+      if ($data['round_status'] ==0) {      
           if(\request('type') == 0){//satisfactory
 
               $pdf = PDF::loadView('result/feedbackreports/final/satisfactory', compact('data'));
