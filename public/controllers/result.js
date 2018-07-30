@@ -37,6 +37,17 @@ new Vue({
         query: '',
         other: '',
         dt: [],
+        //variables used in the filters
+        counties:[],
+        subs: [],
+        facilities:[],
+        role: '',
+        county:'',
+        sub_county:'',
+        facility:'',
+        result_status:'',
+        feedback_status: '',
+        filters:'',
         toggle: {}
     },
 
@@ -71,6 +82,7 @@ new Vue({
         this.loadRoundsDone();
         this.getForm();
         this.getSets();
+        this.loadCounties();
     },
 
     methods : {
@@ -80,6 +92,7 @@ new Vue({
                 {
                     this.results = response.data.data.data;
                     this.pagination = response.data.pagination;
+                    this.role = response.data.user_role;
                 }
                 else
                 {
@@ -162,11 +175,16 @@ new Vue({
                 $("#view-result").modal('hide');
                 toastr.success('Result Verified Successfully.', 'Success Alert', {timeOut: 5000});
             });
-        },
+        }, 
 
         changePage: function (page) {
             this.pagination.current_page = page;
-            this.getVueResults(page);
+            if (this.filters ==1) {
+                this.filter(page);
+            }else{
+
+                this.getVueResults(page);
+            }
         },
 
         getForm: function(){
@@ -221,7 +239,7 @@ new Vue({
                 $("#view-evaluted-result").modal('hide');
                 toastr.success('Result Verified Successfully.', 'Success Alert', {timeOut: 5000});
             });
-        },
+        },        
 
         //A shortcut on quick verification on the satisfactory results
         quickVerifyEvaluatedResult: function(id){
@@ -229,6 +247,24 @@ new Vue({
             this.$http.get('/verify_evaluated_results/'+id).then((response) => {
                 this.changePage(this.pagination.current_page);
                 toastr.success('Result Verified Successfully.', 'Success Alert', {timeOut: 5000});
+            });
+        },
+
+        //Incase of mis-evaluation or any human intervention, update the evaluated results
+        show_update_evaluated_results: function(){
+
+            $("#view-evaluted-result").modal('hide');
+            $("#update-evaluated-result").modal('show');                
+        },
+
+        update_evaluated_results: function(id){
+            let myForm = document.getElementById('update_evaluated_results');
+            let formData = new FormData(myForm);
+            // console.log(formData);
+            this.$http.post('/update_evaluated_results/'+id, formData).then((response) => {
+                this.changePage(this.pagination.current_page);
+                $("#update-evaluated-result").modal('hide');
+                toastr.success('Result Changed Successfully.', 'Success Alert', {timeOut: 5000});
             });
         },
 
@@ -333,15 +369,93 @@ new Vue({
                     toastr.error(this.error, 'Search Notification', {timeOut: 5000});
                 }
                 else
-                {
+                { 
                     this.results = response.data.data.data;
-                    this.pagination = response.data.data.pagination;
+                    // this.pagination = response.data.pagination;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
                 // The request is finished, change the loading to false again.
                 this.loading = false;
                 // Clear the query.
                 this.query = '';
+            });
+        },
+        filter: function(page) {
+            // Clear the error message.
+            this.error = '';
+            // Empty the results array so we can fill it with the new results.
+            this.results = [];
+            // Set the loading property to true, this will display the "Searching..." button.
+            this.loading = true;
+            var link = '/api/search_result?page='+page;
+
+            //if county
+            if (this.facility) {
+                link = link +'&facility='+this.facility;
+
+            }else if (this.sub_county) {
+                link = link +'&sub_county='+this.sub_county;
+            
+
+            }else if (this.county) {
+
+                link= link +'&county='+this.county;
+            }
+
+            if (this.result_status>=0) {
+            console.log(this.result_status);
+               link = link +'&result_status='+this.result_status;
+
+            }
+
+            if (this.feedback_status>=0) {
+               link = link +'&feedback_status='+this.feedback_status;
+
+            }
+
+            // Making a get request to our API and passing the query to it.
+            this.$http.get(link).then((response) => {
+                // If there was an error set the error message, if not fill the results array.
+                if(response.data.error)
+                {
+                    this.error = response.data.error;
+                    toastr.error(this.error, 'Search Notification', {timeOut: 5000});
+                }
+                else
+                { 
+                    this.results = response.data.data.data;
+                    this.pagination = response.data.pagination;
+                    toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
+                }
+                // The request is finished, change the loading to false again.
+                this.loading = false;
+                // Clear the query.
+                this.filters = 1;
+            });
+        },
+        //Populate counties from FacilityController
+        loadCounties: function() {
+            this.$http.get('/cnts').then((response) => {
+                this.counties = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        fetchSubs: function() {
+            let id = $('#county_id').val();
+            this.$http.get('/subs/'+ id).then((response) => {
+                this.subs = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+        fetchFacilities: function() {
+            let id = $('#sub_id').val();
+            this.$http.get('/fclts/'+id).then((response) => {
+                this.facilities = response.data;
+            }, (response) => {
+                // console.log(response);
             });
         },
         //  toggle other
@@ -353,7 +467,29 @@ new Vue({
                 $(className).hide();
             else
                 $(className).show();
-        }
+        },
+        toggle_checkboxes: function() {
+            var checkedNum = $('.unsatisfactory_group:checked').length;
+             if (!checkedNum) {
+                $('#satisfactory').prop('checked',true);
 
+            }else if(checkedNum>0){
+
+                $('#unsatisfactory').prop('checked',true);
+                  
+            }
+        },
+        toggle_selects: function() {
+            
+            // // console.log($('#feedback_status_id').val());
+            // if (($('#feedback_status_id').val() != null) || ($('#feedback_status_id').val() != 4)) {
+            //     $('#result_status_id').prop('disabled','disabled');
+            //     this.result_status = '';                   
+            // }
+            //  if ($('#result_status_id').val() != null || $('#result_status_id').val() != 4) {
+            //     $('#feedback_status_id').prop('disabled','disabled');
+            //     this.feedback_status = '';               
+            // }                
+        },
     },
 });

@@ -193,19 +193,19 @@ class SmsController extends Controller
                     $facility = Facility::find($request->facility_id);
 
                     $users = $facility->users()->get();
-                    $to = 'Participants in '. $facility->name;
+                    $to = count($users).' participants in '. $facility->name;
 
                 }else if ($request->sub_county_id) {
                     $sub_county = SubCounty::find($request->sub_county_id);
 
                     $users = $sub_county->users()->get();
-                    $to = 'Participants in '. $sub_county->name;
+                    $to = count($users).' participants in '. $sub_county->name;
 
                 }else if ($request->county_id) {
 
                     $county = County::find($request->county_id);
-                    $users = $county->users()->get();
-                    $to = 'Participants in '. $county->name;
+                    $users = $county->enrolledUsers()->get();
+                    $to = count($users).' participants in '. $county->name;
                 }
 
             } else{            
@@ -309,13 +309,15 @@ class SmsController extends Controller
 
 
         $api = DB::table('bulk_sms_settings')->first();
-        $from   = $api->username;
+        //$from   = $api->username;
+	$from = "NPHL";
         $response =[
             'phone_numbers' =>$phone_numbers,
             'message' => $message,
             'from' => $from,
             'to' => $to
         ];
+\Log::info("Users found: ".count($users));
 
         return count($users) > 0 ? response()->json($response) : $error;           
     }
@@ -331,7 +333,8 @@ class SmsController extends Controller
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->username;
         $apikey = $api->api_key;
-        $from = $api->code;
+        //$from = $api->code;
+	$from = "NPHL";
         $sms    = new Bulk($username, $apikey);
 
         //phone numbers come as one array, loop throug it
@@ -345,7 +348,7 @@ class SmsController extends Controller
                 try
                 {                           
                     //print($number .' '.$message.'<br/>');
-                  $sms->sendMessage($number, $message, $from);
+                    $sms->sendMessage($number, $message, $from);
                 }                
                 catch ( AfricasTalkingGatewayException $e )
                 {

@@ -50,7 +50,8 @@ new Vue({
         uploadify: {excel: ''},
         upload: {list: ''},
         designations: [],
-        reasons: { 'reason': '' }
+        reasons: { 'reason': '' },
+        gender: ['Male', 'Female']
     },
 
     computed: {
@@ -577,7 +578,7 @@ new Vue({
             this.someUser.middle_name = user.middle_name;
             this.someUser.last_name = user.last_name;
             this.someUser.name = user.name;
-            this.someUser.sex = user.gndr;
+            this.someUser.sex = this.gender[user.gender];
             this.someUser.phone = user.phone;
             this.someUser.email = user.email;
             this.someUser.address = user.address;

@@ -40,6 +40,84 @@
             </div>
         </div>
     </div>
+    <div class="row" v-if = "role ==1" >
+        <div class="col-lg-12 margin-tb">
+            <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter()"> -->
+                <div class="pull-left col-md-6">
+                    <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#region">Filter by Region</button>
+                    <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#result_status_">Filter by Submission Status</button>
+                    <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#feedback_status_">Filter by Feedback</button>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-sm-4">
+                    <button class="btn btn-sm btn-alizarin" type="submit" @click="filter()" v-if="!loading">Filter </button>
+                    <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                </div>    
+                    <div id="region" class="collapse">
+                        <div class="row">
+                            <div v-if = "role == 1 || role ==3" class="col-sm-3">
+                                <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="county" id="county_id" @change="fetchSubs()" v-model="county">
+                                        <option selected></option>
+                                       <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>                         
+                                    </select>
+                                </div>
+                            </div>
+                            <div v-if = "role == 1 || role ==3 || role == 4" class="col-sm-3">
+                                <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="sub_county" id="sub_id" @change="fetchFacilities()" v-model="sub_county">
+                                        <option selected></option>
+                                       <option  v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>                         
+                                    </select>
+                                </div>
+                            </div>
+                            <div v-if = "role == 1 || role ==3 || role == 4 || role ==7" class="col-sm-3">
+                                <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="facility" v-model="facility">
+                                        <option selected></option>
+                                        <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
+                                    </select>
+                                </div>
+                            </div>                                
+                        </div>
+                    </div> 
+                    <div id="result_status_" class="collapse">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="col-sm-4 form-control-label" for="title">Submission Status:</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="result_status" v-model = "result_status" id="result_status_id" @change="toggle_selects()">
+                                        <option selected></option>
+                                       <option :value="0">Not Checked</option>                         
+                                       <option :value="1">Submitted</option>                         
+                                       <option :value="2">Evaluated</option>                         
+                                       <option :value="3">Verified</option>                         
+                                    </select>
+                                </div>
+                            </div>        
+                        </div>
+                    </div> 
+                    <div id="feedback_status_" class="collapse">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="col-sm-4 form-control-label" for="title">Feedback:</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="feedback_status" v-model = "feedback_status" id="feedback_status_id" @change="toggle_selects()">
+                                        <option selected></option>
+                                       <option :value="0">Satisfactory</option>                         
+                                       <option :value="1">Unsatisfactory</option>                         
+                                    </select>
+                                </div>
+                            </div>                    
+                                           
+                        </div>
+                    </div>
+            <!-- </form>  -->
+        </div>
+    </div>
     <table class="table table-bordered">
         <tr>
             <th>#</th>
@@ -59,12 +137,14 @@
                 <button v-if="result.panel_status==0" class="mbtn mbtn-raised mbtn-danger mbtn-xs">Not Checked</button>
                 <button v-if="result.panel_status==1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Submitted</button>
                 <button v-if="result.panel_status==2" class="mbtn mbtn-raised mbtn-info mbtn-xs">Evaluated</button>
-                <button v-if="result.panel_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
+                <button v-if="role ==1 && result.panel_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
+                <button v-if="role !=1 && result.panel_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Pending Approval</button>
             </td>
             <td>
-                <button v-if="result.feedback==0" class= "mbtn mbtn-raised mbtn-success mbtn-xs">Satisfactory</button>
-                <button v-if="result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">UnSatisfactory</button>
-                <button v-if="result.feedback==2 || result.feedback==null" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
+                <button v-if="role ==1 && result.feedback==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Satisfactory</button>
+                <button v-if="role ==1 && result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Unsatisfactory</button>
+                <button v-if="role !=1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
+                <!-- <button v-if="result.feedback==2 || result.feedback==null" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button> -->
             </td>
             <td>
             @permission('view-result')               
@@ -83,9 +163,7 @@
             @permission('verify-result')
             <button v-if="result.panel_status==2" class="btn btn-sm btn-primary" @click.prevent="showEvaluatedResults(result)"><i class="fa fa-list"></i> Review</button>
             <button v-if="result.panel_status==2 && result.feedback==0" class="btn btn-sm btn-success" @click.prevent="quickVerifyEvaluatedResult(result.id)"><i class="fa fa-check-circle"></i> Verify</button>
-            @endpermission 
-
-            @permission('print-result')
+            
             <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==0" class="btn btn-wisteria" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print</a>
              <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==1" class="btn btn-concrete" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print Again</a>
             @endpermission 
@@ -495,6 +573,17 @@
                                             <td>@{{evaluated_results.pt_panel_6_final_results}}</td>
                                             <td class="text-uppercase">@{{evaluated_results.expected_result_6}}</td>
                                         </tr>
+                                        
+                                   </table>
+                                </div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                        <tr>
+                                            <td><b>PT Participant's Comments</b></td>
+                                            <td>@{{evaluated_results.tester_comments}}</td>
+                                        </tr>
                                         <tr>
                                             <td><b>Panel Results</b></td>
                                             <td>@{{evaluated_results.feedback}}</td>
@@ -502,13 +591,13 @@
                                         <tr>
                                             <td><b>Overall Evaluation</b></td>
                                             <td>@{{evaluated_results.feedback}}</td>
-                                        </tr>
+                                        </tr>                                       
                                    </table>
                                 </div>
-                            </div>  
+                            </div>         
                             <div class="row">
                                 <div class="col-md-12">
-                                   <table class="table table-bordered">
+                                   <table class="table table-bordered">                                        
                                        <tr><b>Reasons For Unsatisfactory:   </b></tr>
                                        <tr>
                                            @{{evaluated_results.remark}}
@@ -526,15 +615,16 @@
                                                 <textarea name="comment" class="form-control">@{{evaluated_results.feedback}}</textarea>
                                             </div>
                                         </div>
-                                        <div class="form-group row col-sm-offset-5 col-sm-7">
-                                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Evaluated Results</button>&nbsp;
+                                        <div class="form-group row col-sm-offset-1">
+                                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Evaluated Results</button>
+                                            <button  class="btn btn-sm btn-wisteria" type="button" @click="show_update_evaluated_results()"><i class='fa fa-pencil-square-o'></i> Update Evaluated Results</button>&nbsp;
                                             <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                              <div class="form-group row" v-else-if="evaluated_results.panel_status==3">                                
-				<label class="col-sm-5 form-control-label" for="title"><b>Comments:</b></label>
+				                <label class="col-sm-5 form-control-label" for="title"><b>Comments:</b></label>
                                 <div class="col-sm-7 form-control">
                                     <p>@{{evaluated_results.pt_approved_comment}}</p>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
@@ -546,5 +636,47 @@
             </div>
         </div>
     </div>
+    <!-- Update Evaluated Test Results Modal -->
+    <div class="modal fade" id="update-evaluated-result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Update Evaluated Test Results</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">  
+                            <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="update_evaluated_results(evaluated_results.pt_id)" id="update_evaluated_results">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incorrect_results" v-bind="{ 'checked': evaluated_results.incorrect_results ==1}"> Incorrect Results</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incomplete_kit_data" v-bind="{ 'checked': evaluated_results.incomplete_kit_data ==1}"> Incomplete Kit Data</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="dev_from_procedure" v-bind="{ 'checked': evaluated_results.dev_from_procedure ==1}"> Deviation from Procedure</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incomplete_other_information" v-bind="{ 'checked': evaluated_results.incomplete_other_information ==1}"> Incomplete Other Information</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="use_of_expired_kits" v-bind="{ 'checked': evaluated_results.use_of_expired_kits ==1}"> Use of Expired Kits</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="invalid_results" v-bind="{ 'checked': evaluated_results.invalid_results ==1}"> Invalid Results</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="wrong_algorithm" v-bind="{ 'checked': evaluated_results.wrong_algorithm ==1}"> Wrong Algorithm</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incomplete_results" v-bind="{ 'checked': evaluated_results.incomplete_results ==1}"> Incomplete Results</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><input type="radio" value="0" id="satisfactory" name="feedback"><b> Satisfactory</b></td>
+                                        <td colspan="2"><input type="radio" value="1" id="unsatisfactory" name="feedback"><b> Unsatisfactory</b></td>                               
+                                    </tr>
+                                </table>                        
+                                <div class="form-group row col-sm-offset-2">
+                                    <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Update Evaluated Results</button>&nbsp;
+                                    <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 @endsection

@@ -43,7 +43,7 @@ class ResultController extends Controller
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
         $items_per_page = 100;
-        $results = Pt::latest()->withTrashed()->paginate($items_per_page);
+
         if(Auth::user()->isCountyCoordinator())
         {
             $results = County::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
@@ -59,13 +59,100 @@ class ResultController extends Controller
         else if(Auth::user()->isParticipant())
         {
             $results = Auth::user()->results()->latest()->withTrashed()->paginate($items_per_page);
+        }else
+        {
+            $results = Pt::latest()->withTrashed()->paginate($items_per_page);
 
         }
-        if($request->has('q')) 
-        {
-            $search = $request->get('q');
-            $results = Pt::where('id', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate($items_per_page);
+
+        //search results by user details
+        if ($request->has('q')||$request->has('cpunty')||$request->has('sub_county')||$request->has('facility')||$request->has('feedback_status')||$request->has('result_status')) {        
+            if($request->has('q')) 
+            {
+                $search = $request->get('q');
+                $search_ar = ['search'=>$search];
+                
+                if(Auth::user()->isCountyCoordinator())
+                {
+                    $results = County::find(Auth::user()->ru()->tier)->results($search_ar);
+                    // ->latest()->withTrashed()->paginate($items_per_page);                
+                }
+                else if(Auth::user()->isSubCountyCoordinator())
+                {
+                    $results = SubCounty::find(Auth::user()->ru()->tier)->results($search_ar);
+                    // ->latest()->withTrashed()->paginate($items_per_page);
+                }
+                else if(Auth::user()->isFacilityInCharge())
+                {
+                   $results = Facility::find(Auth::user()->ru()->tier)->results($search_ar);
+                   // ->latest()->withTrashed()->paginate($items_per_page);
+                }
+                else if(Auth::user()->isPartner())
+                {
+                   $results = ImplementingPartner::find(Auth::user()->ru()->tier)->results($search_ar);
+                   // ->latest()->withTrashed()->paginate($items_per_page);
+                }
+                else{
+                    $users = User::where('name', 'LIKE', "%{$search}%")
+                        ->orWhere('first_name', 'LIKE', "%{$search}%")
+                        ->orWhere('middle_name', 'LIKE', "%{$search}%")
+                        ->orWhere('last_name', 'LIKE', "%{$search}%")
+                        ->orWhere('email', 'LIKE', "%{$search}%")
+                        ->orWhere('phone', 'LIKE', "%{$search}%")
+                        ->orWhere('uid', 'LIKE', "%{$search}%")->pluck('id');
+                        // dd($users);
+
+                    $enrolments = Enrol::whereIn('user_id', $users)->pluck('id');
+                    $results = Pt::whereIn('enrolment_id', $enrolments);
+                    //->
+                }
+            }
+            //search results by filters
+            if($request->has('county')) 
+            {            
+                    $results = County::find($request->get('county'))->results();
+                    // ->latest()->withTrashed()->paginate($items_per_page);                
+                
+            }
+             if($request->has('sub_county')) 
+            {
+                    $results = SubCounty::find($request->get('sub_county'))->results();
+                    // ->latest()->withTrashed()->paginate($items_per_page);
+
+            }
+            if($request->has('facility')) 
+            {
+                   $results = Facility::find($request->get('facility'))->results();
+                   // ->latest()->withTrashed()->paginate($items_per_page);
+
+            }
+            if ($request->has('result_status')|| $request->has('feedback_status')) {               
+            
+                if($request->has('result_status')) 
+                {
+                    if ($request->has('county') ||$request->has('sub_county')||$request->has('facility')) {
+                        $results = $results->where('panel_status', $request->get('result_status'))->latest()->withTrashed()->paginate($items_per_page);
+                        
+                    }else{
+                        $results = Pt::where('panel_status', $request->get('result_status'))->latest()->withTrashed()->paginate($items_per_page);
+
+                    }
+                }
+                if($request->has('feedback_status')) 
+                {     
+                    if ($request->has('county') ||$request->has('sub_county')||$request->has('facility')) {
+                        $results = $results->where('feedback', $request->get('feedback_status'))->latest()->withTrashed()->paginate($items_per_page);
+                        
+                    }else{
+                        $results = Pt::where('feedback', $request->get('feedback_status'))->latest()->withTrashed()->paginate($items_per_page);
+                    }
+                }
+            }else{
+
+                $results = $results->latest()->withTrashed()->paginate($items_per_page);
+            }
         }
+
         foreach($results as $result)
         {
             $result->rnd = $result->enrolment->round->name;
@@ -73,12 +160,13 @@ class ResultController extends Controller
             $result->uid = $result->enrolment->user->uid;
 
             //particpants should not see the result feedback until it has been verified by the admin             
-            if(Auth::user()->isParticipant()){
+            if(Auth::user()->isParticipant() ||Auth::user()->isSubCountyCoordinator()||Auth::user()->isCountyCoordinator()||Auth::user()->isPartner()){
                 if ($result->panel_status != 3) {
                     $result->feedback = 2;
                 }                
             }
-	    $result->user_role = Auth::user()->ru()->role_id;
+
+	        $result->user_role = Auth::user()->ru()->role_id;
         }
 
         $response = [
@@ -90,6 +178,7 @@ class ResultController extends Controller
                 'from' => $results->firstItem(),
                 'to' => $results->lastItem()
             ],
+            'user_role' => Auth::user()->ru()->role_id,
             'data' => $results
         ]; 
         return $results->count() > 0 ? response()->json($response) : $error;
@@ -531,6 +620,10 @@ class ResultController extends Controller
                 $date_constituted = $rss->response;
             if($rss->field_id == Field::idByUID('Date PT Panel Tested'))
                 $date_tested = $rss->response;
+
+            //comment
+             if($rss->field_id == Field::idByUID('Comments'))
+                $tester_comments = $rss->response;
         }
         $actual_results = array();
 
@@ -582,6 +675,16 @@ class ResultController extends Controller
         $round_status = $round->status;
         $feedback = $pt->outcome($pt->feedback);
         $panel_status = $pt->panel_status;
+
+        //get reasons for unsatisfactory
+        $incorrect_results = $pt->incorrect_results;
+        $incomplete_kit_data = $pt->incomplete_kit_data;
+        $dev_from_procedure = $pt->dev_from_procedure;
+        $incomplete_other_information = $pt->incomplete_other_information;
+        $use_of_expired_kits = $pt->use_of_expired_kits;
+        $invalid_results = $pt->invalid_results;
+        $wrong_algorithm = $pt->wrong_algorithm;
+        $incomplete_results = $pt->incomplete_results;
 
         if($pt->feedback == Pt::UNSATISFACTORY)
             $remark = $pt->unsatisfactory(); 
@@ -661,6 +764,15 @@ class ResultController extends Controller
                     "sample_4"=>$sample_4,
                     "sample_5"=>$sample_5,
                     "sample_6"=>$sample_6,
+
+                    'incorrect_results' => $incorrect_results,
+                    'incomplete_kit_data' => $incomplete_kit_data,
+                    'dev_from_procedure' => $dev_from_procedure,
+                    'incomplete_other_information' => $incomplete_other_information,
+                    'use_of_expired_kits' => $use_of_expired_kits,
+                    'invalid_results' => $invalid_results,
+                    'wrong_algorithm' => $wrong_algorithm,
+                    'incomplete_results' => $incomplete_results
                 );
 
         // return response()->json($all_results); 
@@ -717,7 +829,7 @@ class ResultController extends Controller
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->code;
         $apikey     = $api->api_key;
-        if($recipients)
+        /*if($recipients)
         {
             // Specified sender-id
             // $from = $api->code;
@@ -741,7 +853,76 @@ class ResultController extends Controller
             {
             echo "Encountered an error while sending: ".$e->getMessage();
             }
+        }*/
+        return response()->json($result);
+    }
+     /**
+     * Update the evaluated results
+     *
+     * @param ID of the selected pt -  $id
+     */
+    public function update_evaluated_results(Request $request, $id )
+    {
+        $pt_id = $request->pt_id;
+        $user_id = Auth::user()->id; 
+
+        $result = Pt::find($id);
+        if ($request->incorrect_results) {
+            $result->incorrect_results = $request->incorrect_results;
+        }else{
+            $result->incorrect_results = 0;
         }
+
+        if ($request->incomplete_kit_data) {
+            $result->incomplete_kit_data = $request->incomplete_kit_data;
+        }else{
+            $result->incomplete_kit_data = 0;
+        }
+
+        if ($request->dev_from_procedure) {
+            $result->dev_from_procedure = $request->dev_from_procedure;
+        }else{
+            $result->dev_from_procedure = 0;
+        }
+
+        if ($request->incomplete_other_information) {
+            $result->incomplete_other_information = $request->incomplete_other_information;
+        }else{
+            $result->incomplete_other_information = 0;
+        }
+
+        if ($request->use_of_expired_kits) {
+            $result->use_of_expired_kits = $request->use_of_expired_kits;
+        }else{
+
+            $result->use_of_expired_kits = 0;
+        }
+        if ($request->invalid_results) {
+            $result->invalid_results = $request->invalid_results;
+        }else{
+            $result->invalid_results = 0;
+        }
+
+        if ($request->wrong_algorithm) {
+            $result->wrong_algorithm = $request->wrong_algorithm;
+        }else{
+            $result->wrong_algorithm = 0;
+        }
+
+        if ($request->incomplete_results) {
+            $result->incomplete_results = $request->incomplete_results;
+        }else{
+            $result->incomplete_results =0;
+        }
+
+        if ($request->feedback==1) {        //cannot check if value is 0.    
+            $result->feedback = $request->feedback;
+        }else{
+            $result->feedback = 0; 
+        }
+        
+        $result->save();
+        
         return response()->json($result);
     }
         

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Lot;
-
+use App\Round;
 use Auth;
 
 class LotController extends Controller

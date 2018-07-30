@@ -41,6 +41,7 @@ class County extends Model
     {
        return $this->belongsToMany('App\ImplementingPartner');
     }
+
     /**
     * Get users for a county
     *
@@ -80,8 +81,63 @@ class County extends Model
             $fls = $this->facilities()->pluck('id')->toArray();
             $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);
         }        
-        return $users;
+        return $users->distinct();
     }
+    /**
+    * Get users for a county
+    *
+    */
+    public function enrolledUsers($role=null, $roundID=3)
+    {
+        if ($role =='User') {
+            $county = [$this->id];
+            $county_role = Role::idByName('County Coordinator');
+
+            $subcounty_role = Role::idByName('Sub-County Coordinator');
+            $subs = $this->subCounties()->pluck('id')->toArray();
+            $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                        ->join('enrolments', function($join) use ($roundID){
+                            $join->on('users.id', '=', 'enrolments.user_id')
+                                ->where('enrolments.round_id', '=', $roundID);
+                        })
+                        ->where(function($query) use ($subcounty_role, $subs){
+                            return $query->where('role_id', $subcounty_role)->whereIn('tier', $subs);
+                        })->orWhere(function($q) use ($county_role, $county){
+                            return $q->where('role_id', $county_role)->whereIn('tier', $county);
+                        });
+        }else if (is_array($role)){
+
+            $search = $role['search'];
+            $prole = Role::idByName('Participant');
+            $fls = $this->facilities()->pluck('id')->toArray();
+            $users = User::select('users.*')
+                        ->join('enrolments', function($join) use ($roundID){
+                            $join->on('users.id', '=', 'enrolments.user_id')
+                                ->where('enrolments.round_id', '=', $roundID);
+                        })
+                         ->where(function($query) use ($search){
+                            $query->where('users.name', 'LIKE', "%{$search}%");
+                            $query->orWhere('first_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('middle_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('last_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('phone', 'LIKE', "%{$search}%");
+                            $query->orWhere('email', 'LIKE', "%{$search}%");
+                            $query->orWhere('uid', 'LIKE', "%{$search}%");
+                        })
+                        ->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);
+        }else{
+            $prole = Role::idByName('Participant');
+            $fls = $this->facilities()->pluck('id')->toArray();
+            $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                            ->join('enrolments', function($join) use ($roundID){
+                                $join->on('users.id', '=', 'enrolments.user_id')
+                                    ->where('enrolments.round_id', '=', $roundID);
+                            })
+                            ->where('role_id', $prole)->whereIn('tier', $fls);
+        }        
+        return $users->distinct();
+    }
+
     /**
     * Get shipments for a county
     *
@@ -127,9 +183,15 @@ class County extends Model
     * Get results for a county
     *
     */
-    public function results()
+    public function results($search = null)
     {
-        $users = $this->users()->pluck('id');
+        if($search){
+            $users = $this->users($search)->pluck('id');
+
+        }else{
+            $users = $this->users()->pluck('id');
+
+        }
         $enrolments = Enrol::whereIn('user_id', $users)->pluck('id');
         $results = Pt::whereIn('enrolment_id', $enrolments);
         return $results;
