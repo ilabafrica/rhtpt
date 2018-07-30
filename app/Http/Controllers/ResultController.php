@@ -66,7 +66,7 @@ class ResultController extends Controller
         }
 
         //search results by user details
-        if ($request->all()) {        
+        if ($request->has('q')||$request->has('cpunty')||$request->has('sub_county')||$request->has('facility')||$request->has('feedback_status')||$request->has('result_status')) {        
             if($request->has('q')) 
             {
                 $search = $request->get('q');
@@ -827,7 +827,7 @@ class ResultController extends Controller
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->code;
         $apikey     = $api->api_key;
-        if($recipients)
+        /*if($recipients)
         {
             // Specified sender-id
             // $from = $api->code;
@@ -851,7 +851,7 @@ class ResultController extends Controller
             {
             echo "Encountered an error while sending: ".$e->getMessage();
             }
-        }
+        }*/
         return response()->json($result);
     }
      /**
