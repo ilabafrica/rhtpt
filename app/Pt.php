@@ -65,23 +65,39 @@ class Pt extends Model
     */
     public function unsatisfactory()
     {
-        //  TODO  - Check more than one reason...
-        if($this->incorrect_results == 1)
-            return 'Incorrect Results';
-        else if($this->incomplete_kit_data == 1)
-            return 'Incomplete Kit Data';
-        else if($this->dev_from_procedure == 1)
-            return 'Deviation from Procedure';
-        else if($this->incomplete_other_information == 1)
-            return 'Incomplete Other Information';
-        else if($this->use_of_expired_kits == 1)
-            return 'Use of Expired Kits';
-        else if($this->invalid_results == 1)
-            return 'Invalid Results';
-        else if($this->wrong_algorithm == 1)
-            return 'Wrong Algorithm';
-        else if($this->incomplete_results == 1)
-            return 'Incomplete Results';
+      $remark = '';
+        if($this->incorrect_results == 1){
+            $remark = $remark.'Incorrect Results ';
+
+        }
+        if($this->incomplete_kit_data == 1){
+            $remark = $remark.'Incomplete Kit Data ';
+
+        }
+        if($this->dev_from_procedure == 1){
+            $remark = $remark.'Deviation from Procedure ';
+
+        }
+        if($this->incomplete_other_information == 1){
+            $remark = $remark.'Incomplete Other Information ';
+
+        }
+        if($this->use_of_expired_kits == 1){
+            $remark = $remark.'Use of Expired Kits ';
+
+        }
+        if($this->invalid_results == 1){
+            $remark = $remark.'Invalid Results ';
+
+        }
+        if($this->wrong_algorithm == 1){          
+            $remark = $remark.'Wrong Algorithm ';
+        }
+        if($this->incomplete_results == 1){
+            $remark = $remark.'Incomplete Results ';
+
+        }
+        return $remark;
     }
     /**
     * User relationship
