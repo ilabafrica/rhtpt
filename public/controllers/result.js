@@ -48,6 +48,17 @@ new Vue({
         result_status:'',
         feedback_status: '',
         filters:'',
+        //varibles used in editing evaluated results
+        counties_:[],
+        sub_counties_: [],
+        facilities_:[],
+        programs: [],
+        county_:'',
+        sub_county_:'',
+        facility_:'',
+        check_date_clicked: '',
+
+        role: '',
         toggle: {}
     },
 
@@ -433,6 +444,10 @@ new Vue({
                 this.filters = 1;
             });
         },
+        /*
+        * functions used in filters
+        * loading counties, sub_counties and facilities
+        */
         //Populate counties from FacilityController
         loadCounties: function() {
             this.$http.get('/cnts').then((response) => {
@@ -451,6 +466,36 @@ new Vue({
             });
         },
         fetchFacilities: function() {
+            let id = $('#sub_id').val();
+            this.$http.get('/fclts/'+id).then((response) => {
+                this.facilities = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        /*
+        * functions used in updating evaluted test results
+        * loading counties, sub_counties and facilities
+        */
+         //Populate counties from FacilityController
+        loadCounties_: function() {
+            this.$http.get('/cnts').then((response) => {
+                this.counties = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+        fetchSubcounties_: function() {
+            let id = $('#county_id').val();
+            this.$http.get('/subs/'+ id).then((response) => {
+                this.subs = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+        fetchFacilities_: function() {
             let id = $('#sub_id').val();
             this.$http.get('/fclts/'+id).then((response) => {
                 this.facilities = response.data;
@@ -491,5 +536,40 @@ new Vue({
             //     this.feedback_status = '';               
             // }                
         },
+        check_total_days: function() {
+            var year = $('select[name=year]').val();
+            var month = $('select[name=month]').val();
+            var totalDate = 31;
+            if(year !== '' && month !== '') {
+                totalDate = new Date(year, month, 0).getDate();
+            }
+            console.log(year +' ' +month +' ' +totalDate+'  ');
+            $('select[name=day]').empty();
+            for(var i = 1; i <= totalDate; i++) {
+               $('select[name=day]').append("<option value='"+i+"'>"+i+"</option>");
+            }
+        },
+        check_date_button: function(id){               
+            
+            this.check_date_clicked = id;           
+        },
+        set_date: function(id){
+
+            var day = $('#day').val();
+            var month = $('#month').val();
+            var year = $('#year').val(); 
+            var date = year + '-' +month+ '-' +day;
+
+            if (this.check_date_clicked==1) {
+                $('#change_date_received').val(date);
+            }
+            else if (this.check_date_clicked==2) {
+                $('#change_date_constituted').val(date);
+            }
+            else if (this.check_date_clicked==3) {
+                $('#change_date_tested').val('here');
+
+            } 
+        }
     },
 });

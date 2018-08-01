@@ -647,7 +647,167 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">  
-                            <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="update_evaluated_results(evaluated_results.pt_id)" id="update_evaluated_results">
+                            <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="update_evaluated_results(evaluated_results.pt_id)" id="update_evaluated_results">                                 
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('first_name') }"
+                                        for="first_name">First Name:</label>
+                                        <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('middle_name') }"
+                                        for="middle_name">Middle Name:</label>
+                                        <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
+                                        for="last_name">Last Name:</label>                                    
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-4" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha_spaces'" class="form-control"
+                                            :class="{'input': true,'is-danger': errors.has('first_name') }" name="first_name"
+                                            type="text" placeholder=""
+                                            v-model="evaluated_results.first_name" />
+                                        <span v-show="errors.has('first_name')" class="help is-danger">
+                                            @{{ errors.first('first_name') }}</span>
+                                    </div>
+                                    
+                                    <div class="col-sm-4" :class="{ 'control': true }">
+                                        <input v-validate="'alpha_spaces'" class="form-control"
+                                            :class="{'input': true,'is-danger': errors.has('middle_name') }" name="middle_name"
+                                            type="text" placeholder=""
+                                            v-model="evaluated_results.middle_name" />
+                                        <span v-show="errors.has('middle_name')" class="help is-danger">
+                                            @{{ errors.first('middle_name') }}</span>
+                                    </div>
+
+                                    <div class="col-sm-4" :class="{ 'control': true }">
+                                        <input v-validate="'required|alpha_spaces'" class="form-control"
+                                            :class="{'input': true,'is-danger': errors.has('last_name') }" name="last_name"
+                                            type="text" placeholder=""
+                                            v-model="evaluated_results.last_name" />
+                                        <span v-show="errors.has('last_name')" class="help is-danger">
+                                            @{{ errors.first('last_name') }}</span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone number') }" for="phone number">Phone Number:</label>
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('program_id') }" for="title">Program:</label>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-4" :class="{ 'control': true }">
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone number') }" name="phone number" type="text" v-model="evaluated_results.phone"/>
+                                        <span v-show="errors.has('phone number')" class="help is-danger">@{{ errors.first('phone number') }}</span>
+                                    </div>
+                                    <div class="col-sm-4" :class="{ 'control': true }">
+                                        <select class="form-control c-select" :class="{'input': true, 'is-danger': errors.has('program_id') }" name="program_id" v-model="evaluated_results.program_id">
+                                            <option selected></option>
+                                            <!-- <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>    -->
+                                        </select>
+                                        <span v-show="errors.has('program_id')" class="help is-danger">@{{ errors.first('program_id') }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Unique ID:</label>
+                                    <label class="col-sm-4 form-control-label" for="title">Facility:</label>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-4">
+                                        <input type="text" name="username" class="form-control" v-model="evaluated_results.username" disabled/>
+                                    </div>
+                                    <div class="col-sm-6 input-group input-group-sm ">
+                                        <input type="text" name="facility" class="form-control" v-model="evaluated_results.facility" disabled/>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary btn-sm" type="button" id="change_facility" data-toggle="collapse" data-target="#set-facility">change</button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="collapse" id="set-facility">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                                        <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
+                                        <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
+                                        
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="county" id="county_id_" @change="fetchSubcounties_()" v-model="county_">
+                                                <option selected></option>
+                                               <option v-for="county in counties_" :value="county.id">@{{ county.value }}</option>                         
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control" name="sub_county" id="sub_id_" @change="fetchFacilities_()" v-model="sub_county_">
+                                                <option selected></option>
+                                               <option  v-for="sub in sub_counties_" :value="sub.id">@{{ sub.value }}</option>                         
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <select class="form-control" name="facility" v-model="facility_">
+                                                <option selected></option>
+                                                <option v-for="facility in facilities_" :value="facility.id">@{{ facility.value }}</option> 
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>   
+                                <hr>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
+                                        for="last_name">Panel Received</label>
+                                        <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
+                                        for="last_name">Panel Constituted</label>
+                                        <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
+                                        for="last_name">Panel Tested</label>                                                                 
+                                </div>
+                                <div class="form-group row">
+                                    <div class="input-group input-group-sm col-sm-4" :class="{ 'control': true }">
+                                        <input type="text" name="date_received" class="form-control"/>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary btn-sm" @click="check_date_button(1)" type="button" id="change_date_received" data-toggle="collapse" data-target="#set-date">change</button> 
+                                        </span>
+                                    </div> 
+                                    <div class="input-group input-group-sm col-sm-4" :class="{ 'control': true }">
+                                        <input type="text" name="date_constituted" class="form-control"/>   
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary btn-sm" @click="check_date_button(2)" type="button" id="change_date_constituted" data-toggle="collapse" data-target="#set-date">change</button>
+                                        </span>
+                                    </div>
+                                    <div class="input-group input-group-sm col-sm-4" :class="{ 'control': true }">
+                                        <input type="text" name="date_tested" class="form-control"/>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary btn-sm" @click="check_date_button(3)" type="button" id="change_date_tested" data-toggle="collapse" data-target="#set-date">change</button>
+                                        </span>
+                                    </div>
+                                </div>                                                                
+                                <div class="form-group row collapse" id="set-date">
+                                    <div class="col-sm-3">
+                                        <select class="form-control" name="year" id="year">
+                                            <?php 
+                                              $year = date('Y');
+                                              $min = $year - 60;
+                                              $max = $year;
+                                              for( $i=$max; $i>=$min; $i-- ) {
+                                                echo '<option value='.$i.'>'.$i.'</option>';
+                                              }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <select class="form-control" name="month" id="month" @change="check_total_days()">
+                                            <option selected></option>                                           
+                                            <?php for( $m=1; $m<=12; ++$m ) { 
+                                                $month_label = date('F', mktime(0, 0, 0, $m, 1));
+                                            ?>
+                                                <option value="<?php echo $m; ?>"><?php echo $month_label; ?></option>
+                                            <?php } ?>
+                                        </select> 
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <select class="form-control" name="day" id="day">
+                                            <option value=''></option>                                           
+                                        </select>
+                                    </div>                                    
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-success btn-sm" type="button" id="set_date" @click="set_date()">Set</button>
+                                    </div>
+                                </div>
+                                <hr>
                                 <table class="table table-bordered">
                                     <tr>
                                         <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incorrect_results" v-bind="{ 'checked': evaluated_results.incorrect_results ==1}"> Incorrect Results</td>
@@ -665,7 +825,51 @@
                                         <td colspan="2"><input type="radio" value="0" id="satisfactory" name="feedback"><b> Satisfactory</b></td>
                                         <td colspan="2"><input type="radio" value="1" id="unsatisfactory" name="feedback"><b> Unsatisfactory</b></td>                               
                                     </tr>
-                                </table>                        
+                                </table> 
+                                <hr>
+                                <table class="table table-bordered">
+                                     <tr>
+                                        <td>Test 1</td>
+                                        <td>Test 2</td>
+                                        <td>Final</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" name="kit_1" :value="evaluated_results.determine" class="form-control"></td>
+                                        <td><input type="text" name="kit_2" :value = "evaluated_results.firstresponse" class="form-control"></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control" name="pt_panel_1_kit1_results" :value="evaluated_results.pt_panel_1_kit1_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_1_kit2_results" :value="evaluated_results.pt_panel_1_kit2_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_1_final_results" :value="evaluated_results.pt_panel_1_final_results"></td>
+                                    </tr>
+                                     <tr>
+                                        <td><input type="text" class="form-control" name="pt_panel_2_kit1_results" :value="evaluated_results.pt_panel_2_kit1_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_2_kit2_results" :value="evaluated_results.pt_panel_2_kit2_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_2_final_results" :value="evaluated_results.pt_panel_3_final_results"></td>
+                                    </tr>
+                                     <tr>
+                                        <td><input type="text" class="form-control" name="pt_panel_3_kit1_results" :value="evaluated_results.pt_panel_3_kit1_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_3_kit2_results" :value="evaluated_results.pt_panel_3_kit2_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_3_final_results" :value="evaluated_results.pt_panel_3_final_results"></td>
+                                    </tr>
+                                     <tr>
+                                        <td><input type="text" class="form-control" name="pt_panel_4_kit1_results" :value="evaluated_results.pt_panel_4_kit1_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_4_kit2_results" :value="evaluated_results.pt_panel_4_kit2_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_4_final_results" :value="evaluated_results.pt_panel_4_final_results"></td>
+                                    </tr>
+                                     <tr>
+                                        <td><input type="text" class="form-control" name="pt_panel_5_kit1_results" :value="evaluated_results.pt_panel_5_kit1_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_5_kit2_results" :value="evaluated_results.pt_panel_5_kit2_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_5_final_results" :value="evaluated_results.pt_panel_5_final_results"></td>
+                                    </tr>
+                                     <tr>
+                                        <td><input type="text" class="form-control" name="pt_panel_6_kit1_results" :value="evaluated_results.pt_panel_6_kit1_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_6_kit2_results" :value="evaluated_results.pt_panel_6_kit1_results"></td>
+                                        <td><input type="text" class="form-control" name="pt_panel_6_final_results" :value="evaluated_results.pt_panel_6_final_results"></td>
+                                    </tr>
+                                    
+                                </table>                       
                                 <div class="form-group row col-sm-offset-2">
                                     <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Update Evaluated Results</button>&nbsp;
                                     <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>

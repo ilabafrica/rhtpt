@@ -659,6 +659,10 @@ class ResultController extends Controller
 
         //get participant details
         $user_name = $user->name;
+        $first_name = $user->first_name;
+        $middle_name = $user->middle_name;
+        $last_name = $user->last_name;
+        $phone_no = $user->phone;
         $tester_id = $user->username;
         $roleUser = $user->ru();
         $facility = Facility::find($roleUser->tier);
@@ -701,6 +705,10 @@ class ResultController extends Controller
                     'pt_approved_comment' => $pt->approved_comment,
                     'date_approved' => $pt->date_approved,
                     'user_name' => $user_name,
+                    'first_name' => $first_name,
+                    'middle_name' => $middle_name,
+                    'last_name' => $last_name,
+                    'phone_no' => $phone_no,
                     'tester_id' => $tester_id,
                     'designation' => $designation,
                     'program' => $program,
