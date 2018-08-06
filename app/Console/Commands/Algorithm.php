@@ -491,7 +491,7 @@ class Algorithm extends Command
      {
          // Check correctness
          $incorrect_results = 1;
-         $indeterminate = Option::idByTitle('Indeterminate');
+         $indeterminate = Option::idByTitle('Inconclusive');
          if(
              ($pt_panel_1_final_results == $ex_1 || $pt_panel_1_final_results == $indeterminate) &&
              ($pt_panel_2_final_results == $ex_2 || $pt_panel_2_final_results == $indeterminate) &&
