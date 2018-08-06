@@ -125,7 +125,7 @@
             <th>Tester ID</th>
             <th>Participant</th>
             <th>Status</th>
-            <th>Results</th>
+            <th>Reports</th>
             <th>Action</th>
         </tr>
         <tr v-for="(result, key) in results">
@@ -148,10 +148,10 @@
             </td>
             <td>
             @permission('view-result')               
-                <button class="btn btn-sm btn-secondary" v-if="(result.panel_status==0 && result.user_role !=2) || result.panel_status==1 " @click.prevent="viewResult(result)" ><i class="fa fa-reorder"></i> View</button>
+                <button class="btn btn-sm btn-secondary" v-if="(result.panel_status==0 && result.user_role !=2) || result.panel_status==1 " @click.prevent="viewResult(result)" ><i class="fa fa-reorder"></i> View Result</button>
                 <button class="btn btn-sm btn-success" v-if="result.panel_status==0 && result.user_role==2" @click.prevent="viewResult(result)" ><i class="fa fa-check-circle"></i> Verify</button>    
                 	
-                <button class="btn btn-sm btn-secondary" v-if="result.panel_status==3" @click.prevent="showEvaluatedResults(result)" ><i class="fa fa-reorder"></i> View</button> 
+                <button class="btn btn-sm btn-secondary" v-if="result.panel_status==3" @click.prevent="showEvaluatedResults(result)" ><i class="fa fa-reorder"></i> View Report</button> 
             @endpermission
             @permission('update-result')
                 <button  v-if="result.panel_status==0" class="btn btn-sm btn-primary" @click.prevent="editResult(result)" ><i class="fa fa-edit"></i> Edit</button>

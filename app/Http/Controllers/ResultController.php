@@ -46,22 +46,22 @@ class ResultController extends Controller
 
         if(Auth::user()->isCountyCoordinator())
         {
-            $results = County::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
+            $results = County::find(Auth::user()->ru()->tier)->results()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $results = SubCounty::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
+           $results = SubCounty::find(Auth::user()->ru()->tier)->results()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $results = Facility::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
+           $results = Facility::find(Auth::user()->ru()->tier)->results()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isParticipant())
         {
-            $results = Auth::user()->results()->latest()->withTrashed()->paginate($items_per_page);
+            $results = Auth::user()->results()->withTrashed()->paginate($items_per_page);
         }else
         {
-            $results = Pt::latest()->withTrashed()->paginate($items_per_page);
+            $results = Pt::withTrashed()->paginate($items_per_page);
 
         }
 
@@ -149,7 +149,7 @@ class ResultController extends Controller
                 }
             }else{
 
-                $results = $results->latest()->withTrashed()->paginate($items_per_page);
+                $results = $results->withTrashed()->paginate($items_per_page);
             }
         }
 
@@ -812,7 +812,7 @@ class ResultController extends Controller
         $result->save();
 
          //  Send SMS
-        $round = Round::find($pt->enrolment->round->id)->description;
+        $round = Round::find($result->enrolment->round->id)->description;
         $message = Notification::where('template', Notification::FEEDBACK_RELEASE)->first()->message;
         $message = $this->replace_between($message, '[', ']', $round);
         $message = str_replace(' [', ' ', $message);
@@ -822,9 +822,9 @@ class ResultController extends Controller
         $updated = Carbon::today()->toDateTimeString();
         //  Time
         $now = Carbon::now('Africa/Nairobi');
-        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $pt->enrolment->round->id, 'text' => $message, 'user_id' => $pt->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
+        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $result->enrolment->round->id, 'text' => $message, 'user_id' => $result->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
         $recipients = NULL;
-        $recipients = User::find($pt->enrolment->user->id)->value('phone');
+        $recipients = User::find($result->enrolment->user->id)->value('phone');
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->code;
