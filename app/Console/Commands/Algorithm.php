@@ -491,9 +491,10 @@ class Algorithm extends Command
      {
          // Check correctness
          $incorrect_results = 1;
-         $indeterminate = Option::idByTitle('Indeterminate');
+         $indeterminate = Option::idByTitle('Inconclusive');
          $reactive = Option::idByTitle('Reactive');
          $non_reactive = Option::idByTitle('Non Reactive');
+
          if(
              ($pt_panel_1_final_results == $ex_1 || (($pt_panel_1_final_results == $indeterminate) && ($pt_panel_1_test_1_results ==$reactive && $pt_panel_1_test_2_results ==$non_reactive))) &&
              ($pt_panel_2_final_results == $ex_2 || (($pt_panel_2_final_results == $indeterminate) && ($pt_panel_2_test_1_results ==$reactive && $pt_panel_2_test_2_results ==$non_reactive))) &&
@@ -554,6 +555,7 @@ class Algorithm extends Command
          $fr = Option::idByTitle('First Response');
          $det = Option::idByTitle('Determine');
          $duo = Option::idByTitle('SDBioline');
+
          if(
              ($pt_panel_1_test_1_results == $non_reactive && $pt_panel_1_test_2_results == $not_done) || ($pt_panel_1_test_1_results == $reactive && ($pt_panel_1_test_2_results == $non_reactive || $pt_panel_1_test_2_results == $reactive)) && 
              ($pt_panel_2_test_1_results == $non_reactive && $pt_panel_2_test_2_results == $not_done) || ($pt_panel_2_test_1_results == $reactive && ($pt_panel_2_test_2_results == $non_reactive || $pt_panel_2_test_2_results == $reactive)) && 
