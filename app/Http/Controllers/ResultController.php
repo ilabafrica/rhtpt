@@ -667,7 +667,7 @@ class ResultController extends Controller
         $roleUser = $user->ru();
         $facility = Facility::find($roleUser->tier);
         $designation = $user->designation($roleUser->designation);
-        $program = Program::find($roleUser->program_id)->name;
+        $program = Program::find($roleUser->program_id)->id;
         $county = strtoupper($facility->subCounty->county->name);
         $sub_county = $facility->subCounty->name;
         $mfl = $facility->code;

@@ -135,7 +135,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('facility', 'FacilityController@manageFacility');
     Route::resource('vuefacilitys','FacilityController');
     Route::any('vuefacilitys/{id}/restore','FacilityController@restore');
-    Route::get('search_facility',array('as'=>'search_facility','uses'=>'FacilityController@search_facility'));
+    Route::get('search_facility/{id}',array('as'=>'search_facility','uses'=>'FacilityController@search_facility'));
 
     Route::get('user', 'UserController@manageUser');
     Route::resource('vueusers','UserController');

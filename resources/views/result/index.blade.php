@@ -691,13 +691,13 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-4" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone number') }" name="phone number" type="text" v-model="evaluated_results.phone"/>
+                                        <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone number') }" name="phone number" type="text" v-model="evaluated_results.phone_no"/>
                                         <span v-show="errors.has('phone number')" class="help is-danger">@{{ errors.first('phone number') }}</span>
                                     </div>
                                     <div class="col-sm-4" :class="{ 'control': true }">
-                                        <select class="form-control c-select" :class="{'input': true, 'is-danger': errors.has('program_id') }" name="program_id" v-model="evaluated_results.program_id">
+                                        <select class="form-control c-select" :class="{'input': true, 'is-danger': errors.has('program_id') }" name="program_id" v-model="evaluated_results.program">
                                             <option selected></option>
-                                            <!-- <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>    -->
+                                            <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
                                         </select>
                                         <span v-show="errors.has('program_id')" class="help is-danger">@{{ errors.first('program_id') }}</span>
                                     </div>
@@ -709,10 +709,11 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
-                                        <input type="text" name="username" class="form-control" v-model="evaluated_results.username" disabled/>
+                                        <input type="text" name="username" class="form-control" v-model="evaluated_results.tester_id" disabled/>
                                     </div>
                                     <div class="col-sm-6 input-group input-group-sm ">
-                                        <input type="text" name="facility" class="form-control" v-model="evaluated_results.facility" disabled/>
+                                        <input type="text" name="facility_name" id="facility_name" class="form-control" v-model="evaluated_results.facility" disabled/>
+                                        <input type="hidden" name="facility_id" id="facility_id" class="form-control" v-model="evaluated_results.facility"/>
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary btn-sm" type="button" id="change_facility" data-toggle="collapse" data-target="#set-facility">change</button>
                                         </span>
@@ -726,24 +727,27 @@
                                         
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <select class="form-control" name="county" id="county_id_" @change="fetchSubcounties_()" v-model="county_">
                                                 <option selected></option>
                                                <option v-for="county in counties_" :value="county.id">@{{ county.value }}</option>                         
                                             </select>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <select class="form-control" name="sub_county" id="sub_id_" @change="fetchFacilities_()" v-model="sub_county_">
                                                 <option selected></option>
                                                <option  v-for="sub in sub_counties_" :value="sub.id">@{{ sub.value }}</option>                         
                                             </select>
                                         </div>
                                         <div class="col-sm-3">
-                                            <select class="form-control" name="facility" v-model="facility_">
+                                            <select class="form-control" name="facility" id = "facility_id_list" v-model="facility_">
                                                 <option selected></option>
                                                 <option v-for="facility in facilities_" :value="facility.id">@{{ facility.value }}</option> 
                                             </select>
                                         </div>
+                                        <div class="input-group-btn">
+                                        <button class="btn btn-success btn-sm" type="button" id="set_facility" @click="set_facility()">Set</button>
+                                    </div>
                                     </div>
                                 </div>   
                                 <hr>
@@ -757,19 +761,19 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="input-group input-group-sm col-sm-4" :class="{ 'control': true }">
-                                        <input type="text" name="date_received" class="form-control"/>
+                                        <input type="text" name="date_received" id="date_received" class="form-control" v-model ="evaluated_results.date_received"/>
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary btn-sm" @click="check_date_button(1)" type="button" id="change_date_received" data-toggle="collapse" data-target="#set-date">change</button> 
                                         </span>
                                     </div> 
                                     <div class="input-group input-group-sm col-sm-4" :class="{ 'control': true }">
-                                        <input type="text" name="date_constituted" class="form-control"/>   
+                                        <input type="text" name="date_constituted" id="date_constituted" class="form-control" v-model ="evaluated_results.date_constituted"/>   
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary btn-sm" @click="check_date_button(2)" type="button" id="change_date_constituted" data-toggle="collapse" data-target="#set-date">change</button>
                                         </span>
                                     </div>
                                     <div class="input-group input-group-sm col-sm-4" :class="{ 'control': true }">
-                                        <input type="text" name="date_tested" class="form-control"/>
+                                        <input type="text" name="date_tested" id="date_tested" class="form-control" v-model ="evaluated_results.date_tested"/>
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary btn-sm" @click="check_date_button(3)" type="button" id="change_date_tested" data-toggle="collapse" data-target="#set-date">change</button>
                                         </span>
@@ -793,6 +797,10 @@
                                             <option selected></option>                                           
                                             <?php for( $m=1; $m<=12; ++$m ) { 
                                                 $month_label = date('F', mktime(0, 0, 0, $m, 1));
+
+                                                if (strlen((string)$m)<2) {
+                                                    $m = '0'.$m;
+                                                }
                                             ?>
                                                 <option value="<?php echo $m; ?>"><?php echo $month_label; ?></option>
                                             <?php } ?>
@@ -834,39 +842,199 @@
                                         <td>Final</td>
                                     </tr>
                                     <tr>
-                                        <td><input type="text" name="kit_1" :value="evaluated_results.determine" class="form-control"></td>
-                                        <td><input type="text" name="kit_2" :value = "evaluated_results.firstresponse" class="form-control"></td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="kit_1" id="kit_1" :value="evaluated_results.determine">
+                                                <input type="hidden" name="kit_1_id" id="kit_id_1" class="form-control" v-model="evaluated_results.kit_1"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_kit(1)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="kit_2" id="kit_2" :value="evaluated_results.firstresponse">
+                                                <input type="hidden" name="kit_2_id" id="kit_id_2" class="form-control" v-model="evaluated_results.kit_2"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_kit(2)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td><input type="text" class="form-control" name="pt_panel_1_kit1_results" :value="evaluated_results.pt_panel_1_kit1_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_1_kit2_results" :value="evaluated_results.pt_panel_1_kit2_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_1_final_results" :value="evaluated_results.pt_panel_1_final_results"></td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_1_kit1_results" id="sample_test_1" :value="evaluated_results.pt_panel_1_kit1_results">
+                                                <input type="hidden" name="pt_panel_1_kit1_results_id" id="pt_panel_1_kit1_results_id" class="form-control" v-model="evaluated_results.pt_panel_1_kit1_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(1)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_1_kit2_results" id="sample_test_2":value="evaluated_results.pt_panel_1_kit2_results">
+                                                <input type="hidden" name="pt_panel_1_kit2_results_id" id="pt_panel_1_kit2_results_id" class="form-control" v-model="evaluated_results.pt_panel_1_kit2_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(2)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_1_final_results" id="sample_final_3":value="evaluated_results.pt_panel_1_final_results">
+                                                <input type="hidden" name="pt_panel_1_final_results_id" id="pt_panel_1_final_results_id" class="form-control" v-model="evaluated_results.pt_panel_1_final_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_final_result(3)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
                                     </tr>
                                      <tr>
-                                        <td><input type="text" class="form-control" name="pt_panel_2_kit1_results" :value="evaluated_results.pt_panel_2_kit1_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_2_kit2_results" :value="evaluated_results.pt_panel_2_kit2_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_2_final_results" :value="evaluated_results.pt_panel_3_final_results"></td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_2_kit1_results" id="sample_test_4":value="evaluated_results.pt_panel_2_kit1_results">
+                                                <input type="hidden" name="pt_panel_2_kit1_results_id" id="pt_panel_2_kit1_results_id" class="form-control" v-model="evaluated_results.pt_panel_2_kit1_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(4)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_2_kit2_results" id="sample_test_5":value="evaluated_results.pt_panel_2_kit2_results">
+                                                <input type="hidden" name="pt_panel_2_kit2_results_id" id="pt_panel_2_kit2_results_id" class="form-control" v-model="evaluated_results.pt_panel_2_kit2_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(5)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_2_final_results" id="sample_final_6":value="evaluated_results.pt_panel_2_final_results">
+                                                <input type="hidden" name="pt_panel_2_final_results_id" id="pt_panel_2_final_results_id" class="form-control" v-model="evaluated_results.pt_panel_2_final_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_final_result(6)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
                                     </tr>
                                      <tr>
-                                        <td><input type="text" class="form-control" name="pt_panel_3_kit1_results" :value="evaluated_results.pt_panel_3_kit1_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_3_kit2_results" :value="evaluated_results.pt_panel_3_kit2_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_3_final_results" :value="evaluated_results.pt_panel_3_final_results"></td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_2_kit2_results" id="sample_test_7":value="evaluated_results.pt_panel_2_kit2_results">
+                                                <input type="hidden" name="pt_panel_2_kit2_results_id" id="pt_panel_2_kit2_results_id" class="form-control" v-model="evaluated_results.pt_panel_2_kit2_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(7)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_3_kit2_results" id="sample_test_8":value="evaluated_results.pt_panel_3_kit2_results">
+                                                <input type="hidden" name="pt_panel_3_kit2_results_id" id="pt_panel_3_kit2_results_id" class="form-control" v-model="evaluated_results.pt_panel_3_kit2_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(8)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_3_final_results" id="sample_final_9":value="evaluated_results.pt_panel_3_final_results">
+                                                <input type="hidden" name="pt_panel_3_final_results_id" id="pt_panel_3_final_results_id" class="form-control" v-model="evaluated_results.pt_panel_3_final_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_final_result(9)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
                                     </tr>
                                      <tr>
-                                        <td><input type="text" class="form-control" name="pt_panel_4_kit1_results" :value="evaluated_results.pt_panel_4_kit1_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_4_kit2_results" :value="evaluated_results.pt_panel_4_kit2_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_4_final_results" :value="evaluated_results.pt_panel_4_final_results"></td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_4_kit1_results" id="sample_test_10":value="evaluated_results.pt_panel_4_kit1_results">
+                                                <input type="hidden" name="pt_panel_4_kit1_results_id" id="pt_panel_4_kit1_results_id" class="form-control" v-model="evaluated_results.pt_panel_4_kit1_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(10)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_4_kit2_results" id="sample_test_11":value="evaluated_results.pt_panel_4_kit2_results">
+                                                <input type="hidden" name="pt_panel_4_kit2_results_id" id="pt_panel_4_kit2_results_id" class="form-control" v-model="evaluated_results.pt_panel_4_kit2_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(11)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_4_final_results" id="sample_final_12":value="evaluated_results.pt_panel_4_final_results">
+                                                <input type="hidden" name="pt_panel_4_final_results_id" id="pt_panel_4_final_results_id" class="form-control" v-model="evaluated_results.pt_panel_4_final_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_final_result(12)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
                                     </tr>
                                      <tr>
-                                        <td><input type="text" class="form-control" name="pt_panel_5_kit1_results" :value="evaluated_results.pt_panel_5_kit1_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_5_kit2_results" :value="evaluated_results.pt_panel_5_kit2_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_5_final_results" :value="evaluated_results.pt_panel_5_final_results"></td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_5_kit1_results" id="sample_test_13":value="evaluated_results.pt_panel_5_kit1_results">
+                                                <input type="hidden" name="pt_panel_5_kit1_results_id" id="pt_panel_5_kit1_results_id" class="form-control" v-model="evaluated_results.pt_panel_5_kit1_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(13)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_5_kit2_results" id="sample_test_14":value="evaluated_results.pt_panel_5_kit2_results">
+                                                <input type="hidden" name="pt_panel_5_kit2_results_id" id="pt_panel_5_kit2_results_id" class="form-control" v-model="evaluated_results.pt_panel_5_kit2_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(14)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_5_final_results" id="sample_final_15":value="evaluated_results.pt_panel_5_final_results">
+                                                <input type="hidden" name="pt_panel_5_final_results_id" id="pt_panel_5_final_results_id" class="form-control" v-model="evaluated_results.pt_panel_5_final_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_final_result(15)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
                                     </tr>
                                      <tr>
-                                        <td><input type="text" class="form-control" name="pt_panel_6_kit1_results" :value="evaluated_results.pt_panel_6_kit1_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_6_kit2_results" :value="evaluated_results.pt_panel_6_kit1_results"></td>
-                                        <td><input type="text" class="form-control" name="pt_panel_6_final_results" :value="evaluated_results.pt_panel_6_final_results"></td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_6_kit1_results" id="sample_test_16":value="evaluated_results.pt_panel_6_kit1_results">
+                                                <input type="hidden" name="pt_panel_6_kit1_results_id" id="pt_panel_6_kit1_results_id" class="form-control" v-model="evaluated_results.pt_panel_6_kit1_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(16)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_6_kit2_results" id="sample_test_17":value="evaluated_results.pt_panel_6_kit2_results">
+                                                <input type="hidden" name="pt_panel_6_kit2_results_id" id="pt_panel_6_kit2_results_id" class="form-control" v-model="evaluated_results.pt_panel_6_kit2_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_test_result(17)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm ">
+                                                <input type="text" disabled  class="form-control" name="pt_panel_6_final_results" id="sample_final_18":value="evaluated_results.pt_panel_6_final_results">
+                                                <input type="hidden" name="pt_panel_6_final_results_id" id="pt_panel_6_final_results_id" class="form-control" v-model="evaluated_results.pt_panel_6_final_results_id"/>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_final_result(18)"><i class="fa fa-edit"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
                                     </tr>
                                     
                                 </table>                       
@@ -883,4 +1051,12 @@
     </div>
 </div>
 
+<style type="text/css">
+    .sweet-alert input {
+       display: initial;
+       width: auto;
+       height: auto;
+       margin: auto;
+}
+</style>
 @endsection

@@ -57,6 +57,7 @@ new Vue({
         sub_county_:'',
         facility_:'',
         check_date_clicked: '',
+        find_facility: [],
 
         role: '',
         toggle: {}
@@ -265,7 +266,10 @@ new Vue({
         show_update_evaluated_results: function(){
 
             $("#view-evaluted-result").modal('hide');
-            $("#update-evaluated-result").modal('show');                
+            $("#update-evaluated-result").modal('show'); 
+
+            this.loadCounties_();
+            this.loadPrograms();               
         },
 
         update_evaluated_results: function(id){
@@ -481,24 +485,33 @@ new Vue({
          //Populate counties from FacilityController
         loadCounties_: function() {
             this.$http.get('/cnts').then((response) => {
-                this.counties = response.data;
+                this.counties_ = response.data;
             }, (response) => {
                 // console.log(response);
             });
         },
 
         fetchSubcounties_: function() {
-            let id = $('#county_id').val();
+            let id = $('#county_id_').val();
             this.$http.get('/subs/'+ id).then((response) => {
-                this.subs = response.data;
+                this.sub_counties_ = response.data;
             }, (response) => {
                 // console.log(response);
             });
         },
         fetchFacilities_: function() {
-            let id = $('#sub_id').val();
+            let id = $('#sub_id_').val();
             this.$http.get('/fclts/'+id).then((response) => {
-                this.facilities = response.data;
+                this.facilities_ = response.data;
+            }, (response) => {
+                // console.log(response);
+            });
+        },
+
+         //    Populate programs from ProgramController
+        loadPrograms: function() {
+            this.$http.get('/progs').then((response) => { 
+                this.programs = response.data;
             }, (response) => {
                 // console.log(response);
             });
@@ -543,9 +556,13 @@ new Vue({
             if(year !== '' && month !== '') {
                 totalDate = new Date(year, month, 0).getDate();
             }
-            console.log(year +' ' +month +' ' +totalDate+'  ');
             $('select[name=day]').empty();
             for(var i = 1; i <= totalDate; i++) {
+
+                //append 0 to single digits
+                if (i.toString().length<2) {
+                    i = '0'+i;
+                }
                $('select[name=day]').append("<option value='"+i+"'>"+i+"</option>");
             }
         },
@@ -561,15 +578,128 @@ new Vue({
             var date = year + '-' +month+ '-' +day;
 
             if (this.check_date_clicked==1) {
-                $('#change_date_received').val(date);
+                $('#date_received').val(date);
             }
             else if (this.check_date_clicked==2) {
-                $('#change_date_constituted').val(date);
+                $('#date_constituted').val(date);
             }
             else if (this.check_date_clicked==3) {
-                $('#change_date_tested').val('here');
+                $('#date_tested').val(date);
 
             } 
+                $('#month').val('');
+                $('#day').val('');
+                this.check_date_clicked = '';
+                $('#set-date').collapse('hide');
+        },
+        set_facility: function(id){
+
+            var id = $('#facility_id_list').val();
+
+            this.$http.get('/search_facility/'+id).then((response) => {
+                this.find_facility = response.data;
+
+                $('#facility_id').val(this.find_facility.id);
+                $('#facility_name').val(this.find_facility.name);
+
+                $('#set-facility').collapse('hide');
+
+            });         
+        },
+        //change the test data using dynamic pop ups
+        set_test_result: function (id){
+            var input = $("#sample_test_"+id); 
+            var output = '<div class=""> <input type="radio" name="test_result" id="sample_test" value="1"/> Reactive <input type="radio" name="test_result" id="sample_test" value="2"/> Non Reactive <input type="radio" name="test_result" id="sample_test" value="3"/> Invalid <input type="radio" name="test_result" id="sample_test" value="4"/> Not Done </div>';
+            var value;
+            swal({
+                    title: "Please Select:",
+                    text: output,
+                    html: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#025aa5",
+                    confirmButtonText: "Set",
+                    cancelButtonText: "Close",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                }, 
+                function () {
+                    value = $("input[name=test_result]:checked").val();
+                    $('#sample_test_'+id).val('1');
+
+                    if (value == 1) {
+                        input.val('Reactive');
+                    }else if (value == 2) {
+                        input.val('Non Reactive');
+                    }else if (value == 3) {
+                        input.val('Invalid');
+                    }else if (value == 4) {
+                        input.val('Not Done');
+                    }
+                }
+             );                            
+        },
+        //change the final result data using dynamic pop ups
+        set_final_result: function (id){
+            var input = $("#sample_final_"+id);
+            var output = '<div class=""> <input type="radio" name="final_result" id="sample_test" value="1"/> Postive <input type="radio" name="final_result" id="sample_test" value="2"/> Negative <input type="radio" name="final_result" id="sample_test" value="3"/> Invalid <input type="radio" name="final_result" id="sample_test" value="4"/> Inconclusive <input type="radio" name="final_result" id="sample_test" value="5"/> Not Done </div>';
+            var value;
+            swal({
+                    title: "Please Select:",
+                    text: output,
+                    html: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#025aa5",
+                    confirmButtonText: "Set",
+                    cancelButtonText: "Close",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                }, 
+                function () {
+                    value = $("input[name=final_result]:checked").val();
+                    $('#sample_final_id_'+id).val('1');
+
+                    if (value == 1) {
+                        input.val('Positive');
+                    }else if (value == 2) {
+                        input.val('Negative');
+                    }else if (value == 3) {
+                        input.val('Invalid');
+                    }else if (value == 4) {
+                        input.val('Inconclusive');
+                    }else if (value == 5) {
+                        input.val('Not Done');
+                    }
+                }
+             );                           
+        },
+        set_kit: function (id){
+            var input = $("#kit_"+id); 
+            var output = '<div class=""> <input type="radio" name="final_result" id="sample_test" value="1"/> Determine <input type="radio" name="final_result" id="sample_test" value="2"/> First Response <input type="radio" name="final_result" id="sample_test" value="3"/> SD Bioline ';
+            var value;
+            swal({
+                    title: "Please Select:",
+                    text: output,
+                    html: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#025aa5",
+                    confirmButtonText: "Set",
+                    cancelButtonText: "Close",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                }, 
+                function () {
+                    value = $("input[name=final_result]:checked").val();
+                    $('#kit_id_'+id).val('1');
+
+                    if (value == 1) {
+                        input.val('Determine');
+                    }else if (value == 2) {
+                        input.val('First Response');
+                    }else if (value == 3) {
+                        input.val('SD Bioline');
+                    }
+                }
+             );                           
         }
     },
 });
