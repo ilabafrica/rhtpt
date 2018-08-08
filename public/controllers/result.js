@@ -609,6 +609,7 @@ new Vue({
         //change the test data using dynamic pop ups
         set_test_result: function (id){
             var input = $("#sample_test_"+id); 
+            var input_value = $("#sample_test_value_"+id); 
             var output = '<div class=""> <input type="radio" name="test_result" id="sample_test" value="1"/> Reactive <input type="radio" name="test_result" id="sample_test" value="2"/> Non Reactive <input type="radio" name="test_result" id="sample_test" value="3"/> Invalid <input type="radio" name="test_result" id="sample_test" value="4"/> Not Done </div>';
             var value;
             swal({
@@ -628,12 +629,16 @@ new Vue({
 
                     if (value == 1) {
                         input.val('Reactive');
+                        input_value.val('5');
                     }else if (value == 2) {
                         input.val('Non Reactive');
+                        input_value.val('6');
                     }else if (value == 3) {
                         input.val('Invalid');
+                        input_value.val('7');
                     }else if (value == 4) {
                         input.val('Not Done');
+                        input_value.val('8');
                     }
                 }
              );                            
@@ -641,6 +646,7 @@ new Vue({
         //change the final result data using dynamic pop ups
         set_final_result: function (id){
             var input = $("#sample_final_"+id);
+            var input_value = $("#sample_final_value_"+id);
             var output = '<div class=""> <input type="radio" name="final_result" id="sample_test" value="1"/> Postive <input type="radio" name="final_result" id="sample_test" value="2"/> Negative <input type="radio" name="final_result" id="sample_test" value="3"/> Invalid <input type="radio" name="final_result" id="sample_test" value="4"/> Inconclusive <input type="radio" name="final_result" id="sample_test" value="5"/> Not Done </div>';
             var value;
             swal({
@@ -660,21 +666,27 @@ new Vue({
 
                     if (value == 1) {
                         input.val('Positive');
+                        input_value.val('9');
                     }else if (value == 2) {
                         input.val('Negative');
+                        input_value.val('10');
                     }else if (value == 3) {
                         input.val('Invalid');
+                        input_value.val('7');
                     }else if (value == 4) {
                         input.val('Inconclusive');
+                        input_value.val('11');
                     }else if (value == 5) {
                         input.val('Not Done');
+                        input_value.val('8');
                     }
                 }
              );                           
         },
         set_kit: function (id){
             var input = $("#kit_"+id); 
-            var output = '<div class=""> <input type="radio" name="final_result" id="sample_test" value="1"/> Determine <input type="radio" name="final_result" id="sample_test" value="2"/> First Response <input type="radio" name="final_result" id="sample_test" value="3"/> SD Bioline ';
+            var input_value = $("#kit_id_"+id); 
+            var output = '<div class=""> <input type="radio" name="kit" id="sample_test" value="1"/> Determine <input type="radio" name="kit" id="sample_test" value="2"/> First Response <input type="radio" name="kit" id="sample_test" value="3"/> SD Bioline ';
             var value;
             swal({
                     title: "Please Select:",
@@ -688,15 +700,17 @@ new Vue({
                     closeOnCancel: true
                 }, 
                 function () {
-                    value = $("input[name=final_result]:checked").val();
-                    $('#kit_id_'+id).val('1');
+                    value = $("input[name=kit]:checked").val();
 
                     if (value == 1) {
                         input.val('Determine');
+                        input_value.val('1');
                     }else if (value == 2) {
                         input.val('First Response');
+                        input_value.val('2');
                     }else if (value == 3) {
                         input.val('SD Bioline');
+                        input_value.val('3');
                     }
                 }
              );                           

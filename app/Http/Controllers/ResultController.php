@@ -18,6 +18,7 @@ use App\Facility;
 use App\Program;
 use App\Panel;
 use App\Material;
+use App\EvaluatedResult;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
@@ -556,58 +557,98 @@ class ResultController extends Controller
 
         foreach ($pt_results as $rss) {
             //test kit 1 results
-            if($rss->field_id == Field::idByUID('PT Panel 1 Test 1 Results'))
+            if($rss->field_id == Field::idByUID('PT Panel 1 Test 1 Results')){
                 $pt_panel_1_kit1_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 2 Test 1 Results'))
+                $pt_panel_1_kit1_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 2 Test 1 Results')){
                 $pt_panel_2_kit1_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 3 Test 1 Results'))
+                $pt_panel_2_kit1_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 3 Test 1 Results')){
                 $pt_panel_3_kit1_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 4 Test 1 Results'))
+                $pt_panel_3_kit1_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 4 Test 1 Results')){
                 $pt_panel_4_kit1_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 5 Test 1 Results'))
+                $pt_panel_4_kit1_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 5 Test 1 Results')){
                 $pt_panel_5_kit1_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 6 Test 1 Results'))
+                $pt_panel_5_kit1_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 6 Test 1 Results')){
                 $pt_panel_6_kit1_results = $option::nameByID($rss->response);
+                $pt_panel_6_kit1_results_value = $rss->response;
+            }
 
             //test kit 2 results
-            if($rss->field_id == Field::idByUID('PT Panel 1 Test 2 Results'))
+            if($rss->field_id == Field::idByUID('PT Panel 1 Test 2 Results')){
                 $pt_panel_1_kit2_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 2 Test 2 Results'))
+                $pt_panel_1_kit2_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 2 Test 2 Results')){
                 $pt_panel_2_kit2_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 3 Test 2 Results'))
+                $pt_panel_2_kit2_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 3 Test 2 Results')){
                 $pt_panel_3_kit2_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 4 Test 2 Results'))
+                $pt_panel_3_kit2_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 4 Test 2 Results')){
                 $pt_panel_4_kit2_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 5 Test 2 Results'))
+                $pt_panel_4_kit2_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 5 Test 2 Results')){
                 $pt_panel_5_kit2_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 6 Test 2 Results'))
+                $pt_panel_5_kit2_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 6 Test 2 Results')){
                 $pt_panel_6_kit2_results = $option::nameByID($rss->response);
+                $pt_panel_6_kit2_results_value = $rss->response;
+            }
            
             //final results
-            if($rss->field_id == Field::idByUID('PT Panel 1 Final Results'))
+            if($rss->field_id == Field::idByUID('PT Panel 1 Final Results')){
                 $pt_panel_1_final_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 2 Final Results'))
+                $pt_panel_1_final_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 2 Final Results')){
                 $pt_panel_2_final_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 3 Final Results'))
+                $pt_panel_2_final_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 3 Final Results')){
                 $pt_panel_3_final_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 4 Final Results'))
+                $pt_panel_3_final_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 4 Final Results')){
                 $pt_panel_4_final_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 5 Final Results'))
+                $pt_panel_4_final_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 5 Final Results')){
                 $pt_panel_5_final_results = $option::nameByID($rss->response);
-            if($rss->field_id == Field::idByUID('PT Panel 6 Final Results'))
+                $pt_panel_5_final_results_value = $rss->response;
+            }
+            if($rss->field_id == Field::idByUID('PT Panel 6 Final Results')){
                 $pt_panel_6_final_results = $option::nameByID($rss->response);
+                $pt_panel_6_final_results_value = $rss->response;
+            }
            
             // //test kit 1 results
-            if($rss->field_id == Field::idByUID('Test 1 Kit Name'))
+            if($rss->field_id == Field::idByUID('Test 1 Kit Name')){
                 $determine = $option::nameByID($rss->response);
+                $determine_value = $rss->response;
+            }
             if($rss->field_id == Field::idByUID('Test 1 Lot No.'))
                 $determine_lot_no = $rss->response;
             if($rss->field_id == Field::idByUID('Test 1 Expiry Date'))
                 $determine_expiry_date = $rss->response;
 
             // //test kit 2 results
-            if($rss->field_id == Field::idByUID('Test 2 Kit Name'))
+            if($rss->field_id == Field::idByUID('Test 2 Kit Name')){
                 $firstresponse = $option::nameByID($rss->response);
+                $firstresponse_value = $rss->response;
+            }
             if($rss->field_id == Field::idByUID('Test 2 Lot No.'))
                 $firstresponse_lot_no = $rss->response;
             if($rss->field_id == Field::idByUID('Test 2 Expiry Date'))
@@ -658,6 +699,7 @@ class ResultController extends Controller
         }
 
         //get participant details
+        $participant_id = $user->id;
         $user_name = $user->name;
         $first_name = $user->first_name;
         $middle_name = $user->middle_name;
@@ -671,7 +713,8 @@ class ResultController extends Controller
         $county = strtoupper($facility->subCounty->county->name);
         $sub_county = $facility->subCounty->name;
         $mfl = $facility->code;
-        $facility = $facility->name;
+        $facility_name = $facility->name;
+        $facility_id = $facility->id;
         
         //combine expected and actual result into one array
         $all_results = array();
@@ -704,6 +747,7 @@ class ResultController extends Controller
                     'pt_id' => $pt->id,
                     'pt_approved_comment' => $pt->approved_comment,
                     'date_approved' => $pt->date_approved,
+                    'participant_id' => $participant_id,
                     'user_name' => $user_name,
                     'first_name' => $first_name,
                     'middle_name' => $middle_name,
@@ -714,7 +758,8 @@ class ResultController extends Controller
                     'program' => $program,
                     'county' => $county,
                     'sub_county' => $sub_county,
-                    'facility' => $facility,
+                    'facility' => $facility_name,
+                    'facility_id' => $facility_id,
                     'mfl' => $mfl,
 
                     //material details
@@ -724,14 +769,17 @@ class ResultController extends Controller
 
                     //panel info
                     'determine' =>$determine,
+                    'determine_value' =>$determine_value,
                     'determine_lot_no' =>$determine_lot_no,
                     'determine_expiry_date' =>$determine_expiry_date,
                     'firstresponse' =>$firstresponse,
+                    'firstresponse_value' =>$firstresponse_value,
                     'firstresponse_lot_no' =>$firstresponse_lot_no,
                     'firstresponse_expiry_date' =>$firstresponse_expiry_date,
 
                     //results
                     //test 1 results
+                    //name
                     "pt_panel_1_kit1_results"=>$pt_panel_1_kit1_results, 
                     "pt_panel_2_kit1_results"=>$pt_panel_2_kit1_results,
                     "pt_panel_3_kit1_results"=>$pt_panel_3_kit1_results,
@@ -739,7 +787,16 @@ class ResultController extends Controller
                     "pt_panel_5_kit1_results"=>$pt_panel_5_kit1_results,
                     "pt_panel_6_kit1_results"=>$pt_panel_6_kit1_results,
 
+                    //value 
+                    "pt_panel_1_kit1_results_value"=>$pt_panel_1_kit1_results_value, 
+                    "pt_panel_2_kit1_results_value"=>$pt_panel_2_kit1_results_value,
+                    "pt_panel_3_kit1_results_value"=>$pt_panel_3_kit1_results_value,
+                    "pt_panel_4_kit1_results_value"=>$pt_panel_4_kit1_results_value,
+                    "pt_panel_5_kit1_results_value"=>$pt_panel_5_kit1_results_value,
+                    "pt_panel_6_kit1_results_value"=>$pt_panel_6_kit1_results_value,
+
                     //test 2 results
+                    //name
                     "pt_panel_1_kit2_results"=>$pt_panel_1_kit2_results, 
                     "pt_panel_2_kit2_results"=>$pt_panel_2_kit2_results,
                     "pt_panel_3_kit2_results"=>$pt_panel_3_kit2_results,
@@ -747,13 +804,30 @@ class ResultController extends Controller
                     "pt_panel_5_kit2_results"=>$pt_panel_5_kit2_results,
                     "pt_panel_6_kit2_results"=>$pt_panel_6_kit2_results,
 
+                    //value
+                    "pt_panel_1_kit2_results_value"=>$pt_panel_1_kit2_results_value, 
+                    "pt_panel_2_kit2_results_value"=>$pt_panel_2_kit2_results_value,
+                    "pt_panel_3_kit2_results_value"=>$pt_panel_3_kit2_results_value,
+                    "pt_panel_4_kit2_results_value"=>$pt_panel_4_kit2_results_value,
+                    "pt_panel_5_kit2_results_value"=>$pt_panel_5_kit2_results_value,
+                    "pt_panel_6_kit2_results_value"=>$pt_panel_6_kit2_results_value,
+
                     //final tested results
+                    //name
                     "pt_panel_1_final_results"=>$pt_panel_1_final_results, 
                     "pt_panel_2_final_results"=>$pt_panel_2_final_results,
                     "pt_panel_3_final_results"=>$pt_panel_3_final_results,
                     "pt_panel_4_final_results"=>$pt_panel_4_final_results,
                     "pt_panel_5_final_results"=>$pt_panel_5_final_results,
                     "pt_panel_6_final_results"=>$pt_panel_6_final_results,
+
+                    //value
+                    "pt_panel_1_final_results_value"=>$pt_panel_1_final_results_value, 
+                    "pt_panel_2_final_results_value"=>$pt_panel_2_final_results_value,
+                    "pt_panel_3_final_results_value"=>$pt_panel_3_final_results_value,
+                    "pt_panel_4_final_results_value"=>$pt_panel_4_final_results_value,
+                    "pt_panel_5_final_results_value"=>$pt_panel_5_final_results_value,
+                    "pt_panel_6_final_results_value"=>$pt_panel_6_final_results_value,
 
                     //expected results
                     "expected_result_1"=>$expected_result_1, 
@@ -818,7 +892,7 @@ class ResultController extends Controller
         $result->save();
 
          //  Send SMS
-        $round = Round::find($pt->enrolment->round->id)->description;
+        $round = Round::find($result->enrolment->round->id)->description;
         $message = Notification::where('template', Notification::FEEDBACK_RELEASE)->first()->message;
         $message = $this->replace_between($message, '[', ']', $round);
         $message = str_replace(' [', ' ', $message);
@@ -828,14 +902,14 @@ class ResultController extends Controller
         $updated = Carbon::today()->toDateTimeString();
         //  Time
         $now = Carbon::now('Africa/Nairobi');
-        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $pt->enrolment->round->id, 'text' => $message, 'user_id' => $pt->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
+        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $result->enrolment->round->id, 'text' => $message, 'user_id' => $result->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
         $recipients = NULL;
-        $recipients = User::find($pt->enrolment->user->id)->value('phone');
+        $recipients = User::find($result->enrolment->user->id)->value('phone');
         //  Bulk-sms settings
         $api = DB::table('bulk_sms_settings')->first();
         $username   = $api->code;
         $apikey     = $api->api_key;
-        /*if($recipients)
+        if($recipients)
         {
             // Specified sender-id
             // $from = $api->code;
@@ -859,7 +933,7 @@ class ResultController extends Controller
             {
             echo "Encountered an error while sending: ".$e->getMessage();
             }
-        }*/
+        }
         return response()->json($result);
     }
      /**
@@ -869,65 +943,113 @@ class ResultController extends Controller
      */
     public function update_evaluated_results(Request $request, $id )
     {
-        $pt_id = $request->pt_id;
-        $user_id = Auth::user()->id; 
+        //save user details
 
-        $result = Pt::find($id);
+        $participant = User::find($request->participant_id)->first();
+        $participant->first_name = $request->first_name;
+        $participant->middle_name = $request->middle_name;
+        $participant->last_name = $request->last_name;
+        $participant->phone = $request->phone_number;
+
+        $participant->save();
+
+        DB::table('role_user')->where('user_id', $request->participant_id)->update(['tier' => $request->facility_id, 'program_id' => $request->program_id]);
+        
+        //save pt details
+
+        $pt = Pt::find($id);
         if ($request->incorrect_results) {
-            $result->incorrect_results = $request->incorrect_results;
+            $pt->incorrect_results = $request->incorrect_results;
         }else{
-            $result->incorrect_results = 0;
+            $pt->incorrect_results = 0;
         }
 
         if ($request->incomplete_kit_data) {
-            $result->incomplete_kit_data = $request->incomplete_kit_data;
+            $pt->incomplete_kit_data = $request->incomplete_kit_data;
         }else{
-            $result->incomplete_kit_data = 0;
+            $pt->incomplete_kit_data = 0;
         }
 
         if ($request->dev_from_procedure) {
-            $result->dev_from_procedure = $request->dev_from_procedure;
+            $pt->dev_from_procedure = $request->dev_from_procedure;
         }else{
-            $result->dev_from_procedure = 0;
+            $pt->dev_from_procedure = 0;
         }
 
         if ($request->incomplete_other_information) {
-            $result->incomplete_other_information = $request->incomplete_other_information;
+            $pt->incomplete_other_information = $request->incomplete_other_information;
         }else{
-            $result->incomplete_other_information = 0;
+            $pt->incomplete_other_information = 0;
         }
 
         if ($request->use_of_expired_kits) {
-            $result->use_of_expired_kits = $request->use_of_expired_kits;
+            $pt->use_of_expired_kits = $request->use_of_expired_kits;
         }else{
 
-            $result->use_of_expired_kits = 0;
+            $pt->use_of_expired_kits = 0;
         }
         if ($request->invalid_results) {
-            $result->invalid_results = $request->invalid_results;
+            $pt->invalid_results = $request->invalid_results;
         }else{
-            $result->invalid_results = 0;
+            $pt->invalid_results = 0;
         }
 
         if ($request->wrong_algorithm) {
-            $result->wrong_algorithm = $request->wrong_algorithm;
+            $pt->wrong_algorithm = $request->wrong_algorithm;
         }else{
-            $result->wrong_algorithm = 0;
+            $pt->wrong_algorithm = 0;
         }
 
         if ($request->incomplete_results) {
-            $result->incomplete_results = $request->incomplete_results;
+            $pt->incomplete_results = $request->incomplete_results;
         }else{
-            $result->incomplete_results =0;
+            $pt->incomplete_results =0;
         }
 
         if ($request->feedback==1) {        //cannot check if value is 0.    
-            $result->feedback = $request->feedback;
+            $pt->feedback = $request->feedback;
         }else{
-            $result->feedback = 0; 
+            $pt->feedback = 0; 
         }
         
-        $result->save();
+        $pt->save();
+
+        //save result details
+
+        foreach ($request->all() as $key => $value)
+        {
+            if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
+                continue;
+            else if(stripos($key, 'field') !==FALSE)
+            { 
+                $fieldId = $this->strip($key);
+                if(is_array($value))
+                  $value = implode(', ', $value);
+
+                $results = Result::where('pt_id', $pt->id)->get();
+
+                foreach ($results as $result_key => $result) {
+
+                   if ($result->field_id ==$fieldId) {
+                        $result->response = $value;
+                        $result->save();
+                   }
+                }
+            }            
+        }
+
+        //save previous data
+
+        $evaluated = $this->evaluated_results($pt->id);
+        $user_id = Auth::user()->id;
+
+        $old_details = new EvaluatedResult; 
+        $old_details->pt_id = $pt->id; 
+        $old_details->participant_id = $evaluated['participant_id'];         
+        $old_details->user_id = $user_id;         
+        $old_details->results = json_encode($evaluated); 
+        $old_details->save();
+        
         
         return response()->json($result);
     }
