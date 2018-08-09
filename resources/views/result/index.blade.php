@@ -125,7 +125,7 @@
             <th>Tester ID</th>
             <th>Participant</th>
             <th>Status</th>
-            <th>Reports</th>
+            <th>Performance Report</th>
             <th>Action</th>
         </tr>
         <tr v-for="(result, key) in results">
@@ -610,7 +610,7 @@
                                     <div v-if="evaluated_results.feedback">
                                         <input type="hidden" class="form-control" name="pt_id" :value="evaluated_results.pt_id">
                                         <div class="form-group row" v-if="evaluated_results.panel_status==2">
-                                            <label class="col-sm-5 form-control-label" for="title"><b>Verification Comment:</b></label>
+                                            <label class="col-sm-5 form-control-label" for="title"><b>Expert Comment:</b></label>
                                             <div class="col-sm-7">
                                                 <textarea name="comment" class="form-control">@{{evaluated_results.feedback}}</textarea>
                                             </div>
