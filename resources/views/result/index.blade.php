@@ -756,11 +756,11 @@
                                 <hr>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
-                                        for="last_name">Panel Received</label>
-                                        <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
-                                        for="last_name">Panel Constituted</label>
-                                        <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
-                                        for="last_name">Panel Tested</label>                                                                 
+                                    for="last_name">Panel Received</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
+                                    for="last_name">Panel Constituted</label>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
+                                    for="last_name">Panel Tested</label>                                                                 
                                 </div>
                                 <div class="form-group row">
                                     <div class="input-group input-group-sm col-sm-4" :class="{ 'control': true }">
@@ -1038,9 +1038,15 @@
                                                 </span>
                                             </div>
                                         </td>
-                                    </tr>
-                                    
-                                </table>                       
+                                    </tr>                                    
+                                </table>  
+                                <div class="form-group row">
+                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('reason_for_change') }" for="reason_for_change">Reason For Change</label>                                    
+                                    <div class="col-sm-6" :class="{ 'control': true }">
+                                        <textarea v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('reason_for_change') }" name="reason_for_change" id="reason_for_change" type="text"/> </textarea>
+                                        <span v-show="errors.has('reason_for_change')" class="help is-danger">@{{ errors.first('reason_for_change') }}</span>
+                                    </div>
+                                </div>                     
                                 <div class="form-group row col-sm-offset-2">
                                     <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Update Evaluated Results</button>&nbsp;
                                     <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>

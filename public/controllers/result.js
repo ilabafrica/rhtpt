@@ -266,10 +266,34 @@ new Vue({
         show_update_evaluated_results: function(){
 
             $("#view-evaluted-result").modal('hide');
-            $("#update-evaluated-result").modal('show'); 
 
             this.loadCounties_();
-            this.loadPrograms();               
+            this.loadPrograms();
+
+            //prompt user to add the reason for change before editing
+            
+            swal({
+              title: "Add Reason for Change",
+              text: "",
+              type: "input",
+              showCancelButton: false,
+              confirmButtonText: "Set",
+              confirmButtonColor: "#025aa5",
+              closeOnConfirm: true,
+              animation: "slide-from-top",
+              inputPlaceholder: "Write something"
+            },
+            function(inputValue){
+                if (inputValue === false) return false;
+
+                if (inputValue === "") {
+                    swal.showInputError("You need to write something");
+                    return false
+                }
+
+                $("#reason_for_change").val(inputValue);
+                $("#update-evaluated-result").modal('show'); 
+            });                                       
         },
 
         update_evaluated_results: function(id){

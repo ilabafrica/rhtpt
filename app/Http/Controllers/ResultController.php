@@ -1047,6 +1047,7 @@ class ResultController extends Controller
         $old_details->pt_id = $pt->id; 
         $old_details->participant_id = $evaluated['participant_id'];         
         $old_details->user_id = $user_id;         
+        $old_details->reason_for_change = $request->reason_for_change;         
         $old_details->results = json_encode($evaluated); 
         $old_details->save();
         
