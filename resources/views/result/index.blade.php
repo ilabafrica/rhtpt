@@ -125,7 +125,7 @@
             <th>Tester ID</th>
             <th>Participant</th>
             <th>Status</th>
-            <th>Reports</th>
+            <th>Performance Report</th>
             <th>Action</th>
         </tr>
         <tr v-for="(result, key) in results">
@@ -147,9 +147,8 @@
             <td>
             @permission('view-result')               
                 <button class="btn btn-sm btn-secondary" v-if="(result.panel_status==0 && result.user_role !=2) || result.panel_status==1 " @click.prevent="viewResult(result)" ><i class="fa fa-reorder"></i> View Result</button>
-                <button class="btn btn-sm btn-success" v-if="result.panel_status==0 && result.user_role==2" @click.prevent="viewResult(result)" ><i class="fa fa-check-circle"></i> Verify</button>    
-                	
-                <button class="btn btn-sm btn-secondary" v-if="result.panel_status==3" @click.prevent="showEvaluatedResults(result)" ><i class="fa fa-reorder"></i> View Report</button> 
+                <button class="btn btn-sm btn-success" v-if="result.panel_status==0 && result.user_role==2" @click.prevent="viewResult(result)" ><i class="fa fa-check-circle"></i> Verify</button>
+                <a v-if="result.panel_status==3 " class="btn btn-sm btn-secondary" :href="'print_result/' +result.id + '?type=' + result.feedback +'&view=1'"><i class="fa fa-reorder"></i> View Report</a>
             @endpermission
             @permission('update-result')
                 <button  v-if="result.panel_status==0" class="btn btn-sm btn-primary" @click.prevent="editResult(result)" ><i class="fa fa-edit"></i> Edit</button>
@@ -164,8 +163,8 @@
            @endpermission
 	   
 	   @permission('print-results') 
-            <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==0" class="btn btn-wisteria" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print</a>
-             <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==1" class="btn btn-concrete" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print Again</a>
+            <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==0" class="btn btn-sm btn-wisteria" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print</a>
+             <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==1" class="btn btn-sm btn-concrete" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print Again</a>
             @endpermission 
             </td>
         </tr>
@@ -610,7 +609,7 @@
                                     <div v-if="evaluated_results.feedback">
                                         <input type="hidden" class="form-control" name="pt_id" :value="evaluated_results.pt_id">
                                         <div class="form-group row" v-if="evaluated_results.panel_status==2">
-                                            <label class="col-sm-5 form-control-label" for="title"><b>Verification Comment:</b></label>
+                                            <label class="col-sm-5 form-control-label" for="title"><b>Expert Comment:</b></label>
                                             <div class="col-sm-7">
                                                 <textarea name="comment" class="form-control">@{{evaluated_results.feedback}}</textarea>
                                             </div>
