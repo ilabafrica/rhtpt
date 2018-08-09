@@ -487,18 +487,21 @@ class Algorithm extends Command
      * @param  $date_pt_panel_received, $date_consituted, $date_pt_panel_tested
      * @return Incorrect results.
      */
-     public function check_correct_results($pt_panel_1_final_results, $pt_panel_2_final_results, $pt_panel_3_final_results, $pt_panel_4_final_results, $pt_panel_5_final_results, $pt_panel_6_final_results, $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6)
+     public function check_correct_results($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results, $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6)
      {
          // Check correctness
          $incorrect_results = 1;
-         $indeterminate = Option::idByTitle('Indeterminate');
+         $indeterminate = Option::idByTitle('Inconclusive');
+         $reactive = Option::idByTitle('Reactive');
+         $non_reactive = Option::idByTitle('Non Reactive');
+
          if(
-             ($pt_panel_1_final_results == $ex_1 || $pt_panel_1_final_results == $indeterminate) &&
-             ($pt_panel_2_final_results == $ex_2 || $pt_panel_2_final_results == $indeterminate) &&
-             ($pt_panel_3_final_results == $ex_3 || $pt_panel_3_final_results == $indeterminate) &&
-             ($pt_panel_4_final_results == $ex_4 || $pt_panel_4_final_results == $indeterminate) &&
-             ($pt_panel_5_final_results == $ex_5 || $pt_panel_5_final_results == $indeterminate) &&
-             ($pt_panel_6_final_results == $ex_6 || $pt_panel_6_final_results == $indeterminate)
+             ($pt_panel_1_final_results == $ex_1 || (($pt_panel_1_final_results == $indeterminate) && ($pt_panel_1_test_1_results ==$reactive && $pt_panel_1_test_2_results ==$non_reactive))) &&
+             ($pt_panel_2_final_results == $ex_2 || (($pt_panel_2_final_results == $indeterminate) && ($pt_panel_2_test_1_results ==$reactive && $pt_panel_2_test_2_results ==$non_reactive))) &&
+             ($pt_panel_3_final_results == $ex_3 || (($pt_panel_3_final_results == $indeterminate) && ($pt_panel_3_test_1_results ==$reactive && $pt_panel_3_test_2_results ==$non_reactive))) &&
+             ($pt_panel_4_final_results == $ex_4 || (($pt_panel_4_final_results == $indeterminate)  && ($pt_panel_4_test_1_results ==$reactive && $pt_panel_4_test_2_results ==$non_reactive)))&&
+             ($pt_panel_5_final_results == $ex_5 || (($pt_panel_5_final_results == $indeterminate)  && ($pt_panel_5_test_1_results ==$reactive && $pt_panel_5_test_2_results ==$non_reactive)))&&
+             ($pt_panel_6_final_results == $ex_6 || (($pt_panel_6_final_results == $indeterminate) && ($pt_panel_6_test_1_results ==$reactive && $pt_panel_6_test_2_results ==$non_reactive)))
          )
             $incorrect_results = 0;
          return $incorrect_results;
@@ -552,13 +555,14 @@ class Algorithm extends Command
          $fr = Option::idByTitle('First Response');
          $det = Option::idByTitle('Determine');
          $duo = Option::idByTitle('SDBioline');
+
          if(
-             ($pt_panel_1_test_1_results == $non_reactive && $pt_panel_1_test_2_results == $not_done) || ($pt_panel_1_test_1_results == $reactive && ($pt_panel_1_test_2_results == $non_reactive || $pt_panel_1_test_2_results == $reactive)) || 
-             ($pt_panel_2_test_1_results == $non_reactive && $pt_panel_2_test_2_results == $not_done) || ($pt_panel_2_test_1_results == $reactive && ($pt_panel_2_test_2_results == $non_reactive || $pt_panel_2_test_2_results == $reactive)) || 
-             ($pt_panel_3_test_1_results == $non_reactive && $pt_panel_3_test_2_results == $not_done) || ($pt_panel_3_test_1_results == $reactive && ($pt_panel_3_test_2_results == $non_reactive || $pt_panel_3_test_2_results == $reactive)) || 
-             ($pt_panel_4_test_1_results == $non_reactive && $pt_panel_4_test_2_results == $not_done) || ($pt_panel_4_test_1_results == $reactive && ($pt_panel_4_test_2_results == $non_reactive || $pt_panel_4_test_2_results == $reactive)) || 
-             ($pt_panel_5_test_1_results == $non_reactive && $pt_panel_5_test_2_results == $not_done) || ($pt_panel_5_test_1_results == $reactive && ($pt_panel_5_test_2_results == $non_reactive || $pt_panel_5_test_2_results == $reactive)) || 
-             ($pt_panel_6_test_1_results == $non_reactive && $pt_panel_6_test_2_results == $not_done) || ($pt_panel_6_test_1_results == $reactive && ($pt_panel_6_test_2_results == $non_reactive || $pt_panel_6_test_2_results == $reactive)) || ((($kit_1 == $det) || ($kit_1 == $duo ) ) && ($kit_2 == $fr ))    
+             ($pt_panel_1_test_1_results == $non_reactive && $pt_panel_1_test_2_results == $not_done) || ($pt_panel_1_test_1_results == $reactive && ($pt_panel_1_test_2_results == $non_reactive || $pt_panel_1_test_2_results == $reactive)) && 
+             ($pt_panel_2_test_1_results == $non_reactive && $pt_panel_2_test_2_results == $not_done) || ($pt_panel_2_test_1_results == $reactive && ($pt_panel_2_test_2_results == $non_reactive || $pt_panel_2_test_2_results == $reactive)) && 
+             ($pt_panel_3_test_1_results == $non_reactive && $pt_panel_3_test_2_results == $not_done) || ($pt_panel_3_test_1_results == $reactive && ($pt_panel_3_test_2_results == $non_reactive || $pt_panel_3_test_2_results == $reactive)) && 
+             ($pt_panel_4_test_1_results == $non_reactive && $pt_panel_4_test_2_results == $not_done) || ($pt_panel_4_test_1_results == $reactive && ($pt_panel_4_test_2_results == $non_reactive || $pt_panel_4_test_2_results == $reactive)) && 
+             ($pt_panel_5_test_1_results == $non_reactive && $pt_panel_5_test_2_results == $not_done) || ($pt_panel_5_test_1_results == $reactive && ($pt_panel_5_test_2_results == $non_reactive || $pt_panel_5_test_2_results == $reactive)) && 
+             ($pt_panel_6_test_1_results == $non_reactive && $pt_panel_6_test_2_results == $not_done) || ($pt_panel_6_test_1_results == $reactive && ($pt_panel_6_test_2_results == $non_reactive || $pt_panel_6_test_2_results == $reactive)) && ((($kit_1 == $det) || ($kit_1 == $duo ) ) && ($kit_2 == $fr ))    
             )
             $wrong_algorithm = 0;
          return $wrong_algorithm;
@@ -730,7 +734,7 @@ class Algorithm extends Command
             $incomplete_kit_info = $this->check_kit_info($test_1_kit_name, $test_2_kit_name, $test_1_kit_lot_no, $test_2_kit_lot_no, $test_1_expiry_date, $test_2_expiry_date);
             $use_of_expired_kits = $this->check_expiry($date_pt_panel_tested, $test_1_expiry_date, $test_2_expiry_date, $test_3_expiry_date);
             $incomplete_results = $this->check_complete_results($pt_panel_1_test_1_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_final_results);
-            $incorrect_results = $this->check_correct_results($pt_panel_1_final_results, $pt_panel_2_final_results, $pt_panel_3_final_results, $pt_panel_4_final_results, $pt_panel_5_final_results, $pt_panel_6_final_results, $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6);
+            $incorrect_results = $this->check_correct_results($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results,  $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6);
             $unsatisfactory = $this->check_satisfaction($incorrect_results);
             $invalid_results = $this->check_validity($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results);
             $wrong_algorithm = $this->check_algorithm($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results, $kit_1, $kit_2);

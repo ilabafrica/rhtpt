@@ -16,6 +16,7 @@ use App\SmsHandler;
 use App\SubCounty;
 use App\Designation;
 use App\Pt;
+use App\ImplementingPartner;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 

@@ -47,22 +47,22 @@ class ResultController extends Controller
 
         if(Auth::user()->isCountyCoordinator())
         {
-            $results = County::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
+            $results = County::find(Auth::user()->ru()->tier)->results()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $results = SubCounty::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
+           $results = SubCounty::find(Auth::user()->ru()->tier)->results()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $results = Facility::find(Auth::user()->ru()->tier)->results()->latest()->withTrashed()->paginate($items_per_page);
+           $results = Facility::find(Auth::user()->ru()->tier)->results()->withTrashed()->paginate($items_per_page);
         }
         else if(Auth::user()->isParticipant())
         {
-            $results = Auth::user()->results()->latest()->withTrashed()->paginate($items_per_page);
+            $results = Auth::user()->results()->withTrashed()->paginate($items_per_page);
         }else
         {
-            $results = Pt::latest()->withTrashed()->paginate($items_per_page);
+            $results = Pt::withTrashed()->paginate($items_per_page);
 
         }
 
@@ -150,7 +150,7 @@ class ResultController extends Controller
                 }
             }else{
 
-                $results = $results->latest()->withTrashed()->paginate($items_per_page);
+                $results = $results->withTrashed()->paginate($items_per_page);
             }
         }
 
@@ -719,6 +719,7 @@ class ResultController extends Controller
         //combine expected and actual result into one array
         $all_results = array();
         $round_name = $round->name;
+        $round_status = $round->status;
         $feedback = $pt->outcome($pt->feedback);
         $panel_status = $pt->panel_status;
 
@@ -740,7 +741,8 @@ class ResultController extends Controller
         // dd($remark);
          $all_results = array( 
                     //user details
-                    'round_name'=> $round_name, 
+                    'round_name'=> $round_name,
+                    'round_status'=>$round_status, 
                     'feedback' => $feedback, 
                     'remark' => $remark, 
                     'panel_status' => $panel_status, 
@@ -1064,17 +1066,34 @@ class ResultController extends Controller
     public function print_result($id){
       $data = $this->evaluated_results($id);
 
-      if(\request('type') == 0){//satisfactory
+      //display final report when the round is over
+      if ($data['round_status'] ==0) {      
+          if(\request('type') == 0){//satisfactory
 
-          $pdf = PDF::loadView('result/print1', compact('data'));
-      }
+              $pdf = PDF::loadView('result/feedbackreports/final/satisfactory', compact('data'));
+          }
 
-        if(\request('type') == 1){//unsatisfactory
+            if(\request('type') == 1){//unsatisfactory
 
-            $pt = Pt::where('id',$id)->first();
+                $pt = Pt::where('id',$id)->first();
 
+                $pdf = PDF::loadView('result/feedbackreports/final/unsatisfactory', compact('data','pt'));
+            }
+        }
 
-            $pdf = PDF::loadView('result/print', compact('data','pt'));
+        //display preliminary results
+        else{
+            if(\request('type') == 0){//satisfactory
+
+              $pdf = PDF::loadView('result/feedbackreports/preliminary/satisfactory', compact('data'));
+          }
+
+            if(\request('type') == 1){//unsatisfactory
+
+                $pt = Pt::where('id',$id)->first();
+
+                $pdf = PDF::loadView('result/feedbackreports/preliminary/unsatisfactory', compact('data','pt'));
+            }
         }
 
         $pt = Pt::find($id);
