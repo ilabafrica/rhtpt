@@ -149,9 +149,8 @@
             <td>
             @permission('view-result')               
                 <button class="btn btn-sm btn-secondary" v-if="(result.panel_status==0 && result.user_role !=2) || result.panel_status==1 " @click.prevent="viewResult(result)" ><i class="fa fa-reorder"></i> View Result</button>
-                <button class="btn btn-sm btn-success" v-if="result.panel_status==0 && result.user_role==2" @click.prevent="viewResult(result)" ><i class="fa fa-check-circle"></i> Verify</button>    
-                	
-                <button class="btn btn-sm btn-secondary" v-if="result.panel_status==3" @click.prevent="showEvaluatedResults(result)" ><i class="fa fa-reorder"></i> View Report</button> 
+                <button class="btn btn-sm btn-success" v-if="result.panel_status==0 && result.user_role==2" @click.prevent="viewResult(result)" ><i class="fa fa-check-circle"></i> Verify</button>
+                <a v-if="result.panel_status==3 " class="btn btn-sm btn-secondary" :href="'print_result/' +result.id + '?type=' + result.feedback +'&view=1'"><i class="fa fa-reorder"></i> View Report</a>
             @endpermission
             @permission('update-result')
                 <button  v-if="result.panel_status==0" class="btn btn-sm btn-primary" @click.prevent="editResult(result)" ><i class="fa fa-edit"></i> Edit</button>
@@ -164,8 +163,8 @@
             <button v-if="result.panel_status==2" class="btn btn-sm btn-primary" @click.prevent="showEvaluatedResults(result)"><i class="fa fa-list"></i> Review</button>
             <button v-if="result.panel_status==2 && result.feedback==0" class="btn btn-sm btn-success" @click.prevent="quickVerifyEvaluatedResult(result.id)"><i class="fa fa-check-circle"></i> Verify</button>
             
-            <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==0" class="btn btn-wisteria" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print</a>
-             <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==1" class="btn btn-concrete" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print Again</a>
+            <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==0" class="btn btn-sm btn-wisteria" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print</a>
+             <a v-if="result.panel_status==3 && result.feedback !=null && result.download_status ==1" class="btn btn-sm btn-concrete" :href="'print_result/' +result.id + '?type=' + result.feedback"><i class="fa fa-print"></i> Print Again</a>
             @endpermission 
             </td>
         </tr>
