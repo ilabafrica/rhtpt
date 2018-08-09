@@ -97,23 +97,23 @@
         <td style ="border:solid 1px black;">{{$data['pt_panel_6_final_results']}}</td>
         <td style ="border:solid 1px black; text-transform: uppercase;">{{$data['expected_result_6']}}</td>
     </tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
+    <tr><td colspan="5">&nbsp;</td></tr>
     <tr>
-        <td colspan="5">Expert Comment</td>
+        <td colspan="5"><b>Expert Comment:</b></td>
     </tr>
     <tr>
-        <td colspan="5"></td>
+        <td colspan="5">{{$data['pt_approved_comment']}}</td>
     </tr>
     <tr>
-        <td colspan="5">Please institute the necessary corrective measures before the next round of PT.</td>
+        <td colspan="5"><i>Please institute the necessary corrective measures before the next round of PT.</i></td>
     </tr>
     <tr><td colspan="5">&nbsp;</td></tr>
     <tr><td colspan="5">&nbsp;</td></tr>
     <tr><td colspan="5">&nbsp;</td></tr>
     <tr><td colspan="5">&nbsp;</td></tr>
     <tr><td colspan="5">&nbsp;</td></tr>
-    <tr><td colspan="5">&nbsp;</td></tr>
-    <tr><td colspan="5">&nbsp;</td></tr>
-    <tr><td colspan="5">&nbsp;</td></tr>
+    
     
     <tr>
         <td colspan="3">MOH/NPHL/EQA/COE FORM 09 &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
@@ -132,13 +132,13 @@
     <tr><td colspan="5"><b><div style="text-align:center">Testing Scheme Information</div></b></td></tr>
     <tr class="text-center"><td style ="border:solid 2px black;" colspan="5">
             <p>1.  The HIV-PT is a Qualitative scheme.</p>
-            <p>2.  The scheme utilizes greenish color coded dried tube plasma.</p>
-            <p>3.  PT panel samples have been fully characterized for the assigned HIV Sero-status.</p>
-            <p>4.  Stability testing was done at 4 oC, 25 oC, 37 oC and 45 oC.  Samples were found stable until the return of results.</p>
+            <p>2.  The panel samples come as a green pellet in 2 ml vials.</p>
+            <p>3.  The PT panel samples have been fully characterized for the assigned HIV Sero-status.</p>
+            <p>4.  The panel samples have been tested for stability and are stable.</p>
             <p>5.  Homogeneity was done using systematic random sampling and the results were the same as those of expected results.</p>
             <p>6.  Participant’s performance report is confidential and will ONLY be shared with responsible County Quality officers for purposes of corrective interventions</p>
-            <p>7.  Subcontracted services: Panle distribution, results submission and feedback distribution.</p>
-            <p>8.  Scheme Final report with round summary will be shared on the web within one month and will be available on the NPHL website (www.nphls.or.ke) at the conclusion of every round.</p></td>
+            <p>7.  Subcontracted services: PT panel distribution, return of results and feedback reports distribution.</p>
+            <p>8.  The scheme’s final report with summaries with overall performance analysis will be available on (www.rhtpt.or.ke) within one month of closure of the round.</p></td>
     </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr style="text-align:center"><td colspan="5"><b>PT Scheme Summary Performance.</b></td></tr>
@@ -166,7 +166,7 @@
 
     <tr>
         <td colspan="3"><img src="img/sign_kitheka.png" alt="" height="20" width="80" /></td>
-        <td colspan="2"><img src="img/sophie.png" alt="" height="20" width="80" /></td>
+        <td colspan="2"><img src="img/sophie.PNG" alt="" height="20" width="80" /></td>
     </tr>
     <tr>
         <td colspan="3">Franklin Kitheka</td>
