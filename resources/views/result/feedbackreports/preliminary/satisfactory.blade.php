@@ -132,7 +132,7 @@
     <tr><td colspan="5"><b><div style="text-align:center">Testing Scheme Information</div></b></td></tr>
     <tr class="text-center"><td style ="border:solid 2px black;" colspan="5">
             <p>1.  The HIV-PT is a Qualitative scheme.</p>
-            <p>2.  The scheme utilizes greenish color coded dried tube plasma.</p>
+            <p>2.  The scheme utilizes greenish color coded dried tube plasma samples.</p>
             <p>3.  PT panel samples have been fully characterized for the assigned HIV Sero-status.</p>
             <p>4.  Stability testing was done at 4 oC, 25 oC, 37 oC and 45 oC.  Samples were found stable until the return of results.</p>
             <p>5.  Homogeneity was done using systematic random sampling and the results were the same as those of expected results.</p>
@@ -166,7 +166,7 @@
 
     <tr>
         <td colspan="3"><img src="img/sign_kitheka.png" alt="" height="20" width="80" /></td>
-        <td colspan="2"><img src="img/sophie.png" alt="" height="20" width="80" /></td>
+        <td colspan="2"><img src="img/sophie.PNG" alt="" height="20" width="80" /></td>
     </tr>
     <tr>
         <td colspan="3">Franklin Kitheka</td>
