@@ -972,7 +972,14 @@ class ResultController extends Controller
             $pt->save();
         }
 
-      return $pdf->download('Round '.$data['round_name'].' Results.pdf');
+        //if request is a view report
+        if (\request('view') == 1) {
+            return view('result/feedbackreports/index', compact('data', 'pt'));
+
+        }else{
+        //if request is a download
+            return $pdf->download('Round '.$data['round_name'].' Results.pdf');
+        }
 
     }
     public function feedback($id)
