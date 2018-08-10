@@ -14,8 +14,8 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        fillProfile : {'name':'', 'gender':'', 'email':'', 'phone':'', 'address':'', 'username':'', 'image':'', 'uid':''},
-        userProfile: {'name':'', 'sex':'', 'email':'', 'phone':'', 'address':'', 'username':'', 'image':'', 'uid':''},
+        fillProfile : {'first_name':'', 'middle_name':'', 'last_name':'', 'name':'', 'gender':'', 'email':'', 'phone':'', 'address':'', 'username':'', 'image':'', 'uid':''},
+        userProfile: {'first_name':'', 'middle_name':'', 'last_name':'', 'name':'', 'sex':'', 'email':'', 'phone':'', 'address':'', 'username':'', 'image':'', 'uid':''},
         programs: [],
         designations: [],
         facility : '',
@@ -96,7 +96,7 @@ new Vue({
         {
             var input = this.userProfile;
             this.$http.post('/user/profile/update', input).then((response) => {
-                this.userProfile = {'name':'', 'sex':'', 'email':'', 'phone':'', 'address':'', 'username':'', 'image':'', 'uid':''},
+                this.userProfile = {'first_name':'', 'middle_name':'', 'last_name':'', 'name':'', 'sex':'', 'email':'', 'phone':'', 'address':'', 'username':'', 'image':'', 'uid':''},
                 $("#edit-profile").modal('hide');
                 this.getVueProfile();
                 toastr.success('User Profile Updated Successfully.', 'Success Alert', {timeOut: 5000});

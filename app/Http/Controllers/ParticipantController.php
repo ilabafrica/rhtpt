@@ -326,6 +326,7 @@ class ParticipantController extends Controller
         $user->first_name = $request->first_name;
         $user->middle_name = $request->middle_name;
         $user->last_name = $request->last_name;
+        $user->name = $request->first_name . " " . $request->middle_name . " " . $request->last_name;
         $user->phone = $request->phone;
         $user->email = $request->email;
         try{
@@ -595,13 +596,15 @@ enrolled, you’ll receive a tester ID";
         $now = Carbon::now('Africa/Nairobi');
         //  Prepare to save user details
         //  Check if user exists
-        $userId = User::idByName($request->name);
-        if(!$userId)
-            $userId = User::idByEmail($request->email);
+
+        $userId = User::idByPhone($request->phone);
         if(!$userId)
         {
             $user = new User;
-            $user->name = $request->name;
+            $user->first_name = $request->first_name;
+            $user->middle_name = $request->middle_name;
+            $user->last_name = $request->last_name;
+            $user->name = $request->first_name . " " . $request->middle_name . "" . $request->last_name;
             $user->gender = $request->gender;
             $user->email = $request->email;
             $user->phone = $request->phone;
