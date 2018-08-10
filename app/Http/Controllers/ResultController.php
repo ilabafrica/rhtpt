@@ -156,7 +156,7 @@ class ResultController extends Controller
         foreach($results as $result)
         {
             $result->rnd = $result->enrolment->round->name;
-            $result->tester = $result->enrolment->user->name;
+            $result->tester = $result->enrolment->user->last_fname . " " . $result->enrolment->user->middle_name . " " . $result->enrolment->user->last_name;
             $result->uid = $result->enrolment->user->uid;
 
             //particpants should not see the result feedback until it has been verified by the admin             
@@ -658,7 +658,7 @@ class ResultController extends Controller
         }
 
         //get participant details
-        $user_name = $user->name;
+        $user_name = $user->first_name . " " . $user->middle_name . " " . $user->last_name;
         $tester_id = $user->username;
         $roleUser = $user->ru();
         $facility = Facility::find($roleUser->tier);
@@ -987,7 +987,7 @@ class ResultController extends Controller
         $pt = Pt::find($id);
         $usr = User::find($pt->enrolment->user_id);
         $pt->uid = (string)$usr->uid;
-        $pt->tester = $usr->name;
+        $pt->tester = $usr->first_name . " " . $usr->middle_name . " " . $usr->last_name;
         $pt->program = Program::find(1)->name;
         $facility = Facility::find(1);
         $pt->county = strtoupper($facility->subCounty->county->name);

@@ -543,9 +543,7 @@ class UserController extends Controller
         $now = Carbon::now('Africa/Nairobi');
         //  Prepare to save user details
         //  Check if user exists
-        $userId = User::idByName($request->name);
-        if(!$userId)
-            $userId = User::idByEmail($request->email);
+        $userId = User::idByPhone($request->phone);
         if(!$userId)
         {
             $user = new User;
@@ -555,7 +553,7 @@ class UserController extends Controller
             $user->phone = $request->phone;
             $user->address = $request->address;
             $user->designation = $request->designation;
-            $user->username = $request->name;
+            $user->username = $request->phone;
             $user->deleted_at = $now;
             $user->save();
             $userId = $user->id;
@@ -681,16 +679,9 @@ class UserController extends Controller
                     $program_id = Program::idByTitle(trim($tprogram));
                     $role_id = Role::idByName('Participant');
                     //  Prepare to save participant details
-                    //$tester_id = User::idByName($tname);
-                    /*if(!$tester_id)
-                        $tester_id = User::idByEmail($temail);*/
-                    // if(!$tester_id)
-                    // {
                     $tester = new User;
                     $tester->password = Hash::make(User::DEFAULT_PASSWORD);
-                    /*}
-                    else
-                        $tester = User::find($tester_id);*/
+
                     $tester->name = $tname;
                     $tester->gender = User::MALE;
                     $tester->email = $temail;
@@ -824,12 +815,10 @@ class UserController extends Controller
                         else if(strcmp($tdes, "RCO") === 0)
                             $tdes = User::RCO;
 
-                        //  process user details only if the name exists
+                        //  process user details only if the user exists
                         if($tfname)
                         {
-                            $userId = User::idByName($tsname." ".$tfname." ".$toname);
-                            if(!$userId)
-                                $userId = User::idByEmail($temail);
+                            $userId = User::idByPhone($tphone);
                             if(!$userId)
                             {
                                 $user = new User;
