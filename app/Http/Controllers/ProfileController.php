@@ -100,12 +100,16 @@ class ProfileController extends Controller
             $user->image = $fileName;
         }
     	$this->validate($request, [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'phone' => 'required',
             'email' => 'required'
         ]);
     	$user = auth()->user();
-        $user->name = $request->name;
+        $user->first_name = $request->first_name;
+        $user->middle_name = $request->middle_name;
+        $user->last_name = $request->last_name;
+        $user->name = $request->first_name." ".$request->middle_name." ".$request->last_name;
         $user->phone = $request->phone;
         $user->email = $request->email;
         $user->address = $request->address;
