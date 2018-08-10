@@ -329,6 +329,7 @@ class ParticipantController extends Controller
         $user->name = $request->first_name . " " . $request->middle_name . " " . $request->last_name;
         $user->phone = $request->phone;
         $user->email = $request->email;
+        $user->gender = $request->gender;
         try{
             $user->save();
             $role = $request->role;
