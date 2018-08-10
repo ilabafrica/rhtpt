@@ -58,7 +58,7 @@ new Vue({
         facility_:'',
         check_date_clicked: '',
         find_facility: [],
-
+        updated_evaluated_results:[],
         role: '',
         toggle: {}
     },
@@ -306,7 +306,18 @@ new Vue({
                 toastr.success('Result Changed Successfully.', 'Success Alert', {timeOut: 5000});
             });
         },
+        //compare the updated results and old results 
+        open_old_results: function(id){
 
+            $("#view-evaluted-result").modal('hide');  
+
+            this.$http.get('/show_updated_evaluated_results/'+id).then((response) => {
+                this.updated_evaluated_results = response.data;
+            });
+            $("#compare-evaluted-result").modal('show'); 
+            this.set_difference_in_results();
+        },
+            
         printFeedback:function(id){
             let feedback = [];
             //  Fetch data using the given id

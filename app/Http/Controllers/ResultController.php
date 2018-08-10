@@ -948,6 +948,7 @@ class ResultController extends Controller
         //save user details
 
         $participant = User::find($request->participant_id)->first();
+        $participant->name = $request->first_name.' '.$request->middle_name.' '.$request->last_name;
         $participant->first_name = $request->first_name;
         $participant->middle_name = $request->middle_name;
         $participant->last_name = $request->last_name;
@@ -1057,6 +1058,25 @@ class ResultController extends Controller
         return response()->json($result);
     }
         
+    /**
+     * Fetch feedback for the given id
+     *
+     * @param ID of the selected pt -  $id
+     */
+
+    public function show_updated_evaluated_results($id){
+
+        $current_evaluated = $this->evaluated_results($id);
+        $old = EvaluatedResult::select('evaluated_results.*')->where('pt_id', $id)->orderBy('id', 'DESC')->first();
+
+        $old_results = json_decode($old->results, true);
+        $old_results['reason_for_change'] = $old->reason_for_change;
+
+        return response()->json($old_results);
+
+
+    }
+
     /**
      * Fetch feedback for the given id
      *

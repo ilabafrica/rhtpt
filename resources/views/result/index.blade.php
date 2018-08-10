@@ -439,7 +439,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel">Evaluated Test Results</h4>
+                <h4 class="modal-title col-md-6" id="myModalLabel">Evaluated Test Results</h4>
+                <button type="button" class="btn btn-sm btn-success col-md-4" v-if="" @click="open_old_results(evaluated_results.pt_id)">View Previous Result </button>
                 </div>
                 <div class="modal-body" id="printpdf">
                     <div class="row">
@@ -1052,6 +1053,248 @@
                                     <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compare Evaluted Results Modal -->
+    <div class="modal fade" id="compare-evaluted-result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Evaluated Test Results</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12"> 
+                         <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">                                        
+                                       <tr><b>Reasons For Change:   </b></tr>
+                                       <tr>
+                                           OLD- @{{updated_evaluated_results.reason_for_change}}
+                                       </tr>
+                                   </table>
+                                </div>
+                            </div>   
+                            <!-- Round details -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                        <tr class="text-center"><b>Participant Information </b></tr>
+                                        <tr class="col-md-12">
+                                            <td class="col-md-3"><b>Round</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.round_name}}</td>
+                                            <td class="col-md-3"><b>County</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.county}}</td>
+                                        </tr>
+                                         <tr>
+                                            <td class="col-md-3"><b>Tester ID</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.tester_id}}</td>
+                                            <td class="col-md-3"><b>Sub County</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.sub_county}}</td>
+                                        </tr>
+                                         <tr>
+                                            <td class="col-md-3"><b>Tester Name</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.user_name}}</td>
+                                            <td class="col-md-3"><b>Facility</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.facility}}</td>
+                                        </tr>
+                                         <tr>
+                                            <td class="col-md-3"><b>Program</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.program}}</td>
+                                            <td class="col-md-3"><b>Facility MFL</b></td>
+                                            <td class="col-md-3">@{{evaluated_results.mfl}}</td>
+                                        </tr>
+                                   </table>   
+                                </div>
+                            </div>
+                            <!-- panel details -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                        <tr class="text-center"> <b>Panel Information</b></tr>
+                                        <tr>
+                                            <td><b>Receive Date</b></td>
+                                            <td><b>Constituted Date</b></td>
+                                            <td><b>Tested Date</b></td>
+                                        </tr>
+                                         <tr>
+                                            <td>@{{evaluated_results.date_constituted}}</td>
+                                            <td>@{{evaluated_results.date_received}}</td>                                            
+                                            <td>@{{evaluated_results.date_tested}}</td>
+                                        </tr>
+                                         <tr>
+                                            <td>OLD- @{{updated_evaluated_results.date_constituted}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.date_received}}</td>                                            
+                                            <td>OLD- @{{updated_evaluated_results.date_tested}}</td>
+                                        </tr>
+                                   </table>   
+                                </div>
+                            </div>
+                            <!-- kit details -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                        <tr> <b>Kit Information</b></tr>
+                                        <tr>
+                                            <th>Kit Name</th>                                           
+                                            <th>Kit No</th>                                           
+                                            <th>Kit Expiry Date</th>                                           
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.determine}}</td>
+                                            <td>@{{evaluated_results.determine_lot_no}}</td>
+                                            <td>@{{evaluated_results.determine_expiry_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>OLD- @{{updated_evaluated_results.determine}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.determine_lot_no}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.determine_expiry_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.firstresponse}}</td>
+                                            <td>@{{evaluated_results.firstresponse_lot_no}}</td>
+                                            <td>@{{evaluated_results.firstresponse_expiry_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>OLD- @{{updated_evaluated_results.firstresponse}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.firstresponse_lot_no}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.firstresponse_expiry_date}}</td>
+                                        </tr>                                         
+                                   </table>   
+                                </div>
+                            </div>
+                            <!-- Results details -->                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                        <tr>
+                                            <th>PT Sample ID</th>
+                                            <th>Determine</th>
+                                            <th>First Response</th>
+                                            <th>Final Result</th>
+                                            <th>Expected Result</th>
+                                        </tr>                                        
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_1}}</td>
+                                            <td>@{{evaluated_results.pt_panel_1_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_1_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_1_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_1}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_1}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_1_kit1_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_1_kit2_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_1_final_results}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_2}}</td>
+                                            <td>@{{evaluated_results.pt_panel_2_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_2_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_2_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_2}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_2}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_2_kit1_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_2_kit2_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_2_final_results}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_3}}</td>
+                                            <td>@{{evaluated_results.pt_panel_3_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_3_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_3_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_3}}</td>
+                                        </tr>
+                                          <tr>
+                                            <td>@{{evaluated_results.sample_3}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_3_kit1_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_3_kit2_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_3_final_results}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_4}}</td>
+                                            <td>@{{evaluated_results.pt_panel_4_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_4_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_4_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_4}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_4}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_4_kit1_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_4_kit2_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_4_final_results}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_5}}</td>
+                                            <td>@{{evaluated_results.pt_panel_5_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_5_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_5_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_5}}</td>
+                                        </tr>
+                                         <tr>
+                                            <td>@{{evaluated_results.sample_5}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_5_kit1_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_5_kit2_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_5_final_results}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_6}}</td>
+                                            <td>@{{evaluated_results.pt_panel_6_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_6_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_6_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_6}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.sample_6}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_6_kit1_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_6_kit2_results}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.pt_panel_6_final_results}}</td>
+                                        </tr>
+                                        
+                                   </table>
+                                </div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                        <tr>
+                                            <td><b>PT Participant's Comments</b></td>
+                                            <td>@{{evaluated_results.tester_comments}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Panel Results</b></td>
+                                            <td>@{{evaluated_results.feedback}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.feedback}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Overall Evaluation</b></td>
+                                            <td>@{{evaluated_results.feedback}}</td>
+                                            <td>OLD- @{{updated_evaluated_results.feedback}}</td>
+                                        </tr>                                       
+                                   </table>
+                                </div>
+                            </div>         
+                            <div class="row">
+                                <div class="col-md-12">
+                                   <table class="table table-bordered">                                        
+                                       <tr><b>Reasons For Unsatisfactory:   </b></tr>
+                                       <tr>
+                                           @{{evaluated_results.remark}}
+                                       </tr>
+                                       <tr>
+                                           OLD- @{{updated_evaluated_results.remark}}
+                                       </tr>
+                                   </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
