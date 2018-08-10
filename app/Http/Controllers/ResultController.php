@@ -156,7 +156,7 @@ class ResultController extends Controller
         foreach($results as $result)
         {
             $result->rnd = $result->enrolment->round->name;
-            $result->tester = $result->enrolment->user->last_fname . " " . $result->enrolment->user->middle_name . " " . $result->enrolment->user->last_name;
+            $result->tester = $result->enrolment->user->first_name . " " . $result->enrolment->user->middle_name . " " . $result->enrolment->user->last_name;
             $result->uid = $result->enrolment->user->uid;
 
             //particpants should not see the result feedback until it has been verified by the admin             
