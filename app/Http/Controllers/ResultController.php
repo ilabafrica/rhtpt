@@ -947,7 +947,7 @@ class ResultController extends Controller
     {
         //save user details
 
-        $participant = User::find($request->participant_id)->first();
+        $participant = User::find($request->participant_id);
         $participant->name = $request->first_name.' '.$request->middle_name.' '.$request->last_name;
         $participant->first_name = $request->first_name;
         $participant->middle_name = $request->middle_name;
@@ -1071,6 +1071,8 @@ class ResultController extends Controller
 
         $old_results = json_decode($old->results, true);
         $old_results['reason_for_change'] = $old->reason_for_change;
+        $old_results['editing_user_name'] = User::find($old->user_id)->name;
+        $old_results['editing_updated_at'] = date($old->updated_at);
 
         return response()->json($old_results);
 

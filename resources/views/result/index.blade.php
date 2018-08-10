@@ -756,12 +756,9 @@
                                 </div>   
                                 <hr>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
-                                    for="last_name">Panel Received</label>
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
-                                    for="last_name">Panel Constituted</label>
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
-                                    for="last_name">Panel Tested</label>                                                                 
+                                    <label class="col-sm-4 form-control-label" for="panel_received">Panel Received</label>
+                                    <label class="col-sm-4 form-control-label" for="panel_constituted">Panel Constituted</label>
+                                    <label class="col-sm-4 form-control-label" for="panel_tested">Panel Tested</label>
                                 </div>
                                 <div class="form-group row">
                                     <div class="input-group input-group-sm col-sm-4" :class="{ 'control': true }">
@@ -1073,11 +1070,12 @@
                         <div class="col-md-12"> 
                          <div class="row">
                                 <div class="col-md-12">
-                                   <table class="table table-bordered">                                        
-                                       <tr><b>Reasons For Change:   </b></tr>
+                                   <table class="table table-bordered">
                                        <tr>
-                                           OLD- @{{updated_evaluated_results.reason_for_change}}
-                                       </tr>
+                                            <td><b> Changed By: </b> @{{updated_evaluated_results.editing_user_name}}</td>
+                                            <td><b> On: </b> @{{updated_evaluated_results.editing_updated_at}}</td>
+                                        </tr>
+                                       <tr><td><b>Reasons For Change: </b>@{{updated_evaluated_results.reason_for_change}}</td></tr>
                                    </table>
                                 </div>
                             </div>   
