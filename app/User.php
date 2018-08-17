@@ -222,13 +222,25 @@ EntrustUserTrait::restore insteadof SoftDeletes;
             return false;
     }
     /**
-     * Check if user is Participant
+     * Check if user is Partner
      *
      * @return User model
      */
     public function isPartner()
     {
         if($this->hasRole('Partner'))
+            return true;
+        else
+            return false;
+    }
+    /**
+     * Check if user is Superadmin
+     *
+     * @return User model
+     */
+    public function isSuperAdministrator()
+    {
+        if($this->hasRole('Superadmin'))
             return true;
         else
             return false;

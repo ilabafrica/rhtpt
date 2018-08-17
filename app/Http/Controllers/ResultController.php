@@ -18,6 +18,7 @@ use App\Facility;
 use App\Program;
 use App\Panel;
 use App\Material;
+use App\ImplementingPartner;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
@@ -46,27 +47,30 @@ class ResultController extends Controller
 
         if(Auth::user()->isCountyCoordinator())
         {
-            $results = County::find(Auth::user()->ru()->tier)->results()->withTrashed()->paginate($items_per_page);
+            $results = County::find(Auth::user()->ru()->tier)->results();
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $results = SubCounty::find(Auth::user()->ru()->tier)->results()->withTrashed()->paginate($items_per_page);
+           $results = SubCounty::find(Auth::user()->ru()->tier)->results();
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $results = Facility::find(Auth::user()->ru()->tier)->results()->withTrashed()->paginate($items_per_page);
+           $results = Facility::find(Auth::user()->ru()->tier)->results();
         }
         else if(Auth::user()->isParticipant())
         {
-            $results = Auth::user()->results()->withTrashed()->paginate($items_per_page);
-        }else
+            $results = Auth::user()->results();
+        }
+        else if(Auth::user()->isPartner())
         {
-            $results = Pt::withTrashed()->paginate($items_per_page);
-
+           $results = ImplementingPartner::find(Auth::user()->ru()->tier)->results();
+        }else if(Auth::user()->isSuperAdministrator())
+        {
+            $results = Pt::withTrashed();
         }
 
         //search results by user details
-        if ($request->has('q')||$request->has('cpunty')||$request->has('sub_county')||$request->has('facility')||$request->has('feedback_status')||$request->has('result_status')) {        
+        if ($request->has('q')||$request->has('county')||$request->has('sub_county')||$request->has('facility')||$request->has('feedback_status')||$request->has('result_status')) {        
             if($request->has('q')) 
             {
                 $search = $request->get('q');
@@ -75,22 +79,18 @@ class ResultController extends Controller
                 if(Auth::user()->isCountyCoordinator())
                 {
                     $results = County::find(Auth::user()->ru()->tier)->results($search_ar);
-                    // ->latest()->withTrashed()->paginate($items_per_page);                
                 }
                 else if(Auth::user()->isSubCountyCoordinator())
                 {
                     $results = SubCounty::find(Auth::user()->ru()->tier)->results($search_ar);
-                    // ->latest()->withTrashed()->paginate($items_per_page);
                 }
                 else if(Auth::user()->isFacilityInCharge())
                 {
                    $results = Facility::find(Auth::user()->ru()->tier)->results($search_ar);
-                   // ->latest()->withTrashed()->paginate($items_per_page);
                 }
                 else if(Auth::user()->isPartner())
                 {
                    $results = ImplementingPartner::find(Auth::user()->ru()->tier)->results($search_ar);
-                   // ->latest()->withTrashed()->paginate($items_per_page);
                 }
                 else{
                     $users = User::where('name', 'LIKE', "%{$search}%")
@@ -100,58 +100,35 @@ class ResultController extends Controller
                         ->orWhere('email', 'LIKE', "%{$search}%")
                         ->orWhere('phone', 'LIKE', "%{$search}%")
                         ->orWhere('uid', 'LIKE', "%{$search}%")->pluck('id');
-                        // dd($users);
 
                     $enrolments = Enrol::whereIn('user_id', $users)->pluck('id');
                     $results = Pt::whereIn('enrolment_id', $enrolments);
-                    //->
                 }
             }
             //search results by filters
             if($request->has('county')) 
             {            
                     $results = County::find($request->get('county'))->results();
-                    // ->latest()->withTrashed()->paginate($items_per_page);                
-                
             }
-             if($request->has('sub_county')) 
+            if($request->has('sub_county')) 
             {
-                    $results = SubCounty::find($request->get('sub_county'))->results();
-                    // ->latest()->withTrashed()->paginate($items_per_page);
-
+                $results = SubCounty::find($request->get('sub_county'))->results();
             }
             if($request->has('facility')) 
             {
-                   $results = Facility::find($request->get('facility'))->results();
-                   // ->latest()->withTrashed()->paginate($items_per_page);
-
+               $results = Facility::find($request->get('facility'))->results();
             }
-            if ($request->has('result_status')|| $request->has('feedback_status')) {               
-            
-                if($request->has('result_status')) 
-                {
-                    if ($request->has('county') ||$request->has('sub_county')||$request->has('facility')) {
-                        $results = $results->where('panel_status', $request->get('result_status'))->latest()->withTrashed()->paginate($items_per_page);
-                        
-                    }else{
-                        $results = Pt::where('panel_status', $request->get('result_status'))->latest()->withTrashed()->paginate($items_per_page);
-
-                    }
-                }
-                if($request->has('feedback_status')) 
-                {     
-                    if ($request->has('county') ||$request->has('sub_county')||$request->has('facility')) {
-                        $results = $results->where('feedback', $request->get('feedback_status'))->latest()->withTrashed()->paginate($items_per_page);
-                        
-                    }else{
-                        $results = Pt::where('feedback', $request->get('feedback_status'))->latest()->withTrashed()->paginate($items_per_page);
-                    }
-                }
-            }else{
-
-                $results = $results->withTrashed()->paginate($items_per_page);
+            if($request->has('result_status')) 
+            {
+                $results = $results->where('panel_status', $request->get('result_status'));
+            }
+            if($request->has('feedback_status')) 
+            {     
+                $results = $results->where('feedback', $request->get('feedback_status'));
             }
         }
+
+        $results = $results->withTrashed()->paginate($items_per_page);
 
         foreach($results as $result)
         {
@@ -192,7 +169,6 @@ class ResultController extends Controller
      */
     public function store(Request $request)
     {        
-        // dd($request->all());
         //Check if round has been         
         if ($request->get('round_id') =="") {
             return response()->json(['1']);            
