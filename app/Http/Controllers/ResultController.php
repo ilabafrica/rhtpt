@@ -19,7 +19,7 @@ use App\Program;
 use App\Panel;
 use App\Material;
 use App\ImplementingPartner;
-
+use App\SmsHandler;
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
 use Auth;
@@ -801,35 +801,21 @@ class ResultController extends Controller
         $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $result->enrolment->round->id, 'text' => $message, 'user_id' => $result->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
         $recipients = NULL;
         $recipients = User::find($result->enrolment->user->id)->value('phone');
-        //  Bulk-sms settings
-        $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->code;
-        $apikey     = $api->api_key;
-        if($recipients)
+        $ptUser = User::find($result->enrolment->user->id);
+        $ptUserName = $ptUser->first_name . " " . $ptUser->last_name;
+        $message = str_replace("PT Participant", $ptUserName, $message);
+
+        try
         {
-            // Specified sender-id
-            // $from = $api->code;
-            $from ='NPHL';
-            // Create a new instance of Bulk SMS gateway.
-            $sms    = new Bulk($username, $apikey);
-            // use try-catch to filter any errors.
-            try
-            {
-            // Send messages
-            $results = $sms->sendMessage($recipients, $message, $from);
-            foreach($results as $result)
-            {
-                // status is either "Success" or "error message" and save.
-                $number = $result->number;
-                //  Save the results
-                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
-            }
-            }
-            catch ( AfricasTalkingGatewayException $e )
-            {
-            echo "Encountered an error while sending: ".$e->getMessage();
-            }
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($ptUser->phone, $message);
+            \Log::info("Sent feedback report sms to $ptUserName ".$ptUser->phone." -- Performed by $user_id");
         }
+        catch ( AfricasTalkingGatewayException $e )
+        {
+            echo "Encountered an error while sending: ".$e->getMessage();
+        }
+
         return response()->json($result);
     }
      /**
