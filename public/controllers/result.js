@@ -39,7 +39,7 @@ new Vue({
         dt: [],
         //variables used in the filters
         counties:[],
-        subs: [],
+        subcounties: [],
         facilities:[],
         role: '',
         county:'',
@@ -89,12 +89,12 @@ new Vue({
     },
 
     mounted : function(){
+        this.getRole();
     	this.getVueResults(this.pagination.current_page);
         this.loadRounds();
         this.loadRoundsDone();
         this.getForm();
         this.getSets();
-        this.loadCounties();
     },
 
     methods : {
@@ -143,7 +143,6 @@ new Vue({
             //    Fetch the result using the id
             let id = result.id;
             this.$http.get('/pt/'+id).then((response) => {
-                // console.log(response.data);
                 this.frmData = response.data;
             });
             $("#edit-result").modal('show');
@@ -159,12 +158,9 @@ new Vue({
         },
 
         updateResult: function(id, scope){
-            // this.$validator.validateAll(scope).then(() => {
-                // var input = this.fillResult;
 
                 let myForm = document.getElementById('update_test_results');
                 let input = new FormData(myForm);
-                // console.log(...input);
                 this.$http.post('/update_results/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);
                     // this.fillResult = {'round_id':'','field_id[]':'','response[]':'','comment[]':'','id':''};
@@ -173,10 +169,6 @@ new Vue({
                 }, (response) => {
                     this.formErrorsUpdate = response.data;
                 });
-            // }).catch(() => {
-            //     toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
-            //     return false;
-            // });
         },
 
         verifyResult: function(){
@@ -203,7 +195,6 @@ new Vue({
             this.$http.get('/form').then((response) => {
                 this.form = response.data.sets;
             }, (response) => {
-                // console.log(response.data.sets);
             });
         },
 
@@ -211,7 +202,6 @@ new Vue({
             this.$http.get('/frmSets').then((response) => {
                 this.sets = response.data.sets;
             }, (response) => {
-                // console.log(response.data.sets);
             });
         },
 
@@ -219,7 +209,6 @@ new Vue({
             this.$http.get('/rnds').then((response) => {
                 this.rounds = response.data;
             }, (response) => {
-                // console.log(response);
             });
         },
 
@@ -227,7 +216,6 @@ new Vue({
             this.$http.get('/rndsDone').then((response) => {
                 this.roundsDone = response.data;
             }, (response) => {
-                // console.log(response);
             });
         },
 
@@ -245,7 +233,6 @@ new Vue({
         verifyEvaluatedResult: function(id){
             let myForm = document.getElementById('verify_evaluated_test_results');
             let formData = new FormData(myForm);
-            // console.log(formData);
             this.$http.post('/verify_evaluated_results/'+id, formData).then((response) => {
                 this.changePage(this.pagination.current_page);
                 $("#view-evaluted-result").modal('hide');
@@ -299,7 +286,6 @@ new Vue({
         update_evaluated_results: function(id){
             let myForm = document.getElementById('update_evaluated_results');
             let formData = new FormData(myForm);
-            // console.log(formData);
             this.$http.post('/update_evaluated_results/'+id, formData).then((response) => {
                 this.changePage(this.pagination.current_page);
                 $("#update-evaluated-result").modal('hide');
@@ -452,15 +438,14 @@ new Vue({
                 link= link +'&county='+this.county;
             }
 
-            if (this.result_status>=0) {
-            console.log(this.result_status);
-               link = link +'&result_status='+this.result_status;
+            if (this.result_status) {
 
+               link = link +'&result_status='+this.result_status;
             }
 
-            if (this.feedback_status>=0) {
-               link = link +'&feedback_status='+this.feedback_status;
+            if (this.feedback_status) {
 
+               link = link +'&feedback_status='+this.feedback_status;
             }
 
             // Making a get request to our API and passing the query to it.
@@ -483,63 +468,61 @@ new Vue({
                 this.filters = 1;
             });
         },
+
         /*
         * functions used in filters
         * loading counties, sub_counties and facilities
         */
+
+        getRole: function(page){
+            this.$http.get('/userrole').then((response) => {
+                if(response.data){
+                    this.role = response.data.role_id;
+                    this.loadCounties();
+                    if (this.role == 4) { //County Role
+                        this.county = response.data.tier;
+                        this.loadSubcounties();
+                    }
+                    if (this.role == 7) {// Subcounty Role
+                        this.sub_county = response.data.tier;
+                        this.loadFacilities();
+                    }
+                }
+            })
+        },
+
         //Populate counties from FacilityController
         loadCounties: function() {
-            this.$http.get('/cnts').then((response) => {
+            var url = '/cnts';
+            this.counties = [];
+            this.facilities = [];
+            if(this.role == 3) url = '/partnercounties';
+            this.$http.get(url).then((response) => {
                 this.counties = response.data;
+                this.jimbo = response.data;
             }, (response) => {
-                // console.log(response);
             });
         },
 
-        fetchSubs: function() {
-            let id = $('#county_id').val();
-            this.$http.get('/subs/'+ id).then((response) => {
-                this.subs = response.data;
+        // Populate subcounties from FacilityController
+        loadSubcounties: function() {
+            this.sub_county = "";
+            this.facility = "";
+            this.facilities = [];
+            this.subcounties = [];
+            this.$http.get('/subs/'+ this.county).then((response) => { 
+                this.subcounties = response.data;
             }, (response) => {
-                // console.log(response);
             });
-        },
-        fetchFacilities: function() {
-            let id = $('#sub_id').val();
-            this.$http.get('/fclts/'+id).then((response) => {
+        }, 
+
+        // Populate facilities from FacilityController
+        loadFacilities: function() {
+            this.facility = "";
+            this.facilities = [];
+            this.$http.get('/fclts/' + this.sub_county).then((response) => { 
                 this.facilities = response.data;
             }, (response) => {
-                // console.log(response);
-            });
-        },
-
-        /*
-        * functions used in updating evaluted test results
-        * loading counties, sub_counties and facilities
-        */
-         //Populate counties from FacilityController
-        loadCounties_: function() {
-            this.$http.get('/cnts').then((response) => {
-                this.counties_ = response.data;
-            }, (response) => {
-                // console.log(response);
-            });
-        },
-
-        fetchSubcounties_: function() {
-            let id = $('#county_id_').val();
-            this.$http.get('/subs/'+ id).then((response) => {
-                this.sub_counties_ = response.data;
-            }, (response) => {
-                // console.log(response);
-            });
-        },
-        fetchFacilities_: function() {
-            let id = $('#sub_id_').val();
-            this.$http.get('/fclts/'+id).then((response) => {
-                this.facilities_ = response.data;
-            }, (response) => {
-                // console.log(response);
             });
         },
 
@@ -548,10 +531,8 @@ new Vue({
             this.$http.get('/progs').then((response) => { 
                 this.programs = response.data;
             }, (response) => {
-                // console.log(response);
             });
         },
-        //  toggle other
 
         //  Normal js
         specToggle(className, id){
@@ -574,15 +555,6 @@ new Vue({
         },
         toggle_selects: function() {
             
-            // // console.log($('#feedback_status_id').val());
-            // if (($('#feedback_status_id').val() != null) || ($('#feedback_status_id').val() != 4)) {
-            //     $('#result_status_id').prop('disabled','disabled');
-            //     this.result_status = '';                   
-            // }
-            //  if ($('#result_status_id').val() != null || $('#result_status_id').val() != 4) {
-            //     $('#feedback_status_id').prop('disabled','disabled');
-            //     this.feedback_status = '';               
-            // }                
         },
         check_total_days: function() {
             var year = $('select[name=year]').val();

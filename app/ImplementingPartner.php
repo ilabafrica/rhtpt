@@ -3,6 +3,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\SubCounty;
 use App\Facility;
+use App\Enrol;
+use App\Pt;
 class ImplementingPartner extends Model
 {
 	public $fillable = ['name', 'agency_id'];
@@ -94,4 +96,22 @@ class ImplementingPartner extends Model
           }
         return $users;
     }  
+
+    /**
+    * Get results for a partner affiliated users
+    *
+    */
+    public function results($search = null)
+    {
+        if($search){
+            $users = $this->users($search)->pluck('id');
+
+        }else{
+            $users = $this->users()->pluck('id');
+
+        }
+        $enrolments = Enrol::whereIn('user_id', $users)->pluck('id');
+        $results = Pt::whereIn('enrolment_id', $enrolments);
+        return $results;
+    }
 }

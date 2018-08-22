@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-md-2"></div>
                 <div class="col-sm-4">
-                    <button class="btn btn-sm btn-alizarin" type="submit" @click="filter()" v-if="!loading">Filter </button>
+                    <button class="btn btn-sm btn-alizarin" type="submit" @click="filter(1)" v-if="!loading">Filter </button>
                     <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
                 </div>    
                     <div id="region" class="collapse">
@@ -58,7 +58,7 @@
                             <div v-if = "role == 1 || role ==3" class="col-sm-3">
                                 <label class="col-sm-4 form-control-label" for="title">Counties:</label>
                                 <div class="col-sm-6">
-                                    <select class="form-control" name="county" id="county_id" @change="fetchSubs()" v-model="county">
+                                    <select class="form-control" name="county" id="county_id" @change="loadSubcounties()" v-model="county">
                                         <option selected></option>
                                        <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>                         
                                     </select>
@@ -67,9 +67,9 @@
                             <div v-if = "role == 1 || role ==3 || role == 4" class="col-sm-3">
                                 <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" name="sub_county" id="sub_id" @change="fetchFacilities()" v-model="sub_county">
+                                    <select class="form-control" name="sub_county" id="sub_id" @change="loadFacilities()" v-model="sub_county">
                                         <option selected></option>
-                                       <option  v-for="sub in subs" :value="sub.id">@{{ sub.value }}</option>                         
+                                       <option  v-for="sub in subcounties" :value="sub.id">@{{ sub.value }}</option>                         
                                     </select>
                                 </div>
                             </div>
@@ -91,10 +91,10 @@
                                 <div class="col-sm-6">
                                     <select class="form-control" name="result_status" v-model = "result_status" id="result_status_id" @change="toggle_selects()">
                                         <option selected></option>
-                                       <option :value="0">Not Checked</option>                         
-                                       <option :value="1">Submitted</option>                         
-                                       <option :value="2">Evaluated</option>                         
-                                       <option :value="3">Verified</option>                         
+                                        <option value="0">Not Checked</option>                         
+                                        <option value="1">Submitted</option>                         
+                                        <option value="2">Evaluated</option>                         
+                                        <option value="3">Verified</option>                         
                                     </select>
                                 </div>
                             </div>        
@@ -107,8 +107,8 @@
                                 <div class="col-sm-6">
                                     <select class="form-control" name="feedback_status" v-model = "feedback_status" id="feedback_status_id" @change="toggle_selects()">
                                         <option selected></option>
-                                       <option :value="0">Satisfactory</option>                         
-                                       <option :value="1">Unsatisfactory</option>                         
+                                           <option value="0">Satisfactory</option>                         
+                                           <option value="1">Unsatisfactory</option>                         
                                     </select>
                                 </div>
                             </div>                    
