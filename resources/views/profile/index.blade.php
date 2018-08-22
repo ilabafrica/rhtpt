@@ -40,7 +40,13 @@
                 </tr>
                 <tr>
                     <td>Name:</td>
-                    <td class="text-info"><strong>@{{ userProfile.name }}</strong></td>
+                    <td class="text-info">
+                        <strong>
+                            @{{ userProfile.first_name }}
+                            @{{ userProfile.middle_name }}
+                            @{{ userProfile.last_name }}
+                        </strong>
+                    </td>
                 </tr>
                 <tr>
                     <td>Gender:</td>
@@ -84,7 +90,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel">@{{ userProfile.name }}</h4>
+                <h4 class="modal-title" id="myModalLabel">
+                    @{{ userProfile.first_name }} @{{ userProfile.middle_name }} @{{ userProfile.last_name }}
+                </h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -105,11 +113,25 @@
                                         <label for="facility" class="text-primary"><strong>@{{ userProfile.username }}</strong></label>
                                     </div>
                                 </div>
-    				            <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Name:</label>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="first_name">First Name:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="name" class="form-control" v-model="userProfile.name" />
-                                        <span v-if="formErrors['name']" class="error text-danger">@{{ formErrors['name'] }}</span>
+                                        <input type="text" name="first_name" class="form-control" v-model="userProfile.first_name" />
+                                        <span v-if="formErrors['first_name']" class="error text-danger">@{{ formErrors['first_name'] }}</span>
+                                     </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="middle_name">Middle Name:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="middle_name" class="form-control" v-model="userProfile.middle_name" />
+                                        <span v-if="formErrors['middle_name']" class="error text-danger">@{{ formErrors['middle_name'] }}</span>
+                                     </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="last_name">Last Name:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="last_name" class="form-control" v-model="userProfile.last_name" />
+                                        <span v-if="formErrors['last_name']" class="error text-danger">@{{ formErrors['last_name'] }}</span>
                                      </div>
                                 </div>
                                 <div class="form-group row">

@@ -114,8 +114,7 @@
             <th>Action</th>
         </tr>
         <tr v-for="user in users" v-if="user.role == 2">
-            <td v-if="user.name!=''">@{{ user.name }}</td>
-            <td v-else>@{{ user.first_name }} @{{ user.middle_name }} @{{ user.last_name }}</td>
+            <td>@{{ user.first_name }} @{{ user.middle_name }} @{{ user.last_name }}</td>
             <td>@{{ user.fac}}</td>
             <td>@{{ user.phone }}</td>
             <td>@{{ user.username }}</td>

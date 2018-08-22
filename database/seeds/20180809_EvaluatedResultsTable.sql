@@ -1,5 +1,5 @@
 -- create the evaluated results table used in audit trail
-CREATE TABLE `clean`.`evaluated_results` ( 
+CREATE TABLE `evaluated_results` ( 
 	`id` INT NOT NULL , 
 	`pt_id` INT NOT NULL , 
 	`participant_id` INT NOT NULL , 

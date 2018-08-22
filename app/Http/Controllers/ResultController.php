@@ -157,7 +157,7 @@ class ResultController extends Controller
         foreach($results as $result)
         {
             $result->rnd = $result->enrolment->round->name;
-            $result->tester = $result->enrolment->user->name;
+            $result->tester = $result->enrolment->user->first_name . " " . $result->enrolment->user->middle_name . " " . $result->enrolment->user->last_name;
             $result->uid = $result->enrolment->user->uid;
 
             //particpants should not see the result feedback until it has been verified by the admin             
@@ -947,7 +947,8 @@ class ResultController extends Controller
     {
         //save user details
 
-        $participant = User::find($request->participant_id)->first();
+        $participant = User::find($request->participant_id);
+        $participant->name = $request->first_name.' '.$request->middle_name.' '.$request->last_name;
         $participant->first_name = $request->first_name;
         $participant->middle_name = $request->middle_name;
         $participant->last_name = $request->last_name;
@@ -1063,6 +1064,27 @@ class ResultController extends Controller
      * @param ID of the selected pt -  $id
      */
 
+    public function show_updated_evaluated_results($id){
+
+        $current_evaluated = $this->evaluated_results($id);
+        $old = EvaluatedResult::select('evaluated_results.*')->where('pt_id', $id)->orderBy('id', 'DESC')->first();
+
+        $old_results = json_decode($old->results, true);
+        $old_results['reason_for_change'] = $old->reason_for_change;
+        $old_results['editing_user_name'] = User::find($old->user_id)->name;
+        $old_results['editing_updated_at'] = date($old->updated_at);
+
+        return response()->json($old_results);
+
+
+    }
+
+    /**
+     * Fetch feedback for the given id
+     *
+     * @param ID of the selected pt -  $id
+     */
+
     public function print_result($id){
       $data = $this->evaluated_results($id);
 
@@ -1118,7 +1140,7 @@ class ResultController extends Controller
         $pt = Pt::find($id);
         $usr = User::find($pt->enrolment->user_id);
         $pt->uid = (string)$usr->uid;
-        $pt->tester = $usr->name;
+        $pt->tester = $usr->first_name . " " . $usr->middle_name . " " . $usr->last_name;
         $pt->program = Program::find(1)->name;
         $facility = Facility::find(1);
         $pt->county = strtoupper($facility->subCounty->county->name);

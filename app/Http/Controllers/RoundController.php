@@ -1069,12 +1069,7 @@ class RoundController extends Controller
                             if(strcmp($mike, "in_charge_phone") === 0)
                                 $iphone = $ross;
                         }
-                        //  process gender
-                        // if(strcmp($tgender, "Male") === 0)
-                        //     $tgender = User::MALE;
-                        // else
-                        //     $tgender = User::FEMALE;
-                        //  process designation
+
                         $testerDes = $tdes;
                         if($testerDes)
                         {
@@ -1105,13 +1100,6 @@ class RoundController extends Controller
                                 $facilityId = Facility::idByCode($mfl);
                             }
 
-                         //    if(!$facilityId)
-                         //    {   
-                         //        $missing_facilities = array($tfname, $tsname, $mfl, 'Missing Facility');
-                         //        array_push($duplicates, $missing_facilities);
-
-                         //    }else{
-                                //  process user details only if the name exists
                                 if($uid)
                                 {
                                     $user = User::find(User::idByUid($uid));

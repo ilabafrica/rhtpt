@@ -265,7 +265,11 @@
                                 <a class="nav-link text-primary" href="#">{!! Carbon::now(Config::get('cms.zone'))->toDayDateTimeString() !!}</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-success" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{!! Auth::user()->name !!}</a>
+                                <a class="nav-link dropdown-toggle text-success" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    {!! Auth::user()->first_name !!}
+                                    {!! Auth::user()->middle_name !!}
+                                    {!! Auth::user()->last_name !!}
+                                </a>
                                 <div class="dropdown-menu  dropdown-menu-right">
                                     <a class="dropdown-item  " href="{{ route('profile') }}">Profile</a>
                                     <div class="dropdown-divider"></div>
