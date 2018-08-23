@@ -121,23 +121,22 @@ class FacilityController extends Controller
        Search for a facility in the database
     */
 
-   public function search_facility() {
-        $term = Input::get('term');
+   public function search_facility($id) {
     
-        $results = array();
+        $error = ['error' => 'No facility found'];
         
-        $queries = Facility::where('name', 'LIKE', '%'.$term.'%')
-            ->take($ITEMS_PER_PAGE)->get();
+        $facility = Facility::where('id', $id)->first();
         
-        foreach ($queries as $query)
-        {
-            $results[] = [ 'id' => $query->id, 'value' => $query->name];
-        }
-        if (count($results)>0) {
-            # code...
-            $results[] = [ 'id' => 0, 'value' => 'No Records found'];
-        } 
-        return response()->json($results);
+        return count($facility) > 0 ? response()->json($facility) : $error;
+        // foreach ($queries as $query)
+        // {
+        //     $results[] = [ 'id' => $query->id, 'value' => $query->name];
+        // }
+        // if (count($results)>0) {
+        //     # code...
+        //     $results[] = [ 'id' => 0, 'value' => 'No Records found'];
+        // } 
+        // return response()->json($results);
        
     }
     /**
