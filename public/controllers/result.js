@@ -49,9 +49,6 @@ new Vue({
         feedback_status: '',
         filters:'',
         //varibles used in editing evaluated results
-        counties_:[],
-        sub_counties_: [],
-        facilities_:[],
         programs: [],
         county_:'',
         sub_county_:'',
@@ -254,7 +251,7 @@ new Vue({
 
             $("#view-evaluted-result").modal('hide');
 
-            this.loadCounties_();
+            this.loadCounties();
             this.loadPrograms();
 
             //prompt user to add the reason for change before editing

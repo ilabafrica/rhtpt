@@ -639,9 +639,11 @@
     <!-- Update Evaluated Test Results Modal -->
     <div class="modal fade" id="update-evaluated-result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="min-width: 800px;">
                 <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
                 <h4 class="modal-title" id="myModalLabel">Update Evaluated Test Results</h4>
                 </div>
                 <div class="modal-body">
@@ -652,14 +654,17 @@
                                 <input type="hidden" name="participant_id" id="participant_id" class="form-control" value="evaluated_results.participant_id" v-model="evaluated_results.participant_id"/>
 
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('first_name') }"
-                                        for="first_name">First Name:</label>
-                                        <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('middle_name') }"
-                                        for="middle_name">Middle Name:</label>
-                                        <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('last_name') }"
-                                        for="last_name">Last Name:</label>                                    
+                                    <label class="col-sm-4 form-control-label">
+                                        Tester ID: @{{evaluated_results.tester_id}}
+                                    </label>
+                                    <label class="col-sm-8 form-control-label">
+                                        Name:
+                                        @{{evaluated_results.first_name}}
+                                        @{{evaluated_results.middle_name}}
+                                        @{{evaluated_results.last_name}}
+                                    </label>                                    
                                 </div>
-                                <div class="form-group row">
+                                <div class="form-group row" style="display: none;">
                                     <div class="col-sm-4" :class="{ 'control': true }">
                                         <input v-validate="'required|alpha_spaces'" class="form-control"
                                             :class="{'input': true,'is-danger': errors.has('first_name') }" name="first_name"
@@ -687,16 +692,20 @@
                                             @{{ errors.first('last_name') }}</span>
                                     </div>
                                 </div>
-                                <hr>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('phone number') }" for="phone number">Phone Number:</label>
-                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('program_id') }" for="title">Program:</label>
+                                    <label class="col-sm-4 form-control-label">
+                                        Phone: @{{evaluated_results.phone_no}}
+                                    </label>
+                                    <label class="col-sm-8 form-control-label">
+                                        Facility: @{{evaluated_results.facility}}
+                                    </label>
                                 </div>
                                 <div class="form-group row">
-                                    <div class="col-sm-4" :class="{ 'control': true }">
+                                    <div class="col-sm-4" :class="{ 'control': true }" style="display: none;">
                                         <input v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('phone number') }" name="phone number" type="text" v-model="evaluated_results.phone_no"/>
                                         <span v-show="errors.has('phone number')" class="help is-danger">@{{ errors.first('phone number') }}</span>
                                     </div>
+                                    <label class="col-sm-4 form-control-label" :class="{'help is-danger': errors.has('program_id') }" for="title">Program:</label>
                                     <div class="col-sm-4" :class="{ 'control': true }">
                                         <select class="form-control c-select" :class="{'input': true, 'is-danger': errors.has('program_id') }" name="program_id" v-model="evaluated_results.program">
                                             <option selected></option>
@@ -706,18 +715,18 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row" style="display: none;">
                                     <label class="col-sm-4 form-control-label" for="title">Unique ID:</label>
                                     <label class="col-sm-4 form-control-label" for="title">Facility:</label>
                                 </div>
-                                <div class="form-group row">
+                                <div class="form-group row" style="display: none;">
                                     <div class="col-sm-4">
-                                        <input type="text" name="username" class="form-control" v-model="evaluated_results.tester_id" disabled/>
+                                        <input type="text" name="username" class="form-control" v-model="evaluated_results.tester_id" readonly />
                                     </div>
                                     <div class="col-sm-6 input-group input-group-sm ">
-                                        <input type="text" name="facility_name" id="facility_name" class="form-control" v-model="evaluated_results.facility" disabled/>
+                                        <input type="text" name="facility_name" id="facility_name" class="form-control" v-model="evaluated_results.facility" readonly />
                                         <input type="hidden" name="facility_id" id="facility_id" class="form-control" v-model="evaluated_results.facility_id"/>
-                                        <span class="input-group-btn">
+                                        <span class="input-group-btn invisible">
                                             <button class="btn btn-primary btn-sm" type="button" id="change_facility" data-toggle="collapse" data-target="#set-facility">change</button>
                                         </span>
                                     </div>
@@ -731,21 +740,21 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-3">
-                                            <select class="form-control" name="county" id="county_id_" @change="fetchSubcounties_()" v-model="county_">
+                                            <select class="form-control" name="county" id="county_id_" @change="loadSubcounties()" v-model="county_">
                                                 <option selected></option>
                                                <option v-for="county in counties_" :value="county.id">@{{ county.value }}</option>                         
                                             </select>
                                         </div>
                                         <div class="col-sm-3">
-                                            <select class="form-control" name="sub_county" id="sub_id_" @change="fetchFacilities_()" v-model="sub_county_">
+                                            <select class="form-control" name="sub_county" id="sub_id_" @change="loadFacilities()" v-model="sub_county_">
                                                 <option selected></option>
-                                               <option  v-for="sub in sub_counties_" :value="sub.id">@{{ sub.value }}</option>                         
+                                               <option  v-for="sub in sub_counties" :value="sub.id">@{{ sub.value }}</option>                         
                                             </select>
                                         </div>
                                         <div class="col-sm-3">
                                             <select class="form-control" name="facility" id = "facility_id_list" v-model="facility_">
                                                 <option selected></option>
-                                                <option v-for="facility in facilities_" :value="facility.id">@{{ facility.value }}</option> 
+                                                <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
                                             </select>
                                         </div>
                                         <div class="input-group-btn">
@@ -835,32 +844,60 @@
                                     </tr>
                                 </table> 
                                 <hr>
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-3 form-control-label" for="kit_1">Kit 1</label>
+                                        <div class="input-group input-group-sm col-sm-9">
+                                            <input type="text" disabled  class="form-control" name="kit_1" id="kit_1" :value="evaluated_results.determine">
+                                            <input type="hidden" name="field_4" id="kit_id_1" class="form-control" :value="evaluated_results.determine_value" />
+                                             <span class="input-group-btn">
+                                                <button class="btn btn-primary btn-sm" type="button" @click="set_kit(1)"><i class="fa fa-edit"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-5 form-control-label" for="kit_1">Expiry Date</label>
+                                        <div class="input-group input-group-sm col-sm-7">
+                                            <input type="text" name="kit_1_expiry_date" id="kit_1_expiry_date" 
+                                                class="form-control" v-model ="evaluated_results.determine_expiry_date"/>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary btn-sm" type="button" id="change_kit_1_expiry_date">
+                                                    <i class="fa fa-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <label class="form-control-label col-sm-3" for="kit_2">Kit 2</label>
+                                        <div class="input-group input-group-sm col-sm-9">
+                                            <input type="text" disabled  class="form-control" name="kit_2" id="kit_2" :value="evaluated_results.firstresponse">
+                                            <input type="hidden" name="field_7" id="kit_id_2" class="form-control" :value="evaluated_results.firstresponse_value" />
+                                             <span class="input-group-btn">
+                                                <button class="btn btn-primary btn-sm" type="button" @click="set_kit(2)"><i class="fa fa-edit"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-control-label col-sm-5" for="kit_2_expiry_date">Expiry Date</label>
+                                        <div class="input-group input-group-sm col-sm-7">
+                                            <input type="text" name="kit_2_expiry_date" id="kit_2_expiry_date" 
+                                                class="form-control" v-model ="evaluated_results.firstresponse_expiry_date"/>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary btn-sm" type="button" id="change_kit_2_expiry_date">
+                                                    <i class="fa fa-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <table class="table table-bordered">
                                      <tr>
                                         <td>Test 1</td>
                                         <td>Test 2</td>
                                         <td>Final</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="input-group input-group-sm ">
-                                                <input type="text" disabled  class="form-control" name="kit_1" id="kit_1" :value="evaluated_results.determine">
-                                                <input type="hidden" name="field_4" id="kit_id_1" class="form-control" :value="evaluated_results.determine_value" />
-                                                 <span class="input-group-btn">
-                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_kit(1)"><i class="fa fa-edit"></i></button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group input-group-sm ">
-                                                <input type="text" disabled  class="form-control" name="kit_2" id="kit_2" :value="evaluated_results.firstresponse">
-                                                <input type="hidden" name="field_7" id="kit_id_2" class="form-control" :value="evaluated_results.firstresponse_value" />
-                                                 <span class="input-group-btn">
-                                                    <button class="btn btn-primary btn-sm" type="button" @click="set_kit(2)"><i class="fa fa-edit"></i></button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>

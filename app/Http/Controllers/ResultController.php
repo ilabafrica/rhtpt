@@ -910,13 +910,13 @@ class ResultController extends Controller
         //save user details
 
         $participant = User::find($request->participant_id);
-        $participant->name = $request->first_name.' '.$request->middle_name.' '.$request->last_name;
-        $participant->first_name = $request->first_name;
-        $participant->middle_name = $request->middle_name;
-        $participant->last_name = $request->last_name;
-        $participant->phone = $request->phone_number;
+        // $participant->name = $request->first_name.' '.$request->middle_name.' '.$request->last_name;
+        // $participant->first_name = $request->first_name;
+        // $participant->middle_name = $request->middle_name;
+        // $participant->last_name = $request->last_name;
+        // $participant->phone = $request->phone_number;
 
-        $participant->save();
+        // $participant->save();
 
         DB::table('role_user')->where('user_id', $request->participant_id)->update(['tier' => $request->facility_id, 'program_id' => $request->program_id]);
         
