@@ -424,7 +424,7 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "ResultController@update_evaluated_results"
     ));
     Route::any("/show_updated_evaluated_results/{id}", array(
-        "as"   => "update_evaluated_results",
+        "as"   => "show_updated_evaluated_results",
         "uses" => "ResultController@show_updated_evaluated_results"
     ));
 

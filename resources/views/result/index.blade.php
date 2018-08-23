@@ -617,7 +617,9 @@
                                         </div>
                                         <div class="form-group row col-sm-offset-1">
                                             <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Evaluated Results</button>
-                                            <button  class="btn btn-sm btn-wisteria" type="button" @click="show_update_evaluated_results()"><i class='fa fa-pencil-square-o'></i> Update Evaluated Results</button>&nbsp;
+                                            <button  class="btn btn-sm btn-wisteria" type="button" @click="show_update_evaluated_results()">
+                                                <i class='fa fa-pencil-square-o'></i> Update Evaluated Results
+                                            </button>&nbsp;
                                             <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                         </div>
                                     </div>
@@ -858,7 +860,7 @@
                                     <div class="col-sm-6">
                                         <label class="col-sm-5 form-control-label" for="kit_1">Expiry Date</label>
                                         <div class="input-group input-group-sm col-sm-7">
-                                            <input type="text" name="kit_1_expiry_date" id="kit_1_expiry_date" 
+                                            <input type="text" name="field_6" id="kit_1_expiry_date" 
                                                 class="form-control" v-model ="evaluated_results.determine_expiry_date"/>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-primary btn-sm" type="button" id="change_kit_1_expiry_date">
@@ -882,7 +884,7 @@
                                     <div class="col-sm-6">
                                         <label class="form-control-label col-sm-5" for="kit_2_expiry_date">Expiry Date</label>
                                         <div class="input-group input-group-sm col-sm-7">
-                                            <input type="text" name="kit_2_expiry_date" id="kit_2_expiry_date" 
+                                            <input type="text" name="field_9" id="kit_2_expiry_date" 
                                                 class="form-control" v-model ="evaluated_results.firstresponse_expiry_date"/>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-primary btn-sm" type="button" id="change_kit_2_expiry_date">
@@ -894,7 +896,7 @@
                                 </div>
 
                                 <table class="table table-bordered">
-                                     <tr>
+                                    <tr>
                                         <td>Test 1</td>
                                         <td>Test 2</td>
                                         <td>Final</td>
@@ -928,7 +930,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                     <tr>
+                                    <tr>
                                         <td>
                                             <div class="input-group input-group-sm ">
                                                 <input type="text" disabled  class="form-control" name="pt_panel_2_kit1_results" id="sample_test_4":value="evaluated_results.pt_panel_2_kit1_results">
@@ -957,7 +959,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                     <tr>
+                                    <tr>
                                         <td>
                                             <div class="input-group input-group-sm ">
                                                 <input type="text" disabled  class="form-control" name="pt_panel_3_kit1_results" id="sample_test_7":value="evaluated_results.pt_panel_3_kit1_results">
@@ -986,7 +988,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                     <tr>
+                                    <tr>
                                         <td>
                                             <div class="input-group input-group-sm ">
                                                 <input type="text" disabled  class="form-control" name="pt_panel_4_kit1_results" id="sample_test_10":value="evaluated_results.pt_panel_4_kit1_results">
@@ -1015,7 +1017,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                     <tr>
+                                    <tr>
                                         <td>
                                             <div class="input-group input-group-sm ">
                                                 <input type="text" disabled  class="form-control" name="pt_panel_5_kit1_results" id="sample_test_13":value="evaluated_results.pt_panel_5_kit1_results">
@@ -1044,7 +1046,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                     <tr>
+                                    <tr>
                                         <td>
                                             <div class="input-group input-group-sm ">
                                                 <input type="text" disabled  class="form-control" name="pt_panel_6_kit1_results" id="sample_test_16":value="evaluated_results.pt_panel_6_kit1_results">
@@ -1075,15 +1077,23 @@
                                     </tr>                                    
                                 </table>  
                                 <div class="form-group row">
-                                     <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('reason_for_change') }" for="reason_for_change">Reason For Change</label>                                    
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('reason_for_change') }" for="reason_for_change">
+                                        Reason For Change
+                                    </label>                                    
                                     <div class="col-sm-6" :class="{ 'control': true }">
                                         <textarea v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('reason_for_change') }" name="reason_for_change" id="reason_for_change" type="text"/> </textarea>
                                         <span v-show="errors.has('reason_for_change')" class="help is-danger">@{{ errors.first('reason_for_change') }}</span>
                                     </div>
                                 </div>                     
                                 <div class="form-group row col-sm-offset-2">
-                                    <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Update Evaluated Results</button>&nbsp;
-                                    <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                    <button  class="btn btn-sm btn-success ">
+                                        <i class='fa fa-check-circle'></i> Update Evaluated Results
+                                    </button>&nbsp;
+                                    <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">
+                                            <i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}
+                                        </span>
+                                    </button>
                                 </div>
                             </form>
                         </div>

@@ -684,8 +684,8 @@ class ResultController extends Controller
         $tester_id = $user->username;
         $roleUser = $user->ru();
         $facility = Facility::find($roleUser->tier);
-        $designation = $user->designation($roleUser->designation);
-        $program = Program::find($roleUser->program_id)->id;
+        try{$designation = $user->designation($roleUser->designation);}catch(\Exception $ex){$designation = "";}
+        try{$program = Program::find($roleUser->program_id)->id;}catch(\Exception $ex){$program = "";}
         $county = strtoupper($facility->subCounty->county->name);
         $sub_county = $facility->subCounty->name;
         $mfl = $facility->code;
@@ -907,16 +907,9 @@ class ResultController extends Controller
      */
     public function update_evaluated_results(Request $request, $id )
     {
-        //save user details
+        //Get participant
 
         $participant = User::find($request->participant_id);
-        // $participant->name = $request->first_name.' '.$request->middle_name.' '.$request->last_name;
-        // $participant->first_name = $request->first_name;
-        // $participant->middle_name = $request->middle_name;
-        // $participant->last_name = $request->last_name;
-        // $participant->phone = $request->phone_number;
-
-        // $participant->save();
 
         DB::table('role_user')->where('user_id', $request->participant_id)->update(['tier' => $request->facility_id, 'program_id' => $request->program_id]);
         
