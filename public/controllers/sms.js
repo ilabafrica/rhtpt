@@ -48,6 +48,7 @@ new Vue({
         from:'',
         to:'',
         message_to_send:'',
+        managesms: [],
        },
 
   computed: {
@@ -79,7 +80,7 @@ new Vue({
     	
     	this.loadCounties();
         this.loadImplementingPartners();
-        this.getVueMessages(this.pagination.current_page);
+        this.getVueMessages(this.pagination.current_page);        
     },
 
     methods : {

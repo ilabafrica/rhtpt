@@ -28,6 +28,7 @@ class CreateBulkSmsTables extends Migration
             $table->increments('id')->unsigned();
             $table->tinyInteger('template');
             $table->string('message');
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

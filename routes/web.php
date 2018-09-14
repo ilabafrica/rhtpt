@@ -260,7 +260,7 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "lots.fetch",
         "uses" => "LotController@lots"
     ));
-
+  
 
     Route::get('settings', 'BulkSMSController@manageSettings');
 

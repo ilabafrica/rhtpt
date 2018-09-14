@@ -24,7 +24,7 @@
             </button>
             <button type="button" class="btn btn-sm btn-wisteria" data-toggle="modal" data-target="#select-users-message"><i class="fa fa-plus-circle"></i>
             Custom Message
-            </button>
+            </button>          
 		 </h5>			
 		</div> 
     <!-- <div class="col-md-4">
@@ -274,7 +274,7 @@
                                         </table>
                                     </div>
                                 </div>
-                                 <div class="form-group row col-sm-offset-4 col-sm-8" >
+                                 <div class="form-group row col-sm-offset-4 col-sm-8" > 
                                     <button  class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Next</button>
                                     <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                 </div>

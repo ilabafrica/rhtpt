@@ -28,7 +28,10 @@ class Notification extends Model
     const USER_ENABLED = 8;
     const USER_REGISTRATION = 9;
     // const DISABLE_USER = 9;
-    const ROUND_CREATION =10;    
+    const ROUND_CREATION =10; 
+    const USER_UPDATED = 11;
+    const USER_DISABLED = 12;
+    const USER_RESTORED = 13;   
 
     /**
   	 * Return readable tag

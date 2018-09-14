@@ -11,7 +11,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Notifications\Notification;
-
+use App\Http\Controllers\SmsController;
 use App\Role;
 use App\Facility;
 use App\SubCounty;
@@ -136,34 +136,26 @@ class RegisterController extends Controller
         /*
         *  Do SMS Verification for phone number
         */
-        //  Bulk-sms settings
+
+
         $token = mt_rand(100000, 999999);
         $user->sms_code = $token;
         $user->save();
-        $message    = "Your Verification Code is: ".$token;
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            DB::table('role_user')->where('user_id', $user->id)->forceDelete();
-            $user->forceDelete();
-            abort(500, 'Encountered an error while sending verification code. Please try again later.');
-        }
-        
-        try
+        $message  = "Your Verification Code is: ".$token;
+        $ManageSms = new SmsController;
+        $ManageSms->RegistrationVerificationCodeSms($user);
+        /*
+         try
         {
             //  Do Email verification for email address
             $user->email_verification_code = Str::random(60);
             $user->save();
-            /*$usr = $user->toArray();
+            $usr = $user->toArray();
 
-            Mail::send('auth.verification', $usr, function($message) use ($usr) {
+            /*Mail::send('auth.verification', $usr, function($message) use ($usr) {
                 $message->to($usr['email']);
                 $message->subject('National HIV PT - Email Verification Code');
-            });*/
+            });
 
             event(new Registered($usr = $user));
 

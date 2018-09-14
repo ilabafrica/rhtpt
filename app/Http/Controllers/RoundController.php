@@ -17,6 +17,7 @@ use App\SubCounty;
 use App\Designation;
 use App\Pt;
 use App\ImplementingPartner;
+use App\Http\Controllers\SmsController;
 
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
@@ -113,7 +114,7 @@ class RoundController extends Controller
             $recipients = NULL;
             $recipients = implode(",", $phone_numbers);
             //  Send SMS
-            $message = 'Dear County/SubCounty Coordinator, NPHL has created Round'.$round->name.'. You have until'.$round->enrollment_date.' to enrol participants into this round.';            
+            /*$message = 'Dear County/SubCounty Coordinator, NPHL has created Round'.$round->name.'. You have until'.$round->enrollment_date.' to enrol participants into this round.';*/            
             //  Bulk-sms settings
             $api = DB::table('bulk_sms_settings')->first();
             $username   = $api->username;
@@ -122,9 +123,12 @@ class RoundController extends Controller
             {
                 // Specified sender-id
                 $from = $api->code;
+
+                $ManageSms = new SmsController;
+                $ManageSms->RoundCreationSms ($recipients, $round, $from, $apikey, $username);
                 // Create a new instance of Bulk SMS gateway.
                 // use try-catch to filter any errors.
-                try
+                /*try
                 {
                     // Send messages
                     $sms    = new Bulk($username, $apikey);
@@ -134,7 +138,7 @@ class RoundController extends Controller
                 catch ( AfricasTalkingGatewayException $e )
                 {
                 echo "Encountered an error while sending: ".$e->getMessage();
-                }
+                }*/
             }
             return response()->json($round);
         }
