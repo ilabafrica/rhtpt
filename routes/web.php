@@ -135,7 +135,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('facility', 'FacilityController@manageFacility');
     Route::resource('vuefacilitys','FacilityController');
     Route::any('vuefacilitys/{id}/restore','FacilityController@restore');
-    Route::get('search_facility',array('as'=>'search_facility','uses'=>'FacilityController@search_facility'));
+    Route::get('search_facility/{id}',array('as'=>'search_facility','uses'=>'FacilityController@search_facility'));
 
     Route::get('user', 'UserController@manageUser');
     Route::resource('vueusers','UserController');
@@ -422,6 +422,10 @@ Route::group(['middleware' => 'auth'], function()
     Route::any("/update_evaluated_results/{id}", array(
         "as"   => "update_evaluated_results",
         "uses" => "ResultController@update_evaluated_results"
+    ));
+    Route::any("/show_updated_evaluated_results/{id}", array(
+        "as"   => "show_updated_evaluated_results",
+        "uses" => "ResultController@show_updated_evaluated_results"
     ));
 
     //  Get feedback

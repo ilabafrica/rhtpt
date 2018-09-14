@@ -48,6 +48,15 @@ new Vue({
         result_status:'',
         feedback_status: '',
         filters:'',
+        //varibles used in editing evaluated results
+        programs: [],
+        county_:'',
+        sub_county_:'',
+        facility_:'',
+        check_date_clicked: '',
+        find_facility: [],
+        updated_evaluated_results:[],
+        role: '',
         toggle: {}
     },
 
@@ -146,8 +155,6 @@ new Vue({
         },
 
         updateResult: function(id, scope){
-            // this.$validator.validateAll(scope).then(() => {
-                // var input = this.fillResult;
 
                 let myForm = document.getElementById('update_test_results');
                 let input = new FormData(myForm);
@@ -159,10 +166,6 @@ new Vue({
                 }, (response) => {
                     this.formErrorsUpdate = response.data;
                 });
-            // }).catch(() => {
-            //     toastr.error('Please fill in the fields as required.', 'Validation Failed', {timeOut: 5000});
-            //     return false;
-            // });
         },
 
         verifyResult: function(){
@@ -247,7 +250,34 @@ new Vue({
         show_update_evaluated_results: function(){
 
             $("#view-evaluted-result").modal('hide');
-            $("#update-evaluated-result").modal('show');                
+
+            this.loadCounties();
+            this.loadPrograms();
+
+            //prompt user to add the reason for change before editing
+            
+            swal({
+              title: "Add Reason for Change",
+              text: "",
+              type: "input",
+              showCancelButton: false,
+              confirmButtonText: "Set",
+              confirmButtonColor: "#025aa5",
+              closeOnConfirm: true,
+              animation: "slide-from-top",
+              inputPlaceholder: "Write something"
+            },
+            function(inputValue){
+                if (inputValue === false) return false;
+
+                if (inputValue === "") {
+                    swal.showInputError("You need to write something");
+                    return false
+                }
+
+                $("#reason_for_change").val(inputValue);
+                $("#update-evaluated-result").modal('show'); 
+            });                                       
         },
 
         update_evaluated_results: function(id){
@@ -259,7 +289,18 @@ new Vue({
                 toastr.success('Result Changed Successfully.', 'Success Alert', {timeOut: 5000});
             });
         },
+        //compare the updated results and old results 
+        open_old_results: function(id){
 
+            $("#view-evaluted-result").modal('hide');  
+
+            this.$http.get('/show_updated_evaluated_results/'+id).then((response) => {
+                this.updated_evaluated_results = response.data;
+            });
+            $("#compare-evaluted-result").modal('show'); 
+            this.set_difference_in_results();
+        },
+            
         printFeedback:function(id){
             let feedback = [];
             //  Fetch data using the given id
@@ -424,6 +465,12 @@ new Vue({
                 this.filters = 1;
             });
         },
+
+        /*
+        * functions used in filters
+        * loading counties, sub_counties and facilities
+        */
+
         getRole: function(page){
             this.$http.get('/userrole').then((response) => {
                 if(response.data){
@@ -440,6 +487,7 @@ new Vue({
                 }
             })
         },
+
         //Populate counties from FacilityController
         loadCounties: function() {
             var url = '/cnts';
@@ -475,6 +523,14 @@ new Vue({
             });
         },
 
+         //    Populate programs from ProgramController
+        loadPrograms: function() {
+            this.$http.get('/progs').then((response) => { 
+                this.programs = response.data;
+            }, (response) => {
+            });
+        },
+
         //  Normal js
         specToggle(className, id){
             var $input = $("#field_"+id);
@@ -497,5 +553,171 @@ new Vue({
         toggle_selects: function() {
             
         },
+        check_total_days: function() {
+            var year = $('select[name=year]').val();
+            var month = $('select[name=month]').val();
+            var totalDate = 31;
+            if(year !== '' && month !== '') {
+                totalDate = new Date(year, month, 0).getDate();
+            }
+            $('select[name=day]').empty();
+            for(var i = 1; i <= totalDate; i++) {
+
+                //append 0 to single digits
+                if (i.toString().length<2) {
+                    i = '0'+i;
+                }
+               $('select[name=day]').append("<option value='"+i+"'>"+i+"</option>");
+            }
+        },
+        check_date_button: function(id){               
+            
+            this.check_date_clicked = id;           
+        },
+        set_date: function(id){
+
+            var day = $('#day').val();
+            var month = $('#month').val();
+            var year = $('#year').val(); 
+            var date = year + '-' +month+ '-' +day;
+
+            if (this.check_date_clicked==1) {
+                $('#date_received').val(date);
+            }
+            else if (this.check_date_clicked==2) {
+                $('#date_constituted').val(date);
+            }
+            else if (this.check_date_clicked==3) {
+                $('#date_tested').val(date);
+
+            } 
+                $('#month').val('');
+                $('#day').val('');
+                this.check_date_clicked = '';
+                $('#set-date').collapse('hide');
+        },
+        set_facility: function(id){
+
+            var id = $('#facility_id_list').val();
+
+            this.$http.get('/search_facility/'+id).then((response) => {
+                this.find_facility = response.data;
+
+                $('#facility_id').val(this.find_facility.id);
+                $('#facility_name').val(this.find_facility.name);
+
+                $('#set-facility').collapse('hide');
+
+            });         
+        },
+        //change the test data using dynamic pop ups
+        set_test_result: function (id){
+            var input = $("#sample_test_"+id); 
+            var input_value = $("#sample_test_value_"+id); 
+            var output = '<div class=""> <input type="radio" name="test_result" id="sample_test" value="1"/> Reactive <input type="radio" name="test_result" id="sample_test" value="2"/> Non Reactive <input type="radio" name="test_result" id="sample_test" value="3"/> Invalid <input type="radio" name="test_result" id="sample_test" value="4"/> Not Done </div>';
+            var value;
+            swal({
+                    title: "Please Select:",
+                    text: output,
+                    html: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#025aa5",
+                    confirmButtonText: "Set",
+                    cancelButtonText: "Close",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                }, 
+                function () {
+                    value = $("input[name=test_result]:checked").val();
+                    $('#sample_test_'+id).val('1');
+
+                    if (value == 1) {
+                        input.val('Reactive');
+                        input_value.val('5');
+                    }else if (value == 2) {
+                        input.val('Non Reactive');
+                        input_value.val('6');
+                    }else if (value == 3) {
+                        input.val('Invalid');
+                        input_value.val('7');
+                    }else if (value == 4) {
+                        input.val('Not Done');
+                        input_value.val('8');
+                    }
+                }
+             );                            
+        },
+        //change the final result data using dynamic pop ups
+        set_final_result: function (id){
+            var input = $("#sample_final_"+id);
+            var input_value = $("#sample_final_value_"+id);
+            var output = '<div class=""> <input type="radio" name="final_result" id="sample_test" value="1"/> Postive <input type="radio" name="final_result" id="sample_test" value="2"/> Negative <input type="radio" name="final_result" id="sample_test" value="3"/> Invalid <input type="radio" name="final_result" id="sample_test" value="4"/> Inconclusive <input type="radio" name="final_result" id="sample_test" value="5"/> Not Done </div>';
+            var value;
+            swal({
+                    title: "Please Select:",
+                    text: output,
+                    html: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#025aa5",
+                    confirmButtonText: "Set",
+                    cancelButtonText: "Close",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                }, 
+                function () {
+                    value = $("input[name=final_result]:checked").val();
+                    $('#sample_final_id_'+id).val('1');
+
+                    if (value == 1) {
+                        input.val('Positive');
+                        input_value.val('9');
+                    }else if (value == 2) {
+                        input.val('Negative');
+                        input_value.val('10');
+                    }else if (value == 3) {
+                        input.val('Invalid');
+                        input_value.val('7');
+                    }else if (value == 4) {
+                        input.val('Inconclusive');
+                        input_value.val('11');
+                    }else if (value == 5) {
+                        input.val('Not Done');
+                        input_value.val('8');
+                    }
+                }
+             );                           
+        },
+        set_kit: function (id){
+            var input = $("#kit_"+id); 
+            var input_value = $("#kit_id_"+id); 
+            var output = '<div class=""> <input type="radio" name="kit" id="sample_test" value="1"/> Determine <input type="radio" name="kit" id="sample_test" value="2"/> First Response <input type="radio" name="kit" id="sample_test" value="3"/> SD Bioline ';
+            var value;
+            swal({
+                    title: "Please Select:",
+                    text: output,
+                    html: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#025aa5",
+                    confirmButtonText: "Set",
+                    cancelButtonText: "Close",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                }, 
+                function () {
+                    value = $("input[name=kit]:checked").val();
+
+                    if (value == 1) {
+                        input.val('Determine');
+                        input_value.val('1');
+                    }else if (value == 2) {
+                        input.val('First Response');
+                        input_value.val('2');
+                    }else if (value == 3) {
+                        input.val('SD Bioline');
+                        input_value.val('3');
+                    }
+                }
+             );                           
+        }
     },
 });
