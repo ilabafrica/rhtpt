@@ -894,6 +894,20 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <label class="form-control-label col-sm-5" for="determine_lot_no">Determine Lot Number</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" class="form-control" name="field_5" id="determine_lot_no" :value="evaluated_results.determine_lot_no">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-control-label col-sm-5" for="firstresponse_lot_no">First Response Lot Number</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" class="form-control" name="field_8" id="firstresponse_lot_no" :value="evaluated_results.firstresponse_lot_no">
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <table class="table table-bordered">
                                     <tr>
