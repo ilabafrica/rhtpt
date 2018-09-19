@@ -417,7 +417,7 @@ class SmsController extends Controller
   /*Sends the Password reset code sms used in the ForgotPasswordController*/
     public function ForgotPasswordResetVerificationCodeSms($user)
     {
-      $message = Notification::where('template', 16)->withTrashed()->first();
+      $message = Notification::where('template', 14)->withTrashed()->first();
       $message_to_send = $message->message .$user->sms_code;
 
        if ($message->deleted_at == NULL) 
