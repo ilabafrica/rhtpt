@@ -272,10 +272,8 @@ class PTSeeder extends DatabaseSeeder
             array("template" => Notification::USER_UPDATED, "message" => "Dear [user->name],Your HIV PT System account has been created. Your username is [user->username]. Use the link sent to your email to get started.", "description" => "User Updated"), 
             array("template" => Notification::USER_DISABLED, "message" => "Dear [user->name],  NPHL has disabled your account.", "description" => "User Disabled"), 
             array("template" => Notification::USER_RESTORED, "message" => "Dear [user->name], NPHL has enabled your account. Once
-enrolled, you’ll receive a tester ID.", "description" => "User Restored"), 
-
-
-
+enrolled, you’ll receive a tester ID.", "description" => "User Restored"),
+            array("template" => Notification::PASSWORD_VERIFICARION_CODE, "message" => "Your Password Reset Verification Code is:", "description" => "Password Reset Verification Code"),
 
         );
         foreach ($notifications as $notification)

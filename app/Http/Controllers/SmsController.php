@@ -414,24 +414,25 @@ class SmsController extends Controller
             return response()->json(['done']);       
         }
     }
-  /*To test*/
+  /*Sends the Password reset code sms used in the ForgotPasswordController*/
     public function ForgotPasswordResetVerificationCodeSms($user)
     {
-      $message = Notification::where('template', 16)->first();
+      $message = Notification::where('template', 16)->withTrashed()->first();
       $message_to_send = $message->message .$user->sms_code;
 
-       if ($message->deleted_at != NULL) 
+       if ($message->deleted_at == NULL) 
        {
-       
-            return response()->json(['done']);
+          
+           $smsHandler = new SmsHandler();
+            //Replace +254 prefix (if it exists) with 0
+            $userPhone = str_replace("+254", "0", $user->phone);
+          //        print_r($user->phone .' -> '.$message_to_send);            
+            $smsHandler->sendMessage($userPhone, $message_to_send);
+            
         }
         else {
          
-            $smsHandler = new SmsHandler();
-            //Replace +254 prefix (if it exists) with 0
-            $userPhone = str_replace("+254", "0", $user->phone);
-          print_r($user->phone .' -> '.$message_to_send);            
-            // $smsHandler->sendMessage($userPhone, $message_to_send);
+           return response()->json(['done']);
         
        }
 
@@ -442,7 +443,7 @@ class SmsController extends Controller
     public function ParticipantApprovalSms ($user)
     {
          
-         $message = Notification::where('template', 8)->first();
+         $message = Notification::where('template', 8)->withTrashed()->first();
          $smswithname = str_replace('[user->name]', $user->name, $message->message);
          $sms_to_send = str_replace('{user->tester id}', $user->id, $smswithname); 
 
@@ -499,7 +500,7 @@ class SmsController extends Controller
    /* User Controller Store function sms*/   
     public function UserCreatedSms($create)
     {
-       $message = Notification::where('template', 9)->first();
+       $message = Notification::where('template', 9)->withTrashed()->first();
        $message_to_send = str_replace('[user->name]', $create->name, $message->message);
 
 
@@ -529,7 +530,7 @@ class SmsController extends Controller
   
     public function UserUpdateSms($user)
     {
-         $message = Notification::where('template', 11)->first();
+         $message = Notification::where('template', 11)->withTrashed()->first();
      
 
          $smswithname = str_replace('[user->name]', $user->name, $message->message);
