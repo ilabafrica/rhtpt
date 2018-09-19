@@ -31,7 +31,8 @@ class Notification extends Model
     const ROUND_CREATION =10; 
     const USER_UPDATED = 11;
     const USER_DISABLED = 12;
-    const USER_RESTORED = 13;   
+    const USER_RESTORED = 13; 
+    const PASSWORD_VERIFICARION_CODE = 14;  
 
     /**
   	 * Return readable tag
