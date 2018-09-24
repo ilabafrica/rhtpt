@@ -45,7 +45,7 @@
     </tr>
     <tr>
         <td><b>Program</b></td>
-        <td colspan="2">{{$data['program']}}</td>
+        <td colspan="2">{{$data['program_name']}}</td>
         <td><b>Facility MFL</b></td>
         <td>{{$data['mfl']}}</td>
     </tr>
