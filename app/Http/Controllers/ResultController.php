@@ -159,6 +159,7 @@ class ResultController extends Controller
             'user_role' => Auth::user()->ru()->role_id,
             'data' => $results
         ]; 
+
         return $results->count() > 0 ? response()->json($response) : $error;
     }
 
@@ -685,7 +686,8 @@ class ResultController extends Controller
         $roleUser = $user->ru();
         $facility = Facility::find($roleUser->tier);
         try{$designation = $user->designation($roleUser->designation);}catch(\Exception $ex){$designation = "";}
-        try{$program = Program::find($roleUser->program_id)->id;}catch(\Exception $ex){$program = "";}
+        try{$program = Program::find($roleUser->program_id);}catch(\Exception $ex){$program['name'] = "";}
+
         $county = strtoupper($facility->subCounty->county->name);
         $sub_county = $facility->subCounty->name;
         $mfl = $facility->code;
@@ -734,6 +736,7 @@ class ResultController extends Controller
                     'tester_id' => $tester_id,
                     'designation' => $designation,
                     'program' => $program,
+                    'program_name' => $program->name,
                     'county' => $county,
                     'sub_county' => $sub_county,
                     'facility' => $facility_name,
@@ -1096,8 +1099,14 @@ class ResultController extends Controller
         $usr = User::find($pt->enrolment->user_id);
         $pt->uid = (string)$usr->uid;
         $pt->tester = $usr->first_name . " " . $usr->middle_name . " " . $usr->last_name;
-        $pt->program = Program::find(1)->name;
-        $facility = Facility::find(1);
+        try {
+            $ru = $usr->ru();
+        } catch (Exception $e) {
+            $ru['tier'] = "";
+            $ru['program_id'] = "";
+        }
+        $pt->program = Program::find($ru->program_id)->name;
+        $facility = Facility::find($ru->tier);
         $pt->county = strtoupper($facility->subCounty->county->name);
         $pt->sub_county = $facility->subCounty->name;
         $pt->facility = $facility->name;

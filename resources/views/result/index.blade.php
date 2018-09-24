@@ -469,7 +469,7 @@
                                         </tr>
                                          <tr>
                                             <td class="col-md-3"><b>Program</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.program}}</td>
+                                            <td class="col-md-3">@{{evaluated_results.program_name}}</td>
                                             <td class="col-md-3"><b>Facility MFL</b></td>
                                             <td class="col-md-3">@{{evaluated_results.mfl}}</td>
                                         </tr>
@@ -711,7 +711,9 @@
                                     <div class="col-sm-4" :class="{ 'control': true }">
                                         <select class="form-control c-select" :class="{'input': true, 'is-danger': errors.has('program_id') }" name="program_id" v-model="evaluated_results.program">
                                             <option selected></option>
-                                            <option v-for="program in programs" :value="program.id">@{{ program.value }}</option>   
+                                            <option v-for="program in programs" :value="program.id">
+                                                @{{ program.value }}
+                                            </option>   
                                         </select>
                                         <span v-show="errors.has('program_id')" class="help is-danger">@{{ errors.first('program_id') }}</span>
                                     </div>
@@ -1164,7 +1166,7 @@
                                         </tr>
                                          <tr>
                                             <td class="col-md-3"><b>Program</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.program}}</td>
+                                            <td class="col-md-3">@{{evaluated_results.program_name}}</td>
                                             <td class="col-md-3"><b>Facility MFL</b></td>
                                             <td class="col-md-3">@{{evaluated_results.mfl}}</td>
                                         </tr>

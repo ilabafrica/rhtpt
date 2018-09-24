@@ -39,7 +39,9 @@ new Vue({
         dt: [],
         //variables used in the filters
         counties:[],
+        counties_:[],
         subcounties: [],
+        sub_counties: [],
         facilities:[],
         role: '',
         county:'',
@@ -527,6 +529,12 @@ new Vue({
         loadPrograms: function() {
             this.$http.get('/progs').then((response) => { 
                 this.programs = response.data;
+                for (var i = response.data.length - 1; i >= 0; i--) {
+                    this.programs[i] = {id: response.data[i].id, value: response.data[i].value};
+                    if (this.evaluated_results.program_name == this.programs[i].value) {
+                        this.evaluated_results.program = this.programs[i].id;
+                    }
+                }
             }, (response) => {
             });
         },
