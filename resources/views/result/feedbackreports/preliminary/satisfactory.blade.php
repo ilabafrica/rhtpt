@@ -166,7 +166,7 @@
 
     <tr>
         <td colspan="3"><img src="img/sign_kitheka.png" alt="" height="20" width="80" /></td>
-        <td colspan="2"><img src="img/sophie.PNG" alt="" height="20" width="80" /></td>
+        <td colspan="2"><img src="img/sophie.png" alt="" height="20" width="80" /></td>
     </tr>
     <tr>
         <td colspan="3">Franklin Kitheka</td>

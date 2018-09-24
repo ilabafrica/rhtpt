@@ -686,7 +686,7 @@ class ResultController extends Controller
         $roleUser = $user->ru();
         $facility = Facility::find($roleUser->tier);
         try{$designation = $user->designation($roleUser->designation);}catch(\Exception $ex){$designation = "";}
-        try{$program = Program::find($roleUser->program_id);}catch(\Exception $ex){$program['name'] = "";}
+        try{$program = Program::find($roleUser->program_id);}catch(\Exception $ex){$program = ['name' => ""];}
 
         $county = strtoupper($facility->subCounty->county->name);
         $sub_county = $facility->subCounty->name;
@@ -736,7 +736,7 @@ class ResultController extends Controller
                     'tester_id' => $tester_id,
                     'designation' => $designation,
                     'program' => $program,
-                    'program_name' => $program->name,
+                    'program_name' => isset($program->name)?$program->name:"",
                     'county' => $county,
                     'sub_county' => $sub_county,
                     'facility' => $facility_name,
