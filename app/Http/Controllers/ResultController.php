@@ -1091,6 +1091,17 @@ class ResultController extends Controller
 
     public function importResults(Request $request){
 
+        // Expected CSV file headers: 
+        // Round, ID_No, Form_Number, Panel_Tested_Date, Panel_recv_Date, Panel_Const_Date,
+        // Test2_Name, Test3_Name, Test1_Name, Kit1_Lot_No, Kit2_Lot_No, Kit3_Lot_No, Kit1_Exp_Date, Kit3_Exp_Date, 
+        // Kit2_Exp_Date, PT1FinalResults, PT1TEST1Results, PT1TEST2Results, PT1TEST3Results, PT2FinalResults, 
+        // PT2TEST1Results, PT2TEST2Results, PT2TEST3Results, PT3TEST1Results, PT3TEST2Results, PT3TEST3Results, 
+        // PT3FinalResults, PT4FinalResults, PT4TEST1Results, PT4TEST2Results, PT4TEST3Results, PT5FinalResults, 
+        // PT5TEST1Results, PT5TEST2Results, PT5TEST3Results, PT6FinalResults, PT6TEST1Results, PT6TEST3Results, 
+        // PT6TEST2Results
+
+        \Log::info("--- Importing PT results --- (System UID: ".Auth::user()->id." Name: ".Auth::user()->first_name.")");
+
         $fileName = $request->importResultFile;
         $handle = @fopen($fileName, "r");
         $reply = ['total' => 0, 'passed' => 0, 'failed' => 0, 'exist' => 0, 'not_enrolled' => 0, 'no_user' => 0];
