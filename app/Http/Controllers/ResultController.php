@@ -228,52 +228,21 @@ class ResultController extends Controller
                     // save the response for respective field
                     $result->response = $response;
                     $result->save();   
-                }                    
-                    //  Send SMS
-                    $round = Round::find($pt->enrolment->round->id)->description;
-                    $message = Notification::where('template', Notification::RESULTS_RECEIVED)->first()->message;
-                    $message = $this->replace_between($message, '[', ']', $round);
-                    $message = str_replace(' [', ' ', $message);
-                    $message = str_replace(']', ' ', $message);
+                }
 
-                    $created = Carbon::today()->toDateTimeString();
-                    $updated = Carbon::today()->toDateTimeString();
-                    //  Time
-                    $now = Carbon::now('Africa/Nairobi');
-                    $bulk = DB::table('bulk')->insert(['notification_id' => Notification::RESULTS_RECEIVED, 'round_id' => $pt->enrolment->round->id, 'text' => $message, 'user_id' => $pt->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
-                 // dd($bulk);
-                    $recipients = NULL;
-                    $recipients = User::find($pt->enrolment->user->id)->value('phone');
-                    //  Bulk-sms settings
-                    $api = DB::table('bulk_sms_settings')->first();
-                    $username   = $api->code;
-                    $apikey     = $api->api_key;
+                //  Send SMS
+                $round = Round::find($pt->enrolment->round->id)->description;
+                $message = Notification::where('template', Notification::RESULTS_RECEIVED)->first()->message;
+                $message = $this->replace_between($message, '[', ']', $round);
+                $message = str_replace(' [', ' ', $message);
+                $message = str_replace(']', ' ', $message);
 
-                    /*if($recipients)
-                    {
-                        // Specified sender-id
-                        // $from = $api->code;
-                        $from ='NPHL';
-                        // Create a new instance of Bulk SMS gateway.
-                        $sms    = new Bulk($username, $apikey);
-                        // use try-catch to filter any errors.
-                        try
-                        {
-                        // Send messages
-                        $results = $sms->sendMessage($recipients, $message, $from);
-                        foreach($results as $result)
-                        {
-                            // status is either "Success" or "error message" and save.
-                            $number = $result->number;
-                            //  Save the results
-                            DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
-                        }
-                        }
-                        catch ( AfricasTalkingGatewayException $e )
-                        {
-                        echo "Encountered an error while sending: ".$e->getMessage();
-                        }
-                    }*/
+                $created = Carbon::today()->toDateTimeString();
+                $updated = Carbon::today()->toDateTimeString();
+                //  Time
+                $now = Carbon::now('Africa/Nairobi');
+                $bulk = DB::table('bulk')->insert(['notification_id' => Notification::RESULTS_RECEIVED, 'round_id' => $pt->enrolment->round->id, 'text' => $message, 'user_id' => $pt->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
+
                 return response()->json('Saved.');
 
              }
@@ -343,11 +312,7 @@ class ResultController extends Controller
             $from = "NPHL";
             // Create a new instance of Bulk SMS gateway.
             $sms    = new Bulk($username, $apikey);
-\Log::info(Auth::user()->email);
-\Log::info(Auth::user()->phone);
-\Log::info($from);
-\Log::info($recipients);
-\Log::info($message);
+
             // use try-catch to filter any errors.
             try
             {
@@ -839,7 +804,8 @@ class ResultController extends Controller
         // return response()->json($all_results); 
         return $all_results;       
     }
-/**
+
+    /**
      * Verify results evaluted by a NON-Participant
      *
      * @param ID of the selected pt -  $id
@@ -1121,5 +1087,239 @@ class ResultController extends Controller
         ];
 
         return response()->json($response);
+    }
+
+    public function importResults(Request $request){
+
+        $fileName = $request->importResultFile;
+        $handle = @fopen($fileName, "r");
+        $reply = ['total' => 0, 'passed' => 0, 'failed' => 0, 'exist' => 0, 'not_enrolled' => 0, 'no_user' => 0];
+
+        $headers = [];
+        $data = [];
+
+        if ($handle) {
+
+            while (($buffer = fgets($handle, 4096)) !== false) {
+
+                $buffer = str_replace(", ", "|||", $buffer);
+                $reply['total']++;
+
+                if ($reply['total'] == 1) {
+                    $headers = explode(",", $buffer);
+                }else{
+                    $data = explode(",", $buffer);
+                }
+
+                if (count($headers) == count($data) && count($headers) > 0) {
+                    $fullResultSet = [];
+                    for ($i=0; $i < count($headers); $i++) { 
+                        $fullResultSet[str_replace("\"", "", $headers[$i])] = str_replace("\"", "", str_replace("NULL", "", str_replace("|||", ", ", $data[$i])));
+                    }
+
+                    $resultSet['uid'] = $fullResultSet["ID_No"];
+                    $resultSet['round_id'] = Round::idByTitle($fullResultSet['Round']);
+                    $resultSet['field_1'] = $this->reformat($fullResultSet['Panel_recv_Date']);
+                    $resultSet['field_2'] = $this->reformat($fullResultSet['Panel_Const_Date']);
+                    $resultSet['field_3'] = $this->reformat($fullResultSet['Panel_Tested_Date']);
+
+                    $resultSet['field_4'] = $this->getResultOptionID($fullResultSet['Test1_Name']);
+                    $resultSet['field_5'] = $fullResultSet['Kit1_Lot_No'];
+                    $resultSet['field_6'] = $this->reformat($fullResultSet['Kit1_Exp_Date']);
+
+                    $resultSet['field_7'] = $this->getResultOptionID($fullResultSet['Test2_Name']);
+                    $resultSet['field_8'] = $fullResultSet['Kit2_Lot_No'];
+                    $resultSet['field_9'] = $this->reformat($fullResultSet['Kit2_Exp_Date']);
+
+                    $resultSet['field_10'] = $this->getResultOptionID($fullResultSet['Test3_Name']);
+                    $resultSet['field_11'] = $fullResultSet['Kit3_Lot_No'];
+                    $resultSet['field_12'] = $this->reformat($fullResultSet['Kit3_Exp_Date']);
+
+                    $resultSet['field_13'] = $this->getResultOptionID($fullResultSet['PT1TEST1Results']);
+                    $resultSet['field_14'] = $this->getResultOptionID($fullResultSet['PT1TEST2Results']);
+                    $resultSet['field_15'] = $this->getResultOptionID($fullResultSet['PT1TEST3Results']);
+                    $resultSet['field_16'] = $this->getResultOptionID($fullResultSet['PT1FinalResults']);
+
+                    $resultSet['field_17'] = $this->getResultOptionID($fullResultSet['PT2TEST1Results']);
+                    $resultSet['field_18'] = $this->getResultOptionID($fullResultSet['PT2TEST2Results']);
+                    $resultSet['field_19'] = $this->getResultOptionID($fullResultSet['PT2TEST3Results']);
+                    $resultSet['field_20'] = $this->getResultOptionID($fullResultSet['PT2FinalResults']);
+
+                    $resultSet['field_21'] = $this->getResultOptionID($fullResultSet['PT3TEST1Results']);
+                    $resultSet['field_22'] = $this->getResultOptionID($fullResultSet['PT3TEST2Results']);
+                    $resultSet['field_23'] = $this->getResultOptionID($fullResultSet['PT3TEST3Results']);
+                    $resultSet['field_24'] = $this->getResultOptionID($fullResultSet['PT3FinalResults']);
+
+                    $resultSet['field_25'] = $this->getResultOptionID($fullResultSet['PT4TEST1Results']);
+                    $resultSet['field_26'] = $this->getResultOptionID($fullResultSet['PT4TEST2Results']);
+                    $resultSet['field_27'] = $this->getResultOptionID($fullResultSet['PT4TEST3Results']);
+                    $resultSet['field_28'] = $this->getResultOptionID($fullResultSet['PT4FinalResults']);
+
+                    $resultSet['field_29'] = $this->getResultOptionID($fullResultSet['PT5TEST1Results']);
+                    $resultSet['field_30'] = $this->getResultOptionID($fullResultSet['PT5TEST2Results']);
+                    $resultSet['field_31'] = $this->getResultOptionID($fullResultSet['PT5TEST3Results']);
+                    $resultSet['field_32'] = $this->getResultOptionID($fullResultSet['PT5FinalResults']);
+
+                    $resultSet['field_33'] = $this->getResultOptionID($fullResultSet['PT6TEST1Results']);
+                    $resultSet['field_34'] = $this->getResultOptionID($fullResultSet['PT6TEST2Results']);
+                    $resultSet['field_35'] = $this->getResultOptionID($fullResultSet['PT6TEST3Results']);
+                    $resultSet['field_36'] = $this->getResultOptionID($fullResultSet['PT6FinalResults']);
+
+                    $resultSet['field_37'] = $fullResultSet['Comments'];
+
+                    $stored = $this->storeImportedResult($resultSet);
+                    switch ($stored) {
+                        case 1:
+                            $reply['passed']++; break;
+                        case -1:
+                            $reply['failed']++; break;
+                        case -2:
+                            $reply['not_enrolled']++; break;
+                        case -3:
+                            $reply['exist']++; break;
+                        case -5:
+                            $reply['no_user']++; break;
+                    }
+
+                }else{
+                    $reply['failed']++;
+                }
+            }
+
+            if($reply['total'] > 1)$reply['total']--;
+
+            if (!feof($handle)) {
+                $reply['failed']++;
+                \Log::info("Error: unexpected fgets() fail\n");
+            }
+            fclose($handle);
+        }
+
+        return response()->json($reply);
+    }
+
+    function reformat($date){
+        $returnDate = ""; 
+        $parts = explode("/", $date);
+
+        try {
+            $returnDate = $parts[2]."-".str_pad($parts[1], 2, "0", STR_PAD_LEFT)."-".str_pad($parts[0], 2, "0", STR_PAD_LEFT);
+        } catch (\ErrorException $e) {}
+
+        return $returnDate;
+    }
+
+    function getResultOptionID($result){
+        $options = ['determine' => 1, 'first_response' => 2, 'sdbioline' => 3, 'other' => 4, 'reactive' => 5,
+                'non_reactive' => 6, 'invalid' => 7, 'not_done' => 8, 'positive' => 9, 'negative' => 10, 'inconclusive' => 11
+            ];
+        $result = strtolower($result);
+        $resultID = "";
+
+        if (strlen($result) > 0) {
+            try {
+                $resultID = $options[$result];
+            } catch (\ErrorException $e) {}
+        }
+
+        return $resultID;
+    }
+
+    /**
+     * Store imported result in storage.
+     *
+     * @param  $resultSet
+     * @return \Illuminate\Http\Response
+     */
+    function storeImportedResult($resultSet)
+    {
+        $success = -4; //error parsing the data
+
+        try {
+            
+            //Check if round is set         
+            if ($resultSet['round_id'] =="") {
+                $success = -1;            
+                \Log::info("UID: ".$resultSet['uid']." - Round information missing!");
+            } else
+            {   
+                //  Save pt first then proceed to save form fields
+                $roundID = $resultSet['round_id'];
+                $user = User::where('uid', $resultSet['uid'])->first();
+
+                    if (!isset($user->id)) {
+                        \Log::info("UID: ".$resultSet['uid']." - User does not exist in the database! Check soft deletes / disabled user!");
+                        $success = -5;
+                    }else{
+                        $userID = $user->id;
+                        $enrolment = Enrol::where('user_id', $userID)->where('round_id', $roundID)->first();
+                    
+                    //Validation: Check if the enrolment results have been submitted
+                    if (!isset($enrolment->id)) {
+                        $success = -2;
+                        \Log::info("UID: ".$resultSet['uid']." - User is not enrolled to specified round ($roundID)!");
+                    }else{
+                        // Check if a result already exists
+                        $pt = Pt::where('enrolment_id', $enrolment->id)->first();
+
+                        if (!isset($pt->enrolment_id)) {
+                            $pt = new Pt;
+                            $pt->enrolment_id = $enrolment->id;
+                            $pt->panel_status = Pt::NOT_CHECKED;
+                            $pt->save();
+
+                            //update enrollment status to 1
+                            $enrolment->status = Enrol::DONE;
+                            $enrolment->save();
+                           
+                            //  Proceed to form-fields
+                            // get all fields and insert into results
+                            $fields = Field::all();
+                            $response = '';
+
+                            foreach ($fields as $field) {
+                                $result = new Result;
+                                $result->pt_id = $pt->id;
+                                $result->field_id = $field->id;
+                               
+                               //loop through the results entered and get the response for each field
+                                foreach ($resultSet as $key => $value)
+                                {
+                                    if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
+                                        continue;
+                                    else if(stripos($key, 'field') !==FALSE)
+                                    {
+                                        $fieldId = (int)$this->strip($key);
+                                        if(is_array($value))
+                                          $value = implode(', ', $value);
+
+                                        if ($field->id == $fieldId) {
+                                            $response = $value;
+                                            break;
+                                        }else if ($field->id != $fieldId) {
+                                            $response = '';
+                                        }                      
+                                    }                        
+                                } 
+                                // save the response for respective field
+                                $result->response = $response;
+                                $result->save();   
+                            }
+
+                            $success = 1;
+                        }else{
+                            $success = -3;
+                            \Log::info("UID: ".$resultSet['uid']." - User already has a result for this round ($roundID)!");
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            \Log::info("Error parsing data row:");
+            \Log::error($e);
+            \Log::info(json_encode($resultSet));
+        }
+
+        return $success;
     }
 }

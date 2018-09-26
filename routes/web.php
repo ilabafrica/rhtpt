@@ -331,6 +331,11 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "ResultController@verify"
     ));
 
+    Route::post("/result/import", array(
+        "as"   => "resultsimport",
+        "uses" => "ResultController@importResults"
+    ));
+
     Route::get("/form", array(
         "as"   => "fields.fetch",
         "uses" => "QuestionnaireController@fetch"

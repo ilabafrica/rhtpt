@@ -180,6 +180,22 @@ new Vue({
             });
         }, 
 
+        importResults: function(){
+           let myForm = document.getElementById('import_results');
+            let formData = new FormData(myForm);
+            this.$http.post('/result/import', formData).then((response) => {
+                this.changePage(this.pagination.current_page);
+                var reply = JSON.parse(response.body);
+                console.log(response);
+                toastr.success(reply.passed + ' out of ' + reply.total + ' results imported successfully.<br /> ' + 
+                    reply.exist + ' results already exist.<br />' + reply.not_enrolled + 
+                    ' records belong to users not enrolled in the round.<br />' + 
+                    reply.no_user + ' records belong to users who have been disabled.', 'Success Alert', {timeOut: 0});
+            }, (response) => {
+                this.formErrors = response.data;
+            });
+        },
+
         changePage: function (page) {
             this.pagination.current_page = page;
             if (this.filters ==1) {

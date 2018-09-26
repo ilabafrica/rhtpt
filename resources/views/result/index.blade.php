@@ -13,22 +13,30 @@
     <!-- Round Listing -->
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="pull-left col-md-6">
-                <h5><i class="fa fa-book"></i> {!! trans_choice('messages.result', 2) !!}
-        
-                @permission('create-result')
-                    <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-result">
-                        <i class="fa fa-plus-circle"></i>
-                        {!! trans('messages.enter-result') !!}
-                    </button>
-                @endpermission
-                    <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
+            <div class="pull-left col-md-3">
+                <h5>
+                    <i class="fa fa-book"></i> {!! trans_choice('messages.result', 2) !!}
+                    @permission('create-result')
+                        <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-result">
+                            <i class="fa fa-plus-circle"></i>
+                            {!! trans('messages.enter-result') !!}
+                        </button>
+                    @endpermission
+                </h5>
+            </div>
+            <div class="col-md-5">
+                <form method="POST" class="form-inline" id="import_results" v-on:submit.prevent="importResults" enctype="multipart/form-data">
+                    @permission('create-result')
+                        <label for="importResultFile">Import Results:</label>
+                        <input type="file" class="form-control mb-3 mr-sm-3" id="importResultFile" name="importResultFile" />
+                        <button type="submit" class="btn btn-primary mb-2">Import</button>
+                    @endpermission
+                </form>
+                    <a class="btn btn-sm btn-carrot" style="display: none;" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
                     </a>
-                </h5>
             </div>
-            <div class="col-md-2"></div>
             <div class="col-md-4">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" placeholder="Search for..." v-model="query" v-on:keyup.enter="search()">
