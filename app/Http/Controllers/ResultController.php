@@ -1221,6 +1221,7 @@ class ResultController extends Controller
     }
 
     function getResultOptionID($result){
+        // Should really read from options db table
         $options = ['determine' => 1, 'first_response' => 2, 'sdbioline' => 3, 'other' => 4, 'reactive' => 5,
                 'non_reactive' => 6, 'invalid' => 7, 'not_done' => 8, 'positive' => 9, 'negative' => 10, 'inconclusive' => 11
             ];

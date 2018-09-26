@@ -26,7 +26,7 @@
             </div>
             <div class="col-md-5">
                 <form method="POST" class="form-inline" id="import_results" v-on:submit.prevent="importResults" enctype="multipart/form-data">
-                    @permission('create-result')
+                    @permission('import-results')
                         <label for="importResultFile">Import Results:</label>
                         <input type="file" class="form-control mb-3 mr-sm-3" id="importResultFile" name="importResultFile" />
                         <button type="submit" class="btn btn-primary mb-2">Import</button>
