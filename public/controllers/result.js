@@ -190,7 +190,8 @@ new Vue({
                 toastr.success(reply.passed + ' out of ' + reply.total + ' results imported successfully.<br /> ' + 
                     reply.exist + ' results already exist.<br />' + reply.not_enrolled + 
                     ' records belong to users not enrolled in the round.<br />' + 
-                    reply.no_user + ' records belong to users who have been disabled.', 'Success Alert', {timeOut: 0});
+                    reply.no_user + ' records belong to users who have been disabled.'  + 
+                    reply.failed + ' records could not be uploaded.', 'Success Alert', {timeOut: 0});
             }, (response) => {
                 this.formErrors = response.data;
             });

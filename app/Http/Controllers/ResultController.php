@@ -1253,19 +1253,18 @@ class ResultController extends Controller
             if ($resultSet['round_id'] =="") {
                 $success = -1;            
                 \Log::info("UID: ".$resultSet['uid']." - Round information missing!");
-            } else
-            {   
+            } else {   
                 //  Save pt first then proceed to save form fields
                 $roundID = $resultSet['round_id'];
                 $user = User::where('uid', $resultSet['uid'])->first();
 
-                    if (!isset($user->id)) {
-                        \Log::info("UID: ".$resultSet['uid']." - User does not exist in the database! Check soft deletes / disabled user!");
-                        $success = -5;
-                    }else{
-                        $userID = $user->id;
-                        $enrolment = Enrol::where('user_id', $userID)->where('round_id', $roundID)->first();
-                    
+                if (!isset($user->id)) {
+                    \Log::info("UID: ".$resultSet['uid']." - User does not exist in the database! Check soft deletes / disabled user!");
+                    $success = -5;
+                }else{
+                    $userID = $user->id;
+                    $enrolment = Enrol::where('user_id', $userID)->where('round_id', $roundID)->first();
+                
                     //Validation: Check if the enrolment results have been submitted
                     if (!isset($enrolment->id)) {
                         $success = -2;
