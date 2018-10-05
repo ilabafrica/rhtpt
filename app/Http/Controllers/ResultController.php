@@ -615,8 +615,6 @@ class ResultController extends Controller
         $user = $pt->enrolment->user;
         $lot = $user->lot($round_id);
         $expected_results = $lot->panels()->get();
-        // $material_id = $expected_results->first()->material_id;
-        // $material = Material::find($material_id); 
 
         foreach ($expected_results as $ex_rslts) {
 
@@ -782,6 +780,7 @@ class ResultController extends Controller
                     "expected_result_4"=>$expected_result_4,
                     "expected_result_5"=>$expected_result_5,
                     "expected_result_6"=>$expected_result_6,
+                    "tester_comments"=>$tester_comments,
                     
                     //sample name
                     "sample_1"=>$sample_1, 
