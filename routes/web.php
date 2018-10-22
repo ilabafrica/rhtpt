@@ -432,7 +432,11 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "show_updated_evaluated_results",
         "uses" => "ResultController@show_updated_evaluated_results"
     ));
-
+    
+    Route::any("/download_all_result/{id}", array(
+        "as"   => "download_all_result",
+        "uses" => "ResultController@download_all_result"
+    ));
     //  Get feedback
     Route::get("/print_result/{id}", array(
         "as"   => "print_result.fetch",

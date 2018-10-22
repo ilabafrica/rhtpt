@@ -21,12 +21,14 @@ use App\Material;
 use App\EvaluatedResult;
 use App\ImplementingPartner;
 use App\SmsHandler;
+use App\Role;
 use App\Libraries\AfricasTalkingGateway as Bulk;
 
 use Auth;
 use Jenssegers\Date\Date as Carbon;
 use DB;
 use PDF;
+use Excel;
 
 class ResultController extends Controller
 {
@@ -652,6 +654,7 @@ class ResultController extends Controller
         try{$program = Program::find($roleUser->program_id);}catch(\Exception $ex){$program = ['name' => ""];}
 
         $county = strtoupper($facility->subCounty->county->name);
+        $county_id= $facility->subCounty->county->id;
         $sub_county = $facility->subCounty->name;
         $mfl = $facility->code;
         $facility_name = $facility->name;
@@ -673,6 +676,7 @@ class ResultController extends Controller
         $invalid_results = $pt->invalid_results;
         $wrong_algorithm = $pt->wrong_algorithm;
         $incomplete_results = $pt->incomplete_results;
+        $panel_result = $pt->panel_result;
 
         if($pt->feedback == Pt::UNSATISFACTORY)
             $remark = $pt->unsatisfactory(); 
@@ -700,6 +704,7 @@ class ResultController extends Controller
                     'designation' => $designation,
                     'program' => $program,
                     'program_name' => isset($program->name)?$program->name:"",
+                    'county_id' => $county_id,
                     'county' => $county,
                     'sub_county' => $sub_county,
                     'facility' => $facility_name,
@@ -797,7 +802,8 @@ class ResultController extends Controller
                     'use_of_expired_kits' => $use_of_expired_kits,
                     'invalid_results' => $invalid_results,
                     'wrong_algorithm' => $wrong_algorithm,
-                    'incomplete_results' => $incomplete_results
+                    'incomplete_results' => $incomplete_results,
+                    'panel_result' => $panel_result
                 );
 
         // return response()->json($all_results); 
@@ -1331,5 +1337,161 @@ class ResultController extends Controller
         }
 
         return $success;
+    }
+
+    /**
+     * Store imported result in storage.
+     *
+     * @param  $resultSet
+     * @return \Illuminate\Http\Response
+     */
+    public function download_all_result(){
+        if(Auth::user()->isCountyCoordinator())
+        {
+            $results = County::find(Auth::user()->ru()->tier)->results();
+        }
+        else if(Auth::user()->isSubCountyCoordinator())
+        {
+           $results = SubCounty::find(Auth::user()->ru()->tier)->results();
+        }
+        else if(Auth::user()->isFacilityInCharge())
+        {
+           $results = Facility::find(Auth::user()->ru()->tier)->results();
+        }
+        else if(Auth::user()->isParticipant())
+        {
+            $results = Auth::user()->results();
+        }
+        else if(Auth::user()->isPartner())
+        {
+           $results = ImplementingPartner::find(Auth::user()->ru()->tier)->results();
+
+        }else if(Auth::user()->isSuperAdministrator())
+        {
+            $results = Pt::withTrashed();
+        }
+
+        $results = $results->withTrashed()->get();
+
+        // dd($results);
+
+        $title = 'RESULTS SUMMARY';
+
+        return Excel::create($title, function($excel) use ($results) 
+        {
+            $summary = [];
+
+            if (empty($results)) { 
+               $summary[] = [
+                'FACILITY' => '', 
+                'MFL CODE' => '', 
+                'TESTER UNIQUE ID' => '', 
+                'TESTER NAME' => '', 
+                'TESTER PHONE' => '', 
+                'PROGRAM' => '', 
+                'DESIGNATION' => '', 
+                
+                'PANEL RESULT' => '', 
+                'OVERALL RESULT' => '', 
+                'DATE RECIEVED' => '',                   
+                'DATE CONSTITUTED' => '',                   
+                'DATE TESTED' => '',                   
+                'KIT 1 ' => '',                   
+                'KIT 1 EXPIRY DATE' => '',                   
+                'KIT 2 ' => '',                   
+                'KIT 2 EXPIRY DATE ' => '', 
+                'PT PANEL 1 TEST 1 ' => '', 
+                'PT PANEL 1 TEST 2 ' => '', 
+                'PT PANEL 1 TEST FINAL RESULT ' => '',
+                'PT PANEL 2 TEST 1 ' => '', 
+                'PT PANEL 2 TEST 2 ' => '', 
+                'PT PANEL 2 TEST FINAL RESULT ' => '',
+                'PT PANEL 3 TEST 1 ' => '', 
+                'PT PANEL 3 TEST 2 ' => '', 
+                'PT PANEL 3 TEST FINAL RESULT ' => '',
+                'PT PANEL 4 TEST 1 ' => '', 
+                'PT PANEL 4 TEST 2 ' => '', 
+                'PT PANEL 4 TEST FINAL RESULT ' => '',
+                'PT PANEL 5 TEST 1 ' => '', 
+                'PT PANEL 5 TEST 2 ' => '', 
+                'PT PANEL 5 TEST FINAL RESULT ' => '',
+                'PT PANEL 6 TEST 1 ' => '', 
+                'PT PANEL 6 TEST 2 ' => '', 
+                'PT PANEL 6 TEST FINAL RESULT ' => '', 
+                'INCORRECT RESULTS ' => '', 
+                'WRONG ALGORITHM ' => '', 
+                'USE OF EXPIRED KITS ' => '', 
+                'INCOMPLETE KIT DATA ' => '', 
+                'INCOMPLETE RESULTS ' => '', 
+                'DEVIATION FROM PROEDURE ' => '', 
+                'INCOMPLETE OTHER INFORMATION ' => '', 
+                'EXPERTS COMMENTS' => ''];   
+            }
+
+            else{
+                $counties = County::all();
+                foreach($counties as $county)
+                {
+                    foreach($results as $result)
+                    {                        
+                        $result->result_details = $this->evaluated_results($result->id);
+                        
+                        if ($result->result_details['county_id'] == $county->id) {
+
+                            $summary[] = [
+                                'FACILITY' => $result->result_details['facility'], 
+                                'MFL CODE' => $result->result_details['mfl'], 
+                                'TESTER UNIQUE ID' => $result->result_details['tester_id'], 
+                                'TESTER NAME' => $result->result_details['first_name'].' '.$result->result_details['middle_name'].' '.$result->result_details['last_name'], 
+                                'TESTER PHONE' => $result->result_details['phone_no'], 
+                                'PROGRAM' => $result->result_details['program_name'], 
+                                'DESIGNATION' => $result->result_details['designation'], 
+                                
+                                'PANEL RESULT' => $result->result_details['panel_result'], 
+                                'OVERALL RESULT' => $result->result_details['feedback'], 
+                                'DATE RECIEVED' => $result->result_details['date_received'],  
+                                'DATE CONSTITUTED' => $result->result_details['date_constituted'],  
+                                'DATE TESTED' => $result->result_details['date_tested'],  
+                                'KIT 1 ' => $result->result_details['determine_value'],  
+                                'KIT 1 EXPIRY DATE' => $result->result_details['determine_expiry_date'],  
+                                'KIT 2 ' => $result->result_details['firstresponse_value'],  
+                                'KIT 2 EXPIRY DATE ' => $result->result_details['firstresponse_expiry_date'], 
+                                'PT PANEL 1 TEST 1 ' => $result->result_details['pt_panel_1_kit1_results_value'], 
+                                'PT PANEL 1 TEST 2 ' => $result->result_details['pt_panel_1_kit2_results_value'], 
+                                'PT PANEL 1 TEST FINAL RESULT ' => $result->result_details['pt_panel_1_final_results_value'],
+                                'PT PANEL 2 TEST 1 ' => $result->result_details['pt_panel_2_kit1_results_value'], 
+                                'PT PANEL 2 TEST 2 ' => $result->result_details['pt_panel_2_kit2_results_value'], 
+                                'PT PANEL 2 TEST FINAL RESULT ' => $result->result_details['pt_panel_2_final_results_value'],
+                                'PT PANEL 3 TEST 1 ' => $result->result_details['pt_panel_3_kit1_results_value'], 
+                                'PT PANEL 3 TEST 2 ' => $result->result_details['pt_panel_3_kit2_results_value'], 
+                                'PT PANEL 3 TEST FINAL RESULT ' => $result->result_details['pt_panel_3_kit2_results_value'],
+                                'PT PANEL 4 TEST 1 ' => $result->result_details['pt_panel_3_kit2_results_value'], 
+                                'PT PANEL 4 TEST 2 ' => $result->result_details['pt_panel_4_kit2_results_value'], 
+                                'PT PANEL 4 TEST FINAL RESULT ' => $result->result_details['pt_panel_4_final_results_value'],
+                                'PT PANEL 5 TEST 1 ' => $result->result_details['pt_panel_5_kit1_results_value'], 
+                                'PT PANEL 5 TEST 2 ' => $result->result_details['pt_panel_5_kit2_results_value'], 
+                                'PT PANEL 5 TEST FINAL RESULT ' => $result->result_details['pt_panel_5_final_results_value'],
+                                'PT PANEL 6 TEST 1 ' => $result->result_details['pt_panel_6_kit1_results_value'], 
+                                'PT PANEL 6 TEST 2 ' => $result->result_details['pt_panel_6_kit2_results_value'], 
+                                'PT PANEL 6 TEST FINAL RESULT ' => $result->result_details['pt_panel_6_final_results_value'], 
+                                'INCORRECT RESULTS ' => $result->result_details['incorrect_results'], 
+                                'WRONG ALGORITHM ' => $result->result_details['wrong_algorithm'], 
+                                'USE OF EXPIRED KITS ' => $result->result_details['use_of_expired_kits'], 
+                                'INCOMPLETE KIT DATA ' => $result->result_details['incomplete_kit_data'], 
+                                'INCOMPLETE RESULTS ' => $result->result_details['incomplete_results'], 
+                                'DEVIATION FROM PROEDURE ' => $result->result_details['dev_from_procedure'], 
+                                'INCOMPLETE OTHER INFORMATION ' => $result->result_details['incomplete_other_information'], 
+                                'EXPERTS COMMENTS ' => $result->result_details['tester_comments']
+                            ]; 
+                        }                  
+                    }
+                
+                    $sheetTitle = $county->name;
+                    $excel->sheet($sheetTitle, function($sheet) use ($summary) {
+                        $sheet->fromArray($summary);
+                    });
+                }
+            }
+        })->download('xlsx');
     }
 }

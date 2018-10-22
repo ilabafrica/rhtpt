@@ -24,6 +24,13 @@
                     @endpermission
                 </h5>
             </div>
+            <div class="col-md-2">
+                <h5>
+                    @permission('download-all-result')
+                        <a type="button" class="btn btn-sm btn-wisteria" :href="'/download_all_result/1'"><i class="fa fa-plus-circle"></i> Download Results</a>
+                    @endpermission
+                </h5>
+            </div>
             <div class="col-md-5">
                 <form method="POST" class="form-inline" id="import_results" v-on:submit.prevent="importResults" enctype="multipart/form-data">
                     @permission('import-results')
@@ -37,7 +44,7 @@
                         {!! trans('messages.back') !!}
                     </a>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" placeholder="Search for..." v-model="query" v-on:keyup.enter="search()">
                     <span class="input-group-btn">
