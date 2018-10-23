@@ -150,6 +150,7 @@
             <td>
                 <button v-if="result.feedback==0" class="mbtn mbtn-raised mbtn-success mbtn-xs">Satisfactory</button>
                 <button v-if="result.feedback==1" class="mbtn mbtn-raised mbtn-primary mbtn-xs">Unsatisfactory</button>
+                <button v-if="result.feedback==3" class="mbtn mbtn-raised mbtn-danger mbtn-xs">Blank Result</button>
                 <button v-if="result.feedback==2 || result.feedback==null" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Pending</button>
             </td>
             <td>
@@ -851,8 +852,9 @@
                                         <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incomplete_results" v-bind="{ 'checked': evaluated_results.incomplete_results ==1}"> Incomplete Results</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2"><input type="radio" value="0" id="satisfactory" name="feedback"><b> Satisfactory</b></td>
-                                        <td colspan="2"><input type="radio" value="1" id="unsatisfactory" name="feedback"><b> Unsatisfactory</b></td>                               
+                                        <td colspan=" "><input type="radio" value="0" id="satisfactory" name="feedback"><b> Satisfactory</b></td>
+                                        <td colspan=" "><input type="radio" value="1" id="unsatisfactory" name="feedback"><b> Unsatisfactory</b></td>
+                                        <td colspan="2"><input type="radio" value="3" id="blank" name="feedback"><b> Blank Results</b></td>                               
                                     </tr>
                                 </table> 
                                 <hr>

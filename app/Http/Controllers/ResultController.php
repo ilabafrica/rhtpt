@@ -932,7 +932,7 @@ class ResultController extends Controller
             $pt->incomplete_results =0;
         }
 
-        if ($request->feedback==1) {        //cannot check if value is 0.    
+        if ($request->feedback==1 || $request->feedback==2) {        //cannot check if value is 0.    
             $pt->feedback = $request->feedback;
         }else{
             $pt->feedback = 0; 
@@ -1038,6 +1038,11 @@ class ResultController extends Controller
                 $pt = Pt::where('id',$id)->first();
 
                 $pdf = PDF::loadView('result/feedbackreports/preliminary/unsatisfactory', compact('data','pt'));
+            }
+
+            if(\request('type') == 3){//blank
+
+                $pdf = PDF::loadView('result/feedbackreports/preliminary/blank', compact('data'));
             }
         }
 
