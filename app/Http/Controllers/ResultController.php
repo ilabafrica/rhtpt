@@ -1383,6 +1383,9 @@ class ResultController extends Controller
 
             if (empty($results)) { 
                $summary[] = [
+                'COUNTY NO' => '', 
+                'COUNTY' => '', 
+                'SUB-COUNTY' => '', 
                 'FACILITY' => '', 
                 'MFL CODE' => '', 
                 'TESTER UNIQUE ID' => '', 
@@ -1429,16 +1432,15 @@ class ResultController extends Controller
             }
 
             else{
-                $counties = County::all();
-                foreach($counties as $county)
-                {
+                    //process results                    
                     foreach($results as $result)
                     {                        
                         $result->result_details = $this->evaluated_results($result->id);
                         
-                        if ($result->result_details['county_id'] == $county->id) {
-
                             $summary[] = [
+                                'COUNTY NO' => $result->result_details['county_id'], 
+                                'COUNTY' => $result->result_details['county'], 
+                                'SUB-COUNTY' => $result->result_details['sub_county'], 
                                 'FACILITY' => $result->result_details['facility'], 
                                 'MFL CODE' => $result->result_details['mfl'], 
                                 'TESTER UNIQUE ID' => $result->result_details['tester_id'], 
@@ -1482,16 +1484,32 @@ class ResultController extends Controller
                                 'DEVIATION FROM PROEDURE ' => $result->result_details['dev_from_procedure'], 
                                 'INCOMPLETE OTHER INFORMATION ' => $result->result_details['incomplete_other_information'], 
                                 'EXPERTS COMMENTS ' => $result->result_details['tester_comments']
-                            ]; 
-                        }                  
+                            ];                             
                     }
-                
-                    $sheetTitle = $county->name;
-                    $excel->sheet($sheetTitle, function($sheet) use ($summary) {
-                        $sheet->fromArray($summary);
-                    });
-                }
-            }
+
+                    //group results sumarry into counties in an associative array
+                    $sum = array();
+                    foreach ($summary as $element) {
+                        $sum[$element['COUNTY NO']][] = $element;
+                    }
+
+                    //loop through each county and match the assocative array into a worksheet, thereby grouping each result from one county into one workheet
+                    $counties = County::all();
+
+                    foreach($counties as $county)
+                    {
+                        foreach ($sum as $key => $value) {
+                        
+                            if ($key== $county->id) {
+
+                                $sheetTitle = $county->name;
+                                $excel->sheet($sheetTitle, function($sheet) use ($value) {
+                                    $sheet->fromArray($value);
+                                });
+                            }
+                        }
+                    }
+                }  
         })->download('xlsx');
     }
 }
