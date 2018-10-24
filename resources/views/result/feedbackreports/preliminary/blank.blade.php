@@ -41,7 +41,7 @@
     </tr>
     <tr class="text-center"> <td colspan="5"><u><b>RE: Proficiency Testing Results</b></u></td></tr>
     <tr class="text-center"> <td colspan="5">NPHL acknowledges receipt of your Blank Proficiency Testing results for Round {{$data['round_name']}}.</td></tr>
-    <tr class="text-center"> <td colspan="5">Note that your Round {{$data['round_name']}} could not be evalueated since <b>NO RESULTS</b> were submitted.</td></tr>
+    <tr class="text-center"> <td colspan="5">Note that your Round {{$data['round_name']}} could not be evaluated since <b>NO RESULTS</b> were submitted.</td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
 
     <tr class="text-center">
