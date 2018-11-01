@@ -133,9 +133,13 @@ class ResultController extends Controller
 
         foreach($results as $result)
         {
-            $result->rnd = $result->enrolment->round->name;
-            $result->tester = $result->enrolment->user->first_name . " " . $result->enrolment->user->middle_name . " " . $result->enrolment->user->last_name;
-            $result->uid = $result->enrolment->user->uid;
+            
+            try {$result->tester = $result->enrolment->user->first_name . " ";} catch (\Exception $e) {\Log::error($e);}
+            try {$result->tester .= $result->enrolment->user->middle_name . " ";} catch (\Exception $e) {\Log::error($e);}
+            try {$result->tester .= $result->enrolment->user->last_name;} catch (\Exception $e) {\Log::error($e);}
+            
+            try {$result->uid = $result->enrolment->user->uid;} catch (\Exception $e) {\Log::error($e);}
+            try {$result->rnd = $result->enrolment->round->name;} catch (\Exception $e) {\Log::error($e);}
 
             //particpants should not see the result feedback until it has been verified by the admin             
             if(Auth::user()->isParticipant() ||Auth::user()->isSubCountyCoordinator()||Auth::user()->isCountyCoordinator()||Auth::user()->isPartner()){
