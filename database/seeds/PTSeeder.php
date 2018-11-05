@@ -261,10 +261,20 @@ class PTSeeder extends DatabaseSeeder
 
         /* Notifications table */
         $notifications = array(
-            array("template" => Notification::ENROLMENT, "message" => "Dear PT Participant, you have been enrolled into [round] of PT. If you are not participating, contact your County or Sub-County Coordinator"),
-            array("template" => Notification::PANEL_DISPATCH, "message" => "Dear PT Participant, NPHL has dispatched your PT Panel for [round]. If not received within 7 days, contact your County or Sub-County Coordinator"),
-            array("template" => Notification::RESULTS_RECEIVED, "message" => "Dear PT Participant, NPHL has received your PT Results for [round]. You will get your feedback shortly."),
-            array("template" => Notification::FEEDBACK_RELEASE, "message" => "Dear PT Participant, NPHL has released your PT Feedback for [round]. If not received within 7 days, contact your County or Sub-County Coordinator"),            
+            array("template" => Notification::ENROLMENT, "message" => "Dear PT Participant, you have been enrolled into [round] of PT. If you are not participating, contact your County or Sub-County Coordinator", "description" => "Enrollment Message"),
+            array("template" => Notification::PANEL_DISPATCH, "message" => "Dear PT Participant, NPHL has dispatched your PT Panel for [round]. If not received within 7 days, contact your County or Sub-County Coordinator", "description" => "Panels Dispatch"),
+            array("template" => Notification::RESULTS_RECEIVED, "message" => "Dear PT Participant, NPHL has received your PT Results for [round]. You will get your feedback shortly.", "description" => "Results Submitted"),
+            array("template" => Notification::FEEDBACK_RELEASE, "message" => "Dear PT Participant, NPHL has released your PT Feedback for [round]. If not received within 7 days, contact your County or Sub-County Coordinator", "description" => " Results Feedback"),
+            array("template" => Notification::ACTIVATION_CODE, "message" => "Your Verification Code is:", "description" => " Phone Verification Code"), 
+            array("template" => Notification::USER_ENABLED, "message" => "Dear [user->name], your Sub-county Coordinator has approved your request to participate in PT. Your tester ID is {user->tester id}. Use the link sent to your email to get started.", "description" => " Enabled Account"), 
+            array("template" => Notification::USER_REGISTRATION, "message" => "Dear [user->name], your PT system account has been created. Use the link sent to your email address to get started.", "description" => "Account Created"), 
+            array("template" => Notification::ROUND_CREATION, "message" => "Dear County/Sub County Coordinator, NPHL has created Round [round->name]. You have until {round->enrollment_date} to enroll participants into this round.", "description" => "Round Created"), 
+            array("template" => Notification::USER_UPDATED, "message" => "Dear [user->name],Your HIV PT System account has been created. Your username is [user->username]. Use the link sent to your email to get started.", "description" => "User Updated"), 
+            array("template" => Notification::USER_DISABLED, "message" => "Dear [user->name],  NPHL has disabled your account.", "description" => "User Disabled"), 
+            array("template" => Notification::USER_RESTORED, "message" => "Dear [user->name], NPHL has enabled your account. Once
+enrolled, you’ll receive a tester ID.", "description" => "User Restored"),
+            array("template" => Notification::PASSWORD_VERIFICARION_CODE, "message" => "Your Password Reset Verification Code is:", "description" => "Password Reset Verification Code"),
+
         );
         foreach ($notifications as $notification)
         {

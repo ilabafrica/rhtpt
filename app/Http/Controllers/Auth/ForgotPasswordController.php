@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use App\Libraries\AfricasTalkingGateway as Bulk;
 use App\SmsHandler;
+use App\Http\Controllers\SmsController;
 
 
 class ForgotPasswordController extends Controller
@@ -55,23 +56,18 @@ class ForgotPasswordController extends Controller
 \Log::info("Message already sent to user.");
             return $this->sendResetLinkFailedResponse($request, "We've already sent you a password reset token. Please wait for 3 minutes before retrying.");
         }
+     try
+     
+    {
 
-        $message    = "Your Password Reset Verification Code is: ".$token;
-        try
-        {
-\Log::info("Send reset token $token to ".$user->phone . " ". $user->first_name);
-            $smsHandler = new SmsHandler();
+        $ManageSms = new SmsController;
+        $ManageSms->ForgotPasswordResetVerificationCodeSms($user);
 
-            //Replace +254 prefix (if it exists) with 0
-            $userPhone = str_replace("+254", "0", $user->phone);
-
-            $smsHandler->sendMessage($userPhone, $message);
-        }
-        catch ( \Exception $e )
-        {
-\Log::error($e->getMessage());
-            return $this->sendResetLinkFailedResponse($request, $e->getMessage());
-        }
+     }
+     catch (\Exception $e)
+     {
+      return $this->sendResetLinkFailedResponse($request, $e->getMessage());       
+     }
 
         $response = $this->broker()->createToken($user);
 

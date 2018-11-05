@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Notifications\Notification;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SmsController;
 use App\User;
 use App\Role;
 use App\Facility;
@@ -47,7 +48,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
-        $users = User::whereNull('uid')->whereNull('sms_code')->latest()->paginate(100);
+        $users = User::whereNull('uid')->whereNull('sms_code')->withTrashed()->latest()->paginate(100);
 
         $total_users =$users->total();
         $counties ='';
@@ -216,17 +217,11 @@ class UserController extends Controller
             $create->token = $token;
             $create->notify(new AccountNote($create));
             
-            $message    = "Dear ".$create->name.", your PT system account has been created. Use the link sent to your email address to get started.";
-            try 
-            {
-                $smsHandler = new SmsHandler();
-                $smsHandler->sendMessage($create->phone, $message);
-            }
-            catch ( AfricasTalkingGatewayException $e )
-            {
-                echo "Encountered an error while sending: ".$e->getMessage();
-            }
-
+            
+            $ManageSms = new SmsController;
+            $ManageSms->UserCreatedSms($create);
+            
+           
         }
         return response()->json($create);
     }
@@ -287,17 +282,9 @@ class UserController extends Controller
             $token = app('auth.password.broker')->createToken($user);
             $user->token = $token;
             $user->notify(new WelcomeNote($user));
-            
-            $message    = "Dear ".$user->name.", Your HIV PT System account has been created. Your username is ".$user->username.". Use the link sent to your email to get started.";
-            try 
-            {
-                $smsHandler = new SmsHandler();
-                $smsHandler->sendMessage($user->phone, $message);
-            }
-            catch ( AfricasTalkingGatewayException $e )
-            {
-                echo "Encountered an error while sending: ".$e->getMessage();
-            }
+            $ManageSms = new SmsController;
+            $ManageSms->UserUpdateSms($user);
+        
         }
         return response()->json($edit);
     }
@@ -311,16 +298,9 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        $message    = "Dear ".$user->name.", NPHL has disabled your account.";
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+        
+        $ManageSms = new SmsController;
+        $ManageSms->UserDisableSms($user);       
         $user->delete();
         return response()->json(['done']);
     }
@@ -334,16 +314,10 @@ class UserController extends Controller
     public function restore($id) 
     {
         $user = User::withTrashed()->find($id)->restore();
-        $message    = "Dear ".$user->name.", NPHL has enabled your account.";
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+        $user = User::find($id);
+        
+        $ManageSms = new SmsController;
+        $ManageSms->UserRestoreSms($user);       
         return response()->json(['done']);
     }
     /**

@@ -27,7 +27,7 @@ use Auth;
 use Jenssegers\Date\Date as Carbon;
 use DB;
 use PDF;
-
+use App\Http\Controllers\SmsController;
 class ResultController extends Controller
 {
 
@@ -857,18 +857,10 @@ class ResultController extends Controller
         $recipients = User::find($result->enrolment->user->id)->value('phone');
         $ptUser = User::find($result->enrolment->user->id);
         $ptUserName = $ptUser->first_name . " " . $ptUser->last_name;
-        $message = str_replace("PT Participant", $ptUserName, $message);
-
-        try
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($ptUser->phone, $message);
-            \Log::info("Sent feedback report sms to $ptUserName ".$ptUser->phone." -- Performed by $user_id");
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+        // $message = str_replace("PT Participant", $ptUserName, $message);
+        $ManageSms = new SmsController;
+        $ManageSms->ResultVerifySms($ptUser, $ptUserName, $round);
+      
 
         return response()->json($result);
     }

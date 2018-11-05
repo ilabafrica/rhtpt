@@ -31,6 +31,7 @@ use File;
 //  Notification
 use App\Notifications\WelcomeNote;
 use App\Notifications\RegretNote;
+use App\Http\Controllers\SmsController;
 class ParticipantController extends Controller
 {
 
@@ -356,16 +357,9 @@ class ParticipantController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        $message    = "Dear ".$user->name.", NPHL has disabled your account.";
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+       
+        $ManageSms = new SmsController;
+        $ManageSms->UserDisableSms($user);      
         $user->delete();
         return response()->json(['done']);
     }
@@ -380,17 +374,10 @@ class ParticipantController extends Controller
     {
         $user = User::withTrashed()->where('id', $id)->restore();
         $user = User::find($id);
-        $message    = "Dear ".$user->name.", NPHL has enabled your account. Once
-enrolled, you’ll receive a tester ID";
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+      
+        $ManageSms = new SmsController;
+        $ManageSms->ParticipantRestoreSms($user);
+      
         return response()->json(['done']);
     }
     /**
@@ -1014,20 +1001,12 @@ enrolled, you’ll receive a tester ID";
         $apikey     = $api->api_key;
         //  Remove beginning 0 and append +254
         $phone = ltrim($user->phone, '0');
-        $recipient = "+254".$phone;
-        $message    = "Dear ".$user->name.", your Sub-county Coordinator has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
+        $recipient = "+254".$phone;        
         // Create a new instance of our awesome gateway class
         $gateway    = new Bulk($username, $apikey);
-       
-         try 
-         {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-         }
-         catch ( AfricasTalkingGatewayException $e )
-         {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+        $ManageSms = new SmsController;
+        $ManageSms->ParticipantApprovalSms($user);
+        
     }
     public function denyUserVerification(Request $request, $id){
        

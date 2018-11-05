@@ -44,6 +44,7 @@ class PtSetupTables extends Migration
       			$table->string('name');
       			$table->string('description', 100)->nullable();
             $table->date('start_date');
+            $table->date('enrollment_date')->nullable();
             $table->date('end_date');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
@@ -149,6 +150,9 @@ class PtSetupTables extends Migration
             $table->tinyInteger('incomplete_results')->default(0);
             $table->string('comment', 250)->nullable();
             $table->integer('verified_by')->nullable();
+            $table->string('approved_comment', 250)->nullable();
+            $table->date('date_approved')->nullable();
+            $table->integer('approved_by')->nullable();
             $table->foreign('enrolment_id')->references('id')->on('enrolments');
             $table->softDeletes();
       			$table->timestamps();

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
+use Illuminate\Auth\Events\Registered;
 use App\User;
 use App\County;
 // use App\Role;
@@ -357,4 +359,314 @@ class SmsController extends Controller
             }
         }       
     }
+   
+   /* Register Controller registration code*/
+    public function RegistrationVerificationCodeSms($user)
+    {
+      
+     
+       $message = Notification::where('template', 7)->withTrashed()->first();
+       $message_to_send = $message->message .$user->sms_code;
+
+       if ($message->deleted_at == NULL) 
+       {
+             
+           
+            try 
+            {
+                $smsHandler = new SmsHandler();
+                //print_r($user->phone .' -> '.$message_to_send);
+                $smsHandler->sendMessage($user->phone, $message_to_send);
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+                DB::table('role_user')->where('user_id', $user->id)->forceDelete();
+                $user->forceDelete();
+                abort(500, 'Encountered an error while sending verification code. Please try again later.');
+            echo "Encountered an error while sending: ".$e->getMessage();
+            } 
+
+         try
+           {
+            //  Do Email verification for email address
+            $user->email_verification_code = Str::random(60);
+            $user->save();
+
+           /* $usr = $user->toArray();
+            Mail::send('auth.verification', $usr, function($message) use ($usr) {
+                $message->to($usr['email']);
+                $message->subject('National HIV PT - Email Verification Code');
+            });*/
+            event(new Registered($usr = $user));
+          //  $this->guard()->login($user);
+        }
+        catch(Exception $e)
+        {
+            DB::table('role_user')->where('user_id', $user->id)->forceDelete();
+            $user->forceDelete();
+            abort(500, 'Encountered an error while sending verification code. Please try again later.');
+        }
+            
+            
+        }
+        else {
+
+            return response()->json(['done']);       
+        }
+    }
+  /*Sends the Password reset code sms used in the ForgotPasswordController*/
+    public function ForgotPasswordResetVerificationCodeSms($user)
+    {
+      $message = Notification::where('template', 14)->withTrashed()->first();
+      $message_to_send = $message->message .$user->sms_code;
+
+       if ($message->deleted_at == NULL) 
+       {
+          
+           $smsHandler = new SmsHandler();
+            //Replace +254 prefix (if it exists) with 0
+            $userPhone = str_replace("+254", "0", $user->phone);
+          //        print_r($user->phone .' -> '.$message_to_send);            
+            $smsHandler->sendMessage($userPhone, $message_to_send);
+            
+        }
+        else {
+         
+           return response()->json(['done']);
+        
+       }
+
+    }
+  
+   
+    /* Participant Controller Approval Sms*/  
+    public function ParticipantApprovalSms ($user)
+    {
+         
+         $message = Notification::where('template', 8)->withTrashed()->first();
+         $smswithname = str_replace('[user->name]', $user->name, $message->message);
+         $sms_to_send = str_replace('{user->tester id}', $user->id, $smswithname); 
+
+       if ($message->deleted_at == NULL) 
+       {
+        
+           try 
+             {
+                $smsHandler = new SmsHandler();
+                //print_r($user->phone . '->' .$sms_to_send);
+                $smsHandler->sendMessage($user->phone, $sms_to_send);
+             }
+             catch ( AfricasTalkingGatewayException $e )
+             {
+                echo "Encountered an error while sending: ".$e->getMessage();
+            }
+                
+        }
+        else {
+
+            return response()->json(['done']);
+         }
+    }
+    /*  Results verification and evaluated sms*/    
+    public function ResultVerifySms($ptUser, $ptUserName, $round)
+    {
+         $sms = Notification::where('template', 2)->withTrashed()->first();
+
+         $sms_with_username = str_replace("PT Participant" , $ptUserName , $sms->message);
+         $sms_to_send = str_replace('[round]', $round, $sms_with_username);
+
+       if ($sms->deleted_at == NULL) 
+       {
+       
+       try
+        {
+            $smsHandler = new SmsHandler();
+            //print_r($sms_to_send);
+            $smsHandler->sendMessage($ptUser->phone, $sms_to_send);
+         
+        }
+        catch ( AfricasTalkingGatewayException $e )
+        {
+            echo "Encountered an error while sending: ".$e->getMessage();
+        }
+            
+        }
+        else {
+
+        return response()->json(['done']);
+     }
+    }
+
+   /* User Controller Store function sms*/   
+    public function UserCreatedSms($create)
+    {
+       $message = Notification::where('template', 9)->withTrashed()->first();
+       $message_to_send = str_replace('[user->name]', $create->name, $message->message);
+
+
+       if ($message->deleted_at == NULL) 
+       {
+        
+         try 
+            {
+                $smsHandler = new SmsHandler();
+                //print_r($create->phone . '->' . $message_to_send);
+                $smsHandler->sendMessage($create->phone, $message_to_send);
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+                echo "Encountered an error while sending: ".$e->getMessage();
+            }
+            
+        }
+        else {
+          
+          return response()->json(['done']);
+        }
+
+    }
+
+   /*UserController Update function sms*/
+  
+    public function UserUpdateSms($user)
+    {
+         $message = Notification::where('template', 11)->withTrashed()->first();
+     
+
+         $smswithname = str_replace('[user->name]', $user->name, $message->message);
+         $sms_to_send = str_replace('[user->username]', $user->username, $smswithname);
+         
+         if ($message->deleted_at == NULL) 
+        { 
+
+            try 
+            {
+                $smsHandler = new SmsHandler();
+                //print_r($user->phone . '->' . $sms_to_send);
+                $smsHandler->sendMessage($user->phone, $sms_to_send);
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+                echo "Encountered an error while sending: ".$e->getMessage();
+            }
+
+        }
+        else { 
+         
+             return response()->json(['done']);
+        }
+    }
+  
+   /*User controller destroy function sms*/
+ 
+    public function UserDisableSms ($user)
+    {
+      
+        $message = Notification::where('template', 12)->withTrashed()->first();
+        $message_to_send = str_replace('[user->name]', $user->name,  $message->message);
+          
+        if ($message->deleted_at == NULL) 
+        {
+             try 
+            {
+                $smsHandler = new SmsHandler();
+                //print_r($user->phone . '->' . $message_to_send);
+                $smsHandler->sendMessage($user->phone, $message_to_send);
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+                echo "Encountered an error while sending: ".$e->getMessage();
+             }
+             
+        }
+          else { 
+           
+            return response()->json(['done']);
+          
+       }
+    }
+
+   /*User controller re-enable function sms*/
+   
+    public function UserRestoreSms ($user)
+    {
+     
+          $message = Notification::where('template', 13)->withTrashed()->first();
+          $message_to_send = str_replace('[user->name]', $user->name, $message->message);
+        
+        if ($message->deleted_at == NULL) 
+        {
+          try 
+            {
+                $smsHandler = new SmsHandler();
+                $smsHandler->sendMessage($user->phone, $message_to_send);
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+                echo "Encountered an error while sending: ".$e->getMessage();
+            }   
+           
+        }
+        else { 
+           
+          return response()->json(['done']);
+         
+      }
+    }
+   
+   /*RoundController sms sent to Sub/County Coordinators on round creation*/
+    public function RoundCreationSms ($recipients, $round, $from, $apikey, $username)
+    {
+        $message = Notification::where('template', 10)->withTrashed()->first();
+        $sms_to_send = str_replace('[round->name]', $round->name, $message->message);
+
+        $message_to_send = str_replace('{round->enrollment_date}', $round->enrollment_date, $sms_to_send);
+
+        if ($message->deleted_at == NULL) 
+        {
+           try
+            {
+                // Send messages
+                $sms    = new Bulk($username, $apikey);
+                //print_r($recipients . $round->enrollment_date . '->' .$message_to_send);
+                $results = $sms->sendMessage($recipients, $message_to_send, $from);
+            
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+            echo "Encountered an error while sending: ".$e->getMessage();
+            }
+        }else
+        {
+          return response()->json(['done']);            
+        }
+    }
+ 
+    /*public function PanelDispatchSms($round)
+    {
+        $message = Notification::where('template', 1)->withTrashed()->first();
+        $sms_to_send = str_replace('[round->name]', $round->name, $message->message);
+
+      
+
+        if ($message->deleted_at != NULL) 
+        {
+           try
+            {
+                // Send messages
+                $sms    = new Bulk($username, $apikey);
+                print_r($round . '->' .$message_to_send);
+
+                // $results = $sms->sendMessage($recipients, $message_to_send, $from);
+            
+            }
+            catch ( AfricasTalkingGatewayException $e )
+            {
+            echo "Encountered an error while sending: ".$e->getMessage();
+            }
+        }else
+        {
+          return response()->json(['done']);            
+        }
+    }*/
 }
