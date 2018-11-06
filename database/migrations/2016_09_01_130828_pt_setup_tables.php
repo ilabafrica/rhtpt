@@ -44,6 +44,7 @@ class PtSetupTables extends Migration
       			$table->string('name');
       			$table->string('description', 100)->nullable();
             $table->date('start_date');
+            $table->date('enrollment_date');
             $table->date('end_date');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
@@ -122,7 +123,7 @@ class PtSetupTables extends Migration
             $table->increments('id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->integer('round_id')->unsigned();
-            // $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status')->default(0);
 
             $table->softDeletes();
             $table->timestamps();
@@ -149,6 +150,10 @@ class PtSetupTables extends Migration
             $table->tinyInteger('incomplete_results')->default(0);
             $table->string('comment', 250)->nullable();
             $table->integer('verified_by')->nullable();
+            $table->integer('approved_by')->nullable();
+            $table->string('approved_comment', 250)->nullable();
+            $table->integer('download_status')->nullable();            
+            $table->date('date_approved');            
             $table->foreign('enrolment_id')->references('id')->on('enrolments');
             $table->softDeletes();
       			$table->timestamps();
@@ -167,6 +172,26 @@ class PtSetupTables extends Migration
             $table->softDeletes();
       			$table->timestamps();
     		});
+
+        //Evaluated results used in audit trail
+        Schema::create('evaluated_results', function(Blueprint $table)
+        {
+           $table->increments('id')->unsigned();
+           $table->integer('pt_id')->unsigned();
+           $table->integer('participant_id')->unsigned();
+           $table->string('reason_for_change');
+           $table->string('results');
+           $table->integer('user_id')->unsigned();
+           $table->softDeletes();
+           $table->timestamps();
+
+        }); 
+
+        Schema::create('tmp_resultset', function(Blueprint $table)
+        {
+           $table->integer('pt_id')->unsigned();
+           $table->text('answers');
+        });      
     }
 
     /**
@@ -186,6 +211,8 @@ class PtSetupTables extends Migration
       Schema::dropIfExists('lots');
       Schema::dropIfExists('rounds');
       Schema::dropIfExists('materials');
-      Schema::dropIfExists('programs');
+      Schema::dropIfExists('programs');      
+      Schema::dropIfExists('evaluated_results');
+      Schema::dropIfExists('tmp_resultset');
     }
 }

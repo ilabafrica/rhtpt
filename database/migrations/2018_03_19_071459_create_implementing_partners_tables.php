@@ -33,7 +33,7 @@ class CreateImplementingPartnersTables extends Migration
           $table->integer('county_id')->unsigned();
         });
 
-        Schema::table('users', function (Blueprint $table) {
+       /* Schema::table('users', function (Blueprint $table) {
           $table->integer('implementing_partner_id')->unsigned()->nullable();
         });
 
@@ -42,7 +42,7 @@ class CreateImplementingPartnersTables extends Migration
         echo "agencies seeded!\n";
         \DB::unprepared(file_get_contents(base_path() . "/database/seeds/implementing_partners.sql"));
         echo "implementing partners seeded!\n";
-        \DB::enableQueryLog();
+        \DB::enableQueryLog();*/
     }
 
     /**
@@ -52,8 +52,7 @@ class CreateImplementingPartnersTables extends Migration
      */
     public function down()
     {
-        Schema::drop('implementing_partner_user');
-        Schema::drop('implementing_partner_county');
+        Schema::drop('county_implementing_partner');
         Schema::drop('implementing_partners');
         Schema::drop('agencies');
     }
