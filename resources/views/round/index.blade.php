@@ -75,13 +75,11 @@
                 <button v-if="!round.deleted_at" class="btn btn-sm btn-danger" @click.prevent="deleteRound(round)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission
             @permission('enrol-participants')                               
-                <!-- <a v-if="!round.deleted_at" class="btn btn-sm btn-wet-asphalt" :href="'/download/' + round.id" id="enrolled" ><i class="fa fa-level-down"></i>Participants List</a> -->
-                <a v-if="!round.deleted_at || round.enrollment_date >= today" :href="'/enrolparticipants/' + round.id" class="btn btn-sm btn-wisteria"><i class="fa fa-list"></i> Enrol Participants</a>
-		@permission('upload-participants')
-                <button v-if="!round.deleted_at" :data-fk="round.id" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
-		@endpermission
-               <!-- <button v-if="!round.deleted_at" class="btn btn-sm btn-new-participants" id="enrol" data-toggle="modal" data-target="#enrol-participants" :data-fk="round.id"   @click.prevent="loadParticipants(round.id)"><i class="fa fa-book"></i> New Participants</button>               -->
+                <a v-if="!round.deleted_at  && !pastEnrolmentDate(round.enrollment_date)" :href="'/enrolparticipants/' + round.id" class="btn btn-sm btn-wisteria"><i class="fa fa-list"></i> Enrol Participants</a>
             @endpermission
+    		@permission('upload-participants')
+                <button v-if="!round.deleted_at" :data-fk="round.id" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
+    		@endpermission
             <a v-if="!round.deleted_at" class="btn btn-sm btn-default" :href="'/participantinfo/' + round.id" id="enrolled" ><i class="fa fa-user"></i> Enrolled Participants Info</a>
             </td>
         </tr>
@@ -464,9 +462,8 @@
                                     </tr>
                                     <tr v-for="participant in testerparticipants">
                                         
- <td><input type="checkbox" checked='false'  :value="participant.id" name="usrs[]" ></td>
-<td>                                        
-                                        @{{ participant.name }}</td>
+                                        <td><input type="checkbox" checked='false' :value="participant.id" name="usrs[]" ></td>
+                                        <td>@{{ participant.name }}</td>
                                         <td>@{{ participant.uid }}</td>
                                         <td>@{{ participant.fac }}</td>
                                         <td>@{{participant.phone}}</td>
@@ -474,28 +471,6 @@
                                                                                     
                                     </tr>
                                 </table>
-                                <!-- Pagination 
-                                <nav>
-                                    <ul class="pagination">
-                                        <li v-if="pagination.current_page > 1" class="page-item">
-                                            <a class="page-link" href="#" aria-label="Previous"
-                                                @click.prevent="changePage(pagination.current_page - 1)">
-                                                <span aria-hidden="true">«</span>
-                                            </a>
-                                        </li>
-                                        <li v-for="page in pagesNumber" class="page-item"
-                                            v-bind:class="[ page == isActived ? 'active' : '']">
-                                            <a class="page-link" href="#"
-                                                @click.prevent="changePage(page)">@{{ page }}</a>
-                                        </li>
-                                        <li v-if="pagination.current_page < pagination.last_page" class="page-item">
-                                            <a class="page-link" href="#" aria-label="Next"
-                                                @click.prevent="changePage(pagination.current_page + 1)">
-                                                <span aria-hidden="true">»</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>-->
 
                                 <div class="form-group row col-sm-offset-4 col-sm-8">
                                     <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Enrol</button>

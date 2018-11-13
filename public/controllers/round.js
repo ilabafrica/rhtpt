@@ -373,6 +373,13 @@ new Vue({
             });*/
         },
 
+        pastEnrolmentDate: function(enrolDate){
+            console.log(enrolDate);
+            var now = new Date();
+            var enrolledDate = new Date(enrolDate);
+            return now.getTime() > enrolledDate.getTime();
+        },
+
         fileChanged(e)
         {
             console.log(e.target.files[0]);
