@@ -269,13 +269,19 @@ class RoundController extends Controller
 
             if(count($enrolledUser) == 0){
                 $enrol = new Enrol;
-                $enrol->user_id = (int)$userID;
-                $enrol->round_id = $roundId;
-                $enrol->save();
-                $user = User::find($enrol->user_id);
-                if($user->phone)
-                {
-                    array_push($phone_numbers, $user->phone);
+                try {
+                    $enrol->user_id = (int)$userID;
+                    $enrol->round_id = $roundId;
+                    $enrol->facility_id = User::find($userID)->ru()->tier;
+                    $enrol->save();
+                        
+                    $user = User::find($enrol->user_id);
+                    if($user->phone)
+                    {
+                        array_push($phone_numbers, $user->phone);
+                    }
+                } catch (Exception $e) {
+                    \Log::info($e);
                 }
             }else if(strcmp($request->view, "unenrol") == 0){
                 foreach ($enrolledUser as $user) {

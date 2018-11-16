@@ -102,7 +102,6 @@ new Vue({
                         this.$http.get('/subs/'+id).then((response) => {
                             this.subs = response.data;
                         }, (response) => {
-                            // console.log(response);
                         });
                     }
                     if (this.role == 7) {
@@ -110,7 +109,6 @@ new Vue({
                         this.$http.get('/fclts/'+id).then((response) => {
                             this.facilities = response.data;
                         }, (response) => {
-                            // console.log(response);
                         });
                     }
                     if (this.testerparticipants.length == 0) {
@@ -274,7 +272,6 @@ new Vue({
                 this.counties = response.data;
                 this.jimbo = response.data;
             }, (response) => {
-                // console.log(response);
             });
         },        
         // fetch subcounties in after selecting a county
@@ -283,7 +280,6 @@ new Vue({
             this.$http.get('/subs/'+id).then((response) => {
                 this.subs = response.data;
             }, (response) => {
-                // console.log(response);
             });
         }, 
         // fetch facilities in one sub county
@@ -292,7 +288,6 @@ new Vue({
             this.$http.get('/fclts/'+id).then((response) => {
                 this.facilities = response.data;
             }, (response) => {
-                // console.log(response);
             });
         },
 
@@ -317,8 +312,6 @@ new Vue({
         },
 
         listNumber: function(key, index){
-            console.log("Key: " + key);
-            console.log("Index: " + index);
             if(index === undefined){
                 return Number(key) + 1;
             }else{
