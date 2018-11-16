@@ -48,7 +48,10 @@ new Vue({
         duplicates: [],
         roundId:'',
         enrol_status: 0,
-        uploadify: {id: '', excel: ''}
+        uploadify: {id: '', excel: ''},
+        view: 'enrol',
+        selectAll: true,
+        selectedParticipants: []
     },
 
     computed: {
@@ -82,7 +85,8 @@ new Vue({
 
     methods : {  
         getParticipants: function() {  
-        var round_id = _.last( window.location.pathname.split( '/' ) ); 
+            var round_id = _.last( window.location.pathname.split( '/' ) );
+
             this.$http.get('/loadparticipants/'+round_id ).then((response) => {
                 if(response.data.data){
                     this.testerparticipants = response.data.data;
@@ -90,6 +94,8 @@ new Vue({
                     this.checked = true;
                     this.role = response.data.role;
                     this.tier = response.data.tier;
+
+                    this.toggleCheck();
                     
                     if (this.role == 4) {
                         let id = this.tier;
@@ -150,6 +156,8 @@ new Vue({
             });
         },
         filter_enrolled_participants: function() {
+            this.view = 'unenrol';
+
             // Clear the error message.
             this.error = '';
             // Empty the users array so we can fill it with the new users.
@@ -298,5 +306,24 @@ new Vue({
                 this.formErrors = response.data;
             });
   	    },               
+
+        toggleCheck: function(){
+            this.selectedParticipants = [];
+            if(this.selectAll){
+                Object.keys(this.testerparticipants).forEach(itemKey => {
+                    this.selectedParticipants.push(this.testerparticipants[itemKey].id);
+                });
+            }
+        },
+
+        listNumber: function(key, index){
+            console.log("Key: " + key);
+            console.log("Index: " + index);
+            if(index === undefined){
+                return Number(key) + 1;
+            }else{
+                return Number(index) + 1;
+            }
+        }
     }
 });

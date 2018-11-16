@@ -263,54 +263,67 @@ class RoundController extends Controller
     {
         $roundId = $request->round_id;
         $phone_numbers = [];
-        foreach($request->usrs as $key => $value)
+        foreach($request->selectedParticipants as $key => $userID)
         {
-            $enrol = new Enrol;
-            $enrol->user_id = (int)$value;
-            $enrol->round_id = $roundId;
-            $enrol->save();
-            $user = User::find($enrol->user_id);
-            if($user->phone)
-            {
-                array_push($phone_numbers, $user->phone);
+            $enrolledUser = Enrol::where('round_id', $roundId)->where('user_id', $userID)->get();
+
+            if(count($enrolledUser) == 0){
+                $enrol = new Enrol;
+                $enrol->user_id = (int)$userID;
+                $enrol->round_id = $roundId;
+                $enrol->save();
+                $user = User::find($enrol->user_id);
+                if($user->phone)
+                {
+                    array_push($phone_numbers, $user->phone);
+                }
+            }else if(strcmp($request->view, "unenrol") == 0){
+                foreach ($enrolledUser as $user) {
+                    Enrol::find($user['id'])->delete();
+                }
             }
         }
-        $recipients = NULL;
-        $recipients = implode(",", $phone_numbers);
-        //  Send SMS
-        $round = Round::find($roundId)->name;
-        $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
-        $message = ApiController::replace_between($message, '[', ']', $round);
-        $message = str_replace(' [', ' ', $message);
-        $message = str_replace('] ', ' ', $message);
-        //  Bulk-sms settings
-        $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
-        $apikey     = $api->api_key;
-        if($recipients)
-        {
-            // Specified sender-id
-            $from = $api->code;
-            // Create a new instance of Bulk SMS gateway.
-            $sms    = new Bulk($username, $apikey);
-            // use try-catch to filter any errors.
-            try
-            {
-            // Send messages
-            $results = $sms->sendMessage($recipients, $message, $from);
-            foreach($results as $result)
-            {
-                // status is either "Success" or "error message" and save.
-                $number = $result->number;
-                //  Save the results
-//                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
-            }
-            }
-            catch ( AfricasTalkingGatewayException $e )
-            {
-            echo "Encountered an error while sending: ".$e->getMessage();
+
+        if(count($phone_numbers) > 0 && env('ALLOW_SENDING_SMS', true)){
+            $recipients = NULL;
+            $recipients = implode(",", $phone_numbers);
+            //  Send SMS
+            $round = Round::find($roundId)->name;
+            $message = Notification::where('template', Notification::ENROLMENT)->first()->message;
+            $message = ApiController::replace_between($message, '[', ']', $round);
+            $message = str_replace(' [', ' ', $message);
+            $message = str_replace('] ', ' ', $message);
+
+            //  Bulk-sms settings
+            $api = DB::table('bulk_sms_settings')->first();
+            $username   = $api->username;
+            $apikey     = $api->api_key;
+
+            if($recipients) {
+                // Specified sender-id
+                $from = $api->code;
+                // Create a new instance of Bulk SMS gateway.
+                $sms    = new Bulk($username, $apikey);
+                // use try-catch to filter any errors.
+                try
+                {
+                    // Send messages
+                    $results = $sms->sendMessage($recipients, $message, $from);
+                    foreach($results as $result)
+                    {
+                        // status is either "Success" or "error message" and save.
+                        $number = $result->number;
+                        //  Save the results
+                       // DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
+                    }
+                }
+                catch ( AfricasTalkingGatewayException $e )
+                {
+                    echo "Encountered an error while sending: ".$e->getMessage();
+                }
             }
         }
+
         return response()->json('Enrolled.');
     }
     /**

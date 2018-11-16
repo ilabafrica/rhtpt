@@ -83,27 +83,36 @@
                 <input type="hidden" class="form-control" name="round_id" id="round-id" v-bind:value="roundId"/>
                 <table class="table table-bordered table-responsive">
                     <tr>
-			<th>#</th>
-                        <th v-if = 'enrol_status ==0'>Remove</th>
+                        <th>#</th>
+                        <th><input type="checkbox" name="select_all" title="Select All" v-model="selectAll" @click="toggleCheck" /> Remove</th>
                         <th>Participant</th>
                         <th>UID</th>
                         <th>Facility</th>
                         <th>Phone</th>
                         <th>Program</th>
                     </tr>
-                    <tr v-for="(participant, key, index) in testerparticipants">
-			<td>@{{index + 1}}</td>
-                        <td v-if = 'enrol_status ==0'><input type="checkbox" checked='false'  :value="participant.id" name="usrs[]" ></td>
+                    <tr v-for="(participant, key, index) in testerparticipants" :key="participant.id" >
+                        <td>@{{listNumber(key, index)}}</td>
+                        <td>
+                            <input type="checkbox" :value="participant.id" name="selectedParticipants[]" v-model="selectedParticipants"/>
+                        </td>
                         <td>@{{ participant.name }}</td>
                         <td>@{{ participant.uid }}</td>
                         <td>@{{ participant.fac }}</td>
-                        <td>@{{participant.phone}}</td>
-                        <td>@{{ participant.prog }}</td>                                                
+                        <td>@{{ participant.phone }}</td>
+                        <td>@{{ participant.prog }}</td>
                     </tr>
                 </table>
-                <div v-if = 'enrol_status ==0' class="form-group row col-sm-offset-4 col-sm-8">
-                    <button type="submit" class="btn btn-sm btn-success"><i class='fa fa-plus-circle'></i> Enrol</button>
-                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                <div class="form-group row col-sm-offset-4 col-sm-8">
+                    <input type="hidden" name="view" v-model="view" />
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <i class='fa fa-plus-circle'></i> 
+                        <span v-if = "view=='enrol'">Enrol</span>
+                        <span v-if = "view=='unenrol'">Unenrol</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span>
+                    </button>
                 </div>
             </div>
         </form>
