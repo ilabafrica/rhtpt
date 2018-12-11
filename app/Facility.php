@@ -127,4 +127,23 @@ class Facility extends Model
         $results = Pt::whereIn('enrolment_id', $enrolments);
         return $results;
     }
+
+    /**
+    * Get users enrolled to a round from this facility
+    *
+    */
+    public function enrolledUsers($roundID=3)
+    {
+      	$prole = Role::idByName('Participant');
+      	$users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                    ->join('enrolments', function($join) use ($roundID){
+                      	$join->on('users.id', '=', 'enrolments.user_id')
+                          	->where('enrolments.round_id', '=', $roundID)
+                        	->whereNull('enrolments.deleted_at');
+                    })
+                    ->where('role_user.role_id', $prole)->where('role_user.tier', $this->id);
+
+        return $users->distinct();
+    }
+
 }

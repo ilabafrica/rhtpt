@@ -182,7 +182,7 @@
                                     </label>
                                    </div>
                                 </div>
-                                 <div class="form-group row" v-if="user_type == 4 || user_type==7">
+                                <div class="form-group row" v-if="user_type == 4 || user_type==7">
                                     <label class="col-sm-4 form-control-label" for="title" v-if="user_type == 4">
                                         County Coordinators</label><br>
                                          <label class="col-sm-4 form-control-label" for="title" v-if="user_type==7">
@@ -190,28 +190,37 @@
                                     <div class="col-sm-8">
                                         <input type="radio" :value="0" v-model="user_group" name="user_group" />All &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <input type="radio" :value="1" v-model="user_group" name="user_group" /> Select County  
-                                  </div>
-                                 </div>
-                                 <div class="form-group row" v-if="user_type == 3">    
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-if="user_type == 3">    
                                     <div class="col-sm-8">
                                         <input type="radio" :value="0" v-model="partner" name="partner" />All  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <input type="radio" :value="1" v-model="partner" name="partner" /> Select Partners  
                                     </div>
-                                 </div>
-                                 <div class="form-group row" v-if="user_type == 2">
+                                </div>
+                                <div class="form-group row" v-if="user_type == 2">
                                     <label class="col-sm-4 form-control-label" for="title"> Participants</label>
                                     <div class="col-sm-8">
                                         <input type="radio" :value="0" v-model="participant" name="participant" /> All  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <input type="radio" :value="1" v-model="participant" name="participant" /> Select County  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <input type="radio" :value="2" v-model="participant" name="participant" /> Search                                         
                                     </div>
-                                 </div>
-                                 <div class="form-group row" v-if="user_type == 3 && partner == 1">
+                                </div>
+                                <div class="form-group row" v-if="user_type == 3 && partner == 1">
                                     <label class="col-sm-4 form-control-label" for="title"> Partners:</label><br>
                                     <div class="col-sm-8">
                                         <select class="form-control c-select" name="partner_id" id="partner_id">
                                             <option selected></option>
                                             <option v-for="implementing_partner in implementing_partners" :value="implementing_partner.id">@{{ implementing_partner.value }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div  class="form-group row" v-if="user_type == 2">
+                                    <label class="col-sm-4 form-control-label" for="title"> Round:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" name="round_id" >
+                                            <option selected></option>
+                                            <option v-for="round in rounds" :value="round.id">@{{ round.value }}</option> 
                                         </select>
                                     </div>
                                 </div>

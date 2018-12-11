@@ -29,7 +29,6 @@ new Vue({
         error: false,       
         query: '', 
         select_county:'',
-        // roles: [],
         user_type:'',  
         user_group: '',
         partner: '',
@@ -40,9 +39,9 @@ new Vue({
         counties:[],
         participants: [],
         subs:[],
+        rounds:[],
         facilities:[],
         implementing_partners: [],
-        // message: '',
         type:'',
         phone_numbers: [],
         from:'',
@@ -77,6 +76,7 @@ new Vue({
 
     mounted : function(){
     	
+        this.loadRounds();
     	this.loadCounties();
         this.loadImplementingPartners();
         this.getVueMessages(this.pagination.current_page);
@@ -197,8 +197,15 @@ new Vue({
             });        
         },
 
+        loadRounds: function() {
+            this.$http.get('/rnds').then((response) => {                
+                this.rounds = response.data;
+            }, (response) => {
+            }); 
+        },
+
         loadCounties: function() {
-            this.$http.get('/cnts').then((response) => {            	
+            this.$http.get('/cnts').then((response) => {                
                 this.counties = response.data;
             }, (response) => {
                 // console.log(response);

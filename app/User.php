@@ -285,13 +285,20 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     * Get participants 
     *
     */
-    public function participants()
+    public function participants($roundID = 0)
     {
-      $role = Role::idByName('Participant');            
-      $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
-                  ->where('role_id', $role); 
+      $role = Role::idByName('Participant');
+      if($roundID > 0){
+        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->join('enrolments', 'users.id', '=', 'enrolments.user_id')
+                  ->where('role_user.role_id', $role)->where('enrolments.round_id', $roundID)
+                  ->whereNull('enrolments.deleted_at');
+      }else{
+        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                  ->where('role_id', $role);
+      }
                         
-        return $users;
+        return $users->distinct();
     } 
      /**
     * Get partners 

@@ -115,4 +115,24 @@ class SubCounty extends Model
         $results = Pt::whereIn('enrolment_id', $enrolments);
         return $results;
     }
+
+    /**
+    * Get users enrolled to a round from this sub-county
+    *
+    */
+    public function enrolledUsers($roundID=3)
+    {
+      $prole = Role::idByName('Participant');
+      $fls = $this->facilities()->pluck('id')->toArray();
+      $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+                      ->join('enrolments', function($join) use ($roundID){
+                          $join->on('users.id', '=', 'enrolments.user_id')
+                              ->where('enrolments.round_id', '=', $roundID)
+                              ->whereNull('enrolments.deleted_at');
+                      })
+                      ->where('role_user.role_id', $prole)->whereIn('role_user.tier', $fls);
+
+        return $users->distinct();
+    }
+
 }

@@ -65,7 +65,7 @@ class ForgotPasswordController extends Controller
             //Replace +254 prefix (if it exists) with 0
             $userPhone = str_replace("+254", "0", $user->phone);
 
-            $smsHandler->sendMessage($userPhone, $message);
+            if(env('ALLOW_SENDING_SMS', true)) $smsHandler->sendMessage($userPhone, $message);
         }
         catch ( \Exception $e )
         {
@@ -74,6 +74,7 @@ class ForgotPasswordController extends Controller
         }
 
         $response = $this->broker()->createToken($user);
+\Log::error("TOKEN: ".$response);
 
         return redirect('/password/code/?id='.$user->id.'&token='.$response);
     }

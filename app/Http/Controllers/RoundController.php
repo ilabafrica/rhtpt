@@ -832,8 +832,6 @@ class RoundController extends Controller
                         }
                         $summary[] = [
                             
-			     // 'County' => $tcounty,
-                            // 'Sub County' => $tsub_county,
                             'County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->county->name,
                             'Sub County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->name,
                             'Facility' => $facility,

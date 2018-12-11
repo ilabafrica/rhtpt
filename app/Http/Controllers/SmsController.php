@@ -145,34 +145,6 @@ class SmsController extends Controller
         return response()->json(['done']); 
     }
 
-    // public function roles()
-    // {
-    //     $error = ['errpr' => 'No results found.'];
-    //     $roles = DB::table('roles')
-    //                 ->select ('name', 'id')
-    //                 ->where('display_name','participant')
-    //                 ->orWhere('display_name', 'County Coordinator')
-    //                 ->orWhere('display_name', 'Sub-County Coordinator')
-    //                 ->orWhere('display_name', 'Partner')
-    //                 ->orWhere('display_name', 'All Users')
-    //                 ->latest()->paginate(5);
-                  
-    //      $response = [
-    //         'pagination' => [
-    //             'total' => $roles->total(),
-    //             'per_page' => $roles->perPage(),
-    //             'current_page' => $roles->currentPage(),
-    //             'last_page' => $roles->lastPage(),
-    //             'from' => $roles->firstItem(),
-    //             'to' => $roles->lastItem()
-    //         ],
-    //         'data' => $roles
-    //     ];
-       
-    //    return $roles->count() > 0 ? response()->json($response) : $error;
-    // }
-
-
     public function select_users_message(Request $request)
     {           
          $users = array();
@@ -187,30 +159,32 @@ class SmsController extends Controller
             $to = 'All Users';
         }
         else if ($request->user_type == 2) {
+
+            $roundID = $request->round_id;
             
             if ($request->participant == 1) {
                 if ($request->facility_id) {
                     $facility = Facility::find($request->facility_id);
 
-                    $users = $facility->users()->get();
+                    $users = $facility->enrolledUsers($roundID)->get();
                     $to = count($users).' participants in '. $facility->name;
 
                 }else if ($request->sub_county_id) {
                     $sub_county = SubCounty::find($request->sub_county_id);
 
-                    $users = $sub_county->users()->get();
+                    $users = $sub_county->enrolledUsers($roundID)->get();
                     $to = count($users).' participants in '. $sub_county->name;
 
                 }else if ($request->county_id) {
 
                     $county = County::find($request->county_id);
-                    $users = $county->enrolledUsers()->get();
+                    $users = $county->enrolledUsers($roundID)->get();
                     $to = count($users).' participants in '. $county->name;
                 }
 
             } else{            
                 $user = new User;
-                $users = $user->participants()->get();
+                $users = $user->participants($roundID)->get();
                 $to = 'All Participants';
             }
         }
