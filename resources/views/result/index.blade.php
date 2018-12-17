@@ -217,7 +217,7 @@
                                     <div class="col-sm-7">
                                         <select class="form-control c-select" name="round_id">
                                             <option selected></option>
-                                            <option v-for="round in roundsDone" :value="round.id">@{{ round.value }}</option>   
+                                            <option value="@{{getLatestRound().id}}">@{{ getLatestRound().value }}</option>   
                                         </select>
                                         <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
                                     </div>

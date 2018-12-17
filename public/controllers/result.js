@@ -235,7 +235,15 @@ new Vue({
             });
         },
 
-        // Verfiy the evaluated 
+        // Get the latest round
+        getLatestRound: function() {
+            var theLatestRound = {id:"0", value:""};
+            for (var ilr = 0; ilr < this.rounds.length; ilr++) {
+                if(theLatestRound.id < this.rounds[ilr].id) theLatestRound = this.rounds[ilr];
+            }
+            return theLatestRound;
+        },
+
         showEvaluatedResults: function(result){
             //    Fetch the result using the id
             let id = result.id;

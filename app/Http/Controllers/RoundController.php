@@ -245,7 +245,6 @@ class RoundController extends Controller
         // fetch rounds details 
         $rounds = Round::whereIn('id', $ids)->pluck('description', 'id');
         // format to match dropdown values
-        // dd($rounds);
         $categories = [];
         foreach($rounds as $key => $value)
         {
