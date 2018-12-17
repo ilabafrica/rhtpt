@@ -80,8 +80,10 @@
     		@permission('upload-participants')
                 <button v-if="!round.deleted_at" :data-fk="round.id" class="btn btn-sm btn-nephritis" @click.prevent="uploadSheet(round)"><i class="fa fa-level-up"></i> Upload Worksheet</button>
     		@endpermission
-            <a v-if="!round.deleted_at" class="btn btn-sm btn-default" :href="'/participantinfo/' + round.id" id="enrolled" ><i class="fa fa-user"></i> Enrolled Participants Info</a>
+            @permission('view-participants')                               
+                <a v-if="!round.deleted_at" class="btn btn-sm btn-default" :href="'/participantinfo/' + round.id" id="enrolled" ><i class="fa fa-user"></i> Enrolled Participants Info</a>
             </td>
+            @endpermission
         </tr>
     </table>
     <!-- Pagination -->
