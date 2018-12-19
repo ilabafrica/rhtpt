@@ -107,7 +107,9 @@
                 Click on the Register button to register as a new participant.
             </div>
             <div class="form-group">
-                <center><span><a style="color:#18bc9c;" href="http://nphls.or.ke/helpdesk/index.php?a=add"><strong>PT Help Desk</strong></a></span></center>
+                <center>
+                    <span><a style="color:#18bc9c;" href="//helpdesk.nphl.go.ke"><strong>PT Help Desk</strong></a></span>
+                </center>
             </div>
         </form>
     </div>

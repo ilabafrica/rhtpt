@@ -48,7 +48,7 @@ class SendVerificationCode extends Notification
             ->subject('Email Verification')
             ->action('Verify Email', url('/email/verify/' . $this->user->email_verification_code))
             ->line('Thank you for using our application!')
-            ->line('In case of any challenges, please use the PT help desk http://nphls.or.ke/helpdesk/index.php?a=add.');
+            ->line('In case of any challenges, please use the PT help desk at helpdesk.nphl.go.ke');
     }
 
     /**

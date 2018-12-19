@@ -84,7 +84,7 @@
 <div class="row" style="padding:20px">
     <div class="col-md-12 text-md-center">
         <br >
-        Designed for <a href="http://www.nphls.or.ke">NPHL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a>
+        Designed for <a href="//helpdesk.nphl.go.ke">NPHL</a> by <a href="//www.ilabafrica.ac.ke">@iLabAfrica</a>
     </div>
 </div>
 </div>

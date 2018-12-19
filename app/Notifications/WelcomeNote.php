@@ -55,7 +55,7 @@ class WelcomeNote extends Notification
             ->action('Get Started', url('password/reset', $this->user->token))
             ->line('Your tester ID/username is '.$this->user->username)
             ->line('Thank you for using our application!')
-            ->line('In case of any challenges, please use the PT help desk http://nphls.or.ke/helpdesk/index.php?a=add.');
+            ->line('In case of any challenges, please use the PT help desk at helpdesk.nphl.go.ke');
     }
 
     /**

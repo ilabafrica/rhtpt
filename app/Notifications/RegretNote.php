@@ -53,7 +53,7 @@ class RegretNote extends Notification
             ->greeting('Hello '.$this->user->name)
             ->line('Your request to participate in the Rapid HIV Proficiency Testing has not been approved.')
             ->line('Thank you for using our application!')
-            ->line('In case of any challenges, please use the PT help desk http://nphls.or.ke/helpdesk/index.php?a=add.');
+            ->line('In case of any challenges, please use the PT help desk at helpdesk.nphl.go.ke');
     }
 
     /**
