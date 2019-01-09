@@ -507,11 +507,20 @@ EntrustUserTrait::restore insteadof SoftDeletes;
         return $this;
     }
 
-    public function results()
+    public function results($roundID = 0)
     {
         
-        $enrolments = $this->enrol()->pluck('id');
-        $results = Pt::whereIn('enrolment_id', $enrolments);
+        $enrolments = $this->join('enrolments', 'users.id', '=', 'enrolments.user_id')->where('users.id', $this->id);
+
+        if($roundID > 0) $enrolments = $enrolments->where('round_id', $roundID);
+
+        $results = $enrolments->join('pt', 'enrolments.id', '=', 'pt.enrolment_id')
+                        ->join('role_user', 'users.id', '=', 'role_user.user_id')
+                        ->join('facilities', 'role_user.tier', '=', 'facilities.id')
+                        ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
+                        ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
+                        ->select(['users.*', 'enrolments.*', 'pt.*', 'role_user.*']);
+
         return $results;
     }
     /**

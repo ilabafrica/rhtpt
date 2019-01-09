@@ -101,18 +101,23 @@ class SubCounty extends Model
     * Get results for a sub-county
     *
     */
-    public function results($search=null)
+    public function results($search = null, $roundID = 0, $countyID = 0, $subCountyID = 0, $facilityID = 0)
     {
-        // $users = $this->users()->pluck('id');
-      if($search){
-            $users = $this->users($search)->pluck('id');
+        $users = $this->users($search);
 
-        }else{
-            $users = $this->users()->pluck('id');
+        $enrolments = $users->join('enrolments', 'users.id', '=', 'enrolments.user_id');
+        if($roundID > 0) $enrolments = $enrolments->where('enrolments.round_id', $roundID);
 
-        }
-        $enrolments = Enrol::whereIn('user_id', $users)->pluck('id');
-        $results = Pt::whereIn('enrolment_id', $enrolments);
+        $results = $enrolments->join('pt', 'enrolments.id', '=', 'pt.enrolment_id')
+                        ->join('facilities', 'role_user.tier', '=', 'facilities.id')
+                        ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
+                        ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
+                        ->select(['users.*', 'enrolments.*', 'pt.*', 'role_user.*']);
+
+        if($countyID > 0) $results = $results->where('counties.id', $countyID);
+        if($subCountyID > 0) $results = $results->where('sub_counties.id', $subCountyID);
+        if($facilityID > 0) $results = $results->where('facilities.id', $facilityID);
+
         return $results;
     }
 

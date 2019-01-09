@@ -27,6 +27,7 @@ new Vue({
         fillVerifiedResult: {},
         form: [],
         sets: [],
+        round: '',
         rounds: [],
         roundsDone: [],
         frmData: {},
@@ -440,6 +441,10 @@ new Vue({
             // Set the loading property to true, this will display the "Searching..." button.
             this.loading = true;
             var link = '/api/search_result?page='+page;
+
+            if (this.round) {
+               link = link +'&round='+this.round;
+            }
 
             //if county
             if (this.facility) {

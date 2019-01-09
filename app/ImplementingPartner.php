@@ -28,9 +28,9 @@ class ImplementingPartner extends Model
     {
       $counties = $this->counties()->pluck('id')->toArray();
 
-      $subcounties = SubCounty::whereIn('county_id', $counties)->pluck('id')->toArray();
+      $subcounties = SubCounty::whereIn('county_id', $counties)->pluck('id');
 
-      $facilities = Facility::whereIn('sub_county_id', $subcounties)->pluck('id')->toArray();
+      $facilities = Facility::whereIn('sub_county_id', $subcounties)->pluck('id');
 
       $result = array( 'counties'=>$counties, 'subcounties'=>$subcounties, 'facilities'=>$facilities);
 
@@ -47,7 +47,7 @@ class ImplementingPartner extends Model
         return Facility::whereIn('sub_county_id', $subs);
     }
     /**
-    * Get users for a sub-county
+    * Get users for an Implementing Partner
     *
     */
     public function users($role = null)
@@ -65,7 +65,8 @@ class ImplementingPartner extends Model
             $subcounty_role = Role::idByName('Sub-County Coordinator');
             $subs = $result['subcounties'];
 
-            $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+            $users = User::select('users.*')
+                        ->join('role_user', 'users.id', '=', 'role_user.user_id')
                         ->where(function($query) use ($subcounty_role, $subs){
                             return $query->where('role_id', $subcounty_role)->whereIn('tier', $subs);
                         })->orWhere(function($q) use ($county_role, $county){
@@ -88,11 +89,14 @@ class ImplementingPartner extends Model
                             $query->orWhere('email', 'LIKE', "%{$search}%");
                             $query->orWhere('uid', 'LIKE', "%{$search}%");
                         })
-                        ->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);
+                        ->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)
+                        ->whereIn('tier', $fls);
        }else{
             $prole = Role::idByName('Participant');
             $fls = $result['facilities'];
-            $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)->whereIn('tier', $fls);
+            $users = User::select('users.*')
+                        ->join('role_user', 'users.id', '=', 'role_user.user_id')
+                        ->where('role_id', $prole)->whereIn('tier', $fls);
           }
         return $users;
     }  
@@ -101,17 +105,24 @@ class ImplementingPartner extends Model
     * Get results for a partner affiliated users
     *
     */
-    public function results($search = null)
+    public function results($search = null, $roundID = 0, $countyID = 0, $subCountyID = 0, $facilityID = 0)
     {
-        if($search){
-            $users = $this->users($search)->pluck('id');
+        $users = $this->users($search);
 
-        }else{
-            $users = $this->users()->pluck('id');
+        $enrolments = $users->join('enrolments', 'users.id', '=', 'enrolments.user_id');
 
-        }
-        $enrolments = Enrol::whereIn('user_id', $users)->pluck('id');
-        $results = Pt::whereIn('enrolment_id', $enrolments);
+        if($roundID > 0) $enrolments = $enrolments->where('round_id', $roundID);
+
+        $results = $enrolments->join('pt', 'enrolments.id', '=', 'pt.enrolment_id')
+                        ->join('facilities', 'role_user.tier', '=', 'facilities.id')
+                        ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
+                        ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
+                        ->select(['users.*', 'enrolments.*', 'pt.*', 'role_user.*']);
+
+        if($countyID > 0) $results = $results->where('counties.id', $countyID);
+        if($subCountyID > 0) $results = $results->where('sub_counties.id', $subCountyID);
+        if($facilityID > 0) $results = $results->where('facilities.id', $facilityID);
+
         return $results;
     }
 }

@@ -46,87 +46,86 @@ class ResultController extends Controller
         $error = ['error' => 'No results found, please try with different keywords.'];
         $items_per_page = 100;
 
+        $searchString = null;
+        $roundID = $countyID = $subCountyID = $facilityID = 0;
+        
+        if($request->has('round')) $roundID = $request->get('round');
+
+        if($request->has('q')) $searchString = ['search'=>$request->get('q')];
+
+        if($request->has('county')) $countyID = $request->get('county');
+
+        if($request->has('sub_county')) $subCountyID = $request->get('sub_county');
+
+        if($request->has('facility')) $facilityID = $request->get('facility');
+
         if(Auth::user()->isCountyCoordinator())
         {
-            $results = County::find(Auth::user()->ru()->tier)->results();
+            $results = County::find(Auth::user()->ru()->tier)->results($searchString, $roundID, $countyID, $subCountyID, $facilityID);
         }
         else if(Auth::user()->isSubCountyCoordinator())
         {
-           $results = SubCounty::find(Auth::user()->ru()->tier)->results();
+            $results = SubCounty::find(Auth::user()->ru()->tier)->results($searchString, $roundID, $countyID, $subCountyID, $facilityID);
         }
         else if(Auth::user()->isFacilityInCharge())
         {
-           $results = Facility::find(Auth::user()->ru()->tier)->results();
+           $results = Facility::find(Auth::user()->ru()->tier)->results($searchString, $roundID, $countyID, $subCountyID, $facilityID);
         }
         else if(Auth::user()->isParticipant())
         {
-            $results = Auth::user()->results();
+            $results = Auth::user()->results($roundID);
         }
         else if(Auth::user()->isPartner())
         {
-           $results = ImplementingPartner::find(Auth::user()->ru()->tier)->results();
+           $results = ImplementingPartner::find(Auth::user()->ru()->tier)->results($searchString, $roundID, $countyID, $subCountyID, $facilityID);
         }else if(Auth::user()->isSuperAdministrator())
         {
-            $results = Pt::withTrashed();
+            if(is_null($searchString)){ //Get all participants
+                $users = User::select('users.id')
+                            ->join('role_user', 'users.id', '=', 'role_user.user_id')
+                            ->join('facilities', 'role_user.tier', '=', 'facilities.id')
+                            ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
+                            ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
+                            ->where('role_id', 2);
+            }else{
+
+                $users = User::select('users.id')
+                        ->join('role_user', 'users.id', '=', 'role_user.user_id')
+                        ->join('facilities', 'role_user.tier', '=', 'facilities.id')
+                        ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
+                        ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
+                        ->where(function($query){
+
+                            $query->where('name', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('first_name', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('middle_name', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('last_name', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('email', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('phone', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('uid', 'LIKE', "%{$searchString['search']}%");
+                        });
+            }
+
+            if($countyID > 0) $users = $users->where('county_id', $countyID);
+            if($subCountyID > 0) $users = $users->where('sub_county_id', $subCountyID);
+            if($facilityID > 0) $users = $users->where('facilities.id', $facilityID);
+
+            $enrolments = $users->join('enrolments', 'users.id', 'enrolments.user_id');
+
+            if($roundID > 0) $enrolments = $enrolments->where('enrolments.round_id', $roundID);
+
+            $results = $enrolments->join('pt','enrolments.id', '=', 'pt.enrolment_id')
+                            ->select(["users.*", "enrolments.*", "pt.*"]);
         }
 
-        //search results by user details
-        if ($request->has('q')||$request->has('county')||$request->has('sub_county')||$request->has('facility')||$request->has('feedback_status')||$request->has('result_status')) {        
-            if($request->has('q')) 
-            {
-                $search = $request->get('q');
-                $search_ar = ['search'=>$search];
-                
-                if(Auth::user()->isCountyCoordinator())
-                {
-                    $results = County::find(Auth::user()->ru()->tier)->results($search_ar);
-                }
-                else if(Auth::user()->isSubCountyCoordinator())
-                {
-                    $results = SubCounty::find(Auth::user()->ru()->tier)->results($search_ar);
-                }
-                else if(Auth::user()->isFacilityInCharge())
-                {
-                   $results = Facility::find(Auth::user()->ru()->tier)->results($search_ar);
-                }
-                else if(Auth::user()->isPartner())
-                {
-                   $results = ImplementingPartner::find(Auth::user()->ru()->tier)->results($search_ar);
-                }
-                else{
-                    $users = User::where('name', 'LIKE', "%{$search}%")
-                        ->orWhere('first_name', 'LIKE', "%{$search}%")
-                        ->orWhere('middle_name', 'LIKE', "%{$search}%")
-                        ->orWhere('last_name', 'LIKE', "%{$search}%")
-                        ->orWhere('email', 'LIKE', "%{$search}%")
-                        ->orWhere('phone', 'LIKE', "%{$search}%")
-                        ->orWhere('uid', 'LIKE', "%{$search}%")->pluck('id');
-
-                    $enrolments = Enrol::whereIn('user_id', $users)->pluck('id');
-                    $results = Pt::whereIn('enrolment_id', $enrolments);
-                }
-            }
-            //search results by filters
-            if($request->has('county')) 
-            {            
-                    $results = County::find($request->get('county'))->results();
-            }
-            if($request->has('sub_county')) 
-            {
-                $results = SubCounty::find($request->get('sub_county'))->results();
-            }
-            if($request->has('facility')) 
-            {
-               $results = Facility::find($request->get('facility'))->results();
-            }
-            if($request->has('result_status')) 
-            {
-                $results = $results->where('panel_status', $request->get('result_status'));
-            }
-            if($request->has('feedback_status')) 
-            {     
-                $results = $results->where('feedback', $request->get('feedback_status'));
-            }
+        // Additional result filters 
+        if($request->has('result_status')) 
+        {
+            $results = $results->where('panel_status', $request->get('result_status'));
+        }
+        if($request->has('feedback_status')) 
+        {     
+            $results = $results->where('feedback', $request->get('feedback_status'));
         }
 
         $results = $results->withTrashed()->paginate($items_per_page);
@@ -134,15 +133,15 @@ class ResultController extends Controller
         foreach($results as $result)
         {
             
-            try {$result->tester = $result->enrolment->user->first_name . " ";} catch (\Exception $e) {\Log::error($e);}
-            try {$result->tester .= $result->enrolment->user->middle_name . " ";} catch (\Exception $e) {\Log::error($e);}
-            try {$result->tester .= $result->enrolment->user->last_name;} catch (\Exception $e) {\Log::error($e);}
+            try {$result->tester = $result->first_name . " ";} catch (\Exception $e) {\Log::error($e);}
+            try {$result->tester .= $result->middle_name . " ";} catch (\Exception $e) {\Log::error($e);}
+            try {$result->tester .= $result->last_name;} catch (\Exception $e) {\Log::error($e);}
             
-            try {$result->uid = $result->enrolment->user->uid;} catch (\Exception $e) {\Log::error($e);}
-            try {$result->rnd = $result->enrolment->round->name;} catch (\Exception $e) {\Log::error($e);}
+            try {$result->uid = $result->uid;} catch (\Exception $e) {\Log::error($e);}
+            try {$result->rnd = Round::nameByID($result->round_id);} catch (\Exception $e) {\Log::error($e);}
 
             //particpants should not see the result feedback until it has been verified by the admin             
-            if(Auth::user()->isParticipant() ||Auth::user()->isSubCountyCoordinator()||Auth::user()->isCountyCoordinator()||Auth::user()->isPartner()){
+            if(!Auth::user()->isSuperAdministrator()){
                 if ($result->panel_status != 3) {
                     $result->feedback = 2;
                 }                

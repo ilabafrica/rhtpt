@@ -32,10 +32,10 @@
                         <button type="submit" class="btn btn-primary mb-2">Import</button>
                     @endpermission
                 </form>
-                    <a class="btn btn-sm btn-carrot" style="display: none;" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
-                        <i class="fa fa-step-backward"></i>
-                        {!! trans('messages.back') !!}
-                    </a>
+                <a class="btn btn-sm btn-carrot" style="display: none;" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
+                    <i class="fa fa-step-backward"></i>
+                    {!! trans('messages.back') !!}
+                </a>
             </div>
             <div class="col-md-4">
                 <div class="input-group input-group-sm">
@@ -51,78 +51,95 @@
     <div class="row" v-if = "role !=2" >
         <div class="col-lg-12 margin-tb">
             <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter()"> -->
-                <div class="pull-left col-md-6">
-                    <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#region">Filter by Region</button>
-                    <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#result_status_">Filter by Submission Status</button>
-                    <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#feedback_status_">Filter by Feedback</button>
+                <div class="row">
+                    <div class="pull-left col-sm-6">
+                        <label>Filter by: </label>
+                        <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#round">Round</button>
+                        <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#region">Region</button>
+                        <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#result_status_">Submission Status</button>
+                        <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#feedback_status_">Feedback</button>
+                    </div>
+                    <div class="col-sm-2">&nbsp;</div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-sm btn-alizarin" type="submit" @click="filter(1)" v-if="!loading">Filter </button>
+                        <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                    </div>
                 </div>
-                <div class="col-md-2"></div>
-                <div class="col-sm-4">
-                    <button class="btn btn-sm btn-alizarin" type="submit" @click="filter(1)" v-if="!loading">Filter </button>
-                    <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
-                </div>    
-                    <div id="region" class="collapse">
-                        <div class="row">
-                            <div v-if = "role == 1 || role ==3" class="col-sm-3">
-                                <label class="col-sm-4 form-control-label" for="title">Counties:</label>
-                                <div class="col-sm-6">
-                                    <select class="form-control" name="county" id="county_id" @change="loadSubcounties()" v-model="county">
-                                        <option selected></option>
-                                       <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>                         
-                                    </select>
-                                </div>
+                <div id="round" class="collapse">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label class="col-sm-4 form-control-label" for="round">Round:</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" name="round" id="round_id" v-model="round">
+                                    <option selected></option>
+                                    <option v-for="round in rounds" :value="round.id">@{{ round.value }}</option>
+                                </select>
                             </div>
-                            <div v-if = "role == 1 || role ==3 || role == 4" class="col-sm-3">
-                                <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="sub_county" id="sub_id" @change="loadFacilities()" v-model="sub_county">
-                                        <option selected></option>
-                                       <option  v-for="sub in subcounties" :value="sub.id">@{{ sub.value }}</option>                         
-                                    </select>
-                                </div>
-                            </div>
-                            <div v-if = "role == 1 || role ==3 || role == 4 || role ==7" class="col-sm-3">
-                                <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="facility" v-model="facility">
-                                        <option selected></option>
-                                        <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
-                                    </select>
-                                </div>
-                            </div>                                
-                        </div>
-                    </div> 
-                    <div id="result_status_" class="collapse">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <label class="col-sm-4 form-control-label" for="title">Submission Status:</label>
-                                <div class="col-sm-6">
-                                    <select class="form-control" name="result_status" v-model = "result_status" id="result_status_id" @change="toggle_selects()">
-                                        <option selected></option>
-                                        <option value="0">Not Checked</option>                         
-                                        <option value="1">Submitted</option>                         
-                                        <option value="2">Evaluated</option>                         
-                                        <option value="3">Verified</option>                         
-                                    </select>
-                                </div>
-                            </div>        
-                        </div>
-                    </div> 
-                    <div id="feedback_status_" class="collapse">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <label class="col-sm-4 form-control-label" for="title">Feedback:</label>
-                                <div class="col-sm-6">
-                                    <select class="form-control" name="feedback_status" v-model = "feedback_status" id="feedback_status_id" @change="toggle_selects()">
-                                        <option selected></option>
-                                           <option value="0">Satisfactory</option>                         
-                                           <option value="1">Unsatisfactory</option>                         
-                                    </select>
-                                </div>
-                            </div>                    
-                                           
                         </div>
                     </div>
+                </div>
+                <div id="region" class="collapse">
+                    <div class="row">
+                        <div v-if = "role == 1 || role ==3" class="col-sm-4">
+                            <label class="col-sm-4 form-control-label" for="title">Counties:</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="county" id="county_id" @change="loadSubcounties()" v-model="county">
+                                    <option selected></option>
+                                   <option v-for="county in counties" :value="county.id">@{{ county.value }}</option>                         
+                                </select>
+                            </div>
+                        </div>
+                        <div v-if = "role == 1 || role ==3 || role == 4" class="col-sm-4">
+                            <label class="col-sm-4 form-control-label" for="title">Sub Counties:</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" name="sub_county" id="sub_id" @change="loadFacilities()" v-model="sub_county">
+                                    <option selected></option>
+                                   <option  v-for="sub in subcounties" :value="sub.id">@{{ sub.value }}</option>                         
+                                </select>
+                            </div>
+                        </div>
+                        <div v-if = "role == 1 || role ==3 || role == 4 || role ==7" class="col-sm-4">
+                            <label class="col-sm-4 form-control-label" for="title">Facilities:</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" name="facility" v-model="facility">
+                                    <option selected></option>
+                                    <option v-for="facility in facilities" :value="facility.id">@{{ facility.value }}</option> 
+                                </select>
+                            </div>
+                        </div>                                
+                    </div>
+                </div> 
+                <div id="result_status_" class="collapse">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label class="col-sm-4 form-control-label" for="title">Submission Status:</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="result_status" v-model = "result_status" id="result_status_id" @change="toggle_selects()">
+                                    <option selected></option>
+                                    <option value="0">Not Checked</option>                         
+                                    <option value="1">Submitted</option>                         
+                                    <option value="2">Evaluated</option>                         
+                                    <option value="3">Verified</option>                         
+                                </select>
+                            </div>
+                        </div>        
+                    </div>
+                </div> 
+                <div id="feedback_status_" class="collapse">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label class="col-sm-4 form-control-label" for="title">Feedback:</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="feedback_status" v-model = "feedback_status" id="feedback_status_id" @change="toggle_selects()">
+                                    <option selected></option>
+                                       <option value="0">Satisfactory</option>                         
+                                       <option value="1">Unsatisfactory</option>                         
+                                </select>
+                            </div>
+                        </div>                    
+                                       
+                    </div>
+                </div>
             <!-- </form>  -->
         </div>
     </div>
@@ -456,30 +473,30 @@
                             <div class="row">
                                 <div class="col-md-12">
                                    <table class="table table-bordered" id="partinfo">
-                                        <tr class="text-center"><b>Participant Information </b></tr>
-                                        <tr class="col-md-12">
-                                            <td class="col-md-3"><b>Round</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.round_name}}</td>
-                                            <td class="col-md-3"><b>County</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.county}}</td>
+                                        <tr><td colspan="4"><b>Participant Information </b></td></tr>
+                                        <tr>
+                                            <td><b>Round</b></td>
+                                            <td>@{{evaluated_results.round_name}}</td>
+                                            <td><b>County</b></td>
+                                            <td>@{{evaluated_results.county}}</td>
                                         </tr>
                                          <tr>
-                                            <td class="col-md-3"><b>Tester ID</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.tester_id}}</td>
-                                            <td class="col-md-3"><b>Sub County</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.sub_county}}</td>
+                                            <td><b>Tester ID</b></td>
+                                            <td>@{{evaluated_results.tester_id}}</td>
+                                            <td><b>Sub County</b></td>
+                                            <td>@{{evaluated_results.sub_county}}</td>
                                         </tr>
                                          <tr>
-                                            <td class="col-md-3"><b>Tester Name</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.user_name}}</td>
-                                            <td class="col-md-3"><b>Facility</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.facility}}</td>
+                                            <td><b>Tester Name</b></td>
+                                            <td>@{{evaluated_results.user_name}}</td>
+                                            <td><b>Facility</b></td>
+                                            <td>@{{evaluated_results.facility}}</td>
                                         </tr>
                                          <tr>
-                                            <td class="col-md-3"><b>Program</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.program_name}}</td>
-                                            <td class="col-md-3"><b>Facility MFL</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.mfl}}</td>
+                                            <td><b>Program</b></td>
+                                            <td>@{{evaluated_results.program_name}}</td>
+                                            <td><b>Facility MFL</b></td>
+                                            <td>@{{evaluated_results.mfl}}</td>
                                         </tr>
                                    </table>   
                                 </div>
@@ -488,7 +505,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                    <table class="table table-bordered">
-                                        <tr class="text-center"> <b>Panel Information</b></tr>
+                                        <tr><td colspan="2"> <b>Panel Information</b></td></tr>
                                         <tr>
                                             <td><b>Receive Date</b></td>
                                             <td>@{{evaluated_results.date_received}}</td>                                            
@@ -508,7 +525,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                    <table class="table table-bordered">
-                                        <tr> <b>Kit Information</b></tr>
+                                        <tr><td colspan="3"><b>Kit Information</b></td></tr>
                                         <tr>
                                             <th>Kit Name</th>                                           
                                             <th>Kit No</th>                                           
@@ -606,9 +623,9 @@
                             <div class="row">
                                 <div class="col-md-12">
                                    <table class="table table-bordered">                                        
-                                       <tr><b>Reasons For Unsatisfactory:   </b></tr>
+                                       <tr><td><b>Reasons For Unsatisfactory:   </b></td></tr>
                                        <tr>
-                                           @{{evaluated_results.remark}}
+                                           <td>@{{evaluated_results.remark}}</td>
                                        </tr>
                                    </table>
                                 </div>

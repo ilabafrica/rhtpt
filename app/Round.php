@@ -54,31 +54,53 @@ class Round extends Model
     {
          return $this->hasMany('App\Lot');
     }
-	/**
-	* Return round ID given the uid
-	* @param $title the unique title of the round
-	*/
-	public static function idByTitle($title=NULL)
-	{
-  		if($title!=NULL)
-  		{
-    			try 
-    			{
-      				$round = Round::where('name', $title)->orderBy('name', 'asc')->firstOrFail();
-      				return $round->id;
-    			} 
-    			catch (ModelNotFoundException $e) 
-    			{
-      				Log::error("The round ` $title ` does not exist:  ". $e->getMessage());
-      				//TODO: send email?
-      				return null;
-    			}
-  		}
-  		else
-  		{
-  			 return null;
-  		}
-	}
+  /**
+  * Return round ID given the uid
+  * @param $title the unique title of the round
+  */
+  public static function idByTitle($title=NULL)
+  {
+      if($title!=NULL)
+      {
+          try 
+          {
+              $round = Round::where('name', $title)->orderBy('name', 'asc')->firstOrFail();
+              return $round->id;
+          } 
+          catch (ModelNotFoundException $e) 
+          {
+              Log::error("The round ` $title ` does not exist:  ". $e->getMessage());
+              //TODO: send email?
+              return null;
+          }
+      }
+      else
+      {
+         return null;
+      }
+  }
+  /**
+  * Return round name given the id
+  * @param $roundID the round primary key
+  */
+  public static function nameByID($roundID=0)
+  {
+      $roundName = "";
+      if($roundID > 0)
+      {
+          try 
+          {
+              $round = Round::find($roundID);
+              $roundName = $round->name;
+          } 
+          catch (ModelNotFoundException $e) 
+          {
+              Log::error("The round ` $roundID ` does not exist:  ". $e->getMessage());
+          }
+      }
+
+      return $roundName;
+  }
     /**
   	 * Constants for durations
   	 *
