@@ -96,8 +96,10 @@ class ProfileController extends Controller
     			$extension = 'png';
     		$fileName = uniqid().'.'.$extension;
             $folder = '/images/profiles/';
-            file_put_contents(public_path().$folder.$fileName, $decoded);
-            $user->image = $fileName;
+            try {
+                file_put_contents(public_path().$folder.$fileName, $decoded);
+                $user->image = $fileName;
+            } catch (\Exception $e) {\Log::error($e);}
         }
     	$this->validate($request, [
             'first_name' => 'required',
