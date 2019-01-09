@@ -128,7 +128,7 @@ class ResultController extends Controller
             $results = $results->where('feedback', $request->get('feedback_status'));
         }
 
-        $results = $results->withTrashed()->paginate($items_per_page);
+        $results = $results->withTrashed()->orderBy('pt.id')->paginate($items_per_page);
 
         foreach($results as $result)
         {
