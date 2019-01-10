@@ -255,7 +255,8 @@
                                                     </div>
                                                 </div>
                                                 <div v-if="item.tag == 2">
-                                                    <input type="date" :name="'field_'+item.id" class="form-control"/>
+                                                    <input type="hidden" :name="'field_'+item.id"/>
+                                                    <my-date-component></my-date-component>
                                                 </div>
                                                 <div v-if="item.tag == 3">
                                                     <input type="email" :name="'field_'+item.id" class="form-control" />

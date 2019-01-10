@@ -60,7 +60,7 @@ new Vue({
         find_facility: [],
         updated_evaluated_results:[],
         role: '',
-        toggle: {}
+        toggle: {},
     },
 
     computed: {
@@ -751,3 +751,54 @@ new Vue({
         }
     },
 });
+
+Vue.component('my-date-component', {
+  data: function () {
+    return {
+        //Drop down list for dates
+        years: ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"],
+        months: [
+            {text: "January", value: "01"},
+            {text: "February", value: "02"},
+            {text: "March", value: "03"},
+            {text: "April", value: "04"},
+            {text: "May", value: "05"},
+            {text: "June", value: "06"},
+            {text: "July", value: "07"},
+            {text: "August", value: "08"},
+            {text: "September", value: "09"},
+            {text: "October", value: "10"},
+            {text: "November", value: "11"},
+            {text: "December", value: "12"}],
+        days: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"
+            ],
+    }
+  },
+  template: '<div class="row" id="my-date-component">'+
+                '<div class="col-sm-5" style="padding-right: 5px;">'+
+                    '<select class="form-control" :name="month">'+
+                        '<option v-for="month in months" v-bind:value="month.value">'+
+                            '{{ month.text }}'+
+                        '</option>'+
+                    '</select>'+
+                '</div>'+
+                '<div class="col-sm-3" style="padding-left: 0;padding-right: 5px;">'+
+                    '<select class="form-control" :name="year">'+
+                        '<option v-for="day in days" v-bind:value="day">'+
+                            '{{ day }}'+
+                        '</option>'+
+                    '</select>'+
+                '</div>'+
+                '<div class="col-sm-4" style="padding-left: 0;">'+
+                    '<select class="form-control" :name="year">'+
+                        '<option v-for="year in years" v-bind:value="year">'+
+                            '{{ year }}'+
+                        '</option>'+
+                    '</select>'+
+                '</div>'+
+            '</div>'
+
+})
+
