@@ -232,7 +232,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-5 form-control-label" for="title">PT Round:</label>
                                     <div class="col-sm-7">
-                                        <select class="form-control c-select" name="round_id">
+                                        <select class="form-control c-select" name="round_id" required >
                                             <option selected></option>
                                             <option v-for="round in roundsDone" :value="round.id">@{{ round.value }}</option>   
                                         </select>
@@ -255,8 +255,8 @@
                                                     </div>
                                                 </div>
                                                 <div v-if="item.tag == 2">
-                                                    <input type="hidden" :name="'field_'+item.id"/>
-                                                    <my-date-component></my-date-component>
+                                                    <input type="hidden" :id="'field_'+item.id" :name="'field_'+item.id">
+                                                    <my-date-component :name="'field_'+item.id" v-on:change="changedate"></my-date-component>
                                                 </div>
                                                 <div v-if="item.tag == 3">
                                                     <input type="email" :name="'field_'+item.id" class="form-control" />
@@ -271,7 +271,6 @@
                                                             @{{ option.title }}
                                                         </label>
                                                     </div>
-                                                    <!-- <input type="text" :name="'comment_'+item.id" class="form-control" /> -->
                                                 </div>
                                                 <div v-if="item.tag == 6">
                                                     <select class="form-control c-select" :name="'field_'+item.id">
@@ -284,12 +283,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- <div class="form-group row" :class="'toggle_'+item.id" style="display:none;">
-                                            <label class="col-sm-5 form-control-label text-danger font-weight-bold" for="title">Please Specify:</label>
-                                            <div class="col-sm-7">
-                                                <textarea :name="'field_'+item.id" class="form-control"></textarea>
-                                            </div>
-                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="form-group row col-sm-offset-5 col-sm-7">
@@ -343,7 +336,8 @@
                                                         </div>
                                                     </div>
                                                     <div v-if="item.tag == 2">
-                                                        <input type="date" :name="'field_'+item.id" class="form-control" :value="dt.response" />
+                                                        <input type="hidden" :name="'field_'+item.id" class="form-control" :value="dt.response" />
+                                                        <my-date-component :name="'field_'+item.id" v-on:change="changedate" :value="dt.response"></my-date-component>
                                                     </div>
                                                     <div v-if="item.tag == 3">
                                                         <input type="email" :name="'field_'+item.id" class="form-control" :value="dt.response" />

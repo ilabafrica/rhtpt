@@ -114,9 +114,11 @@ new Vue({
         },
 
         createResult: function(){
-           let myForm = document.getElementById('analysis_results');
+            let myForm = document.getElementById('analysis_results');
             let formData = new FormData(myForm);
+
       		this.$http.post('/vueresults', formData).then((response) => {
+                console.log(response);
     		    this.changePage(this.pagination.current_page);
       			$("#create-result").modal('hide');
       			toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
@@ -161,9 +163,9 @@ new Vue({
 
                 let myForm = document.getElementById('update_test_results');
                 let input = new FormData(myForm);
+
                 this.$http.post('/update_results/'+id,input).then((response) => {
                     this.changePage(this.pagination.current_page);
-                    // this.fillResult = {'round_id':'','field_id[]':'','response[]':'','comment[]':'','id':''};
                     $("#edit-result").modal('hide');
                     toastr.success('Result Updated Successfully.', 'Success Alert', {timeOut: 5000});
                 }, (response) => {
@@ -748,51 +750,102 @@ new Vue({
                     }
                 }
              );                           
-        }
+        },
+        changedate: function(elementName, dateValue){
+            $('#' + elementName).val(dateValue);
+        },
     },
 });
 
 Vue.component('my-date-component', {
-  data: function () {
-    return {
-        //Drop down list for dates
-        years: ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"],
-        months: [
-            {text: "January", value: "01"},
-            {text: "February", value: "02"},
-            {text: "March", value: "03"},
-            {text: "April", value: "04"},
-            {text: "May", value: "05"},
-            {text: "June", value: "06"},
-            {text: "July", value: "07"},
-            {text: "August", value: "08"},
-            {text: "September", value: "09"},
-            {text: "October", value: "10"},
-            {text: "November", value: "11"},
-            {text: "December", value: "12"}],
-        days: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
-                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"
-            ],
-    }
-  },
-  template: '<div class="row" id="my-date-component">'+
+    props: {
+        date: {
+            type: String,
+            default: '2018-08-01'
+        },
+        name: String,
+    },
+    data: function () {
+        return {
+            //Drop down list for dates
+            years: ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2025", "2026"],
+            months: [
+                {text: "January", value: "01"},
+                {text: "February", value: "02"},
+                {text: "March", value: "03"},
+                {text: "April", value: "04"},
+                {text: "May", value: "05"},
+                {text: "June", value: "06"},
+                {text: "July", value: "07"},
+                {text: "August", value: "08"},
+                {text: "September", value: "09"},
+                {text: "October", value: "10"},
+                {text: "November", value: "11"},
+                {text: "December", value: "12"}],
+            days: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+                    "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                    "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"
+                ],
+            year: '2018',
+            month: '10',
+            day: '01',
+            currentDate: '',
+        }
+    },
+    mounted: function () {
+
+        this.setDefaultDate();
+    },
+    methods: {
+        setDefaultDate: function(){
+            if(this.date.length >= 10){
+                this.year = this.date.substring(0,4);
+            }else{
+                this.year = "2018";
+            }
+
+            if(this.date.length >= 10){
+                this.month = this.date.substring(5,7);
+            }else{
+                this.month = "01";
+            }
+
+            if(this.date.length >= 10){
+                this.day = this.date.substring(8,10);
+            }else{
+                this.day = "01";
+            }
+        },
+        updateYear: function($event){
+            this.currentDate = event.target.value + '-' + this.month + '-' + this.day;
+            this.$emit('change', this.name, this.currentDate);
+        },
+        updateMonth: function($event){
+            this.currentDate = this.year + '-' + event.target.value + '-' + this.day;
+            this.$emit('change', this.name, this.currentDate);
+        },
+        updateDay: function($event){
+            this.currentDate = this.year + '-' + this.month + '-' + event.target.value;
+            this.$emit('change', this.name, this.currentDate);
+        },
+    },
+    template: '<div class="row" id="my-date-component">'+
                 '<div class="col-sm-5" style="padding-right: 5px;">'+
-                    '<select class="form-control" :name="month">'+
+                    '<select class="form-control" v-model="month" v-on:change="updateMonth">'+
                         '<option v-for="month in months" v-bind:value="month.value">'+
                             '{{ month.text }}'+
                         '</option>'+
                     '</select>'+
                 '</div>'+
                 '<div class="col-sm-3" style="padding-left: 0;padding-right: 5px;">'+
-                    '<select class="form-control" :name="year">'+
+                    '<select class="form-control" v-model="day" v-on:change="updateDay">'+
                         '<option v-for="day in days" v-bind:value="day">'+
                             '{{ day }}'+
                         '</option>'+
                     '</select>'+
                 '</div>'+
                 '<div class="col-sm-4" style="padding-left: 0;">'+
-                    '<select class="form-control" :name="year">'+
+                    '<select class="form-control" v-model="year" v-on:change="updateYear">'+
                         '<option v-for="year in years" v-bind:value="year">'+
                             '{{ year }}'+
                         '</option>'+
