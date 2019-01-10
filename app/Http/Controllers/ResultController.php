@@ -94,15 +94,15 @@ class ResultController extends Controller
                         ->join('facilities', 'role_user.tier', '=', 'facilities.id')
                         ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
                         ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
-                        ->where(function($query){
+                        ->where(function($query) use ($searchString){
 
-                            $query->where('name', 'LIKE', "%{$searchString['search']}%")
-                                ->orWhere('first_name', 'LIKE', "%{$searchString['search']}%")
-                                ->orWhere('middle_name', 'LIKE', "%{$searchString['search']}%")
-                                ->orWhere('last_name', 'LIKE', "%{$searchString['search']}%")
-                                ->orWhere('email', 'LIKE', "%{$searchString['search']}%")
-                                ->orWhere('phone', 'LIKE', "%{$searchString['search']}%")
-                                ->orWhere('uid', 'LIKE', "%{$searchString['search']}%");
+                            $query->where('users.name', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('users.first_name', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('users.middle_name', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('users.last_name', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('users.email', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('users.phone', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('users.uid', 'LIKE', "%{$searchString['search']}%");
                         });
             }
 

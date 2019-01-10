@@ -432,7 +432,7 @@ new Vue({
                 // The request is finished, change the loading to false again.
                 this.loading = false;
                 // Clear the query.
-                this.query = '';
+                // this.query = '';
             });
         },
         filter: function(page) {
