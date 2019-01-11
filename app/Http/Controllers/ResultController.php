@@ -246,6 +246,8 @@ class ResultController extends Controller
                 $now = Carbon::now('Africa/Nairobi');
                 $bulk = DB::table('bulk')->insert(['notification_id' => Notification::RESULTS_RECEIVED, 'round_id' => $pt->enrolment->round->id, 'text' => $message, 'user_id' => $pt->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
 
+                \Log::info("Saved result. Done By (users.id): ".Auth::user()->id." for PTID: {$pt->id}");
+                \Log::info($request);
                 return response()->json('Saved.');
 
              }
@@ -280,6 +282,8 @@ class ResultController extends Controller
         $id = $request->pt_id;
         $user_id = Auth::user()->id;
 
+        \Log::info("Verifying result. Done By (users.id): $user_id for PTID: $id");
+        \Log::info($request);
         $result = Pt::find($id);
         $result->verified_by = $user_id;
         $result->panel_status = Pt::CHECKED;
@@ -348,7 +352,8 @@ class ResultController extends Controller
     public function update(Request $request, $id)
     {       
         $pt = Pt::find($id);
-        
+        \Log::info("Update result. Done By (users.id): ".Auth::user()->id. " for PTID: $id");
+        \Log::info($request);
         //  Proceed to form-fields
         foreach ($request->all() as $key => $value)
         {
@@ -862,7 +867,7 @@ class ResultController extends Controller
         {
             $smsHandler = new SmsHandler();
             $smsHandler->sendMessage($ptUser->phone, $message);
-            \Log::info("Sent feedback report sms to $ptUserName ".$ptUser->phone." -- Performed by $user_id");
+            \Log::info("Verified pt and sent feedback report sms to $ptUserName ".$ptUser->phone." -- Performed by $user_id");
         }
         catch ( AfricasTalkingGatewayException $e )
         {

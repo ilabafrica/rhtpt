@@ -255,8 +255,8 @@
                                                     </div>
                                                 </div>
                                                 <div v-if="item.tag == 2">
-                                                    <input type="hidden" :id="'field_'+item.id" :name="'field_'+item.id">
-                                                    <my-date-component :name="'field_'+item.id" v-on:change="changedate"></my-date-component>
+                                                    <input type="hidden" :name="'field_'+item.id" :value="fieldvalues[item.id]">
+                                                    <my-date-component :tag="'field_'+item.id" v-on:change="changedate"></my-date-component>
                                                 </div>
                                                 <div v-if="item.tag == 3">
                                                     <input type="email" :name="'field_'+item.id" class="form-control" />
@@ -302,8 +302,10 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel">Test Results</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Test Results</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -330,39 +332,39 @@
                                                     <div v-if="item.tag == 1">
                                                         <div class="form-checkbox form-checkbox-inline" v-for="option in item.options">
                                                             <label class="form-checkbox-label">
-                                                                <input type="checkbox" :value="option.id" :name="'field_'+item.id">
+                                                                <input type="checkbox" :value="option.id" :name="'field_'+item.id" >
                                                                 @{{ option.title }}
                                                             </label>
                                                         </div>
                                                     </div>
                                                     <div v-if="item.tag == 2">
-                                                        <input type="hidden" :name="'field_'+item.id" class="form-control" :value="dt.response" />
-                                                        <my-date-component :name="'field_'+item.id" v-on:change="changedate" :value="dt.response"></my-date-component>
+                                                        <input type="hidden" :id="'field_'+item.id" :name="'field_'+item.id" :value="fieldvalues[item.id]" required />
+                                                        <my-date-component :tag="'field_'+item.id" @change="changedate" :date="fieldvalues[item.id]" :ref="'field_'+item.id"></my-date-component>
                                                     </div>
                                                     <div v-if="item.tag == 3">
-                                                        <input type="email" :name="'field_'+item.id" class="form-control" :value="dt.response" />
+                                                        <input type="email" :name="'field_'+item.id" class="form-control" :value="dt.response"  />
                                                     </div>
                                                     <div v-if="item.tag == 4">
-                                                        <input type="text" :name="'field_'+item.id" class="form-control" :value="dt.response" />
+                                                        <input type="text" :name="'field_'+item.id" class="form-control" :value="dt.response"  />
                                                     </div>
                                                     <div v-if="item.tag == 5">
 
                                                         <div class="form-radio radio-inline" v-for="option in item.options">
                                                             <label class="form-radio-label">
-                                                                <input type="radio" :value="option.id" :name="'field_'+item.id" v-bind="{ 'checked': option.id==dt.response}"/>
+                                                                <input type="radio" :value="option.id" :name="'field_'+item.id" v-bind="{ 'checked': option.id==dt.response}" />
                                                                 @{{ option.title }}
                                                             </label>
                                                         </div>
-                                                        <input v-if="dt.response==4" type="text" :name="'comment_'+item.id" class="form-control" :value="dt.comment" />
+                                                        <input v-if="dt.response==4" type="text" :name="'comment_'+item.id" class="form-control" :value="dt.comment"  />
                                                     </div>
                                                     <div v-if="item.tag == 6">
-                                                        <select class="form-control c-select" :name="'field_'+item.id">
+                                                        <select class="form-control c-select" :name="'field_'+item.id" >
                                                             <option selected></option>
                                                             <option v-for="option in item.options" v-bind="{ 'selected': option.id==dt.response}" :value="option.id">@{{ round.title }}</option>   
                                                         </select>
                                                     </div>
                                                     <div v-if="item.tag == 7">
-                                                        <textarea v-if="dt.field_id==item.id" :name="'field_'+item.id" class="form-control">@{{dt.response}}</textarea>
+                                                        <textarea v-if="dt.field_id==item.id" :name="'field_'+item.id" class="form-control" >@{{dt.response}}</textarea>
                                                     </div>
                                                 </div>
                                             </div>

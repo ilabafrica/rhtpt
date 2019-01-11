@@ -61,6 +61,8 @@ new Vue({
         updated_evaluated_results:[],
         role: '',
         toggle: {},
+        //
+        fieldvalues: [],
     },
 
     computed: {
@@ -146,6 +148,13 @@ new Vue({
             let id = result.id;
             this.$http.get('/pt/'+id).then((response) => {
                 this.frmData = response.data;
+                for (var i = this.frmData.results.length - 1; i >= 0; i--) {
+                    this.fieldvalues[this.frmData.results[i].field_id] = this.frmData.results[i].response;
+                }
+                //Update my-date-component
+                for (var dateKey in this.$refs) {
+                    this.$refs[dateKey][0].setDate(this.fieldvalues[dateKey.substring(dateKey.length - 1, dateKey.length)]);
+                }
             });
             $("#edit-result").modal('show');
         },
@@ -752,7 +761,9 @@ new Vue({
              );                           
         },
         changedate: function(elementName, dateValue){
-            $('#' + elementName).val(dateValue);
+            if (dateValue.length == 10) {
+                $("input[name="+elementName+"]").val(dateValue);
+            }
         },
     },
 });
@@ -763,7 +774,11 @@ Vue.component('my-date-component', {
             type: String,
             default: '2018-08-01'
         },
-        name: String,
+        tag: String,
+    },
+    model: {
+        prop: 'date',
+        event: 'input'
     },
     data: function () {
         return {
@@ -792,41 +807,41 @@ Vue.component('my-date-component', {
             currentDate: '',
         }
     },
-    mounted: function () {
+    created: function () {
 
-        this.setDefaultDate();
+        this.setDate(this.date);
     },
     methods: {
-        setDefaultDate: function(){
-            if(this.date.length >= 10){
-                this.year = this.date.substring(0,4);
+        setDate: function(newDate){
+            if(newDate.length >= 10){
+                this.year = newDate.substring(0,4);
             }else{
                 this.year = "2018";
             }
 
-            if(this.date.length >= 10){
-                this.month = this.date.substring(5,7);
+            if(newDate.length >= 10){
+                this.month = newDate.substring(5,7);
             }else{
                 this.month = "01";
             }
 
-            if(this.date.length >= 10){
-                this.day = this.date.substring(8,10);
+            if(newDate.length >= 10){
+                this.day = newDate.substring(8,10);
             }else{
                 this.day = "01";
             }
         },
         updateYear: function($event){
             this.currentDate = event.target.value + '-' + this.month + '-' + this.day;
-            this.$emit('change', this.name, this.currentDate);
+            this.$emit('change', this.tag, this.currentDate);
         },
         updateMonth: function($event){
             this.currentDate = this.year + '-' + event.target.value + '-' + this.day;
-            this.$emit('change', this.name, this.currentDate);
+            this.$emit('change', this.tag, this.currentDate);
         },
         updateDay: function($event){
             this.currentDate = this.year + '-' + this.month + '-' + event.target.value;
-            this.$emit('change', this.name, this.currentDate);
+            this.$emit('change', this.tag, this.currentDate);
         },
     },
     template: '<div class="row" id="my-date-component">'+
