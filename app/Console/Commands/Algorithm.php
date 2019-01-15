@@ -487,24 +487,24 @@ class Algorithm extends Command
      * @param  $date_pt_panel_received, $date_consituted, $date_pt_panel_tested
      * @return Incorrect results.
      */
-     public function check_correct_results($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results, $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6)
+     public function check_correct_results($panel1Test1, $panel1Test2, $panel1Test3, $panel1Final, $panel2Test1, $panel2Test2, $panel2Test3, $panel2Final, $panel3Test1, $panel3Test2, $panel3Test3, $panel3Final, $panel4Test1, $panel4Test2, $panel4Test3, $panel4Final, $panel5Test1, $panel5Test2, $panel5Test3, $panel5Final, $panel6Test1, $panel6Test2, $panel6Test3, $panel6Final, $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6)
      {
          // Check correctness
-         $incorrect_results = 1;
+         $incorrectResults = 1;
          $indeterminate = Option::idByTitle('Inconclusive');
          $reactive = Option::idByTitle('Reactive');
-         $non_reactive = Option::idByTitle('Non Reactive');
+         $nonReactive = Option::idByTitle('Non Reactive');
 
          if(
-             ($pt_panel_1_final_results == $ex_1 || (($pt_panel_1_final_results == $indeterminate) && ($pt_panel_1_test_1_results ==$reactive && $pt_panel_1_test_2_results ==$non_reactive))) &&
-             ($pt_panel_2_final_results == $ex_2 || (($pt_panel_2_final_results == $indeterminate) && ($pt_panel_2_test_1_results ==$reactive && $pt_panel_2_test_2_results ==$non_reactive))) &&
-             ($pt_panel_3_final_results == $ex_3 || (($pt_panel_3_final_results == $indeterminate) && ($pt_panel_3_test_1_results ==$reactive && $pt_panel_3_test_2_results ==$non_reactive))) &&
-             ($pt_panel_4_final_results == $ex_4 || (($pt_panel_4_final_results == $indeterminate)  && ($pt_panel_4_test_1_results ==$reactive && $pt_panel_4_test_2_results ==$non_reactive)))&&
-             ($pt_panel_5_final_results == $ex_5 || (($pt_panel_5_final_results == $indeterminate)  && ($pt_panel_5_test_1_results ==$reactive && $pt_panel_5_test_2_results ==$non_reactive)))&&
-             ($pt_panel_6_final_results == $ex_6 || (($pt_panel_6_final_results == $indeterminate) && ($pt_panel_6_test_1_results ==$reactive && $pt_panel_6_test_2_results ==$non_reactive)))
+             ($panel1Final == $ex_1 || (($panel1Final == $indeterminate) && ($panel1Test1 ==$reactive && $panel1Test2 ==$nonReactive))) &&
+             ($panel2Final == $ex_2 || (($panel2Final == $indeterminate) && ($panel2Test1 ==$reactive && $panel2Test2 ==$nonReactive))) &&
+             ($panel3Final == $ex_3 || (($panel3Final == $indeterminate) && ($panel3Test1 ==$reactive && $panel3Test2 ==$nonReactive))) &&
+             ($panel4Final == $ex_4 || (($panel4Final == $indeterminate) && ($panel4Test1 ==$reactive && $panel4Test2 ==$nonReactive))) &&
+             ($panel5Final == $ex_5 || (($panel5Final == $indeterminate) && ($panel5Test1 ==$reactive && $panel5Test2 ==$nonReactive))) &&
+             ($panel6Final == $ex_6 || (($panel6Final == $indeterminate) && ($panel6Test1 ==$reactive && $panel6Test2 ==$nonReactive)))
          )
-            $incorrect_results = 0;
-         return $incorrect_results;
+            $incorrectResults = 0;
+         return $incorrectResults;
      }
     /**
      * Function to check if results satisfactory
@@ -546,26 +546,57 @@ class Algorithm extends Command
      * @param  Test results
      * @return Wrong algorithm.
      */
-     public function check_algorithm($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results, $kit_1, $kit_2)
+     public function check_algorithm($panel1Test1, $panel1Test2, $panel1Test3, $panel1Final, $panel2Test1, $panel2Test2, $panel2Test3, $panel2Final, $panel3Test1, $panel3Test2, $panel3Test3, $panel3Final, $panel4Test1, $panel4Test2, $panel4Test3, $panel4Final, $panel5Test1, $panel5Test2, $panel5Test3, $panel5Final, $panel6Test1, $panel6Test2, $panel6Test3, $panel6Final, $kit1, $kit2)
      {
-         $wrong_algorithm = 1;
-         $reactive = Option::idByTitle('Reactive');
-         $non_reactive = Option::idByTitle('Non Reactive');
-         $not_done = Option::idByTitle('Not Done');
-         $fr = Option::idByTitle('First Response');
-         $det = Option::idByTitle('Determine');
-         $duo = Option::idByTitle('SDBioline');
+        $wrongAlgorithm = [];
+        $reactive = Option::idByTitle('Reactive');
+        $nonReactive = Option::idByTitle('Non Reactive');
+        $notDone = Option::idByTitle('Not Done');
+        $firstResponse = Option::idByTitle('First Response');
+        $determine = Option::idByTitle('Determine');
+        $bioline = Option::idByTitle('SDBioline');
 
-         if(
-             ($pt_panel_1_test_1_results == $non_reactive && $pt_panel_1_test_2_results == $not_done) || ($pt_panel_1_test_1_results == $reactive && ($pt_panel_1_test_2_results == $non_reactive || $pt_panel_1_test_2_results == $reactive)) && 
-             ($pt_panel_2_test_1_results == $non_reactive && $pt_panel_2_test_2_results == $not_done) || ($pt_panel_2_test_1_results == $reactive && ($pt_panel_2_test_2_results == $non_reactive || $pt_panel_2_test_2_results == $reactive)) && 
-             ($pt_panel_3_test_1_results == $non_reactive && $pt_panel_3_test_2_results == $not_done) || ($pt_panel_3_test_1_results == $reactive && ($pt_panel_3_test_2_results == $non_reactive || $pt_panel_3_test_2_results == $reactive)) && 
-             ($pt_panel_4_test_1_results == $non_reactive && $pt_panel_4_test_2_results == $not_done) || ($pt_panel_4_test_1_results == $reactive && ($pt_panel_4_test_2_results == $non_reactive || $pt_panel_4_test_2_results == $reactive)) && 
-             ($pt_panel_5_test_1_results == $non_reactive && $pt_panel_5_test_2_results == $not_done) || ($pt_panel_5_test_1_results == $reactive && ($pt_panel_5_test_2_results == $non_reactive || $pt_panel_5_test_2_results == $reactive)) && 
-             ($pt_panel_6_test_1_results == $non_reactive && $pt_panel_6_test_2_results == $not_done) || ($pt_panel_6_test_1_results == $reactive && ($pt_panel_6_test_2_results == $non_reactive || $pt_panel_6_test_2_results == $reactive)) && ((($kit_1 == $det) || ($kit_1 == $duo ) ) && ($kit_2 == $fr ))    
-            )
-            $wrong_algorithm = 0;
-         return $wrong_algorithm;
+        // For each panel:
+        // If test 1 is "non reactive", test 2 should be "not done" and the final result should be "non reactive"
+        // If test 1 is "reactive", test 2 should not be "not done" and the final result should be "reactive", "non reactive" or "inconclusive"
+        // Kit 1 should be "determine" or "bioline" and kit 2 should be "first response"
+
+        if (!(($panel1Test1 == $nonReactive && $panel1Test2 == $notDone && $panel1Final == $nonReactive) ||
+                    ($panel1Test1 == $reactive && $panel1Test2 != $notDone && $panel1Final != $notDone))) {
+            $wrongAlgorithm[] = 1;
+        }
+
+        if (!(($panel2Test1 == $nonReactive && $panel2Test2 == $notDone && $panel2Final == $nonReactive) ||
+                    ($panel2Test1 == $reactive && $panel2Test2 != $notDone && $panel2Final != $notDone))) {
+            $wrongAlgorithm[] = 1;
+        }
+
+        if (!(($panel3Test1 == $nonReactive && $panel3Test2 == $notDone && $panel3Final == $nonReactive) ||
+                    ($panel3Test1 == $reactive && $panel3Test2 != $notDone && $panel3Final != $notDone))) {
+            $wrongAlgorithm[] = 1;
+        }
+
+        if (!(($panel4Test1 == $nonReactive && $panel4Test2 == $notDone && $panel4Final == $nonReactive) ||
+                    ($panel4Test1 == $reactive && $panel4Test2 != $notDone && $panel4Final != $notDone))) {
+            $wrongAlgorithm[] = 1;
+        }
+
+        if (!(($panel5Test1 == $nonReactive && $panel5Test2 == $notDone && $panel5Final == $nonReactive) ||
+                    ($panel5Test1 == $reactive && $panel5Test2 != $notDone && $panel5Final != $notDone))) {
+            $wrongAlgorithm[] = 1;
+        }
+
+        if (!(($panel6Test1 == $nonReactive && $panel6Test2 == $notDone && $panel6Final == $nonReactive) ||
+                    ($panel6Test1 == $reactive && $panel6Test2 != $notDone && $panel6Final != $notDone))) {
+            $wrongAlgorithm[] = 1;
+        }
+
+        if (!(($kit1 == $determine || $kit1 == $bioline) && $kit2 == $firstResponse)) {
+            $wrongAlgorithm[] = 1;
+        }
+
+        if(array_sum($wrongAlgorithm) > 0) return 1; //TRUE
+        else return 0; //FALSE
      }
     /**
      * Function to set overall result - satisfactory/unsatisfactory
@@ -591,169 +622,171 @@ class Algorithm extends Command
             $round = $pt->enrolment->round_id;
             $user = $pt->enrolment->user;
             
-	    if ($user){
-	    if($pt->enrolment->user->registration)
-                $user = User::where('uid', $user->registration->uid)->first();
-            $lot = $user->lot($round);
-	    $res_1 = $lot->panels()->where('panel', 1)->first();
-            $res_2 = $lot->panels()->where('panel', 2)->first();
-            $res_3 = $lot->panels()->where('panel', 3)->first();
-            $res_4 = $lot->panels()->where('panel', 4)->first();
-            $res_5 = $lot->panels()->where('panel', 5)->first();
-            $res_6 = $lot->panels()->where('panel', 6)->first();
-	    
-	    $ex_1 = Option::idByTitle($res_1->result($res_1->result));
-            $ex_2 = Option::idByTitle($res_2->result($res_2->result));
-            $ex_3 = Option::idByTitle($res_3->result($res_3->result));
-            $ex_4 = Option::idByTitle($res_4->result($res_4->result));
-            $ex_5 = Option::idByTitle($res_5->result($res_5->result));
-            $ex_6 = Option::idByTitle($res_6->result($res_6->result));
-            //  End fetch
-            $rs = $pt->results;
-            $date_pt_panel_received = NULL;
-            $date_pt_panel_constituted = NULL;
-            $date_pt_panel_tested = NULL;
-            $test_1_kit_name = NULL;
-            $test_2_kit_name = NULL;
-            $test_1_kit_lot_no = NULL;
-            $test_2_kit_lot_no = NULL;
-            $test_1_expiry_date = NULL;
-            $test_2_expiry_date = NULL;
-            $test_3_expiry_date = NULL;
-            //  Kit names
-            $kit_1 = NULL;
-            $kit_2 = NULL;
+    	    if ($user){
+        	    if($pt->enrolment->user->registration)
+                    $user = User::where('uid', $user->registration->uid)->first();
 
-            $pt_panel_1_test_1_results = NULL;
-            $pt_panel_1_test_2_results = NULL;
-            $pt_panel_1_test_3_results = NULL;
-            $pt_panel_1_final_results = NULL;
-            $pt_panel_2_test_1_results = NULL;
-            $pt_panel_2_test_2_results = NULL;
-            $pt_panel_2_test_3_results = NULL;
-            $pt_panel_2_final_results = NULL;
-            $pt_panel_3_test_1_results = NULL;
-            $pt_panel_3_test_2_results = NULL;
-            $pt_panel_3_test_3_results = NULL;
-            $pt_panel_3_final_results = NULL;
-            $pt_panel_4_test_1_results = NULL;
-            $pt_panel_4_test_2_results = NULL;
-            $pt_panel_4_test_3_results = NULL;
-            $pt_panel_4_final_results = NULL;
-            $pt_panel_5_test_1_results = NULL;
-            $pt_panel_5_test_2_results = NULL;
-            $pt_panel_5_test_3_results = NULL;
-            $pt_panel_5_final_results = NULL;
-            $pt_panel_6_test_1_results = NULL;
-            $pt_panel_6_test_2_results = NULL;
-            $pt_panel_6_test_3_results = NULL;
-            $pt_panel_6_final_results = NULL;
-            foreach($rs as $rss)
-            {
-                //  Get all variables first to be used after the loop
-                if($rss->field_id == Field::idByUID('Date PT Panel Received'))
-                    $date_pt_panel_received = $this->dates($rss->response);
-                if($rss->field_id == Field::idByUID('Date PT Panel Constituted'))
-                    $date_pt_panel_constituted = $this->dates($rss->response);
-                if($rss->field_id == Field::idByUID('Date PT Panel Tested'))
-                    $date_pt_panel_tested = $this->dates($rss->response);
-                if($rss->field_id == Field::idByUID('Test 1 Kit Name')){
-                    $test_1_kit_name = $rss->response;
-                    $kit_1 = $rss->response;
-                    if($kit_1 == Option::idByTitle("Other"))
-                        $kit_1 = $rss->comment;
+                $lot = $user->lot($round);
+        	    $res_1 = $lot->panels()->where('panel', 1)->first();
+                $res_2 = $lot->panels()->where('panel', 2)->first();
+                $res_3 = $lot->panels()->where('panel', 3)->first();
+                $res_4 = $lot->panels()->where('panel', 4)->first();
+                $res_5 = $lot->panels()->where('panel', 5)->first();
+                $res_6 = $lot->panels()->where('panel', 6)->first();
+    	    
+        	    $ex_1 = Option::idByTitle($res_1->result($res_1->result));
+                $ex_2 = Option::idByTitle($res_2->result($res_2->result));
+                $ex_3 = Option::idByTitle($res_3->result($res_3->result));
+                $ex_4 = Option::idByTitle($res_4->result($res_4->result));
+                $ex_5 = Option::idByTitle($res_5->result($res_5->result));
+                $ex_6 = Option::idByTitle($res_6->result($res_6->result));
+                //  End fetch
+                $rs = $pt->results;
+                $date_pt_panel_received = NULL;
+                $date_pt_panel_constituted = NULL;
+                $date_pt_panel_tested = NULL;
+                $test_1_kit_name = NULL;
+                $test_2_kit_name = NULL;
+                $test_1_kit_lot_no = NULL;
+                $test_2_kit_lot_no = NULL;
+                $test_1_expiry_date = NULL;
+                $test_2_expiry_date = NULL;
+                $test_3_expiry_date = NULL;
+                //  Kit names
+                $kit_1 = NULL;
+                $kit_2 = NULL;
+
+                $pt_panel_1_test_1_results = NULL;
+                $pt_panel_1_test_2_results = NULL;
+                $pt_panel_1_test_3_results = NULL;
+                $pt_panel_1_final_results = NULL;
+                $pt_panel_2_test_1_results = NULL;
+                $pt_panel_2_test_2_results = NULL;
+                $pt_panel_2_test_3_results = NULL;
+                $pt_panel_2_final_results = NULL;
+                $pt_panel_3_test_1_results = NULL;
+                $pt_panel_3_test_2_results = NULL;
+                $pt_panel_3_test_3_results = NULL;
+                $pt_panel_3_final_results = NULL;
+                $pt_panel_4_test_1_results = NULL;
+                $pt_panel_4_test_2_results = NULL;
+                $pt_panel_4_test_3_results = NULL;
+                $pt_panel_4_final_results = NULL;
+                $pt_panel_5_test_1_results = NULL;
+                $pt_panel_5_test_2_results = NULL;
+                $pt_panel_5_test_3_results = NULL;
+                $pt_panel_5_final_results = NULL;
+                $pt_panel_6_test_1_results = NULL;
+                $pt_panel_6_test_2_results = NULL;
+                $pt_panel_6_test_3_results = NULL;
+                $pt_panel_6_final_results = NULL;
+
+                foreach($rs as $rss)
+                {
+                    //  Get all variables first to be used after the loop
+                    if($rss->field_id == Field::idByUID('Date PT Panel Received'))
+                        $date_pt_panel_received = $this->dates($rss->response);
+                    if($rss->field_id == Field::idByUID('Date PT Panel Constituted'))
+                        $date_pt_panel_constituted = $this->dates($rss->response);
+                    if($rss->field_id == Field::idByUID('Date PT Panel Tested'))
+                        $date_pt_panel_tested = $this->dates($rss->response);
+                    if($rss->field_id == Field::idByUID('Test 1 Kit Name')){
+                        $test_1_kit_name = $rss->response;
+                        $kit_1 = $rss->response;
+                        if($kit_1 == Option::idByTitle("Other"))
+                            $kit_1 = $rss->comment;
+                    }
+                    if($rss->field_id == Field::idByUID('Test 2 Kit Name')){
+                        $test_2_kit_name = $rss->response;
+                        $kit_2 = $rss->response;
+                    }
+                    if($rss->field_id == Field::idByUID('Test 1 Lot No.'))
+                        $test_1_kit_lot_no = $rss->response;
+                    if($rss->field_id == Field::idByUID('Test 2 Lot No.'))
+                        $test_2_kit_lot_no = $rss->response;
+                    
+                    if($rss->field_id == Field::idByUID('Test 1 Expiry Date'))
+                        $test_1_expiry_date = $this->dates($rss->response); 
+                    if($rss->field_id == Field::idByUID('Test 2 Expiry Date'))
+                        $test_2_expiry_date = $this->dates($rss->response);
+                    if($rss->field_id == Field::idByUID('Test 3 Expiry Date'))
+                        $test_3_expiry_date = $this->dates($rss->response);
+
+                    if($rss->field_id == Field::idByUID('PT Panel 1 Test 1 Results'))
+                        $pt_panel_1_test_1_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 1 Test 2 Results'))
+                        $pt_panel_1_test_2_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 1 Test 3 Results'))
+                        $pt_panel_1_test_3_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 1 Final Results'))
+                        $pt_panel_1_final_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 2 Test 1 Results'))
+                        $pt_panel_2_test_1_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 2 Test 2 Results'))
+                        $pt_panel_2_test_2_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 2 Test 3 Results'))
+                        $pt_panel_2_test_3_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 2 Final Results'))
+                        $pt_panel_2_final_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 3 Test 1 Results'))
+                        $pt_panel_3_test_1_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 3 Test 2 Results'))
+                        $pt_panel_3_test_2_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 3 Test 3 Results'))
+                        $pt_panel_3_test_3_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 3 Final Results'))
+                        $pt_panel_3_final_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 4 Test 1 Results'))
+                        $pt_panel_4_test_1_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 4 Test 2 Results'))
+                        $pt_panel_4_test_2_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 4 Test 3 Results'))
+                        $pt_panel_4_test_3_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 4 Final Results'))
+                        $pt_panel_4_final_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 5 Test 1 Results'))
+                        $pt_panel_5_test_1_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 5 Test 2 Results'))
+                        $pt_panel_5_test_2_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 5 Test 3 Results'))
+                        $pt_panel_5_test_3_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 5 Final Results'))
+                        $pt_panel_5_final_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 6 Test 1 Results'))
+                        $pt_panel_6_test_1_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 6 Test 2 Results'))
+                        $pt_panel_6_test_2_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 6 Test 3 Results'))
+                        $pt_panel_6_test_3_results = $rss->response;
+                    if($rss->field_id == Field::idByUID('PT Panel 6 Final Results'))
+                        $pt_panel_6_final_results = $rss->response;
                 }
-                if($rss->field_id == Field::idByUID('Test 2 Kit Name')){
-                    $test_2_kit_name = $rss->response;
-                    $kit_2 = $rss->response;
-                }
-                if($rss->field_id == Field::idByUID('Test 1 Lot No.'))
-                    $test_1_kit_lot_no = $rss->response;
-                if($rss->field_id == Field::idByUID('Test 2 Lot No.'))
-                    $test_2_kit_lot_no = $rss->response;
+                //  Fetch expected results
                 
-                if($rss->field_id == Field::idByUID('Test 1 Expiry Date'))
-                    $test_1_expiry_date = $this->dates($rss->response); 
-                if($rss->field_id == Field::idByUID('Test 2 Expiry Date'))
-                    $test_2_expiry_date = $this->dates($rss->response);
-                if($rss->field_id == Field::idByUID('Test 3 Expiry Date'))
-                    $test_3_expiry_date = $this->dates($rss->response);
-
-                if($rss->field_id == Field::idByUID('PT Panel 1 Test 1 Results'))
-                    $pt_panel_1_test_1_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 1 Test 2 Results'))
-                    $pt_panel_1_test_2_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 1 Test 3 Results'))
-                    $pt_panel_1_test_3_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 1 Final Results'))
-                    $pt_panel_1_final_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 2 Test 1 Results'))
-                    $pt_panel_2_test_1_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 2 Test 2 Results'))
-                    $pt_panel_2_test_2_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 2 Test 3 Results'))
-                    $pt_panel_2_test_3_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 2 Final Results'))
-                    $pt_panel_2_final_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 3 Test 1 Results'))
-                    $pt_panel_3_test_1_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 3 Test 2 Results'))
-                    $pt_panel_3_test_2_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 3 Test 3 Results'))
-                    $pt_panel_3_test_3_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 3 Final Results'))
-                    $pt_panel_3_final_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 4 Test 1 Results'))
-                    $pt_panel_4_test_1_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 4 Test 2 Results'))
-                    $pt_panel_4_test_2_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 4 Test 3 Results'))
-                    $pt_panel_4_test_3_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 4 Final Results'))
-                    $pt_panel_4_final_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 5 Test 1 Results'))
-                    $pt_panel_5_test_1_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 5 Test 2 Results'))
-                    $pt_panel_5_test_2_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 5 Test 3 Results'))
-                    $pt_panel_5_test_3_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 5 Final Results'))
-                    $pt_panel_5_final_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 6 Test 1 Results'))
-                    $pt_panel_6_test_1_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 6 Test 2 Results'))
-                    $pt_panel_6_test_2_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 6 Test 3 Results'))
-                    $pt_panel_6_test_3_results = $rss->response;
-                if($rss->field_id == Field::idByUID('PT Panel 6 Final Results'))
-                    $pt_panel_6_final_results = $rss->response;
-            }
-            //  Fetch expected results
-            
-            $dev_from_procedure = $this->check_dates($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested);
-            $incomplete_other_info = $this->check_other_info($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested);
-            $incomplete_kit_info = $this->check_kit_info($test_1_kit_name, $test_2_kit_name, $test_1_kit_lot_no, $test_2_kit_lot_no, $test_1_expiry_date, $test_2_expiry_date);
-            $use_of_expired_kits = $this->check_expiry($date_pt_panel_tested, $test_1_expiry_date, $test_2_expiry_date, $test_3_expiry_date);
-            $incomplete_results = $this->check_complete_results($pt_panel_1_test_1_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_final_results);
-            $incorrect_results = $this->check_correct_results($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results,  $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6);
-            $unsatisfactory = $this->check_satisfaction($incorrect_results);
-            $invalid_results = $this->check_validity($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results);
-            $wrong_algorithm = $this->check_algorithm($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results, $kit_1, $kit_2);
-            $overall = $this->check_overall($dev_from_procedure, $incomplete_other_info, $incomplete_kit_info, $use_of_expired_kits, $incomplete_results, $incorrect_results, $unsatisfactory, $invalid_results, $wrong_algorithm);
-            //  Update PT with the outcome of the algorithm.
-            $pt->dev_from_procedure = $dev_from_procedure;
-            $pt->incomplete_other_information = $incomplete_other_info;
-            $pt->incomplete_kit_data = $incomplete_kit_info;
-            $pt->use_of_expired_kits = $use_of_expired_kits;
-            $pt->incomplete_results = $incomplete_results;
-            $pt->incorrect_results = $incorrect_results;
-            $pt->panel_result = $unsatisfactory;
-            $pt->invalid_results = $invalid_results;
-            $pt->wrong_algorithm = $wrong_algorithm;
-            $pt->feedback = $overall;
-            $pt->panel_status = Pt::EVALUATED;
-            $pt->save();
-	}
+                $dev_from_procedure = $this->check_dates($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested);
+                $incomplete_other_info = $this->check_other_info($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested);
+                $incomplete_kit_info = $this->check_kit_info($test_1_kit_name, $test_2_kit_name, $test_1_kit_lot_no, $test_2_kit_lot_no, $test_1_expiry_date, $test_2_expiry_date);
+                $use_of_expired_kits = $this->check_expiry($date_pt_panel_tested, $test_1_expiry_date, $test_2_expiry_date, $test_3_expiry_date);
+                $incomplete_results = $this->check_complete_results($pt_panel_1_test_1_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_final_results);
+                $incorrect_results = $this->check_correct_results($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results,  $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6);
+                $unsatisfactory = $this->check_satisfaction($incorrect_results);
+                $invalid_results = $this->check_validity($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results);
+                $wrong_algorithm = $this->check_algorithm($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results, $kit_1, $kit_2);
+                $overall = $this->check_overall($dev_from_procedure, $incomplete_other_info, $incomplete_kit_info, $use_of_expired_kits, $incomplete_results, $incorrect_results, $unsatisfactory, $invalid_results, $wrong_algorithm);
+                //  Update PT with the outcome of the algorithm.
+                $pt->dev_from_procedure = $dev_from_procedure;
+                $pt->incomplete_other_information = $incomplete_other_info;
+                $pt->incomplete_kit_data = $incomplete_kit_info;
+                $pt->use_of_expired_kits = $use_of_expired_kits;
+                $pt->incomplete_results = $incomplete_results;
+                $pt->incorrect_results = $incorrect_results;
+                $pt->panel_result = $unsatisfactory;
+                $pt->invalid_results = $invalid_results;
+                $pt->wrong_algorithm = $wrong_algorithm;
+                $pt->feedback = $overall;
+                $pt->panel_status = Pt::EVALUATED;
+                $pt->save();
+        	}
         }
         return response()->json('Done.');
     }
