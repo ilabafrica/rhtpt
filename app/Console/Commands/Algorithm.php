@@ -78,7 +78,8 @@ class Algorithm extends Command
         $counter = Pt::where('panel_status', Pt::CHECKED)->count();
         if($counter > 0);
         {
-            $pts = Pt::where('panel_status', Pt::CHECKED)->get();
+            // $pts = Pt::where('panel_status', Pt::CHECKED)->get();
+            $pts = [Pt::find(17891)];
             $this->runAlgorithm($pts);
         }
         $this->info('Scheduled:Cron Command Run successfully!');
@@ -487,21 +488,19 @@ class Algorithm extends Command
      * @param  $date_pt_panel_received, $date_consituted, $date_pt_panel_tested
      * @return Incorrect results.
      */
-     public function check_correct_results($panel1Test1, $panel1Test2, $panel1Test3, $panel1Final, $panel2Test1, $panel2Test2, $panel2Test3, $panel2Final, $panel3Test1, $panel3Test2, $panel3Test3, $panel3Final, $panel4Test1, $panel4Test2, $panel4Test3, $panel4Final, $panel5Test1, $panel5Test2, $panel5Test3, $panel5Final, $panel6Test1, $panel6Test2, $panel6Test3, $panel6Final, $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6)
+     public function check_correct_results($panel1Final, $panel2Final, $panel3Final, $panel4Final, $panel5Final, $panel6Final, $expectedResult1, $expectedResult2, $expectedResult3, $expectedResult4, $expectedResult5, $expectedResult6)
      {
          // Check correctness
          $incorrectResults = 1;
-         $indeterminate = Option::idByTitle('Inconclusive');
-         $reactive = Option::idByTitle('Reactive');
-         $nonReactive = Option::idByTitle('Non Reactive');
+         $either = Option::idByTitle('Either'); //Added to resolve Round 19 evaluation problems
 
          if(
-             ($panel1Final == $ex_1 || (($panel1Final == $indeterminate) && ($panel1Test1 ==$reactive && $panel1Test2 ==$nonReactive))) &&
-             ($panel2Final == $ex_2 || (($panel2Final == $indeterminate) && ($panel2Test1 ==$reactive && $panel2Test2 ==$nonReactive))) &&
-             ($panel3Final == $ex_3 || (($panel3Final == $indeterminate) && ($panel3Test1 ==$reactive && $panel3Test2 ==$nonReactive))) &&
-             ($panel4Final == $ex_4 || (($panel4Final == $indeterminate) && ($panel4Test1 ==$reactive && $panel4Test2 ==$nonReactive))) &&
-             ($panel5Final == $ex_5 || (($panel5Final == $indeterminate) && ($panel5Test1 ==$reactive && $panel5Test2 ==$nonReactive))) &&
-             ($panel6Final == $ex_6 || (($panel6Final == $indeterminate) && ($panel6Test1 ==$reactive && $panel6Test2 ==$nonReactive)))
+            ($panel1Final == $expectedResult1 || $expectedResult1 == $either) &&
+            ($panel2Final == $expectedResult2 || $expectedResult2 == $either) &&
+            ($panel3Final == $expectedResult3 || $expectedResult3 == $either) &&
+            ($panel4Final == $expectedResult4 || $expectedResult4 == $either) &&
+            ($panel5Final == $expectedResult5 || $expectedResult5 == $either) &&
+            ($panel6Final == $expectedResult6 || $expectedResult6 == $either)
          )
             $incorrectResults = 0;
          return $incorrectResults;
@@ -555,44 +554,53 @@ class Algorithm extends Command
         $firstResponse = Option::idByTitle('First Response');
         $determine = Option::idByTitle('Determine');
         $bioline = Option::idByTitle('SDBioline');
+        $positive = Option::idByTitle('Positive');
+        $negative = Option::idByTitle('Negative');
 
         // For each panel:
         // If test 1 is "non reactive", test 2 should be "not done" and the final result should be "non reactive"
-        // If test 1 is "reactive", test 2 should not be "not done" and the final result should be "reactive", "non reactive" or "inconclusive"
+        // Or If test 1 is "reactive", test 2 should not be "not done" and the final result should be "reactive", "non reactive" or "inconclusive"
         // Kit 1 should be "determine" or "bioline" and kit 2 should be "first response"
 
-        if (!(($panel1Test1 == $nonReactive && $panel1Test2 == $notDone && $panel1Final == $nonReactive) ||
+        if (!(($panel1Test1 == $nonReactive && $panel1Test2 == $notDone && $panel1Final == $negative) ||
                     ($panel1Test1 == $reactive && $panel1Test2 != $notDone && $panel1Final != $notDone))) {
             $wrongAlgorithm[] = 1;
+            \Log::info("Panel 1 fail");
         }
 
-        if (!(($panel2Test1 == $nonReactive && $panel2Test2 == $notDone && $panel2Final == $nonReactive) ||
+        if (!(($panel2Test1 == $nonReactive && $panel2Test2 == $notDone && $panel2Final == $negative) ||
                     ($panel2Test1 == $reactive && $panel2Test2 != $notDone && $panel2Final != $notDone))) {
             $wrongAlgorithm[] = 1;
+            \Log::info("Panel 2 fail");
         }
 
-        if (!(($panel3Test1 == $nonReactive && $panel3Test2 == $notDone && $panel3Final == $nonReactive) ||
+        if (!(($panel3Test1 == $nonReactive && $panel3Test2 == $notDone && $panel3Final == $negative) ||
                     ($panel3Test1 == $reactive && $panel3Test2 != $notDone && $panel3Final != $notDone))) {
             $wrongAlgorithm[] = 1;
+            \Log::info("Panel 3 fail");
         }
 
-        if (!(($panel4Test1 == $nonReactive && $panel4Test2 == $notDone && $panel4Final == $nonReactive) ||
+        if (!(($panel4Test1 == $nonReactive && $panel4Test2 == $notDone && $panel4Final == $negative) ||
                     ($panel4Test1 == $reactive && $panel4Test2 != $notDone && $panel4Final != $notDone))) {
             $wrongAlgorithm[] = 1;
+            \Log::info("Panel 4 fail");
         }
 
-        if (!(($panel5Test1 == $nonReactive && $panel5Test2 == $notDone && $panel5Final == $nonReactive) ||
+        if (!(($panel5Test1 == $nonReactive && $panel5Test2 == $notDone && $panel5Final == $negative) ||
                     ($panel5Test1 == $reactive && $panel5Test2 != $notDone && $panel5Final != $notDone))) {
             $wrongAlgorithm[] = 1;
+            \Log::info("Panel 5 fail");
         }
 
-        if (!(($panel6Test1 == $nonReactive && $panel6Test2 == $notDone && $panel6Final == $nonReactive) ||
+        if (!(($panel6Test1 == $nonReactive && $panel6Test2 == $notDone && $panel6Final == $negative) ||
                     ($panel6Test1 == $reactive && $panel6Test2 != $notDone && $panel6Final != $notDone))) {
             $wrongAlgorithm[] = 1;
+            \Log::info("Panel 6 fail");
         }
 
         if (!(($kit1 == $determine || $kit1 == $bioline) && $kit2 == $firstResponse)) {
             $wrongAlgorithm[] = 1;
+            \Log::info("Kits failure");
         }
 
         if(array_sum($wrongAlgorithm) > 0) return 1; //TRUE
@@ -634,12 +642,12 @@ class Algorithm extends Command
                 $res_5 = $lot->panels()->where('panel', 5)->first();
                 $res_6 = $lot->panels()->where('panel', 6)->first();
     	    
-        	    $ex_1 = Option::idByTitle($res_1->result($res_1->result));
-                $ex_2 = Option::idByTitle($res_2->result($res_2->result));
-                $ex_3 = Option::idByTitle($res_3->result($res_3->result));
-                $ex_4 = Option::idByTitle($res_4->result($res_4->result));
-                $ex_5 = Option::idByTitle($res_5->result($res_5->result));
-                $ex_6 = Option::idByTitle($res_6->result($res_6->result));
+        	    $expectedResult1ID = Option::idByTitle($res_1->result($res_1->result));
+                $expectedResult2ID = Option::idByTitle($res_2->result($res_2->result));
+                $expectedResult3ID = Option::idByTitle($res_3->result($res_3->result));
+                $expectedResult4ID = Option::idByTitle($res_4->result($res_4->result));
+                $expectedResult5ID = Option::idByTitle($res_5->result($res_5->result));
+                $expectedResult6ID = Option::idByTitle($res_6->result($res_6->result));
                 //  End fetch
                 $rs = $pt->results;
                 $date_pt_panel_received = NULL;
@@ -768,7 +776,7 @@ class Algorithm extends Command
                 $incomplete_kit_info = $this->check_kit_info($test_1_kit_name, $test_2_kit_name, $test_1_kit_lot_no, $test_2_kit_lot_no, $test_1_expiry_date, $test_2_expiry_date);
                 $use_of_expired_kits = $this->check_expiry($date_pt_panel_tested, $test_1_expiry_date, $test_2_expiry_date, $test_3_expiry_date);
                 $incomplete_results = $this->check_complete_results($pt_panel_1_test_1_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_final_results);
-                $incorrect_results = $this->check_correct_results($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results,  $ex_1, $ex_2, $ex_3, $ex_4, $ex_5, $ex_6);
+                $incorrect_results = $this->check_correct_results($pt_panel_1_final_results, $pt_panel_2_final_results, $pt_panel_3_final_results, $pt_panel_4_final_results, $pt_panel_5_final_results, $pt_panel_6_final_results,  $expectedResult1ID, $expectedResult2ID, $expectedResult3ID, $expectedResult4ID, $expectedResult5ID, $expectedResult6ID);
                 $unsatisfactory = $this->check_satisfaction($incorrect_results);
                 $invalid_results = $this->check_validity($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results);
                 $wrong_algorithm = $this->check_algorithm($pt_panel_1_test_1_results, $pt_panel_1_test_2_results, $pt_panel_1_test_3_results, $pt_panel_1_final_results, $pt_panel_2_test_1_results, $pt_panel_2_test_2_results, $pt_panel_2_test_3_results, $pt_panel_2_final_results, $pt_panel_3_test_1_results, $pt_panel_3_test_2_results, $pt_panel_3_test_3_results, $pt_panel_3_final_results, $pt_panel_4_test_1_results, $pt_panel_4_test_2_results, $pt_panel_4_test_3_results, $pt_panel_4_final_results, $pt_panel_5_test_1_results, $pt_panel_5_test_2_results, $pt_panel_5_test_3_results, $pt_panel_5_final_results, $pt_panel_6_test_1_results, $pt_panel_6_test_2_results, $pt_panel_6_test_3_results, $pt_panel_6_final_results, $kit_1, $kit_2);

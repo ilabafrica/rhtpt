@@ -137,7 +137,8 @@ class ExpectedController extends Controller
     {
         $results = [
             Expected::NEGATIVE => 'Negative',
-            Expected::POSITIVE => 'Positive'
+            Expected::POSITIVE => 'Positive',
+            Expected::EITHER => 'Either'
         ];
         $categories = [];
         foreach($results as $key => $value)
