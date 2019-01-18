@@ -45,8 +45,8 @@ class SmsHandler{
 
     public function sendMessage($phone, $message)
     { 
-	$from = "NPHL";
-        if($phone != null && strlen($phone) >= 9){
+    	$from = "NPHL";
+        if($phone != null && strlen($phone) >= 9 && env('ALLOW_SENDING_SMS', true)){
             $phone = ltrim($phone, '0');
             $recepient = "+254".$phone;
             $gateway = new Gateway($this->username, $this->apiKey);

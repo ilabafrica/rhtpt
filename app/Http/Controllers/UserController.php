@@ -606,12 +606,6 @@ class UserController extends Controller
         $user->email_verification_code = Str::random(60);
         $user->save();
         $user->notify(new SendVerificationCode($user));
-        /*$usr = $user->toArray();
-
-        Mail::send('auth.verification', $usr, function($message) use ($usr) {
-            $message->to($usr['email']);
-            $message->subject('National HIV PT - Email Verification Code');
-        });*/
 
         return response()->json(['phone' => $user->phone]);        
     }

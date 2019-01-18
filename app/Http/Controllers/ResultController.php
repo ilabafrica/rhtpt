@@ -325,13 +325,15 @@ class ResultController extends Controller
             try
             {
                 // Send messages
-                $send_messages = $sms->sendMessage($recipients, $message, $from);
-                foreach($send_messages as $send_message)
-                {
-                    // status is either "Success" or "error message" and save.
-                    $number = $send_message->number;
-                    //  Save the results
-                    DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk_id]);
+                if(env('ALLOW_SENDING_SMS', true)){
+                    $send_messages = $sms->sendMessage($recipients, $message, $from);
+                    foreach($send_messages as $send_message)
+                    {
+                        // status is either "Success" or "error message" and save.
+                        $number = $send_message->number;
+                        //  Save the results
+                        DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk_id]);
+                    }
                 }
             }
             catch ( AfricasTalkingGatewayException $e )
@@ -714,133 +716,137 @@ class ResultController extends Controller
         $wrong_algorithm = $pt->wrong_algorithm;
         $incomplete_results = $pt->incomplete_results;
 
+        $approver = User::find($pt->approved_by);
+        $approvedBy = "";
+
+        if(isset($approver->first_name)) $approvedBy = "{$approver->first_name} {$approver->last_name}";
+
         if($pt->feedback == Pt::UNSATISFACTORY)
             $remark = $pt->unsatisfactory(); 
         else
             $remark = 'None';
         
-        // dd($remark);
          $all_results = array( 
-                    //user details
-                    'round_name'=> $round_name,
-                    'round_status'=>$round_status, 
-                    'feedback' => $feedback, 
-                    'remark' => $remark, 
-                    'panel_status' => $panel_status, 
-                    'pt_id' => $pt->id,
-                    'pt_approved_comment' => $pt->approved_comment,
-                    'date_approved' => $pt->date_approved,
-                    'participant_id' => $participant_id,
-                    'user_name' => $user_name,
-                    'first_name' => $first_name,
-                    'middle_name' => $middle_name,
-                    'last_name' => $last_name,
-                    'phone_no' => $phone_no,
-                    'tester_id' => $tester_id,
-                    'designation' => $designation,
-                    'program' => $program,
-                    'program_name' => isset($program->name)?$program->name:"",
-                    'county' => $county,
-                    'sub_county' => $sub_county,
-                    'facility' => $facility_name,
-                    'facility_id' => $facility_id,
-                    'mfl' => $mfl,
+            //user details
+            'round_name'=> $round_name,
+            'round_status'=>$round_status, 
+            'feedback' => $feedback, 
+            'remark' => $remark, 
+            'panel_status' => $panel_status, 
+            'pt_id' => $pt->id,
+            'pt_approved_comment' => $pt->approved_comment,
+            'date_approved' => $pt->date_approved,
+            'approved_by' => $approvedBy,
+            'participant_id' => $participant_id,
+            'user_name' => $user_name,
+            'first_name' => $first_name,
+            'middle_name' => $middle_name,
+            'last_name' => $last_name,
+            'phone_no' => $phone_no,
+            'tester_id' => $tester_id,
+            'designation' => $designation,
+            'program' => $program,
+            'program_name' => isset($program->name)?$program->name:"",
+            'county' => $county,
+            'sub_county' => $sub_county,
+            'facility' => $facility_name,
+            'facility_id' => $facility_id,
+            'mfl' => $mfl,
 
-                    //material details
-                    'date_received' =>$date_received,
-                    'date_constituted' =>$date_constituted,
-                    'date_tested' =>$date_tested,
+            //material details
+            'date_received' =>$date_received,
+            'date_constituted' =>$date_constituted,
+            'date_tested' =>$date_tested,
 
-                    //panel info
-                    'determine' =>$determine,
-                    'determine_value' =>$determine_value,
-                    'determine_lot_no' =>$determine_lot_no,
-                    'determine_expiry_date' =>$determine_expiry_date,
-                    'firstresponse' =>$firstresponse,
-                    'firstresponse_value' =>$firstresponse_value,
-                    'firstresponse_lot_no' =>$firstresponse_lot_no,
-                    'firstresponse_expiry_date' =>$firstresponse_expiry_date,
+            //panel info
+            'determine' =>$determine,
+            'determine_value' =>$determine_value,
+            'determine_lot_no' =>$determine_lot_no,
+            'determine_expiry_date' =>$determine_expiry_date,
+            'firstresponse' =>$firstresponse,
+            'firstresponse_value' =>$firstresponse_value,
+            'firstresponse_lot_no' =>$firstresponse_lot_no,
+            'firstresponse_expiry_date' =>$firstresponse_expiry_date,
 
-                    //results
-                    //test 1 results
-                    //name
-                    "pt_panel_1_kit1_results"=>$pt_panel_1_kit1_results, 
-                    "pt_panel_2_kit1_results"=>$pt_panel_2_kit1_results,
-                    "pt_panel_3_kit1_results"=>$pt_panel_3_kit1_results,
-                    "pt_panel_4_kit1_results"=>$pt_panel_4_kit1_results,
-                    "pt_panel_5_kit1_results"=>$pt_panel_5_kit1_results,
-                    "pt_panel_6_kit1_results"=>$pt_panel_6_kit1_results,
+            //results
+            //test 1 results
+            //name
+            "pt_panel_1_kit1_results"=>$pt_panel_1_kit1_results, 
+            "pt_panel_2_kit1_results"=>$pt_panel_2_kit1_results,
+            "pt_panel_3_kit1_results"=>$pt_panel_3_kit1_results,
+            "pt_panel_4_kit1_results"=>$pt_panel_4_kit1_results,
+            "pt_panel_5_kit1_results"=>$pt_panel_5_kit1_results,
+            "pt_panel_6_kit1_results"=>$pt_panel_6_kit1_results,
 
-                    //value 
-                    "pt_panel_1_kit1_results_value"=>$pt_panel_1_kit1_results_value, 
-                    "pt_panel_2_kit1_results_value"=>$pt_panel_2_kit1_results_value,
-                    "pt_panel_3_kit1_results_value"=>$pt_panel_3_kit1_results_value,
-                    "pt_panel_4_kit1_results_value"=>$pt_panel_4_kit1_results_value,
-                    "pt_panel_5_kit1_results_value"=>$pt_panel_5_kit1_results_value,
-                    "pt_panel_6_kit1_results_value"=>$pt_panel_6_kit1_results_value,
+            //value 
+            "pt_panel_1_kit1_results_value"=>$pt_panel_1_kit1_results_value, 
+            "pt_panel_2_kit1_results_value"=>$pt_panel_2_kit1_results_value,
+            "pt_panel_3_kit1_results_value"=>$pt_panel_3_kit1_results_value,
+            "pt_panel_4_kit1_results_value"=>$pt_panel_4_kit1_results_value,
+            "pt_panel_5_kit1_results_value"=>$pt_panel_5_kit1_results_value,
+            "pt_panel_6_kit1_results_value"=>$pt_panel_6_kit1_results_value,
 
-                    //test 2 results
-                    //name
-                    "pt_panel_1_kit2_results"=>$pt_panel_1_kit2_results, 
-                    "pt_panel_2_kit2_results"=>$pt_panel_2_kit2_results,
-                    "pt_panel_3_kit2_results"=>$pt_panel_3_kit2_results,
-                    "pt_panel_4_kit2_results"=>$pt_panel_4_kit2_results,
-                    "pt_panel_5_kit2_results"=>$pt_panel_5_kit2_results,
-                    "pt_panel_6_kit2_results"=>$pt_panel_6_kit2_results,
+            //test 2 results
+            //name
+            "pt_panel_1_kit2_results"=>$pt_panel_1_kit2_results, 
+            "pt_panel_2_kit2_results"=>$pt_panel_2_kit2_results,
+            "pt_panel_3_kit2_results"=>$pt_panel_3_kit2_results,
+            "pt_panel_4_kit2_results"=>$pt_panel_4_kit2_results,
+            "pt_panel_5_kit2_results"=>$pt_panel_5_kit2_results,
+            "pt_panel_6_kit2_results"=>$pt_panel_6_kit2_results,
 
-                    //value
-                    "pt_panel_1_kit2_results_value"=>$pt_panel_1_kit2_results_value, 
-                    "pt_panel_2_kit2_results_value"=>$pt_panel_2_kit2_results_value,
-                    "pt_panel_3_kit2_results_value"=>$pt_panel_3_kit2_results_value,
-                    "pt_panel_4_kit2_results_value"=>$pt_panel_4_kit2_results_value,
-                    "pt_panel_5_kit2_results_value"=>$pt_panel_5_kit2_results_value,
-                    "pt_panel_6_kit2_results_value"=>$pt_panel_6_kit2_results_value,
+            //value
+            "pt_panel_1_kit2_results_value"=>$pt_panel_1_kit2_results_value, 
+            "pt_panel_2_kit2_results_value"=>$pt_panel_2_kit2_results_value,
+            "pt_panel_3_kit2_results_value"=>$pt_panel_3_kit2_results_value,
+            "pt_panel_4_kit2_results_value"=>$pt_panel_4_kit2_results_value,
+            "pt_panel_5_kit2_results_value"=>$pt_panel_5_kit2_results_value,
+            "pt_panel_6_kit2_results_value"=>$pt_panel_6_kit2_results_value,
 
-                    //final tested results
-                    //name
-                    "pt_panel_1_final_results"=>$pt_panel_1_final_results, 
-                    "pt_panel_2_final_results"=>$pt_panel_2_final_results,
-                    "pt_panel_3_final_results"=>$pt_panel_3_final_results,
-                    "pt_panel_4_final_results"=>$pt_panel_4_final_results,
-                    "pt_panel_5_final_results"=>$pt_panel_5_final_results,
-                    "pt_panel_6_final_results"=>$pt_panel_6_final_results,
+            //final tested results
+            //name
+            "pt_panel_1_final_results"=>$pt_panel_1_final_results, 
+            "pt_panel_2_final_results"=>$pt_panel_2_final_results,
+            "pt_panel_3_final_results"=>$pt_panel_3_final_results,
+            "pt_panel_4_final_results"=>$pt_panel_4_final_results,
+            "pt_panel_5_final_results"=>$pt_panel_5_final_results,
+            "pt_panel_6_final_results"=>$pt_panel_6_final_results,
 
-                    //value
-                    "pt_panel_1_final_results_value"=>$pt_panel_1_final_results_value, 
-                    "pt_panel_2_final_results_value"=>$pt_panel_2_final_results_value,
-                    "pt_panel_3_final_results_value"=>$pt_panel_3_final_results_value,
-                    "pt_panel_4_final_results_value"=>$pt_panel_4_final_results_value,
-                    "pt_panel_5_final_results_value"=>$pt_panel_5_final_results_value,
-                    "pt_panel_6_final_results_value"=>$pt_panel_6_final_results_value,
+            //value
+            "pt_panel_1_final_results_value"=>$pt_panel_1_final_results_value, 
+            "pt_panel_2_final_results_value"=>$pt_panel_2_final_results_value,
+            "pt_panel_3_final_results_value"=>$pt_panel_3_final_results_value,
+            "pt_panel_4_final_results_value"=>$pt_panel_4_final_results_value,
+            "pt_panel_5_final_results_value"=>$pt_panel_5_final_results_value,
+            "pt_panel_6_final_results_value"=>$pt_panel_6_final_results_value,
 
-                    //expected results
-                    "expected_result_1"=>$expected_result_1, 
-                    "expected_result_2"=>$expected_result_2,
-                    "expected_result_3"=>$expected_result_3,
-                    "expected_result_4"=>$expected_result_4,
-                    "expected_result_5"=>$expected_result_5,
-                    "expected_result_6"=>$expected_result_6,
-                    "tester_comments"=>$tester_comments,
-                    
-                    //sample name
-                    "sample_1"=>$sample_1, 
-                    "sample_2"=>$sample_2,
-                    "sample_3"=>$sample_3,
-                    "sample_4"=>$sample_4,
-                    "sample_5"=>$sample_5,
-                    "sample_6"=>$sample_6,
+            //expected results
+            "expected_result_1"=>$expected_result_1, 
+            "expected_result_2"=>$expected_result_2,
+            "expected_result_3"=>$expected_result_3,
+            "expected_result_4"=>$expected_result_4,
+            "expected_result_5"=>$expected_result_5,
+            "expected_result_6"=>$expected_result_6,
+            "tester_comments"=>$tester_comments,
+            
+            //sample name
+            "sample_1"=>$sample_1, 
+            "sample_2"=>$sample_2,
+            "sample_3"=>$sample_3,
+            "sample_4"=>$sample_4,
+            "sample_5"=>$sample_5,
+            "sample_6"=>$sample_6,
 
-                    'incorrect_results' => $incorrect_results,
-                    'incomplete_kit_data' => $incomplete_kit_data,
-                    'dev_from_procedure' => $dev_from_procedure,
-                    'incomplete_other_information' => $incomplete_other_information,
-                    'use_of_expired_kits' => $use_of_expired_kits,
-                    'invalid_results' => $invalid_results,
-                    'wrong_algorithm' => $wrong_algorithm,
-                    'incomplete_results' => $incomplete_results
-                );
+            'incorrect_results' => $incorrect_results,
+            'incomplete_kit_data' => $incomplete_kit_data,
+            'dev_from_procedure' => $dev_from_procedure,
+            'incomplete_other_information' => $incomplete_other_information,
+            'use_of_expired_kits' => $use_of_expired_kits,
+            'invalid_results' => $invalid_results,
+            'wrong_algorithm' => $wrong_algorithm,
+            'incomplete_results' => $incomplete_results
+        );
 
-        // return response()->json($all_results); 
         return $all_results;       
     }
 
@@ -869,11 +875,9 @@ class ResultController extends Controller
         $result = Pt::find($id);
         $result->panel_status = Pt::VERIFIED;
         $result->date_approved = Carbon::today()->toDateTimeString();
+        $result->approved_by = $user_id;
         if ($request) {
             $result->approved_comment = $request->comment;            
-     
-            if($request->comment)
-                $result->approved_by = $user_id;
         }
         $result->save();
 
