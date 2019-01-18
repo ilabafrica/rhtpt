@@ -78,8 +78,7 @@ class Algorithm extends Command
         $counter = Pt::where('panel_status', Pt::CHECKED)->count();
         if($counter > 0);
         {
-            // $pts = Pt::where('panel_status', Pt::CHECKED)->get();
-            $pts = [Pt::find(17891)];
+            $pts = Pt::where('panel_status', Pt::CHECKED)->get();
             $this->runAlgorithm($pts);
         }
         $this->info('Scheduled:Cron Command Run successfully!');

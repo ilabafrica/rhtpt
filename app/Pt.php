@@ -54,10 +54,11 @@ class Pt extends Model
     */
     public function outcome($feedback)
     {
-        if($feedback == Pt::SATISFACTORY)
-            return 'Satisfactory';
-        else
-            return 'Unsatisfactory';
+        $outcome = "";
+        if($feedback == Pt::SATISFACTORY) $outcome = 'Satisfactory';
+        if($feedback == Pt::UNSATISFACTORY) $outcome = 'Unsatisfactory';
+
+        return $outcome;
     }
     /**
     * Get reason for unsatisfaction
