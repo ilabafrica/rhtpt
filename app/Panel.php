@@ -17,12 +17,6 @@ class Panel extends Model
     const S4 = 4;
 	  const S5 = 5;
     const S6 = 6;
-    /**
-  	 * Type of result
-  	 *
-  	 */
-  	const NEGATIVE = 1;
-  	const POSITIVE = 2;
 
   	/**
   	 * The database table used by the model.
@@ -60,9 +54,12 @@ class Panel extends Model
   	 */
      public function result($result)
      {
-          if($result == Panel::NEGATIVE)
-              return 'Negative';
-          else
-              return 'Positive';
+          $resultValue = "";
+
+          if($result == Expected::NEGATIVE) $resultValue = 'Negative';
+          if($result == Expected::POSITIVE) $resultValue = 'Positive';
+          if($result == Expected::EITHER) $resultValue = 'Either';
+              
+          return $resultValue;
      }
 }

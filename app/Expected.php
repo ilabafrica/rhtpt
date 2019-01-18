@@ -22,7 +22,8 @@ class Expected extends Model
   	 *
   	 */
   	const NEGATIVE = 1;
-  	const POSITIVE = 2;
+    const POSITIVE = 2;
+  	const EITHER = 3;
     /**
   	 * User relationship
   	 *

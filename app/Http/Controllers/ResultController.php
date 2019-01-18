@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Pt;
 use App\Result;
+use App\Expected;
 use App\Field;
 use App\Option;
 use App\User;
@@ -622,30 +623,61 @@ class ResultController extends Controller
 
         //get expected results
         $round = Round::find($round_id);
+        $sample_1 = "PT-".$round->name."-S1";
+        $sample_2 = "PT-".$round->name."-S2";
+        $sample_3 = "PT-".$round->name."-S3";
+        $sample_4 = "PT-".$round->name."-S4";
+        $sample_5 = "PT-".$round->name."-S5";
+        $sample_6 = "PT-".$round->name."-S6";
+
         $user = $pt->enrolment->user;
         $lot = $user->lot($round_id);
         $expected_results = $lot->panels()->get();
 
         foreach ($expected_results as $ex_rslts) {
 
-            if($ex_rslts->panel == 1)
-                $expected_result_1 = $ex_rslts->result($ex_rslts->result);
-                $sample_1 = "PT-".$round->name."-S1";
-            if($ex_rslts->panel == 2)
-                $expected_result_2 = $ex_rslts->result($ex_rslts->result);
-                $sample_2 = "PT-".$round->name."-S2";
-            if($ex_rslts->panel == 3)
-                $expected_result_3 = $ex_rslts->result($ex_rslts->result);
-                $sample_3 = "PT-".$round->name."-S3";
-            if($ex_rslts->panel == 4)
-                $expected_result_4 = $ex_rslts->result($ex_rslts->result);
-                $sample_4 = "PT-".$round->name."-S4";
-            if($ex_rslts->panel == 5)
-                $expected_result_5 = $ex_rslts->result($ex_rslts->result);
-                $sample_5 = "PT-".$round->name."-S5";
-            if($ex_rslts->panel == 6)
-                $expected_result_6 = $ex_rslts->result($ex_rslts->result);
-                $sample_6 = "PT-".$round->name."-S6";
+            if($ex_rslts->panel == 1){
+                if($ex_rslts->result == Expected::EITHER)
+                    $expected_result_1 = $pt_panel_1_final_results;
+                else
+                    $expected_result_1 = $ex_rslts->result($ex_rslts->result);
+            }
+
+            if($ex_rslts->panel == 2){
+                if($ex_rslts->result == Expected::EITHER)
+                    $expected_result_2 = $pt_panel_2_final_results;
+                else
+                    $expected_result_2 = $ex_rslts->result($ex_rslts->result);
+            }
+
+            if($ex_rslts->panel == 3){
+                if($ex_rslts->result == Expected::EITHER)
+                    $expected_result_3 = $pt_panel_3_final_results;
+                else
+                    $expected_result_3 = $ex_rslts->result($ex_rslts->result);
+            }
+
+            if($ex_rslts->panel == 4){
+                if($ex_rslts->result == Expected::EITHER)
+                    $expected_result_4 = $pt_panel_4_final_results;
+                else
+                    $expected_result_4 = $ex_rslts->result($ex_rslts->result);
+            }
+
+            if($ex_rslts->panel == 5){
+                if($ex_rslts->result == Expected::EITHER)
+                    $expected_result_5 = $pt_panel_5_final_results;
+                else
+                    $expected_result_5 = $ex_rslts->result($ex_rslts->result);
+            }
+
+            if($ex_rslts->panel == 6){
+                if($ex_rslts->result == Expected::EITHER)
+                    $expected_result_6 = $pt_panel_6_final_results;
+                else
+                    $expected_result_6 = $ex_rslts->result($ex_rslts->result);
+            }
+
         }
 
         //get participant details
