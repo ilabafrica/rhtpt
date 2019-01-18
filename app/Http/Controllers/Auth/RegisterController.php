@@ -158,16 +158,8 @@ class RegisterController extends Controller
             //  Do Email verification for email address
             $user->email_verification_code = Str::random(60);
             $user->save();
-            /*$usr = $user->toArray();
-
-            Mail::send('auth.verification', $usr, function($message) use ($usr) {
-                $message->to($usr['email']);
-                $message->subject('National HIV PT - Email Verification Code');
-            });*/
 
             event(new Registered($usr = $user));
-
-            //$this->guard()->login($user);
         }
         catch(Exception $e)
         {
@@ -176,8 +168,6 @@ class RegisterController extends Controller
             abort(500, 'Encountered an error while sending verification code. Please try again later.');
         }
 
-        /*return $this->registered($request, $user)
-            ?: redirect($this->redirectPath());*/
         return $this->registered($request, $user)
             ?: redirect('/2fa');
     }
@@ -238,11 +228,10 @@ class RegisterController extends Controller
             // Specified sender-id
             $from = $api->code;
             // Send message
-            $result = $gateway->sendMessage($recipient, $message);
+            if(env('ALLOW_SENDING_SMS', true)) $gateway->sendMessage($recipient, $message);
         }
         catch (\AfricasTalkingGatewayException $e )
         {
-            // echo "Encountered an error while sending: ".$e->getMessage();
             return response()->json(["error" => "'Encountered an error while sending verification code. Please try again later."], 500);
         }
         try
@@ -250,16 +239,8 @@ class RegisterController extends Controller
             //  Do Email verification for email address
             $user->email_verification_code = Str::random(60);
             $user->save();
-            /*$usr = $user->toArray();
-
-            Mail::send('auth.verification', $usr, function($message) use ($usr) {
-                $message->to($usr['email']);
-                $message->subject('National HIV PT - Email Verification Code');
-            });*/
 
             event(new Registered($usr = $user));
-
-            //$this->guard()->login($user);
         }
         catch(\Exception $e)
         {

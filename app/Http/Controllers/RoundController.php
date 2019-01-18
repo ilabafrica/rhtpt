@@ -128,7 +128,7 @@ class RoundController extends Controller
                 {
                     // Send messages
                     $sms    = new Bulk($username, $apikey);
-                    $results = $sms->sendMessage($recipients, $message, $from);
+                    if(env('ALLOW_SENDING_SMS', true)) $sms->sendMessage($recipients, $message, $from);
                 
                 }
                 catch ( AfricasTalkingGatewayException $e )
@@ -185,7 +185,7 @@ class RoundController extends Controller
             {
                 // Send messages
                 $sms    = new Bulk($username, $apikey);
-                $results = $sms->sendMessage($recipients, $message, $from);
+                if(env('ALLOW_SENDING_SMS', true)) $sms->sendMessage($recipients, $message, $from);
             
             }
             catch ( AfricasTalkingGatewayException $e )
@@ -314,14 +314,7 @@ class RoundController extends Controller
                 try
                 {
                     // Send messages
-                    $results = $sms->sendMessage($recipients, $message, $from);
-                    foreach($results as $result)
-                    {
-                        // status is either "Success" or "error message" and save.
-                        $number = $result->number;
-                        //  Save the results
-                       // DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
-                    }
+                    $sms->sendMessage($recipients, $message, $from);
                 }
                 catch ( AfricasTalkingGatewayException $e )
                 {
@@ -1107,110 +1100,88 @@ class RoundController extends Controller
                         if(strcmp($county, "THARAKA-NITHI") === 0)
                             $county = "Tharaka Nithi";
 
-                            if ($mfl == 'NULL'&& ''){
-                                // $missing_facilities[] = array($tfname, $tsname, $mfl, 'Missing Facility');
-                                $facilityId = 0;
-                                $missing_facilities = array($tfname, $tsname, $mfl, 'Missing Facility');
-                                array_push($duplicates, $missing_facilities);
-                            }
-                            else{
-                                $facilityId = Facility::idByCode($mfl);
-                            }
+                        if ($mfl == 'NULL'&& ''){
+                            // $missing_facilities[] = array($tfname, $tsname, $mfl, 'Missing Facility');
+                            $facilityId = 0;
+                            $missing_facilities = array($tfname, $tsname, $mfl, 'Missing Facility');
+                            array_push($duplicates, $missing_facilities);
+                        }
+                        else{
+                            $facilityId = Facility::idByCode($mfl);
+                        }
 
-                                if($uid)
+                            if($uid)
+                            {
+                                $user = User::find(User::idByUid($uid));
+                                if(!$user)
                                 {
-                                    $user = User::find(User::idByUid($uid));
-                                    if(!$user)
-                                    {
-                                        $user = new User;
-                                        $user->uid = $uid;
-                                    }
+                                    $user = new User;
+                                    $user->uid = $uid;
+                                }
+                            }
+                            else
+                            {
+                                $userId = User::idByPhone($tphone);
+                                if($userId)
+                                {
+                                    $user = User::find($userId);
+                                    $user->uid = $user->uid;
                                 }
                                 else
                                 {
-                                    $userId = User::idByPhone($tphone);
-                                    if($userId)
-                                    {
-                                        $user = User::find($userId);
-                                        $user->uid = $user->uid;
-                                    }
+                                    $user = new User;
+                                    $user->date_registered = $today;
+                                    $count = count(User::where('uid', User::MIN_UNIQUE_ID)->get());
+                                    if($count > 0)
+                                        $user->uid = DB::table('users')->where('uid', '>=', User::MIN_UNIQUE_ID)->max('uid')+1;
                                     else
-                                    {
-                                        $user = new User;
-                                        $user->date_registered = $today;
-                                        $count = count(User::where('uid', User::MIN_UNIQUE_ID)->get());
-                                        if($count > 0)
-                                            $user->uid = DB::table('users')->where('uid', '>=', User::MIN_UNIQUE_ID)->max('uid')+1;
-                                        else
-                                            $user->uid = User::MIN_UNIQUE_ID;
-                                        
-                                    }
+                                        $user->uid = User::MIN_UNIQUE_ID;
+                                    
                                 }
-                                //  process user details
-                                if($tfname && $tsname && $tphone && $temail && $tprog && $tdes)
-                                {   
-                                    if ($tphone == 'NULL' || $tphone == '') {
-                                        $duplicateParticapant = array($tfname, $tsname, $tphone, 'Missing Phone Number');
-                                        $duplicates[] = $duplicateParticapant;
-                                    }
-                                    if(count(User::where('phone', $tphone)->get()) > 0){
-                                        $duplicateParticapant = array($tfname, $tsname, $tphone, 'Phone already taken');
-                                        $duplicates[] = $duplicateParticapant;
-                                        continue;
-                                    }
-                                    $user->name = $tfname. " ".$toname. " ".$tsname;
-                                    $user->first_name = $tfname;
-                                    $user->middle_name = $toname;
-                                    $user->last_name = $tsname;
-                                    $user->gender = $tgender;
-                                    $user->email = $temail;
-                                    $user->phone = $tphone;
-                                    $user->address = $taddress;
-                                    $user->username = uniqid();
-                                    $user->phone_verified = 1;
-                                    $user->email_verified = 1;
-                                    $user->save();
-                                    $user->username = $user->uid;
-                                    $user->password = Hash::make(User::DEFAULT_PASSWORD);
-                                    $user->save();
-                                    $userId = $user->id;
+                            }
+                            //  process user details
+                            if($tfname && $tsname && $tphone && $temail && $tprog && $tdes)
+                            {   
+                                if ($tphone == 'NULL' || $tphone == '') {
+                                    $duplicateParticapant = array($tfname, $tsname, $tphone, 'Missing Phone Number');
+                                    $duplicates[] = $duplicateParticapant;
+                                }
+                                if(count(User::where('phone', $tphone)->get()) > 0){
+                                    $duplicateParticapant = array($tfname, $tsname, $tphone, 'Phone already taken');
+                                    $duplicates[] = $duplicateParticapant;
+                                    continue;
+                                }
+                                $user->name = $tfname. " ".$toname. " ".$tsname;
+                                $user->first_name = $tfname;
+                                $user->middle_name = $toname;
+                                $user->last_name = $tsname;
+                                $user->gender = $tgender;
+                                $user->email = $temail;
+                                $user->phone = $tphone;
+                                $user->address = $taddress;
+                                $user->username = uniqid();
+                                $user->phone_verified = 1;
+                                $user->email_verified = 1;
+                                $user->save();
+                                $user->username = $user->uid;
+                                $user->password = Hash::make(User::DEFAULT_PASSWORD);
+                                $user->save();
+                                $userId = $user->id;
 
-                                    //  Prepare to save facility details
-                                    if ($facilityId >0) {
-                                        
-                                        $fc = Facility::find($facilityId);
-                                        $fc->in_charge = $incharge;
-                                        $fc->in_charge_phone = $iphone;
-                                        $fc->in_charge_email = $iemail;
-                                        $fc->save();
-                                    }
-                                    //  Prepare to save role-user details
-                                    $roleId = Role::idByName('Participant');
-                                    $user->detachAllRoles();
-                                    DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => Program::idByTitle($tprog), "designation" => $tdes]);
-                        }
-                            
-                            //  send email and sms for registration
-/*                   
-                            if($user->date_registered)
-                            {
-                                //  send email and sms
-                                $token = app('auth.password.broker')->createToken($user);
-                                $user->token = $token;
-                                // $user->notify(new WelcomeNote($user));
-                                $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Go to rhtpt.or.ke to get started.";
-                                try 
-                                {
-                                    $smsHandler = new SmsHandler();
-                                    $smsHandler->sendMessage($user->phone, $message);
+                                //  Prepare to save facility details
+                                if ($facilityId >0) {
+                                    
+                                    $fc = Facility::find($facilityId);
+                                    $fc->in_charge = $incharge;
+                                    $fc->in_charge_phone = $iphone;
+                                    $fc->in_charge_email = $iemail;
+                                    $fc->save();
                                 }
-                                catch ( AfricasTalkingGatewayException $e )
-                                {
-                                    echo "Encountered an error while sending: ".$e->getMessage();
-                                }
-                            }                            
-*/                            
-                        // }
+                                //  Prepare to save role-user details
+                                $roleId = Role::idByName('Participant');
+                                $user->detachAllRoles();
+                                DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => Program::idByTitle($tprog), "designation" => $tdes]);
+                        }                            
                     }
                 }
             }

@@ -454,7 +454,7 @@
             </div>
         </div>
     </div>
-       <!-- Verify Evaluted Results Modal -->
+    <!-- Verify Evaluted Results Modal -->
     <div class="modal fade" id="view-evaluted-result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -647,11 +647,33 @@
                                     </div>
                                 </form>
                             </div>
-                             <div class="form-group row" v-else-if="evaluated_results.panel_status==3">                                
-				                <label class="col-sm-5 form-control-label" for="title"><b>Comments:</b></label>
-                                <div class="col-sm-7 form-control">
-                                    <p>@{{evaluated_results.pt_approved_comment}}</p>
-                                    <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                            <div v-else-if="evaluated_results.panel_status==3">
+                                <div class="row">
+                                    <label class="col-sm-5"><b>Comments:</b></label>
+                                    <div class="col-sm-7">
+                                        <p>@{{evaluated_results.pt_approved_comment}}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-5"><b>Verified By:</b></label>
+                                    <div class="col-sm-7">
+                                        <p>@{{evaluated_results.approved_by}}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-5"><b>Date Verified:</b></label>
+                                    <div class="col-sm-7">
+                                        <p>@{{evaluated_results.date_approved}}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <center>
+                                        <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">
+                                                <i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}
+                                            </span>
+                                        </button>
+                                    </center>
                                 </div>                                
                             </div>
                         </div>

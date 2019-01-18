@@ -122,15 +122,17 @@ class BulkSMSController extends Controller
             // use try-catch to filter any errors.
             try
             {
-            // Send messages
-            $results = $sms->sendMessage($recipients, $message, $from);
-            foreach($results as $result)
-            {
-                // status is either "Success" or "error message" and save.
-                $number = $result->number;
-                //  Save the results
-                DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
-            }
+              // Send messages
+              if(env('ALLOW_SENDING_SMS', true)){
+                $results = $sms->sendMessage($recipients, $message, $from);
+                foreach($results as $result)
+                {
+                    // status is either "Success" or "error message" and save.
+                    $number = $result->number;
+                    //  Save the results
+                    DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk->id]);
+                }
+              }
             }
             catch ( AfricasTalkingGatewayException $e )
             {
@@ -163,13 +165,15 @@ class BulkSMSController extends Controller
       try
       {
         // Send messages
-        $results = $sms->sendMessage($recipients, $message);
-        foreach($results as $result) {
-          // status is either "Success" or "error message" and save.
-          echo " Number: " .$result->number;
-          echo " Status: " .$result->status;
-          echo " MessageId: " .$result->messageId;
-          echo " Cost: "   .$result->cost."\n";
+        if(env('ALLOW_SENDING_SMS', true)){
+          $results = $sms->sendMessage($recipients, $message);
+          foreach($results as $result) {
+            // status is either "Success" or "error message" and save.
+            echo " Number: " .$result->number;
+            echo " Status: " .$result->status;
+            echo " MessageId: " .$result->messageId;
+            echo " Cost: "   .$result->cost."\n";
+          }
         }
       }
       catch ( AfricasTalkingGatewayException $e )
@@ -250,18 +254,20 @@ class BulkSMSController extends Controller
         try
         {
           // Send messages
-          $results = $sms->sendMessage($recipients, $message, $from);
-          foreach($results as $result)
-          {
-            // status is either "Success" or "error message" and save.
-            $number = $result->number;
-            $status = $result->status;
-            $msg_id = $result->messageId;
-            $cost = $result->cost;
-            $created_at = $now;
-            $updated_at = $now;
-            //  Save the results
-            DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $msg->id, 'msg_id' => $msg_id, 'cost' => $cost, 'date_sent' => $created, 'created_at' => $created_at, 'updated_at' => $updated_at]);
+          if(env('ALLOW_SENDING_SMS', true)){
+            $results = $sms->sendMessage($recipients, $message, $from);
+            foreach($results as $result)
+            {
+              // status is either "Success" or "error message" and save.
+              $number = $result->number;
+              $status = $result->status;
+              $msg_id = $result->messageId;
+              $cost = $result->cost;
+              $created_at = $now;
+              $updated_at = $now;
+              //  Save the results
+              DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $msg->id, 'msg_id' => $msg_id, 'cost' => $cost, 'date_sent' => $created, 'created_at' => $created_at, 'updated_at' => $updated_at]);
+            }
           }
         }
         catch ( AfricasTalkingGatewayException $e )
