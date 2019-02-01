@@ -323,13 +323,19 @@ new Vue({
         //compare the updated results and old results 
         open_old_results: function(id){
 
-            $("#view-evaluted-result").modal('hide');  
 
             this.$http.get('/show_updated_evaluated_results/'+id).then((response) => {
-                this.updated_evaluated_results = response.data;
+                if(response.data.response){
+
+                    toastr.error(response.data.response, 'Failure Alert', {timeOut: 7000});
+                }else{
+                    
+                    this.updated_evaluated_results = response.data;
+                    
+                    $("#view-evaluted-result").modal('hide');  
+                    $("#compare-evaluted-result").modal('show'); 
+                }
             });
-            $("#compare-evaluted-result").modal('show'); 
-            this.set_difference_in_results();
         },
             
         printFeedback:function(id){

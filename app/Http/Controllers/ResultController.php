@@ -946,6 +946,8 @@ class ResultController extends Controller
         
         //save updated pt details
 
+        $pt->incorrect_results = $pt->incomplete_kit_data = $pt->dev_from_procedure = $pt->incomplete_other_information = $pt->use_of_expired_kits = $pt->invalid_results = $pt->wrong_algorithm = $request->wrong_algorithm = $pt->incomplete_results = $request->incomplete_results = $pt->feedback = 0;
+
         if (isset($request->incorrect_results)) {
             $pt->incorrect_results = $request->incorrect_results;
         }
@@ -978,7 +980,7 @@ class ResultController extends Controller
             $pt->incomplete_results = $request->incomplete_results;
         }
 
-        if (isset($request->feedback)) {
+        if ($request->feedback == 1) {
             $pt->feedback = $request->feedback;
         }
         
@@ -1023,14 +1025,16 @@ class ResultController extends Controller
         $current_evaluated = $this->evaluated_results($id);
         $old = EvaluatedResult::select('evaluated_results.*')->where('pt_id', $id)->orderBy('id', 'DESC')->first();
 
-        $old_results = json_decode($old->results, true);
-        $old_results['reason_for_change'] = $old->reason_for_change;
-        $old_results['editing_user_name'] = User::find($old->user_id)->name;
-        $old_results['editing_updated_at'] = date($old->updated_at);
+        if(isset($old) && count($old->get()) > 0){
+            $old_results = json_decode($old->results, true);
+            $old_results['reason_for_change'] = $old->reason_for_change;
+            $old_results['editing_user_name'] = User::find($old->user_id)->name;
+            $old_results['editing_updated_at'] = date($old->updated_at);
+        }else{
+            $old_results['response'] = "No previous results found!";
+        }
 
         return response()->json($old_results);
-
-
     }
 
     /**
