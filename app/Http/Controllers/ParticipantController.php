@@ -270,7 +270,6 @@ class ParticipantController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
         $this->validate($request, [
             'first_name' => 'required',
             'last_name' => 'required',
@@ -309,6 +308,8 @@ class ParticipantController extends Controller
             }
             $ru = DB::table('role_user')->insert(["user_id" => $create->id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id]);
         }
+        \Log::info("New user created by: USER ID: ".Auth::user()->id);
+        \Log::info($create);
         return response()->json($create);
     }
 
@@ -321,8 +322,11 @@ class ParticipantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //dd($request->all());
         $user = User::find($id);
+        \Log::info("User updated by: USER ID: ".Auth::user()->id);
+        \Log::info("Previous details: ");
+        \Log::info($user);
+
         $user->first_name = $request->first_name;
         $user->middle_name = $request->middle_name;
         $user->last_name = $request->last_name;
@@ -330,6 +334,7 @@ class ParticipantController extends Controller
         $user->phone = $request->phone;
         $user->email = $request->email;
         $user->gender = $request->gender;
+
         try{
             $user->save();
             $role = $request->role;
@@ -338,6 +343,8 @@ class ParticipantController extends Controller
             $designation = $request->designation;
             DB::table('role_user')->where('user_id', $id)->where('role_id', $role)->delete();
             $ru = DB::table('role_user')->insert(["user_id" => $id, "role_id" => $role, "tier" => $tier, "program_id" => $program_id, "designation" => $designation]);
+            \Log::info("New details: ");
+            \Log::info($request);
         }
         catch(Exception $e)
         {
@@ -367,6 +374,7 @@ class ParticipantController extends Controller
             echo "Encountered an error while sending: ".$e->getMessage();
         }
         $user->delete();
+        \Log::info("User (USER ID: $id) deleted by: USER ID: ".Auth::user()->id);
         return response()->json(['done']);
     }
 
@@ -380,6 +388,7 @@ class ParticipantController extends Controller
     {
         $user = User::withTrashed()->where('id', $id)->restore();
         $user = User::find($id);
+        \Log::info("User (USER ID: $id) restored by: USER ID: ".Auth::user()->id);
         $message    = "Dear ".$user->name.", NPHL has enabled your account. Once enrolled, you’ll receive a tester ID";
         try 
         {
@@ -456,7 +465,10 @@ class ParticipantController extends Controller
             'facility_id' => 'required',
             'program_id' => 'required',
         ]);
+        \Log::info("User (USER ID: $id) transfered by: USER ID: ".Auth::user()->id);
+        \Log::info("From: ");
         $tier = Tier::where('user_id', $id)->first();
+        \Log::info($tier);
         $prog = NULL;
         $fac = NULL;
         if($request->facility_id)
@@ -470,6 +482,8 @@ class ParticipantController extends Controller
             $tier->program_id = $prog;
         }
         $response = $tier->save();
+        \Log::info("To:");
+        \Log::info($request);
 
         return response()->json($response);
     }    
@@ -493,7 +507,6 @@ class ParticipantController extends Controller
         {
             foreach($usrs as $user)
             {
-                //dd($user->ru());
                 $user->facility = Facility::find($user->ru()->tier)->name;
                 $user->program = Program::find($user->ru()->program_id)->name;
             }
@@ -523,7 +536,7 @@ class ParticipantController extends Controller
         $error = ['error' => 'No results found, please try with different keywords.'];
         $ids = Round::find($id)->enrolments->pluck('user_id')->toArray();
         $usrs = User::whereIn('id', $ids)->latest()->paginate(5);
-        //dd($usrs);
+
         if(count($usrs)>0)
         {
             foreach($usrs as $enrol)
@@ -616,17 +629,21 @@ class ParticipantController extends Controller
         }
         //  Prepare to save facility details
         $facilityId = Facility::idByCode($request->mfl_code);
+
         if(!$facilityId)
             $facilityId = Facility::idByName($request->facility);
+
         if($facilityId)
             $facility = Facility::find($facilityId);
         else
             $facility = new Facility;
+
         $facility->code = $request->mfl_code;
         $facility->name = $request->facility;
         $facility->in_charge = $request->in_charge;
         $facility->in_charge_phone = $request->in_charge_phone;
         $facility->in_charge_email = $request->in_charge_email;
+
         //  Get sub-county
         $sub_county = SubCounty::idByName($request->sub_county);
         if(!$sub_county)
@@ -637,9 +654,11 @@ class ParticipantController extends Controller
             $sb->save();
             $sub_county = $sb->id;
         }
+
         $facility->sub_county_id = $sub_county;
         $facility->save();
         $facilityId = $facility->id;
+
         //  Prepare to save role-user details
         $roleId = Role::idByName('Participant');
         DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => $request->program]);
@@ -657,6 +676,7 @@ class ParticipantController extends Controller
         {
             echo "Encountered an error while sending: ".$e->getMessage();
         }
+
         //  Do Email verification for email address
         $user->email_verification_code = Str::random(60);
         $user->save();
@@ -682,7 +702,7 @@ class ParticipantController extends Controller
         if(!is_dir(public_path().$folder))
             File::makeDirectory(public_path().$folder, 0777, true);
         file_put_contents(public_path().$folder.$fileName, $decoded);
-        // dd();
+
         //  Handle the import
         //  Get the results
         //  Import a user provided file
@@ -727,17 +747,10 @@ class ParticipantController extends Controller
                     $facility_id = Facility::idByName(trim($tfacility));
                     $program_id = Program::idByTitle(trim($tprogram));
                     $role_id = Role::idByName('Participant');
-                    //  Prepare to save participant details
-                    //$tester_id = User::idByName($tname);
-                    /*if(!$tester_id)
-                        $tester_id = User::idByEmail($temail);*/
-                    // if(!$tester_id)
-                    // {
+
                     $tester = new User;
                     $tester->password = Hash::make(User::DEFAULT_PASSWORD);
-                    /*}
-                    else
-                        $tester = User::find($tester_id);*/
+
                     $tester->name = $tname;
                     $tester->gender = User::MALE;
                     $tester->email = $temail;
@@ -755,178 +768,7 @@ class ParticipantController extends Controller
             }
         }
     }
-    /**
-     * Batch registration
-     *
-     */
-    /*public function batchRegistration(Request $request)
-    {
-        $exploded = explode(',', $request->excel);
-        $decoded = base64_decode($exploded[1]);
-        if(str_contains($exploded[0], 'sheet'))
-            $extension = 'xlsx';
-        else
-            $extension = 'xls';
-        $fileName = uniqid().'.'.$extension;
-        $county = 0;
-        if(Auth::user()->isCountyCoordinator())
-        {
-            $county = County::find(Auth::user()->ru()->tier)->name;
-            $folder = '/batch/registration/'.$county.'/';
-        }
-        else
-            $folder = '/batch/registration/nphls/';
-        if(!is_dir(public_path().$folder))
-            File::makeDirectory(public_path().$folder, 0777, true);
-        file_put_contents(public_path().$folder.$fileName, $decoded);
-        // dd();
-        //  Handle the import
-        //  Get the results
-        //  Import a user provided file
-        //  Convert file to csv
-        if(Auth::user()->isCountyCoordinator())
-            $data = Excel::load('public/batch/registration/'.$county.'/'.$fileName, function($reader) {$reader->ignoreEmpty();})->get();
-        else
-            $data = Excel::load('public/batch/registration/nphls/'.$fileName, function($reader) {$reader->ignoreEmpty();})->get();
-        if(!empty($data) && $data->count())
-        {
 
-            foreach ($data->toArray() as $key => $value) 
-            {
-                foreach($value as $harvey => $specter)
-                {
-                    if(!empty($specter))
-                    {
-                        $county = NULL;
-                        $sub_county = NULL;
-                        $facility = NULL;
-                        $mfl = NULL;
-                        $tfname = NULL;
-                        $tsname = NULL;
-                        $toname = NULL;
-                        $tgender = NULL;
-                        $tphone = NULL;
-                        $temail = NULL;
-                        $taddress = NULL;
-                        $tdes = NULL;
-                        $tprog = NULL;
-                        $incharge = NULL;
-                        $iphone = NULL;
-                        $iemail = NULL;
-                        foreach ($specter as $mike => $ross) 
-                        {
-                            if(strcmp($mike, "county") === 0)
-                                $county = $ross;
-                            if(strcmp($mike, "sub_county") === 0)
-                                $sub_county = $ross;
-                            if(strcmp($mike, "facility") === 0)
-                                $facility = $ross;
-                            if(strcmp($mike, "mfl_code") === 0)
-                                $mfl = $ross;
-                            if(strcmp($mike, "tester_first_name") === 0)
-                                $tfname = $ross;
-                            if(strcmp($mike, "tester_surname") === 0)
-                                $tsname = $ross;
-                            if(strcmp($mike, "tester_other_name") === 0)
-                                $toname = $ross;
-                            if(strcmp($mike, "gender") === 0)
-                                $tgender = $ross;
-                            if(strcmp($mike, "tester_mobile_number") === 0)
-                                $tphone = $ross;
-                            if(strcmp($mike, "tester_email") === 0)
-                                $temail = $ross;
-                            if(strcmp($mike, "tester_address") === 0)
-                                $taddress = $ross;
-                            if(strcmp($mike, "designation") === 0)
-                                $tdes = $ross;
-                            if(strcmp($mike, "program") === 0)
-                                $tprog = $ross;
-                            if(strcmp($mike, "in_charge") === 0)
-                                $incharge = $ross;
-                            if(strcmp($mike, "in_charge_email") === 0)
-                                $iemail = $ross;
-                            if(strcmp($mike, "in_charge_phone") === 0)
-                                $iphone = $ross;
-                        }
-                        //  clean phone
-                        if(!empty($tphone))
-                        {
-                            $tphone = ltrim($tphone, '0');
-                            $tphone = "+254".$tphone;
-                            $tphone = trim($tphone);
-                        }
-                        //  process gender
-                        if(strcmp($tgender, "Male") === 0)
-                            $tgender = User::MALE;
-                        else
-                            $tgender = User::FEMALE;
-                        //  process designation
-                        if(strcmp($tdes, "Nurse") === 0)
-                            $tdes = User::NURSE;
-                        else if(strcmp($tdes, "Lab Tech.") === 0)
-                            $tdes = User::LABTECH;
-                        else if(strcmp($tdes, "Counsellor") === 0)
-                            $tdes = User::COUNSELLOR;
-                        else if(strcmp($tdes, "RCO") === 0)
-                            $tdes = User::RCO;
-
-                        //  process user details only if the name exists
-                        if($tfname)
-                        {
-                            $userId = User::idByName($tsname." ".$tfname." ".$toname);
-                            if(!$userId)
-                                $userId = User::idByEmail($temail);
-                            if(!$userId)
-                            {
-                                $user = new User;
-                                $user->name = $tsname." ".$tfname." ".$toname;
-                                $user->gender = $tgender;
-                                $user->email = $temail;
-                                $user->phone = $tphone;
-                                $user->address = $taddress;
-                                $user->username = uniqid();
-                                $user->save();
-                                $user->username = $user->id;
-                                $user->password = User::DEFAULT_PASSWORD;
-                                $user->save();
-                                $userId = $user->id;
-                            }
-                            //  Prepare to save facility details
-                            $facilityId = Facility::idByCode($mfl);
-                            if(!$facilityId)
-                                $facilityId = Facility::idByName(trim($facility));
-                            if($facilityId)
-                                $fc = Facility::find($facilityId);
-                            else
-                                $fc = new Facility;
-                            $fc->code = $mfl;
-                            $fc->name = $facility;
-                            $fc->in_charge = $incharge;
-                            $fc->in_charge_phone = $iphone;
-                            $fc->in_charge_email = $iemail;
-                            //  Get sub-county
-                            $sub_county_id = SubCounty::idByName($sub_county);
-                            if(!$sub_county_id)
-                            {
-                                $sb = new SubCounty;
-                                $sb->name = $sub_county;
-                                $sb->county_id = County::idByName($county);
-                                $sb->save();
-                                $sub_county_id = $sb->id;
-                            }
-                            $fc->sub_county_id = $sub_county_id;
-                            $fc->save();
-                            $facilityId = $fc->id;
-                            //  Prepare to save role-user details
-                            $roleId = Role::idByName('Participant');
-                            DB::table('role_user')->insert(['user_id' => $userId, 'role_id' => $roleId, 'tier' => $facilityId, 'program_id' => Program::idByTitle($tprog), "designation" => $tdes]);
-                            //  send email and sms for registration
-                        }
-                    }
-                }
-            }
-        }
-    }*/
     /**
      * Check for user phone verification code
      *
@@ -985,7 +827,7 @@ class ParticipantController extends Controller
     public function approve($id)
     {
         $user = User::withTrashed()->where('id', $id)->first();
-    	$max = DB::table('users')->max('uid');
+        $max = DB::table('users')->max('uid');
         $m = $max+1;
         if ($user->uid==null ||$user->uid==''){
             $user->uid = $m; //pick sequential unique ids
@@ -995,6 +837,7 @@ class ParticipantController extends Controller
         $user->deleted_at = null;
         $user->status = '';
         $user->save();
+        \Log::info("User (USER ID: $id) enabled by: USER ID: ".Auth::user()->id);
 
         //send mail
         $token = app('auth.password.broker')->createToken($user);
@@ -1031,6 +874,7 @@ class ParticipantController extends Controller
         $user->status_date = $now;
         $user->save();
         $user->delete();
+        \Log::info("User (USER ID $id) deleted by: USER ID: ".Auth::user()->id);
         
         $message = "Dear ".$user->name.", NPHL has rejected your request to participate in PT because ".$request->reason;
         return response()->json($message);
@@ -1213,8 +1057,9 @@ class ParticipantController extends Controller
         $PARTICIPANT_ROLE_ID = Role::idByName('Participant');
         $role = Auth::user()->ru()->role_id;
         $tier = Auth::user()->ru()->tier;
-	$round = 1;
-	if(strcmp($request->round, '') != 0) $round = $request->round;
+
+        $round = 1;
+        if(strcmp($request->round, '') != 0) $round = $request->round;
         
         $data = DB::table('users')
                     ->join('role_user', function($join) use ($PARTICIPANT_ROLE_ID){

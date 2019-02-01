@@ -402,24 +402,24 @@ EntrustUserTrait::restore insteadof SoftDeletes;
                       return $user->id;
                     }
                     else{
-                      return null;
+                      return false;
                     }                  
                 }
                 else
                 {
-                    return null;
+                    return false;
                 }
             } 
             catch (ModelNotFoundException $e) 
             {
                 Log::error("The user with phone ` $phone ` does not exist:  ". $e->getMessage());
                 //TODO: send email?
-                return null;
+                return false;
             }
         }
         else
         {
-            return null;
+            return false;
         }
     }
     /**
