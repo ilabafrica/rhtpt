@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 use DB;
 use Hash;
@@ -44,6 +46,14 @@ class Algorithm extends Command
     protected $description = 'Command description';
 
     /**
+     * Log instance
+     *
+     * @var Monolog\Logger
+     */
+
+    protected $log;
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -51,6 +61,9 @@ class Algorithm extends Command
     public function __construct()
     {
         parent::__construct();
+
+        $this->log = new Logger('Algorithm');
+        $this->log->pushHandler(new StreamHandler('storage/logs/algorithm.log', Logger::INFO));
     }
 
     /**
@@ -81,7 +94,7 @@ class Algorithm extends Command
             $pts = Pt::where('panel_status', Pt::CHECKED)->get();
             $this->runAlgorithm($pts);
         }
-        $this->info('Scheduled:Cron Command Run successfully!');
+        $this->info("Command run successfully! $counter records evaluated. See storage/logs/algorithm.log for details");
     }
     /**
     * Function to move data from pt-dump to pt table
@@ -353,7 +366,7 @@ class Algorithm extends Command
     }
 
     public function is_a_date($str){ 
-	if (strpos($str, '/') !== false){
+        if (strpos($str, '/') !== false){
             $str = str_replace('/', '-', $str);
         }
         $stamp = strtotime($str);
@@ -367,11 +380,11 @@ class Algorithm extends Command
     }
     public function dates($date){
         $value = '';        
-        print($date);
-	if($this->is_a_date($date) ==true){
+
+        if($this->is_a_date($date) ==true){
             if (strpos($date, '/') !== false)
             {
-	      	if ($date == date('d/m/Y',strtotime(str_replace('/', '-', $date))) ) {
+            if ($date == date('d/m/Y',strtotime(str_replace('/', '-', $date))) ) {
                    
                     $value = Carbon::createFromFormat ('d/m/Y', $date)->toDateString();
                 }            
@@ -555,6 +568,7 @@ class Algorithm extends Command
         $bioline = Option::idByTitle('SDBioline');
         $positive = Option::idByTitle('Positive');
         $negative = Option::idByTitle('Negative');
+        $inconclusive = Option::idByTitle('Inconclusive');
 
         // For each panel:
         // If test 1 is "non reactive", test 2 should be "not done" and the final result should be "non reactive"
@@ -562,44 +576,43 @@ class Algorithm extends Command
         // Kit 1 should be "determine" or "bioline" and kit 2 should be "first response"
 
         if (!(($panel1Test1 == $nonReactive && $panel1Test2 == $notDone && $panel1Final == $negative) ||
-                    ($panel1Test1 == $reactive && $panel1Test2 != $notDone && $panel1Final != $notDone))) {
+                ($panel1Test1 == $reactive && $panel1Test2 == $reactive && $panel1Final == $positive) ||
+                ($panel1Test1 == $reactive && $panel1Test2 == $nonReactive && $panel1Final == $inconclusive))) {
             $wrongAlgorithm[] = 1;
-            \Log::info("Panel 1 fail");
         }
 
         if (!(($panel2Test1 == $nonReactive && $panel2Test2 == $notDone && $panel2Final == $negative) ||
-                    ($panel2Test1 == $reactive && $panel2Test2 != $notDone && $panel2Final != $notDone))) {
+                ($panel2Test1 == $reactive && $panel2Test2 == $reactive && $panel2Final == $positive) ||
+                ($panel2Test1 == $reactive && $panel2Test2 == $nonReactive && $panel2Final == $inconclusive))) {
             $wrongAlgorithm[] = 1;
-            \Log::info("Panel 2 fail");
         }
 
         if (!(($panel3Test1 == $nonReactive && $panel3Test2 == $notDone && $panel3Final == $negative) ||
-                    ($panel3Test1 == $reactive && $panel3Test2 != $notDone && $panel3Final != $notDone))) {
+                ($panel3Test1 == $reactive && $panel3Test2 == $reactive && $panel3Final == $positive) ||
+                ($panel3Test1 == $reactive && $panel3Test2 == $nonReactive && $panel3Final == $inconclusive))) {
             $wrongAlgorithm[] = 1;
-            \Log::info("Panel 3 fail");
         }
 
         if (!(($panel4Test1 == $nonReactive && $panel4Test2 == $notDone && $panel4Final == $negative) ||
-                    ($panel4Test1 == $reactive && $panel4Test2 != $notDone && $panel4Final != $notDone))) {
+                ($panel4Test1 == $reactive && $panel4Test2 == $reactive && $panel4Final == $positive) ||
+                ($panel4Test1 == $reactive && $panel4Test2 == $nonReactive && $panel4Final == $inconclusive))) {
             $wrongAlgorithm[] = 1;
-            \Log::info("Panel 4 fail");
         }
 
         if (!(($panel5Test1 == $nonReactive && $panel5Test2 == $notDone && $panel5Final == $negative) ||
-                    ($panel5Test1 == $reactive && $panel5Test2 != $notDone && $panel5Final != $notDone))) {
+                ($panel5Test1 == $reactive && $panel5Test2 == $reactive && $panel5Final == $positive) ||
+                ($panel5Test1 == $reactive && $panel5Test2 == $nonReactive && $panel5Final == $inconclusive))) {
             $wrongAlgorithm[] = 1;
-            \Log::info("Panel 5 fail");
         }
 
         if (!(($panel6Test1 == $nonReactive && $panel6Test2 == $notDone && $panel6Final == $negative) ||
-                    ($panel6Test1 == $reactive && $panel6Test2 != $notDone && $panel6Final != $notDone))) {
+                ($panel6Test1 == $reactive && $panel6Test2 == $reactive && $panel6Final == $positive) ||
+                ($panel6Test1 == $reactive && $panel6Test2 == $nonReactive && $panel6Final == $inconclusive))) {
             $wrongAlgorithm[] = 1;
-            \Log::info("Panel 6 fail");
         }
 
         if (!(($kit1 == $determine || $kit1 == $bioline) && $kit2 == $firstResponse)) {
             $wrongAlgorithm[] = 1;
-            \Log::info("Kits failure");
         }
 
         if(array_sum($wrongAlgorithm) > 0) return 1; //TRUE
@@ -629,19 +642,19 @@ class Algorithm extends Command
             $round = $pt->enrolment->round_id;
             $user = $pt->enrolment->user;
             
-    	    if ($user){
-        	    if($pt->enrolment->user->registration)
+            if ($user){
+                if($pt->enrolment->user->registration)
                     $user = User::where('uid', $user->registration->uid)->first();
 
                 $lot = $user->lot($round);
-        	    $res_1 = $lot->panels()->where('panel', 1)->first();
+                $res_1 = $lot->panels()->where('panel', 1)->first();
                 $res_2 = $lot->panels()->where('panel', 2)->first();
                 $res_3 = $lot->panels()->where('panel', 3)->first();
                 $res_4 = $lot->panels()->where('panel', 4)->first();
                 $res_5 = $lot->panels()->where('panel', 5)->first();
                 $res_6 = $lot->panels()->where('panel', 6)->first();
-    	    
-        	    $expectedResult1ID = Option::idByTitle($res_1->result($res_1->result));
+            
+                $expectedResult1ID = Option::idByTitle($res_1->result($res_1->result));
                 $expectedResult2ID = Option::idByTitle($res_2->result($res_2->result));
                 $expectedResult3ID = Option::idByTitle($res_3->result($res_3->result));
                 $expectedResult4ID = Option::idByTitle($res_4->result($res_4->result));
@@ -793,7 +806,10 @@ class Algorithm extends Command
                 $pt->feedback = $overall;
                 $pt->panel_status = Pt::EVALUATED;
                 $pt->save();
-        	}
+
+                print(".");
+                $this->log->info("PT ID: {$pt->id} => DFP: {$pt->dev_from_procedure} IOI:{$pt->incomplete_other_information} IKD: {$pt->incomplete_kit_data} UEK: {$pt->use_of_expired_kits} IR: {$pt->incomplete_results} WR: {$pt->incorrect_results} PR: {$pt->panel_result} INV: {$pt->invalid_results} WA: {$pt->wrong_algorithm} F: {$pt->feedback}");
+            }
         }
         return response()->json('Done.');
     }
