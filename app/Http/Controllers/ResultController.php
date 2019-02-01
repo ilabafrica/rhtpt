@@ -400,7 +400,6 @@ class ResultController extends Controller
      */
     public function destroy($id)
     {
-        Shipment::find($id)->delete();
         return response()->json(['done']);
     }
 
@@ -412,7 +411,6 @@ class ResultController extends Controller
      */
     public function restore($id) 
     {
-        $shipment = Shipment::withTrashed()->find($id)->restore();
         return response()->json(['done']);
     }
 

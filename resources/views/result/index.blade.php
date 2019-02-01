@@ -179,7 +179,7 @@
                 <button  v-if="result.panel_status==0" class="btn btn-sm btn-primary" @click.prevent="editResult(result)" ><i class="fa fa-edit"></i> Edit</button>
             @endpermission
             @permission('delete-result')
-                <button class="btn btn-sm btn-danger" @click.prevent="deleteResult(result)"><i class="fa fa-power-off"></i> Disable</button>
+                <button class="btn btn-sm btn-danger" style="display: none;" @click.prevent="deleteResult(result)"><i class="fa fa-power-off"></i> Disable</button>
             @endpermission 
 
             @permission('verify-result')
