@@ -148,7 +148,7 @@ class ResultController extends Controller
                 }                
             }
 
-	        $result->user_role = Auth::user()->ru()->role_id;
+            $result->user_role = Auth::user()->ru()->role_id;
         }
 
         $response = [
@@ -180,7 +180,7 @@ class ResultController extends Controller
             return response()->json(['1']);            
         } else
         {   
-            //	Save pt first then proceed to save form fields
+            //  Save pt first then proceed to save form fields
             $round_id = $request->get('round_id');
             $enrolment = Enrol::where('user_id', Auth::user()->id)->where('round_id', $round_id)->first();
             
@@ -198,7 +198,7 @@ class ResultController extends Controller
                 $enrolment->status = Enrol::DONE;        
                 $enrolment->save();     
                
-                //	Proceed to form-fields
+                //  Proceed to form-fields
                 // get all fields and insert into results
                 $fields = Field::all();
                 $response = '';
@@ -436,16 +436,16 @@ class ResultController extends Controller
         return response()->json($create);
     }
     /**
-  	 * Remove the specified begining of text to get Id alone.
-  	 *
-  	 * @param  int  $id
-  	 * @return Response
-  	 */
-  	public function strip($field)
-  	{
-    		if(($pos = strpos($field, '_')) !== FALSE)
-    		return substr($field, $pos+1);
-  	}
+     * Remove the specified begining of text to get Id alone.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function strip($field)
+    {
+            if(($pos = strpos($field, '_')) !== FALSE)
+            return substr($field, $pos+1);
+    }
     /**
      * Replace strings between two characters.
      *
@@ -925,61 +925,63 @@ class ResultController extends Controller
 
         DB::table('role_user')->where('user_id', $request->participant_id)->update(['tier' => $request->facility_id, 'program_id' => $request->program_id]);
         
-        //save pt details
-
         $pt = Pt::find($id);
-        if ($request->incorrect_results) {
+
+        \Log::info("Update Evaluated Results: PTID - $id");
+        \Log::info("From:");
+        \Log::info($pt);
+        \Log::info("To:");
+        \Log::info($request);
+
+        //save previous data
+
+        $evaluated = $this->evaluated_results($pt->id);
+        $user_id = Auth::user()->id;
+
+        $old_details = new EvaluatedResult; 
+        $old_details->pt_id = $pt->id; 
+        $old_details->participant_id = $evaluated['participant_id'];         
+        $old_details->user_id = $user_id;         
+        $old_details->reason_for_change = $request->reason_for_change;         
+        $old_details->results = json_encode($evaluated); 
+        $old_details->save();
+        
+        //save updated pt details
+
+        if (isset($request->incorrect_results)) {
             $pt->incorrect_results = $request->incorrect_results;
-        }else{
-            $pt->incorrect_results = 0;
         }
 
-        if ($request->incomplete_kit_data) {
+        if (isset($request->incomplete_kit_data)) {
             $pt->incomplete_kit_data = $request->incomplete_kit_data;
-        }else{
-            $pt->incomplete_kit_data = 0;
         }
 
-        if ($request->dev_from_procedure) {
+        if (isset($request->dev_from_procedure)) {
             $pt->dev_from_procedure = $request->dev_from_procedure;
-        }else{
-            $pt->dev_from_procedure = 0;
         }
 
-        if ($request->incomplete_other_information) {
+        if (isset($request->incomplete_other_information)) {
             $pt->incomplete_other_information = $request->incomplete_other_information;
-        }else{
-            $pt->incomplete_other_information = 0;
         }
 
-        if ($request->use_of_expired_kits) {
+        if (isset($request->use_of_expired_kits)) {
             $pt->use_of_expired_kits = $request->use_of_expired_kits;
-        }else{
-
-            $pt->use_of_expired_kits = 0;
         }
-        if ($request->invalid_results) {
+
+        if (isset($request->invalid_results)) {
             $pt->invalid_results = $request->invalid_results;
-        }else{
-            $pt->invalid_results = 0;
         }
 
-        if ($request->wrong_algorithm) {
+        if (isset($request->wrong_algorithm)) {
             $pt->wrong_algorithm = $request->wrong_algorithm;
-        }else{
-            $pt->wrong_algorithm = 0;
         }
 
-        if ($request->incomplete_results) {
+        if (isset($request->incomplete_results)) {
             $pt->incomplete_results = $request->incomplete_results;
-        }else{
-            $pt->incomplete_results =0;
         }
 
-        if ($request->feedback==1) {        //cannot check if value is 0.    
+        if (isset($request->feedback)) {
             $pt->feedback = $request->feedback;
-        }else{
-            $pt->feedback = 0; 
         }
         
         $pt->save();
@@ -1008,19 +1010,6 @@ class ResultController extends Controller
             }            
         }
 
-        //save previous data
-
-        $evaluated = $this->evaluated_results($pt->id);
-        $user_id = Auth::user()->id;
-
-        $old_details = new EvaluatedResult; 
-        $old_details->pt_id = $pt->id; 
-        $old_details->participant_id = $evaluated['participant_id'];         
-        $old_details->user_id = $user_id;         
-        $old_details->reason_for_change = $request->reason_for_change;         
-        $old_details->results = json_encode($evaluated); 
-        $old_details->save();
-        
         
         return response()->json($result);
     }
