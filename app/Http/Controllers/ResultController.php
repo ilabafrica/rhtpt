@@ -946,7 +946,7 @@ class ResultController extends Controller
         
         //save updated pt details
 
-        $pt->incorrect_results = $pt->incomplete_kit_data = $pt->dev_from_procedure = $pt->incomplete_other_information = $pt->use_of_expired_kits = $pt->invalid_results = $pt->wrong_algorithm = $request->wrong_algorithm = $pt->incomplete_results = $request->incomplete_results = $pt->feedback = 0;
+        $pt->incorrect_results = $pt->incomplete_kit_data = $pt->dev_from_procedure = $pt->incomplete_other_information = $pt->use_of_expired_kits = $pt->invalid_results = $pt->wrong_algorithm = $pt->incomplete_results = $pt->feedback = 0;
 
         if (isset($request->incorrect_results)) {
             $pt->incorrect_results = $request->incorrect_results;
