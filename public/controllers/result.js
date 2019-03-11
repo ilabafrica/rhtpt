@@ -311,6 +311,39 @@ new Vue({
             });                                       
         },
 
+        show_ammend_evaluated_results: function(){
+
+            $("#view-evaluted-result").modal('hide');
+
+            this.loadCounties();
+            this.loadPrograms();
+
+            //prompt user to add the reason for change before editing
+            
+            swal({
+              title: "Specify the reason for the ammendment",
+              text: "",
+              type: "input",
+              showCancelButton: false,
+              confirmButtonText: "Set",
+              confirmButtonColor: "#025aa5",
+              closeOnConfirm: true,
+              animation: "slide-from-top",
+              inputPlaceholder: "Ammendment reason"
+            },
+            function(inputValue){
+                if (inputValue === false) return false;
+
+                if (inputValue === "") {
+                    swal.showInputError("You must specify why you wish to ammend the report!");
+                    return false
+                }
+
+                $("#reason_for_ammendment").val(inputValue);
+                $("#ammend-test-report").modal('show'); 
+            });                                       
+        },
+
         update_evaluated_results: function(id){
             let myForm = document.getElementById('update_evaluated_results');
             let formData = new FormData(myForm);
@@ -318,6 +351,16 @@ new Vue({
                 this.changePage(this.pagination.current_page);
                 $("#update-evaluated-result").modal('hide');
                 toastr.success('Result Changed Successfully.', 'Success Alert', {timeOut: 5000});
+            });
+        },
+
+        ammendTestReport: function(id){
+            let myForm = document.getElementById('ammend_test_report');
+            let formData = new FormData(myForm);
+            this.$http.post('/ammend_test_report/'+id, formData).then((response) => {
+                this.changePage(this.pagination.current_page);
+                $("#ammend-test-report").modal('hide');
+                toastr.success('Report Ammended Successfully.', 'Success Alert', {timeOut: 5000});
             });
         },
         //compare the updated results and old results 
@@ -770,6 +813,14 @@ new Vue({
             if (dateValue.length == 10) {
                 $("input[name="+elementName+"]").val(dateValue);
             }
+        },
+        getProgram: function(value){
+            for (var i = this.programs.length - 1; i >= 0; i--) {
+                if(this.programs[i].id == value)
+                    return this.programs[i].value;
+            }
+
+            return '';
         },
     },
 });

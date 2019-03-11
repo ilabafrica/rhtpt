@@ -912,3 +912,8 @@ Just For Demo / Showcase
 
 .showcase-icons > div:hover i{
 	font-size:26px;}
+
+.dialog-form-label {
+	display: inline-block;
+	font-weight: bold;
+}

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\AmmendedPT;
 use App\Pt;
 use App\Result;
 use App\Expected;
@@ -1012,6 +1013,81 @@ class ResultController extends Controller
 
         
         return response()->json($result);
+    }
+        
+     /**
+     * Ammend Test Report
+     *
+     * @param ID of the selected pt -  $id
+     */
+    public function ammendTestReport(Request $request, $id )
+    {
+
+        $pt = Pt::find($id);
+
+        \Log::info("Ammending PT Report: PTID - $id");
+        \Log::info("From:");
+        \Log::info($pt);
+        \Log::info("To:");
+        \Log::info($request);
+
+        //save updated pt details
+
+        $pt->incorrect_results = $pt->incomplete_kit_data = $pt->dev_from_procedure = $pt->incomplete_other_information = $pt->use_of_expired_kits = $pt->invalid_results = $pt->wrong_algorithm = $pt->incomplete_results = $pt->feedback = 0;
+
+        if (isset($request->incorrect_results)) {
+            $pt->incorrect_results = $request->incorrect_results;
+        }
+
+        if (isset($request->incomplete_kit_data)) {
+            $pt->incomplete_kit_data = $request->incomplete_kit_data;
+        }
+
+        if (isset($request->dev_from_procedure)) {
+            $pt->dev_from_procedure = $request->dev_from_procedure;
+        }
+
+        if (isset($request->incomplete_other_information)) {
+            $pt->incomplete_other_information = $request->incomplete_other_information;
+        }
+
+        if (isset($request->use_of_expired_kits)) {
+            $pt->use_of_expired_kits = $request->use_of_expired_kits;
+        }
+
+        if (isset($request->invalid_results)) {
+            $pt->invalid_results = $request->invalid_results;
+        }
+
+        if (isset($request->wrong_algorithm)) {
+            $pt->wrong_algorithm = $request->wrong_algorithm;
+        }
+
+        if (isset($request->incomplete_results)) {
+            $pt->incomplete_results = $request->incomplete_results;
+        }
+
+        if ($request->feedback == 1) {
+            $pt->feedback = $request->feedback;
+        }
+
+        $ammendPTReport = new AmmendedPT;
+        $ammendPTReport->pt_id = $pt->id;
+        $ammendPTReport->feedback = $pt->feedback;
+        $ammendPTReport->incorrect_results = $pt->incorrect_results;
+        $ammendPTReport->incomplete_kit_data = $pt->incomplete_kit_data;
+        $ammendPTReport->dev_from_procedure = $pt->dev_from_procedure;
+        $ammendPTReport->incomplete_other_information = $pt->incomplete_other_information;
+        $ammendPTReport->use_of_expired_kits = $pt->use_of_expired_kits;
+        $ammendPTReport->invalid_results = $pt->invalid_results;
+        $ammendPTReport->wrong_algorithm = $pt->wrong_algorithm;
+        $ammendPTReport->incomplete_results = $pt->incomplete_results;
+        $ammendPTReport->reason_for_ammendment = $request->reason_for_ammendment;
+        $ammendPTReport->ammended_by = Auth::user()->id;
+
+        $ammendPTReport->save();
+        
+        return response()->json($ammendPTReport);
     }
         
     /**

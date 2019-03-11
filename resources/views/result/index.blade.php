@@ -638,9 +638,10 @@
                                             </div>
                                         </div>
                                         <div class="form-group row col-sm-offset-1">
-                                            <button  class="btn btn-sm btn-success "><i class='fa fa-check-circle'></i> Verify Evaluated Results</button>
-                                            <button  class="btn btn-sm btn-wisteria" type="button" @click="show_update_evaluated_results()">
-                                                <i class='fa fa-pencil-square-o'></i> Update Evaluated Results
+                                            <button  class="btn btn-sm btn-success " title="Verify Evaluated Results">
+                                                <i class='fa fa-check-circle'></i> Verify</button>
+                                            <button  class="btn btn-sm btn-wisteria" type="button" @click="show_update_evaluated_results()" title="Update Evaluated Results">
+                                                <i class='fa fa-pencil-square-o'></i> Update
                                             </button>&nbsp;
                                             <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
                                         </div>
@@ -668,6 +669,9 @@
                                 </div>
                                 <div class="row">
                                     <center>
+                                        <button  class="btn btn-sm btn-wisteria" type="button" @click="show_ammend_evaluated_results()" title="Ammend Evaluated Report">
+                                            <i class='fa fa-pencil-square-o'></i> Ammend
+                                        </button>&nbsp;
                                         <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">
                                                 <i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}
@@ -1146,14 +1150,186 @@
                                     </div>
                                 </div>                     
                                 <div class="form-group row col-sm-offset-2">
-                                    <button  class="btn btn-sm btn-success ">
-                                        <i class='fa fa-check-circle'></i> Update Evaluated Results
+                                    <button  class="btn btn-sm btn-success " title="Update Evaluated Results">
+                                        <i class='fa fa-check-circle'></i> Update
                                     </button>&nbsp;
                                     <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">
                                             <i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}
                                         </span>
                                     </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ammended Test Report Modal -->
+    <div class="modal fade" id="ammend-test-report" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="min-width: 800px;">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel"><strong>Ammend Test Report</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">  
+                            <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="ammendTestReport(evaluated_results.pt_id)" id="ammend_test_report"> 
+
+                                <div class="form-group row">
+                                    <span class="col-sm-2 dialog-form-label">Tester ID: </span>
+                                    <span class="col-sm-2">@{{evaluated_results.tester_id}}</span>
+                                    <span class="col-sm-2 dialog-form-label">Name:</span>
+                                    <span class="col-sm-6">
+                                        @{{evaluated_results.first_name}}
+                                        @{{evaluated_results.middle_name}}
+                                        @{{evaluated_results.last_name}}
+                                    </span>
+                                </div>
+                                <div class="form-group row">
+                                    <span class="col-sm-2 dialog-form-label">Phone:</span>
+                                    <span class="col-sm-2">@{{evaluated_results.phone_no}}</span>
+                                    <span class="col-sm-2 dialog-form-label">Facility:</span>
+                                    <span class="col-sm-6">@{{evaluated_results.facility}}</span>
+                                </div>
+                                <div class="form-group row">
+                                    <span class="col-sm-2 dialog-form-label">Program:</span>
+                                    <span class="col-sm-10">@{{getProgram(evaluated_results.program)}}</span>
+                                </div>
+                                <hr>
+                                <div class="form-group row">
+                                    <span class="col-sm-2 dialog-form-label">Panel Received:</span>
+                                    <span class="col-sm-2">@{{evaluated_results.date_received}}</span>
+                                    <span class="col-sm-2 dialog-form-label">Panel Constituted:</span>
+                                    <span class="col-sm-2">@{{evaluated_results.date_constituted}}</span>
+                                    <span class="col-sm-2 dialog-form-label">Panel Tested:</span>
+                                    <span class="col-sm-2">@{{evaluated_results.date_tested}}</span>
+                                </div>
+                                <hr>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incorrect_results" v-bind="{ 'checked': evaluated_results.incorrect_results ==1}"> Incorrect Results</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incomplete_kit_data" v-bind="{ 'checked': evaluated_results.incomplete_kit_data ==1}"> Incomplete Kit Data</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="dev_from_procedure" v-bind="{ 'checked': evaluated_results.dev_from_procedure ==1}"> Deviation from Procedure</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incomplete_other_information" v-bind="{ 'checked': evaluated_results.incomplete_other_information ==1}"> Incomplete Other Information</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="use_of_expired_kits" v-bind="{ 'checked': evaluated_results.use_of_expired_kits ==1}"> Use of Expired Kits</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="invalid_results" v-bind="{ 'checked': evaluated_results.invalid_results ==1}"> Invalid Results</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="wrong_algorithm" v-bind="{ 'checked': evaluated_results.wrong_algorithm ==1}"> Wrong Algorithm</td>
+                                        <td><input type="checkbox" value="1" class="unsatisfactory_group" @click="toggle_checkboxes()" name="incomplete_results" v-bind="{ 'checked': evaluated_results.incomplete_results ==1}"> Incomplete Results</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><input type="radio" value="0" id="satisfactory" name="feedback"><b> Satisfactory</b></td>
+                                        <td colspan="2"><input type="radio" value="1" id="unsatisfactory" name="feedback"><b> Unsatisfactory</b></td>                               
+                                    </tr>
+                                </table> 
+                                <hr>
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <span class="col-sm-3 dialog-form-label">Kit 1</span>
+                                        <span>@{{evaluated_results.determine}}</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="col-sm-5 dialog-form-label">Expiry Date</span>
+                                        <span>@{{evaluated_results.determine_expiry_date}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <span class="col-sm-3 dialog-form-label">Kit 2</span>
+                                        <span>@{{evaluated_results.firstresponse}}</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="col-sm-5 dialog-form-label">Expiry Date</span>
+                                        <span>@{{evaluated_results.firstresponse_expiry_date}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <span class="col-sm-5 dialog-form-label">Kit 1 Lot Number</span>
+                                        <span>@{{evaluated_results.determine_lot_no}}</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="col-sm-5 dialog-form-label">Kit 2 Lot Number</span>
+                                        <span>@{{evaluated_results.firstresponse_lot_no}}</span>
+                                    </div>
+                                </div>
+
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Test 1</th>
+                                            <th>Test 2</th>
+                                            <th>Final</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@{{evaluated_results.pt_panel_1_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_1_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_1_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_1}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.pt_panel_2_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_2_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_2_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_2}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.pt_panel_3_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_3_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_3_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_3}}</td>
+                                       </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.pt_panel_4_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_4_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_4_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_4}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.pt_panel_5_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_5_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_5_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_5}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@{{evaluated_results.pt_panel_6_kit1_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_6_kit2_results}}</td>
+                                            <td>@{{evaluated_results.pt_panel_6_final_results}}</td>
+                                            <td class="text-uppercase">@{{evaluated_results.expected_result_6}}</td>
+                                        </tr>                                    
+                                    </tbody>
+                                </table>  
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('reason_for_ammendment') }" for="reason_for_ammendment">
+                                        <strong>Reason for ammendment</strong>
+                                    </label>                                    
+                                    <div class="col-sm-6" :class="{ 'control': true }">
+                                        <textarea v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('reason_for_ammendment') }" name="reason_for_ammendment" id="reason_for_ammendment" type="text"/> </textarea>
+                                        <span v-show="errors.has('reason_for_ammendment')" class="help is-danger">@{{ errors.first('reason_for_ammendment') }}</span>
+                                    </div>
+                                </div>                     
+                                <div class="form-group row">
+                                    <center>
+                                    <button  class="btn btn-sm btn-success " title="Ammend Test Report">
+                                        <i class='fa fa-check-circle'></i> Ammend
+                                    </button>&nbsp;
+                                    <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">
+                                            <i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}
+                                        </span>
+                                    </button>
+                                    </center>
                                 </div>
                             </form>
                         </div>

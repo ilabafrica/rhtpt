@@ -428,6 +428,10 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "update_evaluated_results",
         "uses" => "ResultController@update_evaluated_results"
     ));
+    Route::post("/ammend_test_report/{id}", array(
+        "as"   => "ammend_test_report",
+        "uses" => "ResultController@ammendTestReport"
+    ));
     Route::any("/show_updated_evaluated_results/{id}", array(
         "as"   => "show_updated_evaluated_results",
         "uses" => "ResultController@show_updated_evaluated_results"
