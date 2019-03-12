@@ -13,30 +13,6 @@ class CreateAmendedPTReportsTable extends Migration
      */
     public function up()
     {
-CREATE TABLE `amended_pt` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `pt_id` int(10) unsigned NOT NULL,
-  `status` tinyint(3) NOT NULL DEFAULT 1,
-  `feedback` tinyint(4) NOT NULL DEFAULT '0',
-  `incorrect_results` tinyint(4) NOT NULL DEFAULT '0',
-  `incomplete_kit_data` tinyint(4) NOT NULL DEFAULT '0',
-  `dev_from_procedure` tinyint(4) NOT NULL DEFAULT '0',
-  `incomplete_other_information` tinyint(4) NOT NULL DEFAULT '0',
-  `use_of_expired_kits` tinyint(4) NOT NULL DEFAULT '0',
-  `invalid_results` tinyint(4) NOT NULL DEFAULT '0',
-  `wrong_algorithm` tinyint(4) NOT NULL DEFAULT '0',
-  `incomplete_results` tinyint(4) NOT NULL DEFAULT '0',
-  `reason_for_amendment` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `amended_by` int(10) UNSIGNED DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `pt_id_foreign` (`pt_id`),
-  CONSTRAINT `pt_id_foreign` FOREIGN KEY (`pt_id`) REFERENCES `pt` (`id`)
-);
-
-
         Schema::create('amended_pt', function (Blueprint $table) {
           $table->increments('id');
           $table->integer('pt_id')->unsigned();
