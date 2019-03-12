@@ -69,6 +69,7 @@
     <tr class="text-center"> <td colspan="5">NPHL acknowledges receipt of your Proficiency Testing results for Round {{$data['round_name']}}</td></tr>
     <tr class="text-center"> <td colspan="5">Your overall performance is <b>{{$amended['feedback']}}.</b></td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
+    @if($amended['feedback'] === 'Unsatisfactory')
     <tr class="text-center"> <td colspan="5">The reason/s for <b> {{$amended['feedback']}}</b> is/are:</td></tr>    
     <tr >        
         <td style ="border:solid 1px black;"><input type="checkbox" style="display: inline"
@@ -104,6 +105,7 @@
         @endif /> Incomplete Other Information</td>
         <td></td>
     </tr>
+    @endif
     <tr> <td colspan="5"> &nbsp;</td> </tr>    
     <tr class="text-center">
         <td style ="border:solid 1px black;" rowspan="2">PT Sample ID</td>
@@ -166,6 +168,11 @@
     <tr>
         <td colspan="5">{{$data['pt_approved_comment']}}</td>
     </tr>
+    @if(isset($amended['reason_for_amendment']))
+    <tr>
+        <td colspan="5"><b>Amendment Comment:</b> {{$amended['reason_for_amendment']}}</td>
+    </tr>
+    @endif
     <tr>
         <td colspan="5"><i>Please institute the necessary corrective measures before the next round of PT.</i></td>
     </tr>

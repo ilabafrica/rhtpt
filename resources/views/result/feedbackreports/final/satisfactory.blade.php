@@ -167,6 +167,11 @@
     <tr>
         <td colspan="5">{{$data['pt_approved_comment']}}</td>
     </tr>
+    @if(isset($amended['reason_for_amendment']))
+    <tr>
+        <td colspan="5"><b>Amendment Comment:</b> {{$amended['reason_for_amendment']}}</td>
+    </tr>
+    @endif
      <tr>
         <td colspan="5"><i>Please institute the necessary corrective measures before the next round of PT.</i></td>
     </tr>

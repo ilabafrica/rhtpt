@@ -949,43 +949,23 @@ class ResultController extends Controller
         
         //save updated pt details
 
-        $pt->incorrect_results = $pt->incomplete_kit_data = $pt->dev_from_procedure = $pt->incomplete_other_information = $pt->use_of_expired_kits = $pt->invalid_results = $pt->wrong_algorithm = $pt->incomplete_results = $pt->feedback = 0;
+        $pt->incorrect_results = isset($request->incorrect_results)?$request->incorrect_results:0;
 
-        if (isset($request->incorrect_results)) {
-            $pt->incorrect_results = $request->incorrect_results;
-        }
+        $pt->incomplete_kit_data = isset($request->incomplete_kit_data)?$request->incomplete_kit_data:0;
 
-        if (isset($request->incomplete_kit_data)) {
-            $pt->incomplete_kit_data = $request->incomplete_kit_data;
-        }
+        $pt->dev_from_procedure = isset($request->dev_from_procedure)?$request->dev_from_procedure:0;
 
-        if (isset($request->dev_from_procedure)) {
-            $pt->dev_from_procedure = $request->dev_from_procedure;
-        }
+        $pt->incomplete_other_information = isset($request->incomplete_other_information)?$request->incomplete_other_information:0;
 
-        if (isset($request->incomplete_other_information)) {
-            $pt->incomplete_other_information = $request->incomplete_other_information;
-        }
+        $pt->use_of_expired_kits = isset($request->use_of_expired_kits)?$request->use_of_expired_kits:0;
 
-        if (isset($request->use_of_expired_kits)) {
-            $pt->use_of_expired_kits = $request->use_of_expired_kits;
-        }
+        $pt->invalid_results = isset($request->invalid_results)?$request->invalid_results:0;
 
-        if (isset($request->invalid_results)) {
-            $pt->invalid_results = $request->invalid_results;
-        }
+        $pt->wrong_algorithm = isset($request->wrong_algorithm)?$request->wrong_algorithm:0;
 
-        if (isset($request->wrong_algorithm)) {
-            $pt->wrong_algorithm = $request->wrong_algorithm;
-        }
+        $pt->incomplete_results = isset($request->incomplete_results)?$request->incomplete_results:0;
 
-        if (isset($request->incomplete_results)) {
-            $pt->incomplete_results = $request->incomplete_results;
-        }
-
-        if ($request->feedback == 1) {
-            $pt->feedback = $request->feedback;
-        }
+        $pt->feedback = $request->feedback == 1?$request->feedback:0;
         
         $pt->save();
 
@@ -1096,8 +1076,11 @@ class ResultController extends Controller
         $amendPTReport->amended_by = Auth::user()->id;
 
         $amendPTReport->save();
+
+        $returnValue = response()->json($amendPTReport);
+        \Log::info($returnValue);
         
-        return response()->json($amendPTReport);
+        return $returnValue;
     }
         
     /**
