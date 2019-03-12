@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAmmendedPTReportsTable extends Migration
+class CreateAmendedPTReportsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAmmendedPTReportsTable extends Migration
      */
     public function up()
     {
-CREATE TABLE `ammended_pt` (
+CREATE TABLE `amended_pt` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `pt_id` int(10) unsigned NOT NULL,
   `status` tinyint(3) NOT NULL DEFAULT 1,
@@ -26,8 +26,8 @@ CREATE TABLE `ammended_pt` (
   `invalid_results` tinyint(4) NOT NULL DEFAULT '0',
   `wrong_algorithm` tinyint(4) NOT NULL DEFAULT '0',
   `incomplete_results` tinyint(4) NOT NULL DEFAULT '0',
-  `reason_for_ammendment` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `ammended_by` int(10) UNSIGNED DEFAULT NULL,
+  `reason_for_amendment` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `amended_by` int(10) UNSIGNED DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE `ammended_pt` (
 );
 
 
-        Schema::create('ammended_pt', function (Blueprint $table) {
+        Schema::create('amended_pt', function (Blueprint $table) {
           $table->increments('id');
           $table->integer('pt_id')->unsigned();
           $table->tinyint('status')->unsigned()->default(1);
@@ -50,12 +50,12 @@ CREATE TABLE `ammended_pt` (
           $table->tinyint('invalid_results')->unsigned()->default(0);
           $table->tinyint('wrong_algorithm')->unsigned()->default(0);
           $table->tinyint('incomplete_results')->unsigned()->default(0);
-          $table->string('reason_for_ammendment');
-          $table->integer('ammended_by')->unsigned();
+          $table->string('reason_for_amendment');
+          $table->integer('amended_by')->unsigned();
           $table->softDeletes();
           $table->timestamps();
           $table->foreign('pt_id')->references('id')->on('pt');
-          $table->foreign('ammended_by')->references('id')->on('users');
+          $table->foreign('amended_by')->references('id')->on('users');
         });
     }
 
@@ -66,6 +66,6 @@ CREATE TABLE `ammended_pt` (
      */
     public function down()
     {
-        Schema::drop('ammended_pt');
+        Schema::drop('amended_pt');
     }
 }

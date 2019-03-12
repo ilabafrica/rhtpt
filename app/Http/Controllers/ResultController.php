@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\AmmendedPT;
+use App\AmendedPT;
 use App\Pt;
 use App\Result;
 use App\Expected;
@@ -1016,16 +1016,16 @@ class ResultController extends Controller
     }
         
      /**
-     * Ammend Test Report
+     * Amend Test Report
      *
      * @param ID of the selected pt -  $id
      */
-    public function ammendTestReport(Request $request, $id )
+    public function amendTestReport(Request $request, $id )
     {
 
         $pt = Pt::find($id);
 
-        \Log::info("Ammending PT Report: PTID - $id");
+        \Log::info("Amending PT Report: PTID - $id");
         \Log::info("From:");
         \Log::info($pt);
         \Log::info("To:");
@@ -1071,23 +1071,23 @@ class ResultController extends Controller
             $pt->feedback = $request->feedback;
         }
 
-        $ammendPTReport = new AmmendedPT;
-        $ammendPTReport->pt_id = $pt->id;
-        $ammendPTReport->feedback = $pt->feedback;
-        $ammendPTReport->incorrect_results = $pt->incorrect_results;
-        $ammendPTReport->incomplete_kit_data = $pt->incomplete_kit_data;
-        $ammendPTReport->dev_from_procedure = $pt->dev_from_procedure;
-        $ammendPTReport->incomplete_other_information = $pt->incomplete_other_information;
-        $ammendPTReport->use_of_expired_kits = $pt->use_of_expired_kits;
-        $ammendPTReport->invalid_results = $pt->invalid_results;
-        $ammendPTReport->wrong_algorithm = $pt->wrong_algorithm;
-        $ammendPTReport->incomplete_results = $pt->incomplete_results;
-        $ammendPTReport->reason_for_ammendment = $request->reason_for_ammendment;
-        $ammendPTReport->ammended_by = Auth::user()->id;
+        $amendPTReport = new AmendedPT;
+        $amendPTReport->pt_id = $pt->id;
+        $amendPTReport->feedback = $pt->feedback;
+        $amendPTReport->incorrect_results = $pt->incorrect_results;
+        $amendPTReport->incomplete_kit_data = $pt->incomplete_kit_data;
+        $amendPTReport->dev_from_procedure = $pt->dev_from_procedure;
+        $amendPTReport->incomplete_other_information = $pt->incomplete_other_information;
+        $amendPTReport->use_of_expired_kits = $pt->use_of_expired_kits;
+        $amendPTReport->invalid_results = $pt->invalid_results;
+        $amendPTReport->wrong_algorithm = $pt->wrong_algorithm;
+        $amendPTReport->incomplete_results = $pt->incomplete_results;
+        $amendPTReport->reason_for_amendment = $request->reason_for_amendment;
+        $amendPTReport->amended_by = Auth::user()->id;
 
-        $ammendPTReport->save();
+        $amendPTReport->save();
         
-        return response()->json($ammendPTReport);
+        return response()->json($amendPTReport);
     }
         
     /**

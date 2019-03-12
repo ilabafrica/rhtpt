@@ -1,10 +1,10 @@
 <?php namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class AmmendedPT extends Model
+class AmendedPT extends Model
 {
   	/**
-  	 * Enabling soft deletes for ammended_pt.
+  	 * Enabling soft deletes for amended_pt.
   	 *
   	 */
   	use SoftDeletes;
@@ -15,10 +15,10 @@ class AmmendedPT extends Model
   	 *
   	 * @var string
   	 */
-  	protected $table = 'ammended_pt';
+  	protected $table = 'amended_pt';
 
     /**
-    *Ammended PT status
+    *Amended PT status
     *
     **/
 
@@ -30,9 +30,9 @@ class AmmendedPT extends Model
   	 * Relationship with users.
   	 *
   	 */
-     public function ammendor()
+     public function amendor()
      {
-       return $this->hasOne('App\User', 'ammended_by');
+       return $this->hasOne('App\User', 'amended_by');
      }
 
      /**

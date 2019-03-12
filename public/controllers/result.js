@@ -311,7 +311,7 @@ new Vue({
             });                                       
         },
 
-        show_ammend_evaluated_results: function(){
+        show_amend_evaluated_results: function(){
 
             $("#view-evaluted-result").modal('hide');
 
@@ -321,7 +321,7 @@ new Vue({
             //prompt user to add the reason for change before editing
             
             swal({
-              title: "Specify the reason for the ammendment",
+              title: "Specify the reason for the amendment",
               text: "",
               type: "input",
               showCancelButton: false,
@@ -329,18 +329,18 @@ new Vue({
               confirmButtonColor: "#025aa5",
               closeOnConfirm: true,
               animation: "slide-from-top",
-              inputPlaceholder: "Ammendment reason"
+              inputPlaceholder: "Amendment reason"
             },
             function(inputValue){
                 if (inputValue === false) return false;
 
                 if (inputValue === "") {
-                    swal.showInputError("You must specify why you wish to ammend the report!");
+                    swal.showInputError("You must specify why you wish to amend the report!");
                     return false
                 }
 
-                $("#reason_for_ammendment").val(inputValue);
-                $("#ammend-test-report").modal('show'); 
+                $("#reason_for_amendment").val(inputValue);
+                $("#amend-test-report").modal('show'); 
             });                                       
         },
 
@@ -354,13 +354,13 @@ new Vue({
             });
         },
 
-        ammendTestReport: function(id){
-            let myForm = document.getElementById('ammend_test_report');
+        amendTestReport: function(id){
+            let myForm = document.getElementById('amend_test_report');
             let formData = new FormData(myForm);
-            this.$http.post('/ammend_test_report/'+id, formData).then((response) => {
+            this.$http.post('/amend_test_report/'+id, formData).then((response) => {
                 this.changePage(this.pagination.current_page);
-                $("#ammend-test-report").modal('hide');
-                toastr.success('Report Ammended Successfully.', 'Success Alert', {timeOut: 5000});
+                $("#amend-test-report").modal('hide');
+                toastr.success('Report Amended Successfully.', 'Success Alert', {timeOut: 5000});
             });
         },
         //compare the updated results and old results 

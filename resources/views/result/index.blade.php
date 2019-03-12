@@ -669,8 +669,8 @@
                                 </div>
                                 <div class="row">
                                     <center>
-                                        <button  class="btn btn-sm btn-wisteria" type="button" @click="show_ammend_evaluated_results()" title="Ammend Evaluated Report">
-                                            <i class='fa fa-pencil-square-o'></i> Ammend
+                                        <button  class="btn btn-sm btn-wisteria" type="button" @click="show_amend_evaluated_results()" title="Amend Evaluated Report">
+                                            <i class='fa fa-pencil-square-o'></i> Amend
                                         </button>&nbsp;
                                         <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">
@@ -1167,20 +1167,20 @@
         </div>
     </div>
 
-    <!-- Ammended Test Report Modal -->
-    <div class="modal fade" id="ammend-test-report" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <!-- Amended Test Report Modal -->
+    <div class="modal fade" id="amend-test-report" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="min-width: 800px;">
                 <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel"><strong>Ammend Test Report</strong></h4>
+                <h4 class="modal-title" id="myModalLabel"><strong>Amend Test Report</strong></h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">  
-                            <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="ammendTestReport(evaluated_results.pt_id)" id="ammend_test_report"> 
+                            <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="amendTestReport(evaluated_results.pt_id)" id="amend_test_report"> 
 
                                 <div class="form-group row">
                                     <span class="col-sm-2 dialog-form-label">Tester ID: </span>
@@ -1311,18 +1311,18 @@
                                     </tbody>
                                 </table>  
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('reason_for_ammendment') }" for="reason_for_ammendment">
-                                        <strong>Reason for ammendment</strong>
+                                    <label class="col-sm-4 form-control-label"  :class="{'help is-danger': errors.has('reason_for_amendment') }" for="reason_for_amendment">
+                                        <strong>Reason for amendment</strong>
                                     </label>                                    
                                     <div class="col-sm-6" :class="{ 'control': true }">
-                                        <textarea v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('reason_for_ammendment') }" name="reason_for_ammendment" id="reason_for_ammendment" type="text"/> </textarea>
-                                        <span v-show="errors.has('reason_for_ammendment')" class="help is-danger">@{{ errors.first('reason_for_ammendment') }}</span>
+                                        <textarea v-validate="'required'" class="form-control" :class="{'input': true, 'is-danger': errors.has('reason_for_amendment') }" name="reason_for_amendment" id="reason_for_amendment" type="text"/> </textarea>
+                                        <span v-show="errors.has('reason_for_amendment')" class="help is-danger">@{{ errors.first('reason_for_amendment') }}</span>
                                     </div>
                                 </div>                     
                                 <div class="form-group row">
                                     <center>
-                                    <button  class="btn btn-sm btn-success " title="Ammend Test Report">
-                                        <i class='fa fa-check-circle'></i> Ammend
+                                    <button  class="btn btn-sm btn-success " title="Amend Test Report">
+                                        <i class='fa fa-check-circle'></i> Amend
                                     </button>&nbsp;
                                     <button  class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">
