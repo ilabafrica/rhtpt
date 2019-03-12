@@ -675,7 +675,7 @@
                                                 <tr>
                                                     <td><strong>Date</strong></td>
                                                     <td>@{{amendment.created_at}}</td>
-                                                    <td><strong>Ammended By</strong></td>
+                                                    <td><strong>Amended By</strong></td>
                                                     <td>@{{amendment.amendor.first_name}} @{{amendment.amendor.last_name}} </td>
                                                 </tr>
                                                     <td><strong>Reason</strong></td>
