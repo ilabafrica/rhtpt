@@ -16,16 +16,16 @@ class CreateAmendedPTReportsTable extends Migration
         Schema::create('amended_pt', function (Blueprint $table) {
           $table->increments('id');
           $table->integer('pt_id')->unsigned();
-          $table->tinyint('status')->unsigned()->default(1);
-          $table->tinyint('feedback')->unsigned()->default(0);
-          $table->tinyint('incorrect_results')->unsigned()->default(0);
-          $table->tinyint('incomplete_kit_data')->unsigned()->default(0);
-          $table->tinyint('dev_from_procedure')->unsigned()->default(0);
-          $table->tinyint('incomplete_other_information')->unsigned()->default(0);
-          $table->tinyint('use_of_expired_kits')->unsigned()->default(0);
-          $table->tinyint('invalid_results')->unsigned()->default(0);
-          $table->tinyint('wrong_algorithm')->unsigned()->default(0);
-          $table->tinyint('incomplete_results')->unsigned()->default(0);
+          $table->tinyInteger('status')->unsigned()->default(1);
+          $table->tinyInteger('feedback')->unsigned()->default(0);
+          $table->tinyInteger('incorrect_results')->unsigned()->default(0);
+          $table->tinyInteger('incomplete_kit_data')->unsigned()->default(0);
+          $table->tinyInteger('dev_from_procedure')->unsigned()->default(0);
+          $table->tinyInteger('incomplete_other_information')->unsigned()->default(0);
+          $table->tinyInteger('use_of_expired_kits')->unsigned()->default(0);
+          $table->tinyInteger('invalid_results')->unsigned()->default(0);
+          $table->tinyInteger('wrong_algorithm')->unsigned()->default(0);
+          $table->tinyInteger('incomplete_results')->unsigned()->default(0);
           $table->string('reason_for_amendment');
           $table->integer('amended_by')->unsigned();
           $table->softDeletes();
