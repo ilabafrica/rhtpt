@@ -63,6 +63,15 @@ new Vue({
         toggle: {},
         //
         fieldvalues: [],
+        reasonsForUnsatisfactory: {'incorrect_results': 'Incorrect results', 
+                                    'incomplete_kit_data': 'Incomplete kit data', 
+                                    'dev_from_procedure': 'Deviation from procedure', 
+                                    'incomplete_other_information': 'Incomplete other information', 
+                                    'use_of_expired_kits': 'Use of expired kits', 
+                                    'invalid_results': 'Invalid results',
+                                    'wrong_algorithm': 'Wrong Algorithm', 
+                                    'incomplete_results': 'Incomplete results'
+                                },
     },
 
     computed: {
@@ -814,10 +823,24 @@ new Vue({
                 $("input[name="+elementName+"]").val(dateValue);
             }
         },
+        getFeedback: function(value){
+            if(value == 1){
+               return "UNSATISFACTORY";
+            }else{
+               return "SATISFACTORY";
+           }
+        },
         getProgram: function(value){
             for (var i = this.programs.length - 1; i >= 0; i--) {
                 if(this.programs[i].id == value)
                     return this.programs[i].value;
+            }
+
+            return '';
+        },
+        getReasonForUnsatisfactory: function(key, value){
+            if(value == 1){
+                    return this.reasonsForUnsatisfactory[key];
             }
 
             return '';

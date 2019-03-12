@@ -843,7 +843,9 @@ class ResultController extends Controller
             'use_of_expired_kits' => $use_of_expired_kits,
             'invalid_results' => $invalid_results,
             'wrong_algorithm' => $wrong_algorithm,
-            'incomplete_results' => $incomplete_results
+            'incomplete_results' => $incomplete_results,
+
+            'amendments' => $pt->amendments()->with('amendor')->get()
         );
 
         return $all_results;       
@@ -1071,8 +1073,16 @@ class ResultController extends Controller
             $pt->feedback = $request->feedback;
         }
 
+        // Deactive previous amended reports
+        $amendedReports = AmendedPT::where('pt_id', $id)->where('status', AmendedPT::ACTIVE)->get();
+        foreach ($amendedReports as $amendedReport) {
+            $amendedReport->status = AmendedPT::DEACTIVATED;
+            $amendedReport->save();
+        }
+
+        // Save new report
         $amendPTReport = new AmendedPT;
-        $amendPTReport->pt_id = $pt->id;
+        $amendPTReport->pt_id = $id;
         $amendPTReport->feedback = $pt->feedback;
         $amendPTReport->incorrect_results = $pt->incorrect_results;
         $amendPTReport->incomplete_kit_data = $pt->incomplete_kit_data;

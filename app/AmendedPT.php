@@ -22,9 +22,8 @@ class AmendedPT extends Model
     *
     **/
 
-    const DELETED = 0; //Don't show this report
-    const ACTIVE = 1; // Show both this and the previous report
-    const OVER_RIDE = 2; // Show only this report
+    const DEACTIVATED = 0; // Not the latest report
+    const ACTIVE = 1; // This is the latest report
     
     /**
   	 * Relationship with users.
@@ -32,7 +31,7 @@ class AmendedPT extends Model
   	 */
      public function amendor()
      {
-       return $this->hasOne('App\User', 'amended_by');
+       return $this->hasOne('App\User', 'id', 'amended_by');
      }
 
      /**

@@ -655,16 +655,49 @@
                                         <p>@{{evaluated_results.pt_approved_comment}}</p>
                                     </div>
                                 </div>
+                                <hr>
                                 <div class="row">
-                                    <label class="col-sm-5"><b>Verified By:</b></label>
-                                    <div class="col-sm-7">
+                                    <label class="col-sm-3"><b>Date Verified:</b></label>
+                                    <div class="col-sm-3">
+                                        <p>@{{evaluated_results.date_approved}}</p>
+                                    </div>
+                                    <label class="col-sm-3"><b>Verified By:</b></label>
+                                    <div class="col-sm-3">
                                         <p>@{{evaluated_results.approved_by}}</p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <label class="col-sm-5"><b>Date Verified:</b></label>
-                                    <div class="col-sm-7">
-                                        <p>@{{evaluated_results.date_approved}}</p>
+                                <hr>
+                                <div class="row" v-if="evaluated_results.amendments.length>0">
+                                    <div class="col-sm-12">
+                                        <strong>Amendments</strong><br>
+                                        <div class="table-responsive" v-for="amendment in evaluated_results.amendments">
+                                            <table class="table table-bordered table-striped">
+                                                <tr>
+                                                    <td><strong>Date</strong></td>
+                                                    <td>@{{amendment.created_at}}</td>
+                                                    <td><strong>Ammended By</strong></td>
+                                                    <td>@{{amendment.amendor.first_name}} @{{amendment.amendor.last_name}} </td>
+                                                </tr>
+                                                    <td><strong>Reason</strong></td>
+                                                    <td colspan="3">@{{amendment.reason_for_amendment}}</td>
+                                                <tr>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Feedback</strong></td>
+                                                    <td>@{{getFeedback(amendment.feedback)}}</td>
+                                                    <td colspan="2">
+                                                        @{{getReasonForUnsatisfactory('incorrect_results', amendment.incorrect_results)}}
+                                                        @{{getReasonForUnsatisfactory('incomplete_kit_data', amendment.incomplete_kit_data)}}
+                                                        @{{getReasonForUnsatisfactory('dev_from_procedure', amendment.dev_from_procedure)}}
+                                                        @{{getReasonForUnsatisfactory('incomplete_other_information', amendment.incomplete_other_information)}}
+                                                        @{{getReasonForUnsatisfactory('use_of_expired_kits', amendment.use_of_expired_kits)}}
+                                                        @{{getReasonForUnsatisfactory('invalid_results', amendment.invalid_results)}}
+                                                        @{{getReasonForUnsatisfactory('wrong_algorithm', amendment.wrong_algorithm)}}
+                                                        @{{getReasonForUnsatisfactory('incomplete_results', amendment.incomplete_results)}}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -1357,61 +1390,68 @@
                                             <td><b> Changed By: </b> @{{updated_evaluated_results.editing_user_name}}</td>
                                             <td><b> On: </b> @{{updated_evaluated_results.editing_updated_at}}</td>
                                         </tr>
-                                       <tr><td><b>Reasons For Change: </b>@{{updated_evaluated_results.reason_for_change}}</td></tr>
+                                       <tr><td colspan="2"><b>Reasons For Change: </b>@{{updated_evaluated_results.reason_for_change}}</td></tr>
                                    </table>
                                 </div>
                             </div>   
                             <!-- Round details -->
                             <div class="row">
                                 <div class="col-md-12">
-                                   <table class="table table-bordered">
-                                        <tr class="text-center"><b>Participant Information </b></tr>
-                                        <tr class="col-md-12">
-                                            <td class="col-md-3"><b>Round</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.round_name}}</td>
-                                            <td class="col-md-3"><b>County</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.county}}</td>
-                                        </tr>
-                                         <tr>
-                                            <td class="col-md-3"><b>Tester ID</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.tester_id}}</td>
-                                            <td class="col-md-3"><b>Sub County</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.sub_county}}</td>
-                                        </tr>
-                                         <tr>
-                                            <td class="col-md-3"><b>Tester Name</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.user_name}}</td>
-                                            <td class="col-md-3"><b>Facility</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.facility}}</td>
-                                        </tr>
-                                         <tr>
-                                            <td class="col-md-3"><b>Program</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.program_name}}</td>
-                                            <td class="col-md-3"><b>Facility MFL</b></td>
-                                            <td class="col-md-3">@{{evaluated_results.mfl}}</td>
-                                        </tr>
-                                   </table>   
+                                    <b>Participant Information </b><br>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td><b>Round</b></td>
+                                                <td>@{{evaluated_results.round_name}}</td>
+                                                <td><b>Tester ID</b></td>
+                                                <td>@{{evaluated_results.tester_id}}</td>
+                                            </tr>
+                                             <tr>
+                                                <td><b>Tester</b></td>
+                                                <td>@{{evaluated_results.user_name}}</td>
+                                                <td><b>Program</b></td>
+                                                <td>@{{evaluated_results.program_name}}</td>
+                                            </tr>
+                                             <tr>
+                                                <td><b>County</b></td>
+                                                <td>@{{evaluated_results.county}}</td>
+                                                <td><b>Sub County</b></td>
+                                                <td>@{{evaluated_results.sub_county}}</td>
+                                            </tr>
+                                             <tr>
+                                                <td><b>MFL Code</b></td>
+                                                <td>@{{evaluated_results.mfl}}</td>
+                                                <td><b>Facility</b></td>
+                                                <td>@{{evaluated_results.facility}}</td>
+                                            </tr>
+                                       </table>
+                                   </div>
                                 </div>
                             </div>
                             <!-- panel details -->
                             <div class="row">
                                 <div class="col-md-12">
-                                   <table class="table table-bordered">
-                                        <tr class="text-center"> <b>Panel Information</b></tr>
+                                    <b>Panel Information</b><br>
+                                    <table class="table table-bordered">
                                         <tr>
+                                            <td>&nbsp;</td>
+                                            <td><b>Previous</b></td>
+                                            <td><b>Current</b></td>
+                                        </tr>
+                                         <tr>
                                             <td><b>Receive Date</b></td>
+                                            <td>@{{updated_evaluated_results.date_received}}</td>
+                                            <td>@{{evaluated_results.date_received}}</td>
+                                        </tr>
+                                         <tr>
                                             <td><b>Constituted Date</b></td>
-                                            <td><b>Tested Date</b></td>
-                                        </tr>
-                                         <tr>
+                                            <td>@{{updated_evaluated_results.date_constituted}}</td>
                                             <td>@{{evaluated_results.date_constituted}}</td>
-                                            <td>@{{evaluated_results.date_received}}</td>                                            
-                                            <td>@{{evaluated_results.date_tested}}</td>
                                         </tr>
-                                         <tr>
-                                            <td>OLD- @{{updated_evaluated_results.date_constituted}}</td>
-                                            <td>OLD- @{{updated_evaluated_results.date_received}}</td>                                            
-                                            <td>OLD- @{{updated_evaluated_results.date_tested}}</td>
+                                        <tr>
+                                            <td><b>Tested Date</b></td>
+                                            <td>@{{updated_evaluated_results.date_tested}}</td>
+                                            <td>@{{evaluated_results.date_tested}}</td>
                                         </tr>
                                    </table>   
                                 </div>
@@ -1419,33 +1459,38 @@
                             <!-- kit details -->
                             <div class="row">
                                 <div class="col-md-12">
-                                   <table class="table table-bordered">
-                                        <tr> <b>Kit Information</b></tr>
+                                    <b>Kit Information</b><br>
+                                    <table class="table table-bordered">
                                         <tr>
-                                            <th>Kit Name</th>                                           
-                                            <th>Kit No</th>                                           
-                                            <th>Kit Expiry Date</th>                                           
+                                            <th>&nbsp;</th>                                           
+                                            <th>Name</th>                                           
+                                            <th>Number</th>                                           
+                                            <th>Expiry Date</th>                                           
                                         </tr>
                                         <tr>
+                                            <td><strong>Previous</strong></td>
+                                            <td>@{{updated_evaluated_results.determine}}</td>
+                                            <td>@{{updated_evaluated_results.determine_lot_no}}</td>
+                                            <td>@{{updated_evaluated_results.determine_expiry_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Current</strong></td>
                                             <td>@{{evaluated_results.determine}}</td>
                                             <td>@{{evaluated_results.determine_lot_no}}</td>
                                             <td>@{{evaluated_results.determine_expiry_date}}</td>
                                         </tr>
                                         <tr>
-                                            <td>OLD- @{{updated_evaluated_results.determine}}</td>
-                                            <td>OLD- @{{updated_evaluated_results.determine_lot_no}}</td>
-                                            <td>OLD- @{{updated_evaluated_results.determine_expiry_date}}</td>
-                                        </tr>
+                                            <td><strong>Previous</strong></td>
+                                            <td>@{{updated_evaluated_results.firstresponse}}</td>
+                                            <td>@{{updated_evaluated_results.firstresponse_lot_no}}</td>
+                                            <td>@{{updated_evaluated_results.firstresponse_expiry_date}}</td>
+                                        </tr>                                         
                                         <tr>
+                                            <td><strong>Current</strong></td>
                                             <td>@{{evaluated_results.firstresponse}}</td>
                                             <td>@{{evaluated_results.firstresponse_lot_no}}</td>
                                             <td>@{{evaluated_results.firstresponse_expiry_date}}</td>
                                         </tr>
-                                        <tr>
-                                            <td>OLD- @{{updated_evaluated_results.firstresponse}}</td>
-                                            <td>OLD- @{{updated_evaluated_results.firstresponse_lot_no}}</td>
-                                            <td>OLD- @{{updated_evaluated_results.firstresponse_expiry_date}}</td>
-                                        </tr>                                         
                                    </table>   
                                 </div>
                             </div>

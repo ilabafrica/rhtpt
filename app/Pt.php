@@ -108,4 +108,13 @@ class Pt extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    /**
+    * Amended PT Reports relationship
+    *
+    */
+    public function amendments()
+    {
+        return $this->hasMany('App\AmendedPT');
+    }
 }
