@@ -13,7 +13,15 @@
     <tr style="text-align:center"><td colspan="5"><b>P.O Box 20750 - 00202, NAIROBI, nphlpt@nphls.or.ke</b></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>NATIONAL HIV SEROLOGY PROFICIENCY TESTING SCHEME</b></td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
-    <tr style="text-align:center"><td colspan="5"><b>Preliminary Report</b></td></tr>
+    <tr style="text-align:center">
+        <td colspan="5">
+            {{$data}}
+            <?php if(count($data['amendments']) > 0){ ?>
+            <b>Amended Report</b>
+            <?php }else{ ?>
+            <b>Preliminary Report</b>
+            <?php } ?>
+    </td></tr>
     <tr> <td colspan="5" style="border-top:solid 2px black;"> &nbsp;</td> </tr>
     <tr>
         <td><b>Round</b></td>

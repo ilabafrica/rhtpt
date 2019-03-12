@@ -23,7 +23,32 @@
     <tr style="text-align:center"><td colspan="5"><b>P.O Box 20750 - 00202, NAIROBI, nphlpt@nphls.or.ke</b></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>NATIONAL HIV SEROLOGY PROFICIENCY TESTING SCHEME</b></td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
-    <tr style="text-align:center"><td colspan="5"><b>Preliminary Report</b></td></tr>
+    <tr style="text-align:center"><td colspan="5">
+            <?php
+                if(count($data['amendments']) > 0){
+                    foreach ($data['amendments'] as $amendment) {
+                        if($amendment['status'] == 1){//Active
+                            $amended = $amendment->toArray();
+                            $amended['feedback'] = $amended['feedback'] == 1?'Unsatisfactory':'Satisfactory';
+                        }
+                    }
+            ?>
+                <b>Amended Report</b>
+            <?php 
+                }else{ 
+                    $amended['feedback'] = $data['feedback'];
+                    $amended['incorrect_results'] = $data['incorrect_results'];
+                    $amended['wrong_algorithm'] = $data['wrong_algorithm'];
+                    $amended['use_of_expired_kits'] = $data['use_of_expired_kits'];
+                    $amended['incomplete_kit_data'] = $data['incomplete_kit_data'];
+                    $amended['incomplete_results'] = $data['incomplete_results'];
+                    $amended['dev_from_procedure'] = $data['dev_from_procedure'];
+                    $amended['incomplete_other_information'] = $data['incomplete_other_information'];
+            ?>
+                <b>Preliminary Report</b>
+            <?php } 
+            ?>
+    </td></tr>
     <tr> <td colspan="5" style="border-top:solid 2px black;"> &nbsp;</td> </tr>
     <tr>
         <td><b>Round</b></td>
@@ -52,41 +77,41 @@
     <tr> <td> &nbsp;</td> </tr>
     <tr class="text-center"> <td colspan="5"><u><b>RE: Proficiency Testing Results</b></u></td></tr>
     <tr class="text-center"> <td colspan="5">NPHL acknowledges receipt of your Proficiency Testing results for Round {{$data['round_name']}}.</td></tr>
-    <tr class="text-center"> <td colspan="5">Your overall performance is <b>{{$data['feedback']}}</b>.</td></tr>
+    <tr class="text-center"> <td colspan="5">Your overall performance is <b>{{$amended['feedback']}}</b>.</td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
 
-    @if ($data['feedback'] === 'Unsatisfactory')
+    @if ($amended['feedback'] === 'Unsatisfactory')
     <tr class="text-center"> <td colspan="5">The reason/s for <b> {{$data['feedback']}}</b> is/are:</td></tr>    
     <tr >        
         <td style ="border:solid 1px black;"><input type="checkbox" style="display: inline"
-        @if($pt->incorrect_results == 1)
+        @if($amended['incorrect_results'] == 1)
         checked
         @endif /> Incorrect Result</td>
         <td style ="border:solid 1px black;"><input type="checkbox" style="display: inline"
-        @if($pt->wrong_algorithm == 1)
+        @if($amended['wrong_algorithm'] == 1)
          checked
         @endif /> Wrong Algorithm</td>
         <td style ="border:solid 1px black;"><input type="checkbox" style="display: inline"
-        @if($pt->use_of_expired_kits == 1)
+        @if($amended['use_of_expired_kits'] == 1)
          checked
         @endif /> Use of Expired Kits</td>              
         <td style ="border:solid 1px black;"><input type="checkbox" width="200" style="display: inline"
-        @if($pt->incomplete_kit_data == 1)
+        @if($amended['incomplete_kit_data'] == 1)
          checked
         @endif /> Incomplete Kit Data</td>
         <td></td>
     </tr>
     <tr >
        <td style ="border:solid 1px black;"><input type="checkbox" style="display: inline"
-        @if($pt->incomplete_results == 1)
+        @if($amended['incomplete_results'] == 1)
          checked
         @endif />Incomplete Results</td>  
         <td style ="border:solid 1px black;"><input type="checkbox" width="200" style="display: inline"
-        @if($pt->dev_from_procedure == 1)
+        @if($amended['dev_from_procedure'] == 1)
          checked
         @endif  /> Deviation From Procedure</td>
         <td colspan="2" style ="border:solid 1px black;"><input type="checkbox" width="200" style="display: inline"
-        @if($pt->incomplete_other_information == 1)
+        @if($amended['incomplete_other_information'] == 1)
          checked
         @endif /> Incomplete Other Information</td>
         <td></td>
