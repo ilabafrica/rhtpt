@@ -323,7 +323,8 @@ class UserController extends Controller
      */
     public function restore($id) 
     {
-        $user = User::withTrashed()->find($id)->restore();
+        $user = User::withTrashed()->find($id);
+        $user->restore();
         $message    = "Dear ".$user->name.", NPHL has enabled your account.";
 
         $smsHandler = new SmsHandler();
