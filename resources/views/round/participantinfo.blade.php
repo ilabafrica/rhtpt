@@ -102,6 +102,7 @@
                 <tr>
                     <th>Participant</th>
                     <th>PT Enrollment ID</th>
+                    <th>Phone</th>
                     <th>Facility</th>
                     <th>Sub County</th>
                     <th>County</th>
@@ -110,6 +111,7 @@
                 <tr v-for="participant in participants">                                        
                     <td>@{{ participant.name }}</td>
                     <td>@{{ participant.uid }}</td>
+                    <td>@{{ participant.phone }}</td>
                     <td>@{{ participant.facility_name }}</td>
                     <td>@{{ participant.sub_county_name}}</td>
                     <td>@{{ participant.county_name }}</td>                                                
@@ -122,28 +124,6 @@
                     </td>                                                
                 </tr>
             </table> 
-            <!-- Pagination -->
-          <!--   <nav>
-                <ul class="pagination">
-                    <li v-if="pagination.current_page > 1" class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous"
-                            @click.prevent="changePage(pagination.current_page - 1)">
-                            <span aria-hidden="true">«</span>
-                        </a>
-                    </li>
-                    <li v-for="page in pagesNumber" class="page-item"
-                        v-bind:class="[ page == isActived ? 'active' : '']">
-                        <a class="page-link" href="#"
-                            @click.prevent="changePage(page)">@{{ page }}</a>
-                    </li>
-                    <li v-if="pagination.current_page < pagination.last_page" class="page-item">
-                        <a class="page-link" href="#" aria-label="Next"
-                            @click.prevent="changePage(pagination.current_page + 1)">
-                            <span aria-hidden="true">»</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>    -->            
         </div>
     </div>
 </div>

@@ -154,9 +154,9 @@ new Vue({
         },
 
         getRoundName(key) {
-	    for(i = 0; i < this.rounds.length; i++){
-	        if(this.rounds[i].id == key) return this.rounds[i].value;
-	    }
+    	    for(i = 0; i < this.rounds.length; i++){
+    	        if(this.rounds[i].id == key) return this.rounds[i].value;
+    	    }
             return '';
         },
     }

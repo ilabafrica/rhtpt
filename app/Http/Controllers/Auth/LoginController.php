@@ -47,21 +47,6 @@ class LoginController extends Controller
         return view('auth/signin');
     }
 
-    /**
-     * @param Request $request
-     * @param $user
-     * @return \Illuminate\Http\RedirectResponse
-     */
-
-    /*protected function authenticated(Request $request, $user)
-    {
-
-        if(!$user->status)
-        {
-            Auth::logout();
-            return redirect('/login')->with('error', '<strong>Account Suspended</strong> <br>Your account has been suspended by administrators.');
-        }
-    }*/
     protected function credentials(Request $request)
     {
         $field = filter_var($request->input($this->username()), FILTER_VALIDATE_EMAIL) ? 'email' : 'username';

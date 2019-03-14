@@ -245,7 +245,11 @@ class UserController extends Controller
             'username' => 'required'
         ]);
 
-        $edit = User::find($id)->update($request->all());
+        $thisUser = User::find($id);
+        \Log::info("User update -- performed by: ".Auth::user()->id);
+        \Log::info("From: \n".json_encode($thisUser)."\nTo:\n".json_encode($request));
+
+        $edit = $thisUser->update($request->all());
         if($request->role)
         {
             $role = $request->role;
@@ -383,36 +387,6 @@ class UserController extends Controller
         ];
 
         return $users->count() > 0 ? response()->json($response) : $error;
-    }
-    /**
-     * Transfer the specified participant.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function transfer(Request $request, $id)
-    {
-        $this->validate($request, [
-            'facility_id' => 'required',
-            'program_id' => 'required',
-        ]);
-        $tier = Tier::where('user_id', $id)->first();
-        $prog = NULL;
-        $fac = NULL;
-        if($request->facility_id)
-        {
-            $fac = $request->facility_id;
-            $tier->tier = $fac;
-        }
-        if($request->program_id)
-        {
-            $prog = $request->program_id;
-            $tier->program_id = $prog;
-        }
-        $response = $tier->save();
-
-        return response()->json($response);
     }
     /**
      * Function for enrolling users to a round of testing
@@ -612,7 +586,7 @@ class UserController extends Controller
         if(!is_dir(public_path().$folder))
             File::makeDirectory(public_path().$folder, 0777, true);
         file_put_contents(public_path().$folder.$fileName, $decoded);
-        // dd();
+
         //  Handle the import
         //  Get the results
         //  Import a user provided file
@@ -703,7 +677,6 @@ class UserController extends Controller
         if(!is_dir(public_path().$folder))
             File::makeDirectory(public_path().$folder, 0777, true);
         file_put_contents(public_path().$folder.$fileName, $decoded);
-        // dd();
         //  Handle the import
         //  Get the results
         //  Import a user provided file
@@ -917,7 +890,6 @@ class UserController extends Controller
         return redirect()->to('verified')
                 ->with('warning', "Your token is invalid.");
     }
-
     
     /**
      * Get user's role ID and tier ID
@@ -927,7 +899,8 @@ class UserController extends Controller
     public function getRole(){
         return ["role_id" => Auth::user()->ru()->role_id, "tier" => Auth::user()->ru()->tier];
     }
-public function assign_uid(){
+
+    public function assign_uid(){
 
         $response = '';
         $users = User::select('users.id')
@@ -957,6 +930,7 @@ public function assign_uid(){
          }
         return response()->json($response);
     }
+    
     public function all_users(Request $request){
         $users = User::latest()->withTrashed()->paginate(100);
         if($request->has('q')) 
