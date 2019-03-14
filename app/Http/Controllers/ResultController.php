@@ -23,7 +23,6 @@ use App\Material;
 use App\EvaluatedResult;
 use App\ImplementingPartner;
 use App\SmsHandler;
-use App\Libraries\AfricasTalkingGateway as Bulk;
 
 use Auth;
 use Jenssegers\Date\Date as Carbon;
@@ -310,39 +309,19 @@ class ResultController extends Controller
 
         $recipients = NULL;
         $recipients = User::find($result->enrolment->user->id)->phone;
-        //  Bulk-sms settings
-        $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
-        $apikey     = $api->api_key;
+
         if($recipients)
         {
-            // Specified sender-id
-            $from = $api->code; //Mapesa: this still picks the wrong code. Nat-HivPT instead of NPHL
-            $from = "NPHL";
-            // Create a new instance of Bulk SMS gateway.
-            $sms    = new Bulk($username, $apikey);
+            $sms = new SmsHandler;
 
-            // use try-catch to filter any errors.
-            try
+            foreach($recipients as $recipient)
             {
-                // Send messages
-                if(env('ALLOW_SENDING_SMS', true)){
-                    $send_messages = $sms->sendMessage($recipients, $message, $from);
-                    foreach($send_messages as $send_message)
-                    {
-                        // status is either "Success" or "error message" and save.
-                        $number = $send_message->number;
-                        //  Save the results
-                        DB::table('broadcast')->insert(['number' => $number, 'bulk_id' => $bulk_id]);
-                    }
-                }
-            }
-            catch ( AfricasTalkingGatewayException $e )
-            {
-                echo "Encountered an error while sending: ".$e->getMessage();
+                $responseMessage = $sms->sendMessage($recipient, $message);
+                //  Save the results
+                DB::table('broadcast')->insert(['number' => $recipient, 'bulk_id' => $bulk_id]);
             }
  
-       }
+        }
         return response()->json($result);
     }
 
@@ -900,16 +879,9 @@ class ResultController extends Controller
         $ptUserName = $ptUser->first_name . " " . $ptUser->last_name;
         $message = str_replace("PT Participant", $ptUserName, $message);
 
-        try
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($ptUser->phone, $message);
-            \Log::info("Verified pt and sent feedback report sms to $ptUserName ".$ptUser->phone." -- Performed by $user_id");
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+        $smsHandler = new SmsHandler();
+        $smsHandler->sendMessage($ptUser->phone, $message);
+        \Log::info("Verified pt and sent feedback report sms to $ptUserName ".$ptUser->phone." -- Performed by $user_id");
 
         return response()->json($result);
     }
@@ -1013,46 +985,6 @@ class ResultController extends Controller
         \Log::info("To:");
         \Log::info($request);
 
-        //save updated pt details
-
-        $pt->incorrect_results = $pt->incomplete_kit_data = $pt->dev_from_procedure = $pt->incomplete_other_information = $pt->use_of_expired_kits = $pt->invalid_results = $pt->wrong_algorithm = $pt->incomplete_results = $pt->feedback = 0;
-
-        if (isset($request->incorrect_results)) {
-            $pt->incorrect_results = $request->incorrect_results;
-        }
-
-        if (isset($request->incomplete_kit_data)) {
-            $pt->incomplete_kit_data = $request->incomplete_kit_data;
-        }
-
-        if (isset($request->dev_from_procedure)) {
-            $pt->dev_from_procedure = $request->dev_from_procedure;
-        }
-
-        if (isset($request->incomplete_other_information)) {
-            $pt->incomplete_other_information = $request->incomplete_other_information;
-        }
-
-        if (isset($request->use_of_expired_kits)) {
-            $pt->use_of_expired_kits = $request->use_of_expired_kits;
-        }
-
-        if (isset($request->invalid_results)) {
-            $pt->invalid_results = $request->invalid_results;
-        }
-
-        if (isset($request->wrong_algorithm)) {
-            $pt->wrong_algorithm = $request->wrong_algorithm;
-        }
-
-        if (isset($request->incomplete_results)) {
-            $pt->incomplete_results = $request->incomplete_results;
-        }
-
-        if ($request->feedback == 1) {
-            $pt->feedback = $request->feedback;
-        }
-
         // Deactive previous amended reports
         $amendedReports = AmendedPT::where('pt_id', $id)->where('status', AmendedPT::ACTIVE)->get();
         foreach ($amendedReports as $amendedReport) {
@@ -1060,26 +992,40 @@ class ResultController extends Controller
             $amendedReport->save();
         }
 
-        // Save new report
+        // Save amended PT report
         $amendPTReport = new AmendedPT;
+
         $amendPTReport->pt_id = $id;
-        $amendPTReport->feedback = $pt->feedback;
-        $amendPTReport->incorrect_results = $pt->incorrect_results;
-        $amendPTReport->incomplete_kit_data = $pt->incomplete_kit_data;
-        $amendPTReport->dev_from_procedure = $pt->dev_from_procedure;
-        $amendPTReport->incomplete_other_information = $pt->incomplete_other_information;
-        $amendPTReport->use_of_expired_kits = $pt->use_of_expired_kits;
-        $amendPTReport->invalid_results = $pt->invalid_results;
-        $amendPTReport->wrong_algorithm = $pt->wrong_algorithm;
-        $amendPTReport->incomplete_results = $pt->incomplete_results;
+        $amendPTReport->feedback = $request->feedback == 1?$request->feedback:0;
+        $amendPTReport->incorrect_results = isset($request->incorrect_results)?$request->incorrect_results:0;
+        $amendPTReport->incomplete_kit_data = isset($request->incomplete_kit_data)?$request->incomplete_kit_data:0;
+        $amendPTReport->dev_from_procedure = isset($request->dev_from_procedure)?$request->dev_from_procedure:0;
+        $amendPTReport->incomplete_other_information = isset($request->incomplete_other_information)?$request->incomplete_other_information:0;
+        $amendPTReport->use_of_expired_kits = isset($request->use_of_expired_kits)?$request->use_of_expired_kits:0;
+        $amendPTReport->invalid_results = isset($request->invalid_results)?$request->invalid_results:0;
+        $amendPTReport->wrong_algorithm = isset($request->wrong_algorithm)?$request->wrong_algorithm:0;
+        $amendPTReport->incomplete_results = isset($request->incomplete_results)?$request->incomplete_results:0;
         $amendPTReport->reason_for_amendment = $request->reason_for_amendment;
         $amendPTReport->amended_by = Auth::user()->id;
-
         $amendPTReport->save();
 
         $returnValue = response()->json($amendPTReport);
         \Log::info($returnValue);
         
+        //Update feedback in PT table
+        \Log::info("PT ID $id result amended by User ID: ". Auth::user()->id . " from " . $pt->feedback . " to ". $amendPTReport->feedback);
+        $pt->feedback = $amendPTReport->feedback;
+        $pt->save();
+
+        // Notify the user via SMS
+        $smsHandler = new SmsHandler;
+        $ptUser = $pt->enrolment->user;
+        $round = $pt->enrolment->round;
+        $message = "Dear {$ptUser->name}, following a review of your results, your Round {$round->name} PT report has been amended. Kindly login to your account to download it.";
+        $smsHandler->sendMessage($ptUser->phone, $message, true);
+        \Log::info("Amended report sms sent to User ID:{$ptUser->id}:{$ptUser->name} {$ptUser->phone}. -- Performed by ".Auth::user()->id);
+
+
         return $returnValue;
     }
         

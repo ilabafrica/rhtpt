@@ -7,7 +7,6 @@ use App\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use App\Libraries\AfricasTalkingGateway as Bulk;
 use App\SmsHandler;
 
 
@@ -62,10 +61,7 @@ class ForgotPasswordController extends Controller
 \Log::info("Send reset token $token to ".$user->phone . " ". $user->first_name);
             $smsHandler = new SmsHandler();
 
-            //Replace +254 prefix (if it exists) with 0
-            $userPhone = str_replace("+254", "0", $user->phone);
-
-            if(env('ALLOW_SENDING_SMS', true)) $smsHandler->sendMessage($userPhone, $message);
+            $smsHandler->sendMessage($user->phone, $message);
         }
         catch ( \Exception $e )
         {

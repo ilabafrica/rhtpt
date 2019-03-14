@@ -6,16 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\County;
-// use App\Role;
 use App\SmsHandler;
 use App\SubCounty;
 use App\Facility;
 use App\ImplementingPartner;
-// use App\Designation;
 use App\Notification;
 use \stdClass;
-
-use App\Libraries\AfricasTalkingGateway as Bulk;
 
 use Auth;
 use DB;
@@ -279,19 +275,14 @@ class SmsController extends Controller
         }
 
         //process message
-
-
-
         $api = DB::table('bulk_sms_settings')->first();
-        //$from   = $api->username;
-	$from = "NPHL";
         $response =[
             'phone_numbers' =>$phone_numbers,
             'message' => $message,
-            'from' => $from,
+            'from' => $api->code,
             'to' => $to
         ];
-\Log::info("Users found: ".count($users));
+        \Log::info("Users found: ".count($users));
 
         return count($users) > 0 ? response()->json($response) : $error;           
     }
@@ -302,16 +293,9 @@ class SmsController extends Controller
     public function sendMessage(Request $request){
 
         $message = $request->message_to_send;
+        $sms = new SmsHandler;
 
-        // send SMS
-        $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
-        $apikey = $api->api_key;
-        //$from = $api->code;
-	$from = "NPHL";
-        $sms    = new Bulk($username, $apikey);
-
-        //phone numbers come as one array, loop throug it
+        //phone numbers come as one array, loop through it
         foreach ($request->phone_numbers as $phone) {   
             
             //convert the phone number string to array then send sms by looping through the array
@@ -319,15 +303,7 @@ class SmsController extends Controller
 
             foreach ($phone_number as  $number) {
                 
-                try
-                {                           
-                    //print($number .' '.$message.'<br/>');
-                    $sms->sendMessage($number, $message, $from);
-                }                
-                catch ( AfricasTalkingGatewayException $e )
-                {
-                    echo "Encountered an error while sending: ".$e->getMessage();
-                }
+                $sms->sendMessage($number, $message);
             }
         }       
     }

@@ -21,7 +21,7 @@ use DB;
 use Hash;
 use Auth;
 use Mail;
-use App\Libraries\AfricasTalkingGateway as Bulk;
+
 //  Carbon - for use with dates
 use Jenssegers\Date\Date as Carbon;
 use Excel;
@@ -217,15 +217,11 @@ class UserController extends Controller
             $create->notify(new AccountNote($create));
             
             $message    = "Dear ".$create->name.", your PT system account has been created. Use the link sent to your email address to get started.";
-            try 
-            {
-                $smsHandler = new SmsHandler();
-                $smsHandler->sendMessage($create->phone, $message);
-            }
-            catch ( AfricasTalkingGatewayException $e )
-            {
-                echo "Encountered an error while sending: ".$e->getMessage();
-            }
+
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($create->phone, $message);
+
+            \Log::info("User ID {$create->id} {$create->name} {$create->phone} has been created. Corresponding SMS sent.");
 
         }
         return response()->json($create);
@@ -289,15 +285,12 @@ class UserController extends Controller
             $user->notify(new WelcomeNote($user));
             
             $message    = "Dear ".$user->name.", Your HIV PT System account has been created. Your username is ".$user->username.". Use the link sent to your email to get started.";
-            try 
-            {
-                $smsHandler = new SmsHandler();
-                $smsHandler->sendMessage($user->phone, $message);
-            }
-            catch ( AfricasTalkingGatewayException $e )
-            {
-                echo "Encountered an error while sending: ".$e->getMessage();
-            }
+
+            $smsHandler = new SmsHandler();
+            $smsHandler->sendMessage($user->phone, $message);
+
+            \Log::info("User ID {$user->id} {$user->name} {$user->phone} has been created. Corresponding SMS sent.");
+
         }
         return response()->json($edit);
     }
@@ -312,16 +305,13 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $message    = "Dear ".$user->name.", NPHL has disabled your account.";
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+
+        $smsHandler = new SmsHandler();
+        $smsHandler->sendMessage($user->phone, $message);
+
         $user->delete();
+        \Log::info("User ID $id {$user->name} deleted by User ID: ".Auth::user()->id.". Corresponding SMS sent.");
+
         return response()->json(['done']);
     }
 
@@ -335,15 +325,12 @@ class UserController extends Controller
     {
         $user = User::withTrashed()->find($id)->restore();
         $message    = "Dear ".$user->name.", NPHL has enabled your account.";
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+
+        $smsHandler = new SmsHandler();
+        $smsHandler->sendMessage($user->phone, $message);
+
+        \Log::info("User ID $id {$user->name} restored by User ID: ".Auth::user()->id.". Corresponding SMS sent.");
+
         return response()->json(['done']);
     }
     /**
@@ -593,15 +580,12 @@ class UserController extends Controller
         $user->sms_code = $token;
         $user->save();
         $message    = "Your Verification Code is: ".$token;
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+
+        $smsHandler = new SmsHandler();
+        $smsHandler->sendMessage($user->phone, $message);
+
+        \Log::info("User ID {$user->id} {$user->name} {$user->phone} registered. Corresponding SMS with verification code ($token) sent.");
+
         //  Do Email verification for email address
         $user->email_verification_code = Str::random(60);
         $user->save();
@@ -866,25 +850,13 @@ class UserController extends Controller
                             $user->notify(new WelcomeNote($user));
                             
 
-                            //  Bulk-sms settings
-                            $api = DB::table('bulk_sms_settings')->first();
-                            $username   = $api->username;
-                            $apikey     = $api->api_key;
-                            //  Remove beginning 0 and append +254
-                            $phone = ltrim($user->phone, '0');
-                            $recipient = "+254".$phone;
                             $message    = "Dear ".$user->name.", NPHL has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
-                            // Create a new instance of our awesome gateway class
-                            $gateway    = new Bulk($username, $apikey);
-                            try 
-                            {
-                                $smsHandler = new SmsHandler();
-                                $smsHandler->sendMessage($user->phone, $message);
-                            }
-                            catch ( AfricasTalkingGatewayException $e )
-                            {
-                                echo "Encountered an error while sending: ".$e->getMessage();
-                            }
+
+                            $smsHandler = new SmsHandler();
+                            $smsHandler->sendMessage($user->phone, $message);
+
+                            \Log::info("User ID {$user->id} {$user->name} {$user->phone} assigned a tester ID by ".Auth::user()->id.". Corresponding SMS with tester ID ({$user->uid}}) sent.");
+
                         }
                     }
                 }

@@ -24,7 +24,6 @@ use Mail;
 use DB;
 use Hash;
 use Auth;
-use App\Libraries\AfricasTalkingGateway as Bulk;
 use Jenssegers\Date\Date as Carbon;
 
 class RegisterController extends Controller
@@ -208,32 +207,24 @@ class RegisterController extends Controller
     {
         if(strlen($request) < 10 || strlen($request) > 10)
             return response()->json(["error" => "Enter a valid phone number."]);
+
         $phone = ltrim($request, '0');
-        $recipient = "+254".$phone;
         $user = User::withTrashed()->where('phone', 'LIKE', '%'.$phone.'%')->first();
         if(!$user)
             return response()->json(["error" => "Phone number not found."]);
-        //  Bulk-sms settings
-        $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
-        $apikey     = $api->api_key;
+
         $token = mt_rand(100000, 999999);
         $user->sms_code = $token;
         $user->save();
         $message    = "Your Verification Code is: ".$token;
-        // Create a new instance of our awesome gateway class
-        $gateway    = new Bulk($username, $apikey);
-        try 
-        { 
-            // Specified sender-id
-            $from = $api->code;
-            // Send message
-            if(env('ALLOW_SENDING_SMS', true)) $gateway->sendMessage($recipient, $message);
-        }
-        catch (\AfricasTalkingGatewayException $e )
-        {
+
+        $smsHandler = new SmsHandler();
+        $SMSResponseMessage = $smsHandler->sendMessage($user->phone, $message);
+
+        if($SMSResponseMessage === false){
             return response()->json(["error" => "'Encountered an error while sending verification code. Please try again later."], 500);
         }
+        
         try
         {
             //  Do Email verification for email address

@@ -21,7 +21,6 @@ use DB;
 use Hash;
 use Auth;
 use Mail;
-use App\Libraries\AfricasTalkingGateway as Bulk;
 //  Carbon - for use with dates
 use Jenssegers\Date\Date as Carbon;
 use Excel;
@@ -364,17 +363,12 @@ class ParticipantController extends Controller
     {
         $user = User::find($id);
         $message    = "Dear ".$user->name.", NPHL has disabled your account.";
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+
+        $smsHandler = new SmsHandler();
+        $smsHandler->sendMessage($user->phone, $message);
+
         $user->delete();
-        \Log::info("User (USER ID: $id) deleted by: USER ID: ".Auth::user()->id);
+        \Log::info("User (USER ID: $id {$user->name}) deleted by: USER ID: ".Auth::user()->id);
         return response()->json(['done']);
     }
 
@@ -388,17 +382,12 @@ class ParticipantController extends Controller
     {
         $user = User::withTrashed()->where('id', $id)->restore();
         $user = User::find($id);
-        \Log::info("User (USER ID: $id) restored by: USER ID: ".Auth::user()->id);
+        \Log::info("User (USER ID: $id {$user->name}) restored by: USER ID: ".Auth::user()->id);
         $message    = "Dear ".$user->name.", NPHL has enabled your account. Once enrolled, you’ll receive a tester ID";
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+
+        $smsHandler = new SmsHandler();
+        $smsHandler->sendMessage($user->phone, $message);
+
         return response()->json(['done']);
     }
     /**
@@ -667,15 +656,9 @@ class ParticipantController extends Controller
         $user->sms_code = $token;
         $user->save();
         $message    = "Your Verification Code is: ".$token;
-        try 
-        {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-        }
-        catch ( AfricasTalkingGatewayException $e )
-        {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+
+        $smsHandler = new SmsHandler();
+        $smsHandler->sendMessage($user->phone, $message);
 
         //  Do Email verification for email address
         $user->email_verification_code = Str::random(60);
@@ -844,27 +827,12 @@ class ParticipantController extends Controller
         $user->token = $token;
         $user->notify(new WelcomeNote($user));
         
-        //  Bulk-sms settings
-        $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->code;
-        $apikey     = $api->api_key;
-        //  Remove beginning 0 and append +254
-        $phone = ltrim($user->phone, '0');
-        $recipient = "+254".$phone;
         $message    = "Dear ".$user->name.", your Sub-county Coordinator has approved your request to participate in PT. Your tester ID is ".$user->uid.". Use the link sent to your email to get started.";
-        // Create a new instance of our awesome gateway class
-        $gateway    = new Bulk($username, $apikey);
        
-         try 
-         {
-            $smsHandler = new SmsHandler();
-            $smsHandler->sendMessage($user->phone, $message);
-         }
-         catch ( AfricasTalkingGatewayException $e )
-         {
-            echo "Encountered an error while sending: ".$e->getMessage();
-        }
+        $smsHandler = new SmsHandler();
+        $smsHandler->sendMessage($user->phone, $message);
     }
+
     public function denyUserVerification(Request $request, $id){
        
         $user = User::withTrashed()->find($id);

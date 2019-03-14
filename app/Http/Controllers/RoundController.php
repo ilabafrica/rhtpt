@@ -18,8 +18,6 @@ use App\Designation;
 use App\Pt;
 use App\ImplementingPartner;
 
-use App\Libraries\AfricasTalkingGateway as Bulk;
-
 use Auth;
 use DB;
 use Jenssegers\Date\Date as Carbon;
@@ -114,26 +112,12 @@ class RoundController extends Controller
             $recipients = implode(",", $phone_numbers);
             //  Send SMS
             $message = 'Dear County/SubCounty Coordinator, NPHL has created Round'.$round->name.'. You have until'.$round->enrollment_date.' to enrol participants into this round.';            
-            //  Bulk-sms settings
-            $api = DB::table('bulk_sms_settings')->first();
-            $username   = $api->username;
-            $apikey     = $api->api_key;
+
             if($recipients)
             {
-                // Specified sender-id
-                $from = $api->code;
-                // Create a new instance of Bulk SMS gateway.
-                // use try-catch to filter any errors.
-                try
-                {
-                    // Send messages
-                    $sms    = new Bulk($username, $apikey);
-                    if(env('ALLOW_SENDING_SMS', true)) $sms->sendMessage($recipients, $message, $from);
-                
-                }
-                catch ( AfricasTalkingGatewayException $e )
-                {
-                echo "Encountered an error while sending: ".$e->getMessage();
+                $sms = new SmsHandler;
+                foreach ($recipients as $recipient) {
+                    $sms->sendMessage($recipient, $message);
                 }
             }
             return response()->json($round);
@@ -171,26 +155,13 @@ class RoundController extends Controller
         $recipients = implode(",", $phone_numbers);
         //  Send SMS
         $message = 'Dear County/SubCounty Coordinator, Round '.$round->name.' is now open for enrollment. Please enroll your participants between '.$round->start_date.' and '.$round->enrollment_date.'. Deadline is 5pm '.$round->enrollment_date;
-        //  Bulk-sms settings
-        $api = DB::table('bulk_sms_settings')->first();
-        $username   = $api->username;
-        $apikey     = $api->api_key;
+
         if($recipients)
         {
-            // Specified sender-id
-            $from = $api->code;
-            // Create a new instance of Bulk SMS gateway.
-            // use try-catch to filter any errors.
-            try
-            {
-                // Send messages
-                $sms    = new Bulk($username, $apikey);
-                if(env('ALLOW_SENDING_SMS', true)) $sms->sendMessage($recipients, $message, $from);
-            
-            }
-            catch ( AfricasTalkingGatewayException $e )
-            {
-            echo "Encountered an error while sending: ".$e->getMessage();
+            // Send messages
+            $sms = new SmsHandler;
+            foreach ($recipients as $recipient) {
+                $sms->sendMessage($recipient, $message);
             }
         }
 
@@ -290,7 +261,7 @@ class RoundController extends Controller
             }
         }
 
-        if(count($phone_numbers) > 0 && env('ALLOW_SENDING_SMS', true)){
+        if(count($phone_numbers) > 0){
             $recipients = NULL;
             $recipients = implode(",", $phone_numbers);
             //  Send SMS
@@ -300,25 +271,11 @@ class RoundController extends Controller
             $message = str_replace(' [', ' ', $message);
             $message = str_replace('] ', ' ', $message);
 
-            //  Bulk-sms settings
-            $api = DB::table('bulk_sms_settings')->first();
-            $username   = $api->username;
-            $apikey     = $api->api_key;
-
             if($recipients) {
-                // Specified sender-id
-                $from = $api->code;
-                // Create a new instance of Bulk SMS gateway.
-                $sms    = new Bulk($username, $apikey);
-                // use try-catch to filter any errors.
-                try
-                {
-                    // Send messages
-                    $sms->sendMessage($recipients, $message, $from);
-                }
-                catch ( AfricasTalkingGatewayException $e )
-                {
-                    echo "Encountered an error while sending: ".$e->getMessage();
+
+                $sms = new SmsHandler;
+                foreach ($recipients as $recipient) {
+                    $sms->sendMessage($recipient, $message);
                 }
             }
         }
