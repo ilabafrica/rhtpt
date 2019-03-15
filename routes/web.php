@@ -316,6 +316,7 @@ Route::group(['middleware' => 'auth'], function()
     ));
 
     Route::get('result', 'ResultController@manageResult');
+    Route::get('pt/{id}/reevaluate', 'ResultController@reevaluate');
     
     Route::post("/update_results/{id}", array(
         "as"   => "update_results",

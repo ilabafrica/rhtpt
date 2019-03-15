@@ -290,10 +290,17 @@ new Vue({
 
         //A shortcut on quick verification on the satisfactory results
         quickVerifyEvaluatedResult: function(id){
-            // let id = result.id;
             this.$http.get('/verify_evaluated_results/'+id).then((response) => {
                 this.changePage(this.pagination.current_page);
                 toastr.success('Result Verified Successfully.', 'Success Alert', {timeOut: 5000});
+            });
+        },
+
+        //Submit a result for re-evaluation. It will be re-evaluated when the Algorithm next runs
+        submitForReevaluation: function(id){
+            this.$http.get('/pt/'+id+'/reevaluate').then((response) => {
+                this.changePage(this.pagination.current_page);
+                toastr.success('The result has been submitted for re-evaluation!', 'Success Alert', {timeOut: 5000});
             });
         },
 

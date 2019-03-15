@@ -662,13 +662,17 @@
                                                 <textarea name="comment" class="form-control">@{{evaluated_results.feedback}}</textarea>
                                             </div>
                                         </div>
-                                        <div class="form-group row col-sm-offset-1">
+                                        <div class="form-group row">
+                                            <center>
                                             <button  class="btn btn-sm btn-success " title="Verify Evaluated Results">
                                                 <i class='fa fa-check-circle'></i> Verify</button>
                                             <button  class="btn btn-sm btn-wisteria" type="button" @click="show_update_evaluated_results()" title="Update Evaluated Results">
                                                 <i class='fa fa-pencil-square-o'></i> Update
-                                            </button>&nbsp;
+                                            </button>
+                                            <button  class="btn btn-sm btn-warning " @click="submitForReevaluation(evaluated_results.pt_id)" title="Submit Result for Revaluation" data-dismiss="modal">
+                                                <i class='fa fa-list'></i> Re-evaluate</button>
                                             <button type="button" class="btn btn-sm btn-silver" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i> {!! trans('messages.cancel') !!}</span></button>
+                                            </center>
                                         </div>
                                     </div>
                                 </form>

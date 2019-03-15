@@ -406,6 +406,26 @@ class ResultController extends Controller
     }
 
     /**
+     * Sets the status of a panel to Submitted thus setting it up for re-evaluation.
+     *
+     * @param  int  $PTID
+     * @return \Illuminate\Http\Response
+     */
+    public function reevaluate($PTID)
+    {
+        \Log::info("Submitting a panel (PTID: $PTID) for re-evaluation. Done by ". Auth::user()->id);
+
+        $pt = Pt::find($PTID);
+
+        \Log::info("Initial outcome:\n". json_encode($pt));
+
+        $pt->panel_status = Pt::CHECKED;
+        $pt->save();
+
+        return response()->json(['done']);
+    }
+
+    /**
      * Receive a shipment.
      *
      * @param  \Illuminate\Http\Request  $request
