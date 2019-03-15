@@ -329,7 +329,7 @@ class ParticipantController extends Controller
         $user->first_name = $request->first_name;
         $user->middle_name = $request->middle_name;
         $user->last_name = $request->last_name;
-        $user->name = $request->first_name . " " . $request->middle_name . " " . $request->last_name;
+        $user->name = trim($request->first_name) . " " . trim($request->middle_name) . " " . trim($request->last_name);
         $user->phone = $request->phone;
         $user->email = $request->email;
         $user->gender = $request->gender;

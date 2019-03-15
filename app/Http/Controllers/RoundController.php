@@ -1145,5 +1145,19 @@ class RoundController extends Controller
             return response()->json(array('errors' => $duplicates));
         }
     }
+
+
+    /**
+     * Get Lots for the specified round.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $roundID
+     * @return \Illuminate\Http\Response
+     */
+    public function getLots(Request $request, $roundID)
+    {
+        $round = Round::find($roundID);
+        return response()->json($round->lots->all());
+    }
 }
 $excel = App::make('excel');

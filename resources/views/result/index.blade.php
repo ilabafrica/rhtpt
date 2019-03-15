@@ -52,15 +52,14 @@
         <div class="col-lg-12 margin-tb">
             <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter()"> -->
                 <div class="row">
-                    <div class="pull-left col-sm-6">
+                    <div class="pull-left col-sm-12">
                         <label>Filter by: </label>
                         <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#round">Round</button>
                         <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#region">Region</button>
                         <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#result_status_">Submission Status</button>
                         <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#feedback_status_">Feedback</button>
-                    </div>
-                    <div class="col-sm-2">&nbsp;</div>
-                    <div class="col-sm-4">
+                        <button data-toggle="collapse" v-if="role==1" class="btn btn-success btn-sm" data-target="#lot">Lot</button>
+                        <button data-toggle="collapse" v-if="role==1" class="btn btn-success btn-sm" data-target="#results_order">Order By</button>
                         <button class="btn btn-sm btn-alizarin" type="submit" @click="filter(1)" v-if="!loading">Filter </button>
                         <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
                     </div>
@@ -70,7 +69,7 @@
                         <div class="col-sm-4">
                             <label class="col-sm-4 form-control-label" for="round">Round:</label>
                             <div class="col-sm-8">
-                                <select class="form-control" name="round" id="round_id" v-model="round">
+                                <select class="form-control" name="round" id="round_id" v-model="round" @change="getLots()">
                                     <option selected></option>
                                     <option v-for="round in rounds" :value="round.id">@{{ round.value }}</option>
                                 </select>
@@ -138,6 +137,32 @@
                             </div>
                         </div>                    
                                        
+                    </div>
+                </div>
+                <div id="lot" class="collapse">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label class="col-sm-4 form-control-label" for="lot">Lot:</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="lot" v-model="lot" id="lot_id" @change="toggle_selects()">
+                                    <option selected></option>
+                                    <option v-for="alot in lots" v-bind:value="alot.lot">Lot @{{alot.lot}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="results_order" class="collapse">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label class="col-sm-4 form-control-label" for="results_order_id">Order By:</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="results_order" v-model="results_order" id="results_order_id" @change="toggle_selects()">
+                                    <option selected></option>
+                                    <option v-for="ro in resultsOrder" v-bind:value="ro.id">@{{ro.title}}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             <!-- </form>  -->

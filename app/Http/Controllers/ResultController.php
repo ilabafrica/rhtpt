@@ -48,9 +48,11 @@ class ResultController extends Controller
         $items_per_page = 100;
 
         $searchString = null;
-        $roundID = $countyID = $subCountyID = $facilityID = 0;
+        $roundID = $lotID = $countyID = $subCountyID = $facilityID = $resultsOrderIndex = 0;
         
         if($request->has('round')) $roundID = $request->get('round');
+
+        if($request->has('lot')) $lotID = $request->get('lot');
 
         if($request->has('q')) $searchString = ['search'=>$request->get('q')];
 
@@ -60,6 +62,8 @@ class ResultController extends Controller
 
         if($request->has('facility')) $facilityID = $request->get('facility');
 
+        if($request->has('results_order')) $resultsOrderIndex = $request->get('results_order');
+    
         if(Auth::user()->isCountyCoordinator())
         {
             $results = County::find(Auth::user()->ru()->tier)->results($searchString, $roundID, $countyID, $subCountyID, $facilityID);
@@ -115,6 +119,12 @@ class ResultController extends Controller
 
             if($roundID > 0) $enrolments = $enrolments->where('enrolments.round_id', $roundID);
 
+            if($lotID > 0){
+                $enrolments = $enrolments->join('lots', 'enrolments.round_id', 'lots.round_id')
+                                ->where('lots.lot', '=', $lotID)
+                                ->where(\DB::raw("lots.tester_id LIKE CONCAT('%', SUBSTR(users.uid, -1), '%') AND enrolments.deleted_at "));
+            }
+
             $results = $enrolments->join('pt','enrolments.id', '=', 'pt.enrolment_id')
                             ->select(["users.*", "enrolments.*", "pt.*"]);
         }
@@ -129,7 +139,8 @@ class ResultController extends Controller
             $results = $results->where('feedback', $request->get('feedback_status'));
         }
 
-        $results = $results->withTrashed()->orderBy('pt.id')->paginate($items_per_page);
+        $resultsOrder = ['pt.id', 'users.first_name', 'users.uid'];
+        $results = $results->withTrashed()->orderBy($resultsOrder[$resultsOrderIndex])->paginate($items_per_page);
 
         foreach($results as $result)
         {

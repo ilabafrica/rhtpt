@@ -27,9 +27,13 @@ new Vue({
         fillVerifiedResult: {},
         form: [],
         sets: [],
+        lot: '',
+        lots: [],
         round: '',
         rounds: [],
         roundsDone: [],
+        results_order: '',
+        resultsOrder: [{'id':'1', 'title':'Name'}, {'id': 0, 'title':'Submission Time'}, {'id':'2', 'title':'Tester ID'}],
         frmData: {},
         viewFormData:{},
         evaluated_results:[],
@@ -238,6 +242,13 @@ new Vue({
         getSets: function(){
             this.$http.get('/frmSets').then((response) => {
                 this.sets = response.data.sets;
+            }, (response) => {
+            });
+        },
+
+        getLots: function() {
+            this.$http.get('/round/' + this.round + '/lots').then((response) => {
+                this.lots = response.data;
             }, (response) => {
             });
         },
@@ -513,6 +524,9 @@ new Vue({
 
             if (this.round) {
                link = link +'&round='+this.round;
+                if (this.lot) {
+                   link = link +'&lot='+this.lot;
+                }
             }
 
             //if county
@@ -536,6 +550,11 @@ new Vue({
             if (this.feedback_status) {
 
                link = link +'&feedback_status='+this.feedback_status;
+            }
+
+            if (this.results_order) {
+
+               link = link +'&results_order='+this.results_order;
             }
 
             // Making a get request to our API and passing the query to it.

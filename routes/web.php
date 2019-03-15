@@ -125,6 +125,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::any('vueprograms/{id}/restore','ProgramController@restore');
 
     Route::get('round', 'RoundController@manageRound');
+    Route::get('round/{id}/lots', 'RoundController@getLots');
     Route::resource('vuerounds','RoundController');
     Route::any('vuerounds/{id}/restore','RoundController@restore');
 
