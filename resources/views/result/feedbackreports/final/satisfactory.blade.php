@@ -65,10 +65,10 @@
         <td>{{$data['mfl']}}</td>
     </tr>
     <tr> <td> &nbsp;</td> </tr>
-    @if($amended['feedback'] === 'Unsatisfactory')
     <tr class="text-center"> <td colspan="5"><u><b>RE: Proficiency Testing Results</b></u></td></tr>
     <tr class="text-center"> <td colspan="5">NPHL acknowledges receipt of your Proficiency Testing results for Round {{$data['round_name']}}.</td></tr>
     <tr class="text-center"> <td colspan="5">Your overall performance is <b>{{$amended['feedback']}}</b>.</td></tr>
+    @if($amended['feedback'] === 'Unsatisfactory')
     <tr class="text-center"> <td colspan="5">The reason/s for <b> {{$amended['feedback']}}</b> is/are:</td></tr>    
     <tr >        
         <td style ="border:solid 1px black;"><input type="checkbox" style="display: inline"
