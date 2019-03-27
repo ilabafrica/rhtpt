@@ -48,8 +48,8 @@
                     <td>@{{ tally.round }}</td>
                     <td>@{{ tally.enrolment }}</td>
                     <td>@{{ tally.response }}</td>
-                    <td>@{{ tally.satisfactory }}</td>
-                    <td>@{{ tally.unsatisfactory }}</td>
+                    <td>@{{ tally.satisfactory }} (@{{ (tally.satisfactory / tally.response * 100).toFixed(2) }}%) </td>
+                    <td>@{{ tally.unsatisfactory }}  (@{{ (tally.unsatisfactory / tally.response * 100).toFixed(2) }}%) </td>
                 </tr>
             </table>
             <div id="talliesContainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
