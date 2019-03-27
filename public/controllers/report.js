@@ -94,7 +94,7 @@ new Vue({
                     type: 'column'
                 },
                 title: {
-                    text: 'Response and Satisfaction',
+                    text: 'Response and Satisfaction Rates (%)',
                     x: -20 //center
                 },
                 subtitle: {
@@ -107,7 +107,7 @@ new Vue({
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'Count'
+                        text: 'Percentage'
                     }
                 },
                 colors: ['#00acc1', '#afb42b'],
@@ -127,7 +127,7 @@ new Vue({
                     type: 'column'
                 },
                 title: {
-                    text: 'Unsatisfactory Performance',
+                    text: 'Reasons for Unsatisfactory Performance',
                     x: -20 //center
                 },
                 subtitle: {
@@ -140,7 +140,7 @@ new Vue({
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'Count'
+                        text: 'Percentage'
                     }
                 },
                 colors: ['#2E2E2E', '#007E33', '#e91e63', '#6d4c41','#1a237e', '#ff6f00', '#bf360c', '#607d8b', '#45526E'],

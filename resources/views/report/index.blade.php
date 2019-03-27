@@ -9,10 +9,10 @@
     </div>
 </div>
 <div class="" id="manage-report">
-    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateReport" class="form-inline">
-        <div class="col-md-12">
+    <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateReport" class="form-inline hidden">
+        <div class="col-md-12" style="display: none;">
             <div class="form-group">
-                <label class="col-sm-4 form-control-label" for="from">From:</label>
+                <label class="col-sm-4 form-control-label" for="from">Round:</label>
                 <div class="col-sm-8">
                     <select class="form-control c-select" name="from">
                         <option selected></option>
