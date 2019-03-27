@@ -47,7 +47,7 @@
                 <tr v-for="tally in tallies">
                     <td>@{{ tally.round }}</td>
                     <td>@{{ tally.enrolment }}</td>
-                    <td>@{{ tally.response }}</td>
+                    <td>@{{ tally.response }} (@{{ (tally.response / tally.enrolment * 100).toFixed(2) }}%)</td>
                     <td>@{{ tally.satisfactory }} (@{{ (tally.satisfactory / tally.response * 100).toFixed(2) }}%) </td>
                     <td>@{{ tally.unsatisfactory }}  (@{{ (tally.unsatisfactory / tally.response * 100).toFixed(2) }}%) </td>
                 </tr>
