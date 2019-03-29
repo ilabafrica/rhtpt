@@ -161,24 +161,34 @@ new Vue({
             let myForm = document.getElementById('select_users_message');         
             let formData = new FormData(myForm);
 
-            this.$http.post('/select_users_message', formData ).then((response) => {
+            if(formData.get('user_type') == 9){ //Send to any
+                $("#select-users-message").modal('hide');
+                $("#resend-message").modal('show');
 
-                if (response.data.error) {
-                    toastr.error('No users found.', 'Error', {timeOut: 5000});
+                this.phone_numbers = [];
+                this.from = "NPHL"; //TODO: Make configurable
+                this.to = [];
+                this.message_to_send = "";
+            }else{
+                this.$http.post('/select_users_message', formData ).then((response) => {
 
-                }else{
-                    $("#select-users-message").modal('hide');
-                    $("#resend-message").modal('show');
+                    if (response.data.error) {
+                        toastr.error('No users found.', 'Error', {timeOut: 5000});
 
-                    this.phone_numbers = response.data.phone_numbers;
-                    this.from = response.data.from;
-                    this.to = response.data.to;
-                    this.message_to_send = response.data.message;
-                }
-            }, (response) => {
-                this.formErrors = response.data;
-                
-            });        
+                    }else{
+                        $("#select-users-message").modal('hide');
+                        $("#resend-message").modal('show');
+
+                        this.phone_numbers = response.data.phone_numbers;
+                        this.from = response.data.from;
+                        this.to = response.data.to;
+                        this.message_to_send = response.data.message;
+                    }
+                }, (response) => {
+                    this.formErrors = response.data;
+                    
+                });
+            }
         },
 
         resendMessages : function() {

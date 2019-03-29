@@ -13,12 +13,12 @@
 <div class="" id="manage-sms">
 <!-- Sms listing -->
 <div class="row">
-		<div class="pull-left col-md-8">
+	<div class="pull-left col-md-8">
 		<h5><i class="fa fa-book">	</i>
 		 {!! trans_choice('messages.Messages', 2) !!}
-		 <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
+		<a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
              <i class="fa fa-step-backward"></i> {!! trans('messages.back') !!}
-            </a>
+        </a>
             <button type="button" class="btn btn-sm btn-belize-hole" data-toggle="modal" data-target="#create-message"><i class="fa fa-plus-circle"></i>
             {!! trans('messages.add') !!}
             </button>
@@ -26,17 +26,7 @@
             Custom Message
             </button>
 		 </h5>			
-		</div> 
-    <!-- <div class="col-md-4">
-                <div class="input-group input-group-sm">
-                    <input type="text" class="form-control" placeholder="Search for..." v-model="query" v-on:keyup.enter="search()">
-                    <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="button" v-if="!loading"><i class="fa fa-search"></i></button>
-                        <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
-                    </span>
-                </div>
-            </div>  -->
-            <!-- </form> -->  		
+	</div> 
 	</div>
       <table class="table table-bordered">
         <tr>
@@ -80,7 +70,7 @@
     </nav>
 
 	<!-- Create Sms-->
-<div class="modal fade" id="create-message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="create-message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -172,13 +162,14 @@
                                     <div class="form-radio radio-inline" >
                                     <label class="form-radio-label">
                                         <div v-if="sendMessage.template != 7 && sendMessage.template != 8 && sendMessage.template != 9">
-                                            <input type="radio" :value="0" v-model="user_type" name="user_type" />All users   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" :value="3" v-model="user_type" name="user_type" />Partners &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" :value="4" v-model="user_type" name="user_type" />County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" :value="7" v-model="user_type" name="user_type" />Sub-County Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" :value="2" v-model="user_type" name="user_type" />Participant &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" :value="0" v-model="user_type" name="user_type" />All users <br>
+                                            <input type="radio" :value="3" v-model="user_type" name="user_type" />Partners <br>
+                                            <input type="radio" :value="4" v-model="user_type" name="user_type" />County Coordinator <br>
+                                            <input type="radio" :value="7" v-model="user_type" name="user_type" />Sub-County Coordinator <br>
+                                            <input type="radio" :value="2" v-model="user_type" name="user_type" />Participant <br>
                                         </div>
-                                        <input type="radio" :value="8" v-model="user_type" name="user_type" />Search
+                                        <input type="radio" :value="8" v-model="user_type" name="user_type" />Search <br>
+                                        <input type="radio" :value="9" v-model="user_type" name="user_type" />Any User
                                     </label>
                                    </div>
                                 </div>
@@ -307,15 +298,21 @@
                 <div class="modal-body">
                     <div class="row" >
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="resendMessages()" id="resend_message" data-vv-scope="resend_message">
-                            <input type="hidden" name="phone_numbers[]" v-bind:value="phone_numbers">
                             <div class="col-md-12">    
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title"> From</label>                                                               
                                     <div class="col-sm-8">@{{from}}</div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="form-group row" v-if="user_type!=9">
                                     <label class="col-sm-4 form-control-label" for="title"> To</label>                                                              
                                     <div class="col-sm-8">@{{to}}</div>                       
+                                    <input type="hidden" name="phone_numbers[]" v-bind:value="phone_numbers">
+                                </div>
+                                <div class="form-group row" v-if="user_type==9">
+                                    <label class="col-sm-4 form-control-label" for="title"> To</label>                                                              
+                                    <div class="col-sm-8">                       
+                                        <input type="text" name="phone_numbers[]" v-bind:value="phone_numbers" />
+                                    </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title"> Message</label>                                                               
