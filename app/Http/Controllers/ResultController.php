@@ -728,6 +728,9 @@ class ResultController extends Controller
         $approver = User::find($pt->approved_by);
         $approvedBy = "";
 
+        $performer = $pt->enrolment->performer();
+        \Log::info($performer);
+
         if(isset($approver->first_name)) $approvedBy = "{$approver->first_name} {$approver->last_name}";
 
         if($pt->feedback == Pt::UNSATISFACTORY)
@@ -753,6 +756,7 @@ class ResultController extends Controller
             'last_name' => $last_name,
             'phone_no' => $phone_no,
             'tester_id' => $tester_id,
+            'tester_id_on_panel' => $performer->uid,
             'designation' => $designation,
             'program' => $program,
             'program_name' => isset($program->name)?$program->name:"",
@@ -936,6 +940,10 @@ class ResultController extends Controller
         \Log::info($pt);
         \Log::info("To:");
         \Log::info($request);
+
+        $enrolment = Enrol::find($pt->enrolment_id);
+        $enrolment->tester_id = $request->tester_id_on_panel;
+        $enrolment->save();
 
         //save previous data
 

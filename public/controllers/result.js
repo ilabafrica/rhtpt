@@ -675,9 +675,6 @@ new Vue({
                   
             }
         },
-        toggle_selects: function() {
-            
-        },
         check_total_days: function() {
             var year = $('select[name=year]').val();
             var month = $('select[name=month]').val();

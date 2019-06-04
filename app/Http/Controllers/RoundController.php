@@ -92,7 +92,6 @@ class RoundController extends Controller
             //save round
             $request->request->add(['user_id' => Auth::user()->id]);
 
-            // $create = Round::create($request->all());
             $round = new Round;
             $round->name =$request->name;
             $round->description =$request->description;
@@ -216,7 +215,6 @@ class RoundController extends Controller
         // fetch rounds details 
         $rounds = Round::whereIn('id', $ids)->pluck('description', 'id');
         // format to match dropdown values
-        // dd($rounds);
         $categories = [];
         foreach($rounds as $key => $value)
         {
@@ -241,10 +239,13 @@ class RoundController extends Controller
             if(count($enrolledUser) == 0){
                 $enrol = new Enrol;
                 try {
+                    $facilityID = User::find($userID)->ru()->tier;
                     $enrol->user_id = (int)$userID;
                     $enrol->round_id = $roundId;
-                    $enrol->facility_id = User::find($userID)->ru()->tier;
+                    $enrol->facility_id = $facilityID;
+                    $enrol->tester_id = (int)$userID;
                     $enrol->save();
+                    \Log::info("Participant (users.id: $userID) enrolled for round (rounds.id: $roundId) at facility ($facilityID) by (users.id: ".Auth::user()->id.")");
                         
                     $user = User::find($enrol->user_id);
                     if($user->phone)
@@ -257,6 +258,7 @@ class RoundController extends Controller
             }else if(strcmp($request->view, "unenrol") == 0){
                 foreach ($enrolledUser as $user) {
                     Enrol::find($user['id'])->delete();
+                    \Log::info("Participant (users.id: $userID) unenrolled from round (rounds.id: $roundId) at facility ($facilityID) by (users.id: ".Auth::user()->id.")");
                 }
             }
         }
@@ -276,6 +278,8 @@ class RoundController extends Controller
                 $sms = new SmsHandler;
                 foreach ($recipients as $recipient) {
                     $sms->sendMessage($recipient, $message);
+                    \Log::info("Enrolment notification sent to $recipient");
+
                 }
             }
         }
@@ -594,15 +598,12 @@ class RoundController extends Controller
             if(!empty($participant->ru()->tier))
             {
                 $facility = Facility::find($participant->ru()->tier);
-                //$participant->facility = $participant->ru()->tier;
-                //$participant->sub_county = $facility->subCounty->id;
-                //$participant->county = $facility->subCounty->county->id;
-                
-    		if ($facility) {
-    		    $participant->facility_name = $facility->name;
-            	    $participant->sub_county_name = $facility->subCounty->name;
-                        $participant->county_name = $facility->subCounty->county->name;               
-    		}else{
+               
+        		if ($facility) {
+        		    $participant->facility_name = $facility->name;
+                	    $participant->sub_county_name = $facility->subCounty->name;
+                            $participant->county_name = $facility->subCounty->county->name;               
+        		}else{
                     $participant->facility = '';
                     $participant->sub_county = '';
                     $participant->county = '';   
@@ -820,7 +821,7 @@ class RoundController extends Controller
                     if(count($testers) > 0)
                     {
                         $testers = implode(",", $testers);
-                        // dd($testers);
+
                         $sheetTitle = $county->name;
                         if (count($testers)>0) {
                     $data = DB::select(

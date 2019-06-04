@@ -113,7 +113,7 @@
                         <div class="col-sm-4">
                             <label class="col-sm-4 form-control-label" for="title">Submission Status:</label>
                             <div class="col-sm-6">
-                                <select class="form-control" name="result_status" v-model = "result_status" id="result_status_id" @change="toggle_selects()">
+                                <select class="form-control" name="result_status" v-model = "result_status" id="result_status_id">
                                     <option selected></option>
                                     <option value="0">Not Checked</option>                         
                                     <option value="1">Submitted</option>                         
@@ -129,7 +129,7 @@
                         <div class="col-sm-4">
                             <label class="col-sm-4 form-control-label" for="title">Feedback:</label>
                             <div class="col-sm-6">
-                                <select class="form-control" name="feedback_status" v-model = "feedback_status" id="feedback_status_id" @change="toggle_selects()">
+                                <select class="form-control" name="feedback_status" v-model = "feedback_status" id="feedback_status_id">
                                     <option selected></option>
                                        <option value="0">Satisfactory</option>                         
                                        <option value="1">Unsatisfactory</option>                         
@@ -144,7 +144,7 @@
                         <div class="col-sm-4">
                             <label class="col-sm-4 form-control-label" for="lot">Lot:</label>
                             <div class="col-sm-6">
-                                <select class="form-control" name="lot" v-model="lot" id="lot_id" @change="toggle_selects()">
+                                <select class="form-control" name="lot" v-model="lot" id="lot_id">
                                     <option selected></option>
                                     <option v-for="alot in lots" v-bind:value="alot.lot">Lot @{{alot.lot}}</option>
                                 </select>
@@ -157,7 +157,7 @@
                         <div class="col-sm-4">
                             <label class="col-sm-4 form-control-label" for="results_order_id">Order By:</label>
                             <div class="col-sm-6">
-                                <select class="form-control" name="results_order" v-model="results_order" id="results_order_id" @change="toggle_selects()">
+                                <select class="form-control" name="results_order" v-model="results_order" id="results_order_id">
                                     <option selected></option>
                                     <option v-for="ro in resultsOrder" v-bind:value="ro.id">@{{ro.title}}</option>
                                 </select>
@@ -826,6 +826,12 @@
                                             </option>   
                                         </select>
                                         <span v-show="errors.has('program_id')" class="help is-danger">@{{ errors.first('program_id') }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 form-control-label" for="title">Tester ID on Panel:</label>
+                                    <div class="col-sm-4" :class="{ 'control': true }">
+                                        <input v-validate="'required'" class="form-control" name="tester_id_on_panel" type="text" v-model="evaluated_results.tester_id_on_panel"/>
                                     </div>
                                 </div>
 

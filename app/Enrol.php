@@ -25,7 +25,7 @@ class Enrol extends Model
     const DONE =1;
     const NOT_DONE =0;
     /**
-  	 * Relationship with users.
+  	 * Relationship with user that was enrolled for the pt round.
   	 *
   	 */
      public function user()
@@ -47,5 +47,14 @@ class Enrol extends Model
      public function pt()
      {
        return $this->hasOne('App\Pt', 'enrolment_id');
+     }
+
+     /**
+     * Relationship with user that performed the pt.
+     *
+     */
+     public function performer()
+     {
+       return $this->belongsTo('App\User', 'tester_id');
      }
 }

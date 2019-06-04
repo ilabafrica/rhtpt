@@ -26,9 +26,36 @@ class ReportController extends Controller
      */
     public function index(Request $request)
     {
-        $summaries = DB::select("SELECT r.id, r.description AS 'round', COUNT(DISTINCT e.user_id) AS 'enrolment', COUNT(DISTINCT pt.id) AS 'response', SUM(feedback=0) AS 'satisfactory', SUM(feedback=1) AS 'unsatisfactory' FROM rounds r INNER JOIN enrolments e ON r.id=e.round_id LEFT JOIN pt ON e.id=pt.enrolment_id WHERE ISNULL(r.deleted_at) AND ISNULL(e.deleted_at) GROUP BY r.id");
-        $percentiles = DB::select("SELECT r.id, r.description AS 'round', COUNT(DISTINCT e.user_id) AS 'enrolment', COUNT(DISTINCT pt.id) AS 'total_response', concat(round(( COUNT(DISTINCT pt.id)/COUNT(DISTINCT e.user_id) * 100 ),2),'%') AS 'response', concat(round(( SUM(feedback=0)/COUNT(DISTINCT pt.id) * 100 ),2),'%') AS 'satisfactory' FROM rounds r INNER JOIN enrolments e ON r.id=e.round_id LEFT JOIN pt ON e.id=pt.enrolment_id WHERE ISNULL(r.deleted_at) AND ISNULL(e.deleted_at) GROUP BY r.id;");
-        $unsperf = DB::select("SELECT r.id, r.description AS 'round', COUNT(DISTINCT pt.id) AS 'response', SUM(feedback=0) AS 'total_unsatisfactory', concat(round(( SUM(feedback=1)/COUNT(DISTINCT pt.id) * 100 ),2),'%') AS 'unsatisfactory', concat(round(( SUM(incomplete_kit_data=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incomplete_kit_data', concat(round(( SUM(incorrect_results=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incorrect_results', concat(round(( SUM(wrong_algorithm=1)/SUM(feedback=1) * 100 ),2),'%') AS 'wrong_algorithm', concat(round(( SUM(dev_from_procedure=1)/SUM(feedback=1) * 100 ),2),'%') AS 'deviation_from_procedure', concat(round(( SUM(incomplete_other_information=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incomplete_other_information', concat(round(( SUM(use_of_expired_kits=1)/SUM(feedback=1) * 100 ),2),'%') AS 'use_of_expired_kits', concat(round(( SUM(invalid_results=1)/SUM(feedback=1) * 100 ),2),'%') AS 'invalid_results', concat(round(( SUM(incomplete_results=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incomplete_results' FROM rounds r INNER JOIN enrolments e ON r.id=e.round_id LEFT JOIN pt ON e.id=pt.enrolment_id WHERE ISNULL(r.deleted_at) AND ISNULL(e.deleted_at) GROUP BY r.id;");
+        $whereClause = "";
+        $facilityJoin = "";
+        $subcountyJoin = "";
+
+        if ($request->has('round_start')) {
+            $whereClause .= " AND r.id >= ".$request->get('round_start');
+        }
+
+        if ($request->has('round_end')) {
+            $whereClause .= " AND r.id <= ".$request->get('round_end');
+        }
+
+        if ($request->has('facility')) {
+            $whereClause .= " AND e.facility_id = ".$request->get('facility');
+        }
+
+        if ($request->has('sub_county')) {
+            $facilityJoin = " LEFT JOIN facilities f ON e.facility_id = f.id";
+            $whereClause .= " AND f.sub_county_id = ".$request->get('sub_county');
+        }
+
+        if ($request->has('county')) {
+            $facilityJoin = " LEFT JOIN facilities f ON e.facility_id = f.id";
+            $subcountyJoin = " LEFT JOIN sub_counties s ON f.sub_county_id = s.id";
+            $whereClause .= " AND s.county_id = ".$request->get('county');
+        }
+
+        $summaries = DB::select("SELECT r.id, r.description AS 'round', COUNT(DISTINCT e.user_id) AS 'enrolment', COUNT(DISTINCT pt.id) AS 'response', SUM(feedback=0) AS 'satisfactory', SUM(feedback=1) AS 'unsatisfactory' FROM rounds r INNER JOIN enrolments e ON r.id=e.round_id LEFT JOIN pt ON e.id=pt.enrolment_id $facilityJoin $subcountyJoin WHERE ISNULL(r.deleted_at) AND ISNULL(e.deleted_at) $whereClause GROUP BY r.id");
+        $percentiles = DB::select("SELECT r.id, r.description AS 'round', COUNT(DISTINCT e.user_id) AS 'enrolment', COUNT(DISTINCT pt.id) AS 'total_response', concat(round(( COUNT(DISTINCT pt.id)/COUNT(DISTINCT e.user_id) * 100 ),2),'%') AS 'response', concat(round(( SUM(feedback=0)/COUNT(DISTINCT pt.id) * 100 ),2),'%') AS 'satisfactory' FROM rounds r INNER JOIN enrolments e ON r.id=e.round_id LEFT JOIN pt ON e.id=pt.enrolment_id $facilityJoin $subcountyJoin WHERE ISNULL(r.deleted_at) AND ISNULL(e.deleted_at) $whereClause GROUP BY r.id;");
+        $unsperf = DB::select("SELECT r.id, r.description AS 'round', COUNT(DISTINCT pt.id) AS 'response', SUM(feedback=0) AS 'total_unsatisfactory', concat(round(( SUM(feedback=1)/COUNT(DISTINCT pt.id) * 100 ),2),'%') AS 'unsatisfactory', concat(round(( SUM(incomplete_kit_data=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incomplete_kit_data', concat(round(( SUM(incorrect_results=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incorrect_results', concat(round(( SUM(wrong_algorithm=1)/SUM(feedback=1) * 100 ),2),'%') AS 'wrong_algorithm', concat(round(( SUM(dev_from_procedure=1)/SUM(feedback=1) * 100 ),2),'%') AS 'deviation_from_procedure', concat(round(( SUM(incomplete_other_information=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incomplete_other_information', concat(round(( SUM(use_of_expired_kits=1)/SUM(feedback=1) * 100 ),2),'%') AS 'use_of_expired_kits', concat(round(( SUM(invalid_results=1)/SUM(feedback=1) * 100 ),2),'%') AS 'invalid_results', concat(round(( SUM(incomplete_results=1)/SUM(feedback=1) * 100 ),2),'%') AS 'incomplete_results' FROM rounds r INNER JOIN enrolments e ON r.id=e.round_id LEFT JOIN pt ON e.id=pt.enrolment_id $facilityJoin $subcountyJoin WHERE ISNULL(r.deleted_at) AND ISNULL(e.deleted_at) $whereClause GROUP BY r.id;");
         $summariesChart = [];
         $sumCategories = ['Enrolment', 'Response', 'Satisfactory', 'Unsatisfactory'];
         foreach ($summaries as $content) 
