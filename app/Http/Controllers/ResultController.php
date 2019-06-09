@@ -728,7 +728,7 @@ class ResultController extends Controller
         $approver = User::find($pt->approved_by);
         $approvedBy = "";
 
-        $performer = $pt->enrolment->performer();
+        $performer = $pt->enrolment->performer;
         \Log::info($performer);
 
         if(isset($approver->first_name)) $approvedBy = "{$approver->first_name} {$approver->last_name}";
