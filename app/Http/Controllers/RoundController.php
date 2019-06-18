@@ -659,26 +659,41 @@ class RoundController extends Controller
             return back();
         }
         //  workbook title
-        if(Auth::user()->isCountyCoordinator())
+        if(Auth::user()->isSubCountyCoordinator())
+            $title = SubCounty::find(Auth::user()->ru()->tier)->name." SUBCOUNTY ".$suffix;
+        else if(Auth::user()->isCountyCoordinator())
             $title = County::find(Auth::user()->ru()->tier)->name." COUNTY ".$suffix;
         else
             $title = "KENYA RAPID HIV PT ".$suffix;
+
         return Excel::create($title, function($excel) use ($rId, $roundId, $users, $roleId, $request) 
         {
             $round = Round::find($rId);
-            if(Auth::user()->isCountyCoordinator())
+            if(Auth::user()->isCountyCoordinator() || Auth::user()->isSubCountyCoordinator())
             {
                 $countyId = Auth::user()->ru()->tier;
-                $county = County::find($countyId)->name;
-                //  sub-counties and facilities
-                $fIds = County::find($countyId)->facilities()->pluck('id');
+                if (Auth::user()->isCountyCoordinator()) {
+                    $county = County::find($countyId)->name;
+                    //  sub-counties and facilities
+                    $fIds = County::find($countyId)->facilities()->pluck('id');
+                }
+
+                if (Auth::user()->isSubCountyCoordinator()) {
+                    $county = SubCounty::find($countyId)->name;
+                    //  sub-counties and facilities
+                    $fIds = SubCounty::find($countyId)->facilities()->pluck('id');
+                }
+
                 $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
+
                 if($request->status)
                     $ids = User::whereIn('id', $ids)->whereBetween('date_registered', [$round->start_date, $round->end_date])->pluck('id');
+
                 $testers = Enrol::where('round_id', $rId)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
                 $testers = implode(",", $testers);               
                 $summary = [];
                 $sheetTitle = $county;
+
                 if (empty($testers)) {
                     $summary[] = [
                         'County' => '',
@@ -711,19 +726,19 @@ class RoundController extends Controller
                         u.email AS 'Tester Email',
                         u.address AS 'Tester Address',
                         p.name AS 'Program',
-                        ru.designation AS 'Designation',
+                        d.name AS 'Designation',
                         f.name AS 'Facility',
                         f.code AS 'MFL Code',
                         f.in_charge AS 'In Charge',
                         f.in_charge_phone AS 'In Charge Phone',
                         f.in_charge_email AS 'In Charge Email'
-                        FROM users u, facilities f, role_user ru, programs p
-                        WHERE u.id = ru.user_id
-                            AND ru.program_id = p.id
-                            AND ru.tier = f.id
-                            AND ru.program_id = p.id
-                            AND u.id
-                        IN (".$testers.") ORDER BY u.uid ASC;");
+                        FROM users u
+                            INNER JOIN role_user ru ON u.id = ru.user_id AND ru.role_id = $roleId
+                            INNER JOIN facilities f ON ru.tier = f.id
+                            LEFT JOIN programs p ON ru.program_id = p.id
+                            LEFT JOIN designations d ON ru.designation = d.id
+                        WHERE 
+                            u.id IN (".$testers.") ORDER BY u.uid ASC;");
                     
                     foreach($data as $key => $value)
                     {
