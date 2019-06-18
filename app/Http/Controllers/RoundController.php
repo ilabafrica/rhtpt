@@ -669,54 +669,8 @@ class RoundController extends Controller
         return Excel::create($title, function($excel) use ($rId, $roundId, $users, $roleId, $request) 
         {
             $round = Round::find($rId);
-            if(Auth::user()->isCountyCoordinator() || Auth::user()->isSubCountyCoordinator())
-            {
-                $countyId = Auth::user()->ru()->tier;
-                if (Auth::user()->isCountyCoordinator()) {
-                    $county = County::find($countyId)->name;
-                    //  sub-counties and facilities
-                    $fIds = County::find($countyId)->facilities()->pluck('id');
-                }
-
-                if (Auth::user()->isSubCountyCoordinator()) {
-                    $county = SubCounty::find($countyId)->name;
-                    //  sub-counties and facilities
-                    $fIds = SubCounty::find($countyId)->facilities()->pluck('id');
-                }
-
-                $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
-
-                if($request->status)
-                    $ids = User::whereIn('id', $ids)->whereBetween('date_registered', [$round->start_date, $round->end_date])->pluck('id');
-
-                $testers = Enrol::where('round_id', $rId)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
-                $testers = implode(",", $testers);               
-                $summary = [];
-                $sheetTitle = $county;
-
-                if (empty($testers)) {
-                    $summary[] = [
-                        'County' => '',
-                        'Sub County' => '',
-                        'Facility' => '',
-                        'MFL Code' => '',
-                        'Tester Enrollment ID' => '',
-                        'Tester First Name' => '',
-                        'Tester Surname' => '',
-                        'Tester Other Name' => '',
-                        'Gender' => '',
-                        'Tester Mobile Number' => '',
-                        'Tester Email' => '',
-                        'Tester Address' => '',
-                        'Designation' => '',
-                        'Program' => '',
-                        'In Charge' => '',
-                        'In Charge Email' => '',
-                        'In Charge Phone' => '',
-                    ];
-                }else{
-                    $data = DB::select(
-                        "SELECT
+            $sheetTitle = "";
+            $query = "SELECT
                         u.first_name AS 'Tester First Name',
                         u.last_name AS 'Tester Surname',
                         u.middle_name AS 'Tester Other Name',
@@ -738,91 +692,48 @@ class RoundController extends Controller
                             LEFT JOIN programs p ON ru.program_id = p.id
                             LEFT JOIN designations d ON ru.designation = d.id
                         WHERE 
-                            u.id IN (".$testers.") ORDER BY u.uid ASC;");
-                    
-                    foreach($data as $key => $value)
-                    {
-                        $tfirst_name = NULL;
-                        $tmiddle_name = NULL;
-                        $tlast_name = NULL;
-                        $tuid = NULL;
-                        $tphone = NULL;
-                        $temail = NULL;
-                        $tprog = NULL;
-                        $tdes = NULL;
-                        $facility = NULL;
-                        $mfl = NULL;
-                        $icharge = NULL;
-                        $iphone = NULL;
-                        $iemail = NULL;
-                        $tcounty = NULL;
-                        $tsub_county = NULL;
-                        $tgender = NULL;
-                        $taddress = NULL;
-                        foreach($value as $mike => $ross)
-                        {
-                            if(strcasecmp("County", $mike) == 0)
-                                $tcounty = $ross;
-                            if(strcasecmp("Sub County", $mike) == 0)
-                                $tsub_county = $ross;
-                            if(strcasecmp("Facility", $mike) == 0)
-                                $facility = $ross;
-                            if(strcasecmp("MFL Code", $mike) == 0)
-                                $mfl = $ross;
-                            if(strcasecmp("Tester Enrollment ID", $mike) == 0)
-                                $tuid = $ross;
-                            if(strcasecmp("Tester First Name", $mike) == 0)
-                                $tfirst_name = $ross;
-                            if(strcasecmp("Tester Surname", $mike) == 0)
-                                $tlast_name = $ross;
-                            if(strcasecmp("Tester Other Name", $mike) == 0)
-                                $tmiddle_name = $ross;
-                            if(strcasecmp("Gender", $mike) == 0)
-                                $tgender = $ross;
-                            if(strcasecmp("Tester Mobile Number", $mike) == 0)
-                                $tphone = $ross;
-                            if(strcasecmp("Tester Email", $mike) == 0)
-                                $temail = $ross;
-                            if(strcasecmp("Tester Address", $mike) == 0)
-                                $taddress = $ross;
-                            if(strcasecmp("Designation", $mike) == 0)
-                                $tdes = $ross;
-                            if(strcasecmp("Program", $mike) == 0)
-                                $tprog = $ross;
-                            if(strcasecmp("In Charge", $mike) == 0)
-                                $icharge = $ross;
-                            if(strcasecmp("In Charge Email", $mike) == 0)
-                                $iemail = $ross;
-                            if(strcasecmp("In Charge Phone", $mike) == 0)
-                                $iphone = $ross;
-                        }
-                        $summary[] = [
-                            
-                            'County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->county->name,
-                            'Sub County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->name,
-                            'Facility' => $facility,
-                            'MFL Code' => $mfl,
-                            'Tester Enrollment ID' => $tuid,
-                            'Tester First Name' => $tfirst_name,
-                            'Tester Surname' => $tlast_name,
-                            'Tester Other Name' => $tmiddle_name,
-                            'Gender' => $tgender,
-                            'Tester Mobile Number' => $tphone,
-                            'Tester Email' => $temail,
-                            'Tester Address' => $taddress,
-                            'Designation' => $tdes,
-                            'Program' => $tprog,
-                            'In Charge' => $icharge,
-                            'In Charge Email' => $iemail,
-                            'In Charge Phone' => $iphone,
-                        ];
-                    }
-                }
+                            u.id IN (_TESTERS_) ORDER BY u.uid ASC;";
+
+            if(Auth::user()->isSubCountyCoordinator())
+            {
+                $countyId = Auth::user()->ru()->tier;
+                $sheetTitle = SubCounty::find($countyId)->name;
+                //  sub-counties and facilities
+                $fIds = SubCounty::find($countyId)->facilities()->pluck('id');
+
+                $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
+
+                if($request->status)
+                    $ids = User::whereIn('id', $ids)->whereBetween('date_registered', [$round->start_date, $round->end_date])->pluck('id');
+
+                $testers = Enrol::where('round_id', $rId)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
+                $testers = implode(",", $testers);               
+                $summary = $this->getTesterSummary($testers, $query);
+
                 $excel->sheet($sheetTitle, function($sheet) use ($summary) {
                     $sheet->fromArray($summary);
                 });
             }
-            else
+            else if(Auth::user()->isCountyCoordinator()){
+                $countyId = Auth::user()->ru()->tier;
+                $sheetTitle = County::find($countyId)->name;
+                //  sub-counties and facilities
+                $fIds = County::find($countyId)->facilities()->pluck('id');
+
+                $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
+
+                if($request->status)
+                    $ids = User::whereIn('id', $ids)->whereBetween('date_registered', [$round->start_date, $round->end_date])->pluck('id');
+
+                $testers = Enrol::where('round_id', $rId)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
+                $testers = implode(",", $testers);               
+                $summary = $this->getTesterSummary($testers, $query);
+
+                $excel->sheet($sheetTitle, function($sheet) use ($summary) {
+                    $sheet->fromArray($summary);
+                });
+            }
+            else if(Auth::user()->isSuperAdministrator())
             {
                 $counties = County::all();
                 foreach($counties as $county)
@@ -833,117 +744,17 @@ class RoundController extends Controller
                         $ids = User::whereIn('id', $ids)->whereBetween('date_registered', [$round->start_date, $round->end_date])->pluck('id');
                     
                     $testers = Enrol::where('round_id', $round->id)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
+
                     if(count($testers) > 0)
                     {
                         $testers = implode(",", $testers);
 
                         $sheetTitle = $county->name;
                         if (count($testers)>0) {
-                    $data = DB::select(
-                        "SELECT
-                        u.first_name AS 'Tester First Name',
-                        u.last_name AS 'Tester Surname',
-                        u.middle_name AS 'Tester Other Name',
-                        u.uid AS 'Tester Enrollment ID',
-                        u.gender AS 'Gender',
-                        u.phone AS 'Tester Mobile Number',
-                        u.email AS 'Tester Email',
-                        u.address AS 'Tester Address',
-                        p.name AS 'Program',
-                        ru.designation AS 'Designation',
-                        f.name AS 'Facility',
-                        f.code AS 'MFL Code',
-                        f.in_charge AS 'In Charge',
-                        f.in_charge_phone AS 'In Charge Phone',
-                        f.in_charge_email AS 'In Charge Email'
-                        FROM users u, facilities f, role_user ru, programs p
-                        WHERE u.id = ru.user_id
-                            AND ru.program_id = p.id
-                            AND ru.tier = f.id
-                            AND ru.program_id = p.id
-                            AND u.id
-                        IN (".$testers.") ORDER BY u.uid ASC;");
-
-                            // dd($data);
                             //  create associative array
-                            $summary = [];
-                            foreach($data as $key => $value)
-                            {
-                                $tfirst_name = NULL;
-                                $tmiddle_name = NULL;
-                                $tlast_name = NULL;
-                                $tuid = NULL;
-                                $tphone = NULL;
-                                $temail = NULL;
-                                $tprog = NULL;
-                                $tdes = NULL;
-                                $facility = NULL;
-                                $mfl = NULL;
-                                $icharge = NULL;
-                                $iphone = NULL;
-                                $iemail = NULL;
-                                $tcounty = NULL;
-                                $tsub_county = NULL;
-                                $tgender = NULL;
-                                $taddress = NULL;
-                                foreach($value as $mike => $ross)
-                                {
-                                    if(strcasecmp("County", $mike) == 0)
-                                        $tcounty = $ross;
-                                    if(strcasecmp("Sub County", $mike) == 0)
-                                        $tsub_county = $ross;
-                                    if(strcasecmp("Facility", $mike) == 0)
-                                        $facility = $ross;
-                                    if(strcasecmp("MFL Code", $mike) == 0)
-                                        $mfl = $ross;
-                                    if(strcasecmp("Tester Enrollment ID", $mike) == 0)
-                                        $tuid = $ross;
-                                    if(strcasecmp("Tester First Name", $mike) == 0)
-                                        $tfirst_name = $ross;
-                                    if(strcasecmp("Tester Surname", $mike) == 0)
-                                        $tlast_name = $ross;
-                                    if(strcasecmp("Tester Other Name", $mike) == 0)
-                                        $tmiddle_name = $ross;
-                                    if(strcasecmp("Gender", $mike) == 0)
-                                        $tgender = $ross;
-                                    if(strcasecmp("Tester Mobile Number", $mike) == 0)
-                                        $tphone = $ross;
-                                    if(strcasecmp("Tester Email", $mike) == 0)
-                                        $temail = $ross;
-                                    if(strcasecmp("Tester Address", $mike) == 0)
-                                        $taddress = $ross;
-                                    if(strcasecmp("Designation", $mike) == 0)
-                                        $tdes = $ross;
-                                    if(strcasecmp("Program", $mike) == 0)
-                                        $tprog = $ross;
-                                    if(strcasecmp("In Charge", $mike) == 0)
-                                        $icharge = $ross;
-                                    if(strcasecmp("In Charge Email", $mike) == 0)
-                                        $iemail = $ross;
-                                    if(strcasecmp("In Charge Phone", $mike) == 0)
-                                        $iphone = $ross;
-                                }
-                                $summary[] = [
-                                    'County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->name,
-                                    'Sub County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->county->name,
-                                    'Facility' => $facility,
-                                    'MFL Code' => $mfl,
-                                    'Tester Enrollment ID' => $tuid,
-                                    'Tester First Name' => $tfirst_name,
-                                    'Tester Surname' => $tlast_name,
-                                    'Tester Other Name' => $tmiddle_name,
-                                    'Gender' => ($tgender == 1) ? 'Female' : 'Male',
-                                    'Tester Mobile Number' => $tphone,
-                                    'Tester Email' => $temail,
-                                    'Tester Address' => $taddress,
-                                    //'Designation' => Designation::find($tdes)->name,
-                                    'Program' => $tprog,
-                                    'In Charge' => $icharge,
-                                    'In Charge Email' => $iemail,
-                                    'In Charge Phone' => $iphone,
-                                ];
-                            }
+                            $summary = $this->getTesterSummary($testers, $query);
                         }
+
                         $excel->sheet($sheetTitle, function($sheet) use ($summary) {
                             $sheet->fromArray($summary);
                         });
@@ -953,6 +764,119 @@ class RoundController extends Controller
         })->download('xlsx');
     }
     
+    /**
+     * Helper function for the testerSummary function.
+     * Returns an array of tester details
+     *
+     */
+    public function getTesterSummary($testers, $query)
+    {
+        if (empty($testers)) {
+            $summary[] = [
+                'County' => '',
+                'Sub County' => '',
+                'Facility' => '',
+                'MFL Code' => '',
+                'Tester Enrollment ID' => '',
+                'Tester First Name' => '',
+                'Tester Surname' => '',
+                'Tester Other Name' => '',
+                'Gender' => '',
+                'Tester Mobile Number' => '',
+                'Tester Email' => '',
+                'Tester Address' => '',
+                'Designation' => '',
+                'Program' => '',
+                'In Charge' => '',
+                'In Charge Email' => '',
+                'In Charge Phone' => '',
+            ];
+        }else{
+            $query = str_replace("_TESTERS_", $testers, $query);
+            $data = DB::select($query);
+            
+            foreach($data as $key => $value)
+            {
+                $tfirst_name = NULL;
+                $tmiddle_name = NULL;
+                $tlast_name = NULL;
+                $tuid = NULL;
+                $tphone = NULL;
+                $temail = NULL;
+                $tprog = NULL;
+                $tdes = NULL;
+                $facility = NULL;
+                $mfl = NULL;
+                $icharge = NULL;
+                $iphone = NULL;
+                $iemail = NULL;
+                $tcounty = NULL;
+                $tsub_county = NULL;
+                $tgender = NULL;
+                $taddress = NULL;
+                foreach($value as $key2 => $value2)
+                {
+                    if(strcasecmp("County", $key2) == 0)
+                        $tcounty = $value2;
+                    if(strcasecmp("Sub County", $key2) == 0)
+                        $tsub_county = $value2;
+                    if(strcasecmp("Facility", $key2) == 0)
+                        $facility = $value2;
+                    if(strcasecmp("MFL Code", $key2) == 0)
+                        $mfl = $value2;
+                    if(strcasecmp("Tester Enrollment ID", $key2) == 0)
+                        $tuid = $value2;
+                    if(strcasecmp("Tester First Name", $key2) == 0)
+                        $tfirst_name = $value2;
+                    if(strcasecmp("Tester Surname", $key2) == 0)
+                        $tlast_name = $value2;
+                    if(strcasecmp("Tester Other Name", $key2) == 0)
+                        $tmiddle_name = $value2;
+                    if(strcasecmp("Gender", $key2) == 0)
+                        $tgender = $value2;
+                    if(strcasecmp("Tester Mobile Number", $key2) == 0)
+                        $tphone = $value2;
+                    if(strcasecmp("Tester Email", $key2) == 0)
+                        $temail = $value2;
+                    if(strcasecmp("Tester Address", $key2) == 0)
+                        $taddress = $value2;
+                    if(strcasecmp("Designation", $key2) == 0)
+                        $tdes = $value2;
+                    if(strcasecmp("Program", $key2) == 0)
+                        $tprog = $value2;
+                    if(strcasecmp("In Charge", $key2) == 0)
+                        $icharge = $value2;
+                    if(strcasecmp("In Charge Email", $key2) == 0)
+                        $iemail = $value2;
+                    if(strcasecmp("In Charge Phone", $key2) == 0)
+                        $iphone = $value2;
+                }
+                $summary[] = [
+                    
+                    'County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->county->name,
+                    'Sub County' => Facility::where('code', $mfl)->orderBy('name', 'asc')->first()->subCounty->name,
+                    'Facility' => $facility,
+                    'MFL Code' => $mfl,
+                    'Tester Enrollment ID' => $tuid,
+                    'Tester First Name' => $tfirst_name,
+                    'Tester Surname' => $tlast_name,
+                    'Tester Other Name' => $tmiddle_name,
+                    'Gender' => $tgender,
+                    'Tester Mobile Number' => $tphone,
+                    'Tester Email' => $temail,
+                    'Tester Address' => $taddress,
+                    'Designation' => $tdes,
+                    'Program' => $tprog,
+                    'In Charge' => $icharge,
+                    'In Charge Email' => $iemail,
+                    'In Charge Phone' => $iphone,
+                ];
+            }
+        }
+
+        return $summary;
+    }
+
     /**
      * Batch registration and enrollment
      *
