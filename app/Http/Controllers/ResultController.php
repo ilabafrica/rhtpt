@@ -325,12 +325,12 @@ class ResultController extends Controller
         {
             $sms = new SmsHandler;
 
-            foreach($recipients as $recipient)
-            {
-                $responseMessage = $sms->sendMessage($recipient, $message);
+            // foreach($recipients as $recipient)
+            // {
+                $responseMessage = $sms->sendMessage($recipients, $message);
                 //  Save the results
-                DB::table('broadcast')->insert(['number' => $recipient, 'bulk_id' => $bulk_id]);
-            }
+                DB::table('broadcast')->insert(['number' => $recipients, 'bulk_id' => $bulk_id]);
+            // }
  
         }
         return response()->json($result);
