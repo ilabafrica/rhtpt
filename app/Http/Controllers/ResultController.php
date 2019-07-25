@@ -942,7 +942,7 @@ class ResultController extends Controller
         \Log::info($request);
 
         $enrolment = Enrol::find($pt->enrolment_id);
-        $enrolment->tester_id = $request->tester_id_on_panel;
+        $enrolment->tester_id = User::idByUID($request->tester_id_on_panel);
         $enrolment->save();
 
         //save previous data
