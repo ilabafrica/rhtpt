@@ -212,8 +212,8 @@ class RoundController extends Controller
     {
         // get enrolments with no submissions
         $ids = Auth::user()->enrol()->where('status', 0)->pluck('round_id');
-        // fetch rounds details 
-        $rounds = Round::whereIn('id', $ids)->pluck('description', 'id');
+        // fetch rounds details
+        $rounds = Round::whereIn('id', $ids)->where('end_date', '>', Carbon::today())->pluck('description', 'id');
         // format to match dropdown values
         $categories = [];
         foreach($rounds as $key => $value)
