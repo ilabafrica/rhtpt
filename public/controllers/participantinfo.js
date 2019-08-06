@@ -121,7 +121,7 @@ new Vue({
                 }
                 else
                 {
-                    this.participants = response.data.data.data;
+                    this.participants = response.data.data;
                     this.pagination = response.data.pagination;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
