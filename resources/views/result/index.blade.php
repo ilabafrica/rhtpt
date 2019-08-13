@@ -530,6 +530,12 @@
                                             <td><b>Facility MFL</b></td>
                                             <td>@{{evaluated_results.mfl}}</td>
                                         </tr>
+                                         <tr>
+                                            <td><b>Designation</b></td>
+                                            <td>@{{evaluated_results.designation}}</td>
+                                            <td><b>Panel ID</b></td>
+                                            <td>@{{evaluated_results.tester_id_on_panel}}</td>
+                                        </tr>
                                    </table>   
                                 </div>
                             </div>
