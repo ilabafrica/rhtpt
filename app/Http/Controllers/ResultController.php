@@ -344,13 +344,13 @@ class ResultController extends Controller
         $updated = Carbon::today()->toDateTimeString();
         //  Time
         $now = Carbon::now('Africa/Nairobi');
-        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::RESULTS_RECEIVED, 'round_id' => $result->enrolment->round->id, 'text' => $message, 'user_id' => $result->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
+        $bulk = DB::table('bulk')->insert(['notification_id' => Notification::RESULTS_RECEIVED, 'round_id' => $result->enrolment->round->id, 'text' => $message, 'user_id' => $result->enrolment->performer->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
         
         //get the last id inserted and use it in the broadcast table
         $bulk_id = DB::getPdo()->lastInsertId(); 
 
         $recipients = NULL;
-        $recipients = User::find($result->enrolment->user->id)->phone;
+        $recipients = User::find($result->enrolment->performer->id)->phone;
 
         if($recipients)
         {
@@ -672,6 +672,9 @@ class ResultController extends Controller
         $sample_6 = "PT-".$round->name."-S6";
 
         $user = $pt->enrolment->user;
+        $performer = $pt->enrolment->performer;
+        \Log::info($performer);
+
         $lot = $user->lot($round_id);
         $expected_results = $lot->panels()->get();
 
@@ -722,16 +725,16 @@ class ResultController extends Controller
         }
 
         //get participant details
-        $participant_id = $user->id;
-        $user_name = $user->name;
-        $first_name = $user->first_name;
-        $middle_name = $user->middle_name;
-        $last_name = $user->last_name;
-        $phone_no = $user->phone;
-        $tester_id = $user->username;
-        $roleUser = $user->ru();
+        $participant_id = $performer->id;
+        $user_name = $performer->name;
+        $first_name = $performer->first_name;
+        $middle_name = $performer->middle_name;
+        $last_name = $performer->last_name;
+        $phone_no = $performer->phone;
+        $tester_id = $performer->username;
+        $roleUser = $performer->ru();
         $facility = Facility::find($roleUser->tier);
-        try{$designation = $user->designation($roleUser->designation);}catch(\Exception $ex){$designation = "";}
+        try{$designation = $performer->designation($roleUser->designation);}catch(\Exception $ex){$designation = "";}
         try{$program = Program::find($roleUser->program_id);}catch(\Exception $ex){$program = ['name' => ""];}
 
         $county = strtoupper($facility->subCounty->county->name);
@@ -760,9 +763,6 @@ class ResultController extends Controller
         $approver = User::find($pt->approved_by);
         $approvedBy = "";
 
-        $performer = $pt->enrolment->performer;
-        \Log::info($performer);
-
         if(isset($approver->first_name)) $approvedBy = "{$approver->first_name} {$approver->last_name}";
 
         if($pt->feedback == Pt::UNSATISFACTORY)
@@ -788,7 +788,7 @@ class ResultController extends Controller
             'last_name' => $last_name,
             'phone_no' => $phone_no,
             'tester_id' => $tester_id,
-            'tester_id_on_panel' => $performer->uid,
+            'tester_id_on_panel' => $user->uid,
             'designation' => $designation,
             'program' => $program,
             'program_name' => isset($program->name)?$program->name:"",
@@ -941,8 +941,8 @@ class ResultController extends Controller
         $now = Carbon::now('Africa/Nairobi');
         $bulk = DB::table('bulk')->insert(['notification_id' => Notification::FEEDBACK_RELEASE, 'round_id' => $result->enrolment->round->id, 'text' => $message, 'user_id' => $result->enrolment->user->id, 'date_sent' => $now, 'created_at' => $created, 'updated_at' => $updated]);
         $recipients = NULL;
-        $recipients = User::find($result->enrolment->user->id)->value('phone');
-        $ptUser = User::find($result->enrolment->user->id);
+        $recipients = User::find($result->enrolment->performer->id)->value('phone');
+        $ptUser = User::find($result->enrolment->performer->id);
         $ptUserName = $ptUser->first_name . " " . $ptUser->last_name;
         $message = str_replace("PT Participant", $ptUserName, $message);
 
@@ -974,9 +974,9 @@ class ResultController extends Controller
         \Log::info("To:");
         \Log::info($request);
 
-        $enrolment = Enrol::find($pt->enrolment_id);
-        $enrolment->tester_id = User::idByUID($request->tester_id_on_panel);
-        $enrolment->save();
+        // $enrolment = Enrol::find($pt->enrolment_id);
+        // $enrolment->tester_id = User::idByUID($request->tester_id_on_panel);
+        // $enrolment->save();
 
         //save previous data
 
@@ -1164,7 +1164,7 @@ class ResultController extends Controller
         }
 
         $pt = Pt::find($id);
-        $user = User::find($pt->enrolment->user_id)->id;
+        $user = User::find($pt->enrolment->tester_id)->id;
         if ($pt->download_status == 0 && Auth::user()->id==$user) {
             $pt->download_status = Pt::DOWNLOAD_STATUS;
             $pt->save();
@@ -1184,7 +1184,7 @@ class ResultController extends Controller
     public function feedback($id)
     {
         $pt = Pt::find($id);
-        $usr = User::find($pt->enrolment->user_id);
+        $usr = User::find($pt->enrolment->tester_id);
         $pt->uid = (string)$usr->uid;
         $pt->tester = $usr->first_name . " " . $usr->middle_name . " " . $usr->last_name;
         try {
