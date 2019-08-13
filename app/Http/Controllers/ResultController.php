@@ -788,6 +788,7 @@ class ResultController extends Controller
             'last_name' => $last_name,
             'phone_no' => $phone_no,
             'tester_id' => $tester_id,
+            'new_tester_id' => $tester_id,
             'tester_id_on_panel' => $user->uid,
             'designation' => $designation,
             'program' => $program,
@@ -974,9 +975,9 @@ class ResultController extends Controller
         \Log::info("To:");
         \Log::info($request);
 
-        // $enrolment = Enrol::find($pt->enrolment_id);
-        // $enrolment->tester_id = User::idByUID($request->tester_id_on_panel);
-        // $enrolment->save();
+        $enrolment = Enrol::find($pt->enrolment_id);
+        $enrolment->tester_id = User::idByUID($request->new_tester_id);
+        $enrolment->save();
 
         //save previous data
 

@@ -839,9 +839,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-4 form-control-label" for="title">Tester ID on Panel:</label>
+                                    <label class="col-sm-4 form-control-label" for="title">Transfer to Tester:</label>
                                     <div class="col-sm-4" :class="{ 'control': true }">
-                                        <input v-validate="'required'" class="form-control" name="tester_id_on_panel" type="text" v-model="evaluated_results.tester_id_on_panel"/>
+                                        <input v-validate="'required'" class="form-control" name="new_tester_id" type="text" v-model="evaluated_results.new_tester_id"/>
                                     </div>
                                 </div>
 
