@@ -105,7 +105,7 @@ class SubCounty extends Model
     {
         $users = $this->users($search);
 
-        $enrolments = $users->join('enrolments', 'users.id', '=', 'enrolments.user_id');
+        $enrolments = $users->join('enrolments', 'users.id', '=', 'enrolments.tester_id');
         if($roundID > 0) $enrolments = $enrolments->where('enrolments.round_id', $roundID);
 
         $results = $enrolments->join('pt', 'enrolments.id', '=', 'pt.enrolment_id')

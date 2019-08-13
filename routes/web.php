@@ -212,7 +212,7 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "RoundController@rounds"
     ));
 
-    Route::get("/rndsDone", array(
+    Route::get("/rndsDone/{status?}", array(
         "as"   => "rnds.fetch",
         "uses" => "RoundController@roundsDone"
     ));

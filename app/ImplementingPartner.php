@@ -109,7 +109,7 @@ class ImplementingPartner extends Model
     {
         $users = $this->users($search);
 
-        $enrolments = $users->join('enrolments', 'users.id', '=', 'enrolments.user_id');
+        $enrolments = $users->join('enrolments', 'users.id', '=', 'enrolments.tester_id');
 
         if($roundID > 0) $enrolments = $enrolments->where('round_id', $roundID);
 

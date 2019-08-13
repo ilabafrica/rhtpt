@@ -105,9 +105,9 @@ new Vue({
 
     mounted : function(){
         this.getRole();
-    	this.getVueResults(this.pagination.current_page);
+        this.getVueResults(this.pagination.current_page);
         this.loadRounds();
-        this.loadRoundsDone();
+        this.loadRoundsDone(0);
         this.getForm();
         this.getSets();
     },
@@ -132,15 +132,31 @@ new Vue({
             let myForm = document.getElementById('analysis_results');
             let formData = new FormData(myForm);
 
-      		this.$http.post('/vueresults', formData).then((response) => {
-                console.log(response);
-    		    this.changePage(this.pagination.current_page);
-      			$("#create-result").modal('hide');
-      			toastr.success('Result Saved Successfully.', 'Success Alert', {timeOut: 5000});
-      		}, (response) => {
-  			    this.formErrors = response.data;
-          	});
-      	},
+            if (formData.get('tester_id') == '') {
+                console.log(formData);
+                toastr.error('Fill in all the mandatory fields.', 'Failure Alert', {timeOut: 5000});
+            }else{
+                this.$http.post('/vueresults', formData).then((response) => {
+                    this.changePage(this.pagination.current_page);
+                    $("#create-result").modal('hide');
+                    console.log(response.data);
+                    if (response.data.length > 0) {
+                        if (response.data[0] == "1") {
+                            toastr.error('The is no active PT round at the moment!', 'Failure Alert', {timeOut: 5000});
+                        }else if (response.data[0] == "2") {
+                            toastr.error('Please verify that you have entered the correct Tester ID as found on your form!', 'Failure Alert', {timeOut: 5000});
+                        }else if (response.data[0] == "3") {
+                            toastr.error('Results for your panel have already been submitted!', 'Failure Alert', {timeOut: 5000});
+                        }
+
+                    }else{
+                        toastr.success('The result was saved successfully.', 'Success Alert', {timeOut: 5000});
+                    }
+                }, (response) => {
+                    this.formErrors = response.data;
+                });
+            }
+        },
 
         deleteResult: function(result){
             this.$http.delete('/vueresults/'+result.id).then((response) => {
@@ -168,6 +184,10 @@ new Vue({
                 for (var dateKey in this.$refs) {
                     this.$refs[dateKey][0].setDate(this.fieldvalues[dateKey.substring(dateKey.length - 1, dateKey.length)]);
                 }
+                this.loadRoundsDone(1);
+                this.frmData.round_id = this.frmData.round.id;
+                this.frmData.round_name = this.frmData.round.name;
+                console.log(this.frmData.round.name);
             });
             $("#edit-result").modal('show');
         },
@@ -260,8 +280,8 @@ new Vue({
             });
         },
 
-        loadRoundsDone: function() {
-            this.$http.get('/rndsDone').then((response) => {
+        loadRoundsDone: function(status) {
+            this.$http.get('/rndsDone/'+ status).then((response) => {
                 this.roundsDone = response.data;
             }, (response) => {
             });

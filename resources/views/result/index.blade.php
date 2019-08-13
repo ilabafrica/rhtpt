@@ -257,11 +257,17 @@
                                 <div class="form-group row">
                                     <label class="col-sm-5 form-control-label" for="title">PT Round:</label>
                                     <div class="col-sm-7">
-                                        <select class="form-control c-select" name="round_id" required >
+                                        <select class="form-control c-select" name="round_id" >
                                             <option selected></option>
                                             <option v-for="round in roundsDone" :value="round.id">@{{ round.value }}</option>   
                                         </select>
                                         <span v-if="formErrors['round_id']" class="error text-danger">@{{ formErrors['round_id'] }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 form-control-label" for="title">Tester ID on Form:</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" name="tester_id" class="form-control" />
                                     </div>
                                 </div>
                                 <div v-for="frm in form">
@@ -340,10 +346,14 @@
                                 <div class="form-group row">
                                     <label class="col-sm-5 form-control-label" for="title">PT Round:</label>
                                     <div class="col-sm-7">
-                                        <select class="form-control c-select" name="round_id">
-                                            <option selected></option>
-                                            <option v-for="round in rounds" v-if="frmData.round" v-bind="{ 'selected': round.id==frmData.round.id}" :value="round.id">@{{ round.value }}</option>   
-                                        </select>
+                                        <input type="hidden" name="round_id" :value="frmData.round_id" />
+                                        <input type="text" class="form-control" name="round_name" :value="frmData.round_name" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 form-control-label" for="title">Tester ID on Form:</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" name="tester_id" class="form-control" :value="frmData.tester" readonly />
                                     </div>
                                 </div>
                                 <div v-for="frm in form">

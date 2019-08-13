@@ -50,27 +50,27 @@ class ForgotPasswordController extends Controller
             $user->sms_code = $token;
             $user->save();
         }catch( \Exception $e){
-\Log::info($e->getMessage());
-\Log::info("Message already sent to user.");
+            \Log::error($e->getMessage());
+            \Log::error("Message already sent to user.");
             return $this->sendResetLinkFailedResponse($request, "We've already sent you a password reset token. Please wait for 3 minutes before retrying.");
         }
 
         $message    = "Your Password Reset Verification Code is: ".$token;
         try
         {
-\Log::info("Send reset token $token to ".$user->phone . " ". $user->first_name);
+            \Log::info("Send reset token $token to ".$user->phone . " ". $user->first_name);
             $smsHandler = new SmsHandler();
 
             $smsHandler->sendMessage($user->phone, $message);
         }
         catch ( \Exception $e )
         {
-\Log::error($e->getMessage());
+            \Log::error($e->getMessage());
             return $this->sendResetLinkFailedResponse($request, $e->getMessage());
         }
 
         $response = $this->broker()->createToken($user);
-\Log::error("TOKEN: ".$response);
+        \Log::info("TOKEN: ".$response);
 
         return redirect('/password/code/?id='.$user->id.'&token='.$response);
     }

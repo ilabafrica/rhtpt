@@ -115,7 +115,7 @@ class ResultController extends Controller
             if($subCountyID > 0) $users = $users->where('sub_county_id', $subCountyID);
             if($facilityID > 0) $users = $users->where('facilities.id', $facilityID);
 
-            $enrolments = $users->join('enrolments', 'users.id', 'enrolments.user_id');
+            $enrolments = $users->join('enrolments', 'users.id', 'enrolments.tester_id');
 
             if($roundID > 0) $enrolments = $enrolments->where('enrolments.round_id', $roundID);
 
@@ -187,24 +187,51 @@ class ResultController extends Controller
     public function store(Request $request)
     {        
         //Check if round has been         
-        if ($request->get('round_id') =="") {
+        \Log::info("Check if round has been");
+        if ($request->get('tester_id') == "") {
+            \Log::info("No tester_id");
             return response()->json(['1']);            
         } else
         {   
-            //  Save pt first then proceed to save form fields
-            $round_id = $request->get('round_id');
-            $enrolment = Enrol::where('user_id', Auth::user()->id)->where('round_id', $round_id)->first();
+            $testerIDOnForm = "";
+
+            if ($request->get('round_id') != "") {
+                $round_id = $request->get('round_id');
+            }else{
+                //Get the latest round
+                $round = Round::where('end_date', '>', Carbon::today())
+                                ->where('start_date', '<', Carbon::today())->where('status', '=', 0)->first();
+                if(isset($round->id)){
+                    $round_id = $round->id;
+                }else{
+                    \Log::info("No active round");
+                    return response()->json(['1']); // No active round
+                }
+            }
+
+            $testUser = User::where('uid', $request->get('tester_id'))->first();
+            if(isset($testUser->id)){
+                $testerIDOnForm = $testUser->id;
+            }else{
+                \Log::info("The provided uid is faulty");
+                return response()->json(['2']); // The provided uid is faulty
+            }
+
+            $enrolment = Enrol::where('user_id', $testerIDOnForm)->where('round_id', $round_id)->first();
             
             //Validation: Check if the enrolment results have been submitted
             if ($enrolment->status ==1) {
-                return response()->json(['2']);            
+                \Log::info("Enrolment status is 1");
+                return response()->json(['3']);
             }else
-            {   
+            {
+            //  Save pt first then proceed to save form fields
                 $pt = new Pt;
                 $pt->enrolment_id = $enrolment->id;
                 $pt->panel_status = Pt::NOT_CHECKED;
                 $pt->save();
 
+                $enrolment->tester_id = Auth::user()->id;        
                 //update enrollment status to 1
                 $enrolment->status = Enrol::DONE;        
                 $enrolment->save();     
@@ -275,17 +302,21 @@ class ResultController extends Controller
     public function edit($id)
     {
         $pt = Pt::find($id);
-        $round = $pt->enrolment->round;
+        //Get the currently active round
+        $round = Round::where('end_date', '>', Carbon::today())
+                                ->where('start_date', '<', Carbon::today())->where('status', '=', 0)->first();
+        $tester = User::find($pt->enrolment->user_id)->uid;
         $results = $pt->results;
         $response = [
             'pt' => $pt,
             'round' => $round,
+            'tester' => $tester,
             'results' => $results,
             'pt_id'=>$pt->id
         ];
-        // dd($response);
         return response()->json($response);
     }
+
     /*
     *   verify the result after reviewing
     */
@@ -469,6 +500,7 @@ class ResultController extends Controller
 
         return substr_replace($str, $replacement, $start, $end - $start);
     }
+
      /**
      * Verify results evaluted by a NON-Participant
      *
@@ -920,6 +952,7 @@ class ResultController extends Controller
 
         return response()->json($result);
     }
+
      /**
      * Update the evaluated results
      *
@@ -1147,6 +1180,7 @@ class ResultController extends Controller
         }
 
     }
+
     public function feedback($id)
     {
         $pt = Pt::find($id);

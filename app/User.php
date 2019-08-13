@@ -510,7 +510,7 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     public function results($roundID = 0)
     {
         
-        $enrolments = $this->join('enrolments', 'users.id', '=', 'enrolments.user_id')->where('users.id', $this->id);
+        $enrolments = $this->join('enrolments', 'users.id', '=', 'enrolments.tester_id')->where('users.id', $this->id);
 
         if($roundID > 0) $enrolments = $enrolments->where('round_id', $roundID);
 

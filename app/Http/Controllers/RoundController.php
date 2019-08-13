@@ -148,7 +148,6 @@ class RoundController extends Controller
         $county_coordinators = $users->county_coordinators()->pluck('phone')->toArray();
         $subcounty_coordinators = $users->sub_county_coordinators()->pluck('phone')->toArray();
         $phone_numbers = array_merge($county_coordinators, $subcounty_coordinators);
-        // $phone_numbers = array(0=>'0723763026', 1=>'0723763026');
         
         $recipients = NULL;
         $recipients = implode(",", $phone_numbers);
@@ -208,10 +207,10 @@ class RoundController extends Controller
      * Function to return list of rounds already done by a user.
      *
      */
-    public function roundsDone()
+    public function roundsDone($status = 0)
     {
         // get enrolments with no submissions
-        $ids = Auth::user()->enrol()->where('status', 0)->pluck('round_id');
+        $ids = Auth::user()->enrol()->where('status', $status)->pluck('round_id');
         // fetch rounds details
         $rounds = Round::whereIn('id', $ids)->where('end_date', '>', Carbon::today())->pluck('description', 'id');
         // format to match dropdown values
