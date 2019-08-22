@@ -15,6 +15,9 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
           $table->increments('id')->unsigned();
           $table->string('name');
+          $table->string('last_name', 100)->nullable();
+          $table->string('middle_name', 100)->nullable();// not mandatory
+          $table->string('first_name', 100)->nullable();
           $table->tinyInteger("gender")->default(0);
           $table->string('email')->nullable();
           $table->string('phone')->nullable();
@@ -23,6 +26,17 @@ class CreateUsersTable extends Migration
           $table->string('password', 60);
           $table->string("image", 100)->nullable();
           $table->integer('uid')->nullable();
+          $table->string('sms_code')->nullable();
+          $table->boolean('phone_verified')->default(false);
+          $table->string('email_verification_code')->nullable();
+          $table->boolean('email_verified')->default(false);
+          // $table->string("remember_token", 100)->nullable();
+          $table->date('date_registered')->nullable();
+          $table->tinyInteger('status')->nullable();
+          $table->string('reason', 25)->nullable();
+          $table->date('status_date')->nullable();
+          $table->integer('implementing_partner_id')->unsigned();
+         
           $table->rememberToken();
 
           $table->softDeletes();

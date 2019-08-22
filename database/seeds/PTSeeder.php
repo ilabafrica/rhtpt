@@ -14,7 +14,8 @@ use App\Option;
 use App\Notification;
 use App\Questionnaire;
 use App\Nonperformance;
-
+use App\ImplementingPartner;
+use App\Agency;
 //	Carbon - for use with dates
 use Jenssegers\Date\Date as Carbon;
 
@@ -154,7 +155,13 @@ class PTSeeder extends DatabaseSeeder
             array("name" => "export-report", "display_name" => "Can export report"),
             array("name" => "print-results", "display_name" => "Can print result"),
             array("name" => "view-evaluated-results", "display_name" => " Can view evaluated results"),
-            array("name" => "upload-participants", "display_name" => "Can upload participants worksheet")
+            array("name" => "upload-participants", "display_name" => "Can upload participants worksheet"),
+            array("name" => "reports-catalog", "display_name" => "Can view reports"),
+            array("name" => "read-general-report", "display_name" => "Can view general report"),
+            array("name" => "read-participant-registration-counts-report", "display_name" => "Can view participant registration count report"),
+            array("name" => "import-results", "display_name" => "Can import PT results from CSV file.")
+
+
         );
         foreach ($permissions as $permission) {
             Permission::create($permission);
@@ -261,10 +268,14 @@ class PTSeeder extends DatabaseSeeder
 
         /* Notifications table */
         $notifications = array(
-            array("template" => Notification::ENROLMENT, "message" => "Dear PT Participant, you have been enrolled into [round] of PT. If you are not participating, contact your County or Sub-County Coordinator"),
-            array("template" => Notification::PANEL_DISPATCH, "message" => "Dear PT Participant, NPHL has dispatched your PT Panel for [round]. If not received within 7 days, contact your County or Sub-County Coordinator"),
-            array("template" => Notification::RESULTS_RECEIVED, "message" => "Dear PT Participant, NPHL has received your PT Results for [round]. You will get your feedback shortly."),
-            array("template" => Notification::FEEDBACK_RELEASE, "message" => "Dear PT Participant, NPHL has released your PT Feedback for [round]. If not received within 7 days, contact your County or Sub-County Coordinator"),            
+            array("template" => Notification::ENROLMENT, "message" => "Dear PT Participant, you have been enrolled into [round] of PT. If you are not participating, contact your County or Sub-County Coordinator", "description" => "Enrollment Message"),
+            array("template" => Notification::PANEL_DISPATCH, "message" => "Dear PT Participant, NPHL has dispatched your PT Panel for [round]. If not received within 7 days, contact your County or Sub-County Coordinator", "description" => "Panels Dispatch"),
+            array("template" => Notification::RESULTS_RECEIVED, "message" => "Dear PT Participant, NPHL has received your PT Results for [round]. You will get your feedback shortly.", "description" => "Results Submitted"),
+            array("template" => Notification::FEEDBACK_RELEASE, "message" => "Dear PT Participant, NPHL has released your PT Feedback for [round]. If not received within 7 days, contact your County or Sub-County Coordinator", "description" => " Results Feedback"),
+            array("template" => Notification::ACTIVATION_CODE, "message" => "Your Verification Code is:", "description" => " Phone Verification Code"), 
+            array("template" => Notification::USER_ENABLED, "message" => "Dear [user->name], your Sub-county Coordinator has approved your request to participate in PT. Your tester ID is {user->tester id}. Use the link sent to your email to get started.", "description" => " Enabled Account"), 
+            array("template" => Notification::USER_REGISTRATION, "message" => "Dear [user->name], your PT system account has been created. Use the link sent to your email address to get started.", "description" => "Account Created"), 
+            array("template" => Notification::ROUND_CREATION, "message" => "Dear County/Sub County Coordinator, NPHL has created Round [round->name]. You have until {round->enrollment_date} to enroll participants into this round.", "description" => "Round Created"),
         );
         foreach ($notifications as $notification)
         {
@@ -327,5 +338,65 @@ class PTSeeder extends DatabaseSeeder
             Nonperformance::create($reason);
         }
         $this->command->info('Non-performance table seeded');
+
+        /*Implementing partners table*/
+        $partners = array(
+            array("name" => "AMREF Africa", "agency_id" => "1" ),
+            array("name" => "EDARP", "agency_id" => "1" ),
+            array("name" => "EGPAF", "agency_id" => "1" ),
+            array("name" => "FHI 360", "agency_id" => "1" ),
+            array("name" => "Global Implentation Solutions (GIS)", "agency_id" => "1" ),
+            array("name" => "UMB - Boresha Maabara", "agency_id" => "1" ),
+            array("name" => "AMREF Nairobi Kitui", "agency_id" => "1" ),
+            array("name" => "Bomu Hospital Affiliated Sites", "agency_id" => "1" ),
+            array("name" => "CHAK CHAP Uzima", "agency_id" => "1" ),
+            array("name" => "CHS Naishi", "agency_id" => "1" ),
+            array("name" => "CHS Shinda", "agency_id" => "1" ),
+            array("name" => "CHS Tegemeza Plus", "agency_id" => "1" ),
+            array("name" => "Columbia STARS", "agency_id" => "1" ),
+            array("name" => "Coptic Hospitals", "agency_id" => "1" ),
+            array("name" => "EGPAF Timiza", "agency_id" => "1" ),
+            array("name" => "HWWK Nairobi Eastern", "agency_id" => "1" ),
+            array("name" => "IRDO Tuungane 3", "agency_id" => "1" ),
+            array("name" => "KCCB KARP", "agency_id" => "1" ),
+            array("name" => "Kenya Disciplined Services ZUIA", "agency_id" => "1" ),
+            array("name" => "Kenya Prison Services", "agency_id" => "1" ),
+            array("name" => "LVCT Daraja", "agency_id" => "1" ),
+            array("name" => "LVCT Steps", "agency_id" => "1" ),
+            array("name" => "Ngima for Sure", "agency_id" => "1" ),
+            array("name" => "UCSF Clinical Kisumu", "agency_id" => "1" ),
+            array("name" => "UMB PACT Kamili", "agency_id" => "1" ),
+            array("name" => "UMB Timiza", "agency_id" => "1" ),
+            array("name" => "UON COE Niche", "agency_id" => "1" ),
+            array("name" => "UON CRISSP Plus", "agency_id" => "1" ),
+            array("name" => "Kisumu West (Placeholder)", "agency_id" => "2" ),
+            array("name" => "South Rift Valley (Placeholder)", "agency_id" => "2" ),
+            array("name" => "APHIAPlus Rift Valley", "agency_id" => "3" ),
+            array("name" => "AMPATHplus", "agency_id" => "3" ),
+            array("name" => "APHIAPlus Pwani", "agency_id" => "3" ),
+            array("name" => "APHIAPlus Rift Valley", "agency_id" => "3" ),
+            array("name" => "APHIAplus Central/Eastern", "agency_id" => "3" ),
+            array("name" => "APHIAplus Imarisha", "agency_id" => "3" ),
+            array("name" => "APHIAplus Nyanza/Western", "agency_id" => "3" ),
+            array("name" => "Afya Jijini", "agency_id" => "3" ),
+            array("name" => "Integrated Program for both HIV infected and affected children and their households", "agency_id" => "3" )
+        );
+
+        foreach ($partners as $partner) {
+
+            ImplementingPartner::create($partner);
+        }
+        $this->command->info('Implementing_partners table seeded');
+      /*Agencies table*/
+      $agencies = array(
+            array("name" => "CDC"),
+            array("name" => "DOD"),
+            array("name" => "USAID")            
+        );
+        foreach ($agencies as $agency)
+        {
+            Agency::create($agency);
+        }
+        $this->command->info('Agencies table seeded');
     }
 }

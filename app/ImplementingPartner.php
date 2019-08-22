@@ -11,6 +11,13 @@ class ImplementingPartner extends Model
 	use SoftDeletes;
 	protected $dates = ['deleted_at'];
 
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'implementing_partners';
+
     public function agency()
     {
       return $this->belongsTo('App\Agency');
