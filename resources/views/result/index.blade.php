@@ -39,9 +39,9 @@
             </div>
             <div class="col-md-4">
                 <div class="input-group input-group-sm">
-                    <input type="text" class="form-control" placeholder="Search for..." v-model="query" v-on:keyup.enter="search()">
+                    <input type="text" class="form-control" placeholder="Search for..." v-model="query" v-on:keyup.enter="search(1)">
                     <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="button" @click="search()" v-if="!loading"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-secondary" type="button" @click="search(1)" v-if="!loading"><i class="fa fa-search"></i></button>
                         <button class="btn btn-secondary" type="button" disabled="disabled" v-if="loading">Searching...</button>
                     </span>
                 </div>
@@ -50,7 +50,7 @@
     </div>
     <div class="row" v-if = "role !=2" >
         <div class="col-lg-12 margin-tb">
-            <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="filter()"> -->
+            <!-- <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="search()"> -->
                 <div class="row">
                     <div class="pull-left col-sm-12">
                         <label>Filter by: </label>
@@ -60,7 +60,7 @@
                         <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#feedback_status_">Feedback</button>
                         <button data-toggle="collapse" v-if="role==1" class="btn btn-success btn-sm" data-target="#lot">Lot</button>
                         <button data-toggle="collapse" v-if="role==1" class="btn btn-success btn-sm" data-target="#results_order">Order By</button>
-                        <button class="btn btn-sm btn-alizarin" type="submit" @click="filter(1)" v-if="!loading">Filter </button>
+                        <button class="btn btn-sm btn-alizarin" type="submit" @click="search(1)" v-if="!loading">Filter </button>
                         <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
                     </div>
                 </div>
@@ -174,6 +174,7 @@
             <th>PT Round</th>
             <th>Tester ID</th>
             <th>Participant</th>
+            <th>Panel ID</th>
             <th>Status</th>
             <th>Performance Report</th>
             <th>Action</th>
@@ -183,6 +184,7 @@
             <td>@{{ result.rnd }}</td>
             <td>@{{ result.uid }}</td>
             <td>@{{ result.tester }}</td>
+            <td>@{{ result.panel_id }}</td>
             <td>
                 <button v-if="result.panel_status==0" class="mbtn mbtn-raised mbtn-danger mbtn-xs">Not Checked</button>
                 <button v-if="result.panel_status==1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Submitted</button>

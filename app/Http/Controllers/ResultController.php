@@ -85,21 +85,24 @@ class ResultController extends Controller
            $results = ImplementingPartner::find(Auth::user()->ru()->tier)->results($searchString, $roundID, $countyID, $subCountyID, $facilityID);
         }else if(Auth::user()->isSuperAdministrator())
         {
-            if(is_null($searchString)){ //Get all participants
-                $users = User::select('users.id')
-                            ->join('role_user', 'users.id', '=', 'role_user.user_id')
-                            ->join('facilities', 'role_user.tier', '=', 'facilities.id')
-                            ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
-                            ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
-                            ->where('role_id', 2);
-            }else{
-
-                $users = User::select('users.id')
+            //Get all participants
+            $users = User::select('users.id')
                         ->join('role_user', 'users.id', '=', 'role_user.user_id')
                         ->join('facilities', 'role_user.tier', '=', 'facilities.id')
                         ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
                         ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
-                        ->where(function($query) use ($searchString){
+                        ->where('role_id', 2);
+
+            if($countyID > 0) $users = $users->where('county_id', $countyID);
+            if($subCountyID > 0) $users = $users->where('sub_county_id', $subCountyID);
+            if($facilityID > 0) $users = $users->where('facilities.id', $facilityID);
+
+            $enrolments = $users->join('enrolments', 'users.id', 'enrolments.tester_id')
+                                ->join('users AS panels', 'enrolments.user_id', 'panels.id');
+
+            if(!is_null($searchString)){
+
+                $enrolments = $enrolments->where(function($query) use ($searchString){
 
                             $query->where('users.name', 'LIKE', "%{$searchString['search']}%")
                                 ->orWhere('users.first_name', 'LIKE', "%{$searchString['search']}%")
@@ -107,15 +110,10 @@ class ResultController extends Controller
                                 ->orWhere('users.last_name', 'LIKE', "%{$searchString['search']}%")
                                 ->orWhere('users.email', 'LIKE', "%{$searchString['search']}%")
                                 ->orWhere('users.phone', 'LIKE', "%{$searchString['search']}%")
-                                ->orWhere('users.uid', 'LIKE', "%{$searchString['search']}%");
+                                ->orWhere('users.uid', 'LIKE', "%{$searchString['search']}%")
+                                ->orWhere('panels.uid', 'LIKE', "%{$searchString['search']}%");
                         });
             }
-
-            if($countyID > 0) $users = $users->where('county_id', $countyID);
-            if($subCountyID > 0) $users = $users->where('sub_county_id', $subCountyID);
-            if($facilityID > 0) $users = $users->where('facilities.id', $facilityID);
-
-            $enrolments = $users->join('enrolments', 'users.id', 'enrolments.tester_id');
 
             if($roundID > 0) $enrolments = $enrolments->where('enrolments.round_id', $roundID);
 
@@ -126,7 +124,7 @@ class ResultController extends Controller
             }
 
             $results = $enrolments->join('pt','enrolments.id', '=', 'pt.enrolment_id')
-                            ->select(["users.*", "enrolments.*", "pt.*"]);
+                            ->select(["users.*", "enrolments.*", "pt.*", "panels.uid AS panel_id"]);
         }
 
         // Additional result filters 
