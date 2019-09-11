@@ -142,10 +142,12 @@ new Vue({
                     console.log(response.data);
                     if (response.data.length > 0) {
                         if (response.data[0] == "1") {
-                            toastr.error('The is no active PT round at the moment!', 'Failure Alert', {timeOut: 5000});
+                            toastr.error('There is no active PT round at the moment!', 'Failure Alert', {timeOut: 5000});
                         }else if (response.data[0] == "2") {
                             toastr.error('Please verify that you have entered the correct Tester ID as found on your form!', 'Failure Alert', {timeOut: 5000});
                         }else if (response.data[0] == "3") {
+                            toastr.error('Results for your panel have already been submitted!', 'Failure Alert', {timeOut: 5000});
+                        }else if (response.data[0] == "4") {
                             toastr.error('Results for your panel have already been submitted!', 'Failure Alert', {timeOut: 5000});
                         }
 
@@ -245,7 +247,7 @@ new Vue({
         changePage: function (page) {
             this.pagination.current_page = page;
             if (this.filters ==1) {
-                this.filter(page);
+                this.search(page);
             }else{
 
                 this.getVueResults(page);
