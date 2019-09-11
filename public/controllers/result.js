@@ -148,7 +148,7 @@ new Vue({
                         }else if (response.data[0] == "3") {
                             toastr.error('Results for your panel have already been submitted!', 'Failure Alert', {timeOut: 5000});
                         }else if (response.data[0] == "4") {
-                            toastr.error('Results for your panel have already been submitted!', 'Failure Alert', {timeOut: 5000});
+                            toastr.error('You have already submitted a result for the current round!', 'Failure Alert', {timeOut: 5000});
                         }
 
                     }else{

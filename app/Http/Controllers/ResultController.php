@@ -215,6 +215,15 @@ class ResultController extends Controller
                 return response()->json(['2']); // The provided uid is faulty
             }
 
+
+            //Validation: Check if the user already submitted another result
+            $multipleSubmissionAttempts = Enrol::where('tester_id', Auth::user()->id)
+                                            ->where('status', '>', 0)->where('round_id', $round_id)->count();
+
+            if ($multipleSubmissionAttempts > 0) {
+                return response()->json(['4']);
+            }
+
             $enrolment = Enrol::where('user_id', $testerIDOnForm)->where('round_id', $round_id)->first();
             
             //Validation: Check if the enrolment results have been submitted
