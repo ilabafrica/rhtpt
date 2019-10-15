@@ -137,6 +137,21 @@ class ResultController extends Controller
         {     
             $results = $results->where('feedback', $request->get('feedback_status'));
         }
+        if($request->has('reason_for_failure'))
+        {
+            $failureReason = '';
+            switch(intval($request->get('reason_for_failure'))){
+                case 1: $failureReason = 'pt.incorrect_results'; break;
+                case 2: $failureReason = 'pt.wrong_algorithm'; break;
+                case 3: $failureReason = 'pt.use_of_expired_kits'; break;
+                case 4: $failureReason = 'pt.incomplete_kit_data'; break;
+                case 5: $failureReason = 'pt.incorrect_results'; break;
+                case 6: $failureReason = 'pt.dev_from_procedure'; break;
+                case 7: $failureReason = 'pt.incomplete_other_information'; break;
+            }
+
+            $results = $results->where($failureReason, '=', '1')->where('pt.feedback', '=', '1');
+        }
 
         $resultsOrder = ['pt.id', 'users.first_name', 'users.uid'];
         $results = $results->withTrashed()->orderBy($resultsOrder[$resultsOrderIndex])->paginate($items_per_page);

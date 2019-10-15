@@ -58,6 +58,7 @@
                         <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#region">Region</button>
                         <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#result_status_">Submission Status</button>
                         <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#feedback_status_">Feedback</button>
+                        <button data-toggle="collapse" class="btn btn-success btn-sm" data-target="#reason_for_failure_">Reason for failure</button>
                         <button data-toggle="collapse" v-if="role==1" class="btn btn-success btn-sm" data-target="#lot">Lot</button>
                         <button data-toggle="collapse" v-if="role==1" class="btn btn-success btn-sm" data-target="#results_order">Order By</button>
                         <button class="btn btn-sm btn-alizarin" type="submit" @click="search(1)" v-if="!loading">Filter </button>
@@ -136,7 +137,25 @@
                                 </select>
                             </div>
                         </div>                    
-                                       
+                    </div>
+                </div>
+                <div id="reason_for_failure_" class="collapse">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label class="col-sm-4 form-control-label" for="title">Reason for failure:</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="reason_for_failure" v-model = "reason_for_failure" id="reason_for_failure_id">
+                                    <option selected></option>
+                                    <option value="1">Incorrect Result</option>
+                                    <option value="2">Wrong Algorithm</option>
+                                    <option value="3">Use of Expired Kits</option>
+                                    <option value="4">Incomplete Kit Data</option>
+                                    <option value="5">Incomplete Results</option>
+                                    <option value="6">Deviation From Procedure</option>
+                                    <option value="7">Incomplete Other Information</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="lot" class="collapse">

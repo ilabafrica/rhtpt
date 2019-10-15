@@ -54,6 +54,7 @@ new Vue({
         facility:'',
         result_status:'',
         feedback_status: '',
+        reason_for_failure: '',
         filters:'',
         //varibles used in editing evaluated results
         programs: [],
@@ -555,6 +556,11 @@ new Vue({
             if (this.feedback_status) {
 
                link = link +'&feedback_status='+this.feedback_status;
+            }
+
+            if (this.reason_for_failure) {
+
+               link = link +'&reason_for_failure='+this.reason_for_failure;
             }
 
             if (this.results_order) {
