@@ -125,6 +125,7 @@ class Facility extends Model
                         ->join('facilities', 'role_user.tier', '=', 'facilities.id')
                         ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
                         ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
+                        ->whereNull('pt.deleted_at')
                         ->select(['users.*', 'enrolments.*', 'pt.*', 'role_user.*']);
 
         if($countyID > 0) $results = $results->where('counties.id', $countyID);

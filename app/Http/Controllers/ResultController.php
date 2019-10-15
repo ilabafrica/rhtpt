@@ -124,6 +124,7 @@ class ResultController extends Controller
             }
 
             $results = $enrolments->join('pt','enrolments.id', '=', 'pt.enrolment_id')
+                            ->whereNull('pt.deleted_at')
                             ->select(["users.*", "enrolments.*", "pt.*", "panels.uid AS panel_id"]);
         }
 
