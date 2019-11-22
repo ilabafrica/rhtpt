@@ -190,6 +190,25 @@ class RoundController extends Controller
         return response()->json(['done']);
     }
     /**
+     * Publish / unpublish a round.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function publish($id) 
+    {
+        $round = Round::find($id);
+        if ($round->published_at) {
+            $round->published_at = null;
+        }else{
+            date_default_timezone_set('Africa/Nairobi');
+            $round->published_at = date("yyyy-mm-dd h:i:s");
+        }
+        $round->save();
+
+        return response()->json(['done']);
+    }
+    /**
      * Function to return list of rounds.
      *
      */

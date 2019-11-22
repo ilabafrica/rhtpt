@@ -148,6 +148,12 @@ new Vue({
             });
     	},
 
+        publishRound: function(round){
+            this.$http.patch('/vuerounds/'+round.id+'/publish').then((response) => {
+                this.changePage(this.pagination.current_page);
+                toastr.success('Round Published Successfully.', 'Success Alert', {timeOut: 5000});
+            });
+        },
         deleteRound: function(round){
             this.$http.delete('/vuerounds/'+round.id).then((response) => {
                 this.changePage(this.pagination.current_page);

@@ -128,6 +128,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('round/{id}/lots', 'RoundController@getLots');
     Route::resource('vuerounds','RoundController');
     Route::any('vuerounds/{id}/restore','RoundController@restore');
+    Route::any('vuerounds/{id}/publish','RoundController@publish');
 
     Route::get('field', 'FieldController@manageField');
     Route::resource('vuefields','FieldController');

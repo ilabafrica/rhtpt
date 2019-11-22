@@ -65,6 +65,10 @@
             <td>@{{ round.enrollment_date }}</td>
             <td>@{{ round.end_date }}</td>
             <td>
+            <!-- @permission('restore-round') -->
+                <button v-if="!round.published_at && !round.deleted_at" class="btn btn-sm btn-success" @click.prevent="publishRound(round)"><i class="fa fa-book"></i> Publish</button>
+                <button v-if="round.published_at && !round.deleted_at" class="btn btn-sm btn-danger" @click.prevent="publishRound(round)"><i class="fa fa-book"></i> Unpublish</button>
+            <!-- @endpermission -->
             @permission('update-round')	
                 <button v-bind="{ 'disabled': round.deleted_at}" class="btn btn-sm btn-primary" @click.prevent="editRound(round)"><i class="fa fa-edit"></i> Edit</button>
             @endpermission
