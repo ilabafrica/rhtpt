@@ -116,7 +116,7 @@
             <div id="talliesContainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         </div>
     </div>
-    <div class="card">
+    <div class="card" style="display: none;">
         <div class="card-block">
             <table class="table table-bordered">
                 <tr>
