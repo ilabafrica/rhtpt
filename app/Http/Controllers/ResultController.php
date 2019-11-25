@@ -1158,9 +1158,9 @@ class ResultController extends Controller
       $data = $this->evaluated_results($id);
       $pt = Pt::find($id);
       $round = $pt->enrolment->round->id;
+
       $summaries = DB::select("SELECT r.id, r.description AS 'round', COUNT(DISTINCT e.user_id) AS 'enrolment', COUNT(DISTINCT pt.id) AS 'response', SUM(feedback=0) AS 'satisfactory', SUM(feedback=1) AS 'unsatisfactory' FROM rounds r INNER JOIN enrolments e ON r.id=e.round_id LEFT JOIN pt ON e.id=pt.enrolment_id WHERE ISNULL(r.deleted_at) AND ISNULL(e.deleted_at) AND e.round_id = '$round' GROUP BY r.id");
 
-      \Log::info(json_encode($summaries));
       $tally = [];
       foreach ($summaries as $summary) {
           $tally['enrolment'] = $summary->enrolment;
@@ -1168,20 +1168,35 @@ class ResultController extends Controller
           $tally['satisfactory'] = $summary->satisfactory;
           $tally['unsatisfactory'] = $summary->unsatisfactory;
       }
-      \Log::info(json_encode($tally));
+
+        $unsperf = DB::select("SELECT r.id, r.description AS 'round', COUNT(DISTINCT pt.id) AS 'response', SUM(feedback=0) AS 'total_unsatisfactory', concat(round(( SUM(feedback=1)/COUNT(DISTINCT pt.id) * 100 ),2),'%') AS 'unsatisfactory', SUM(incomplete_kit_data=1) AS 'incomplete_kit_data', SUM(incorrect_results=1) AS 'incorrect_results', SUM(wrong_algorithm=1) AS 'wrong_algorithm', SUM(dev_from_procedure=1) AS 'deviation_from_procedure', SUM(incomplete_other_information=1) AS 'incomplete_other_information', SUM(use_of_expired_kits=1) AS 'use_of_expired_kits', SUM(invalid_results=1) AS 'invalid_results', SUM(incomplete_results=1) AS 'incomplete_results' FROM rounds r INNER JOIN enrolments e ON r.id=e.round_id LEFT JOIN pt ON e.id=pt.enrolment_id WHERE ISNULL(r.deleted_at) AND ISNULL(e.deleted_at) AND e.round_id = '$round' GROUP BY r.id;");
+
+      $reasons = [];
+      foreach ($unsperf as $performance) {
+          $reasons['response'] = $performance->response;
+          $reasons['incomplete_kit_data'] = $performance->incomplete_kit_data;
+          $reasons['incorrect_results'] = $performance->incorrect_results;
+          $reasons['wrong_algorithm'] = $performance->wrong_algorithm;
+          $reasons['deviation_from_procedure'] = $performance->deviation_from_procedure;
+          $reasons['incomplete_other_information'] = $performance->incomplete_other_information;
+          $reasons['use_of_expired_kits'] = $performance->use_of_expired_kits;
+          $reasons['invalid_results'] = $performance->invalid_results;
+          $reasons['incomplete_results'] = $performance->incomplete_results;
+      }
+      \Log::info(json_encode($reasons));
 
       //display final report when the round is over
       if ($data['round_status'] ==0) {      
           if(\request('type') == 0){//satisfactory
 
-              $pdf = PDF::loadView('result/feedbackreports/final/satisfactory', compact('data','tally'));
+              $pdf = PDF::loadView('result/feedbackreports/final/satisfactory', compact('data','tally','reasons'));
           }
 
             if(\request('type') == 1){//unsatisfactory
 
                 $pt = Pt::where('id',$id)->first();
 
-                $pdf = PDF::loadView('result/feedbackreports/final/unsatisfactory', compact('data','pt', 'tally'));
+                $pdf = PDF::loadView('result/feedbackreports/final/unsatisfactory', compact('data','pt', 'tally', 'reasons'));
             }
         }
 

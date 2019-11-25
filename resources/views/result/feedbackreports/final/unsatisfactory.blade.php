@@ -204,8 +204,9 @@
     </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr style="text-align:center"><td colspan="5"><b>PT Scheme Summary Performance.</b></td></tr>
-    <tr style="text-align:center"> 
-        <td colspan="5"> 
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr style="text-align:center">
+        <td colspan="5">
             <div class="card">
                 <div class="card-block">
                     <table class="table table-bordered" cellspacing="0" style="font-size:15px" width="100%">
@@ -215,20 +216,92 @@
                             <th style ="border:solid 1px black;">Satisfactory</th>
                             <th style ="border:solid 1px black;">Unsatisfactory</th>
                         </tr>
+                        <tr>
                         <?php 
-                            echo "<tr>";
-                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['enrolment']."</td>";
-                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['response']." (".round($tally['response']/$tally['enrolment']*100,2)."%)</td>";
-                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['satisfactory']." (".round($tally['satisfactory']/$tally['response']*100,2)."%)</td>";
-                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['unsatisfactory']." (".round($tally['unsatisfactory']/$tally['response']*100,2)."%)</td>";
-                            echo "</tr>";
+                            echo "<td style ='border:solid 1px black;text-align:center;'>".$tally['enrolment']."</td>";
+                            echo "<td style ='border:solid 1px black;text-align:center;'>".$tally['response']." (".round($tally['response']/$tally['enrolment']*100,2)."%)</td>";
+                            echo "<td style ='border:solid 1px black;text-align:center;'>".$tally['satisfactory']." (".round($tally['satisfactory']/$tally['response']*100,2)."%)</td>";
+                            echo "<td style ='border:solid 1px black;text-align:center;'>".$tally['unsatisfactory']." (".round($tally['unsatisfactory']/$tally['response']*100,2)."%)</td>";
                         ?>
+                        </tr>
                     </table>
-                    <div id="talliesContainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
             </div>
         </td> 
     </tr>
+    <tr> <td colspan="5"> <i>Enrollment, participation and performance</i></td> </tr>
+    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr> 
+        <td colspan="5">
+            <div class="card">
+                <div class="card-block">
+                    <div class="card-block">
+                        <table class="table table-bordered" cellspacing="0" style="font-size:15px" width="100%">
+                            <tr>
+                                <th style ="border:solid 1px black;">
+                                    Participants
+                                </th>
+                                <th style ="border:solid 1px black;">
+                                    Incrorrect Results
+                                </th>
+                                <th style ="border:solid 1px black;">
+                                    Wrong Algorithm
+                                </th>
+                                <th style ="border:solid 1px black;">
+                                    Incompete Kit Data
+                                </th>
+                                <th style ="border:solid 1px black;">
+                                    Deviation from Procedure
+                                </th>
+                                <th style ="border:solid 1px black;">
+                                    Incomplete Other 
+                                Information</th>
+                                <th style ="border:solid 1px black;">
+                                    Use of Expired Kits
+                                </th>
+                                <th style ="border:solid 1px black;">
+                                    Invalid Results
+                                </th>
+                                <th style ="border:solid 1px black;">
+                                    Incomplete Results
+                                </th>
+                            </tr>
+                            <tr>
+                                <td style="border:solid 1px black;text-align: center;">
+                                    <?php echo $reasons['response']; ?>
+                                </td>
+                                <td style="border:solid 1px black;text-align: center;">
+                                    <?php echo $reasons['incorrect_results']; ?>
+                                </td>
+                                <td style="border:solid 1px black;text-align: center;">
+                                    <?php echo $reasons['wrong_algorithm']; ?>
+                                </td>
+                                <td style="border:solid 1px black;text-align: center;">
+                                    <?php echo $reasons['incomplete_kit_data']; ?>
+                                </td>
+                                <td style="border:solid 1px black;text-align: center;">
+                                    <?php echo $reasons['deviation_from_procedure']; ?>
+                                </td>
+                                <td style="border:solid 1px black;text-align: center;">
+                                    <?php echo $reasons['incomplete_other_information']; ?>
+                                </td>
+                                <td style="border:solid 1px black;text-align: center;">
+                                    <?php echo $reasons['use_of_expired_kits']; ?>
+                                </td>
+                                <td style="border:solid 1px black;text-align: center;">
+                                    <?php echo $reasons['invalid_results']; ?>
+                                </td>
+                                <td style="border:solid 1px black;text-align: center;">
+                                    <?php echo $reasons['incomplete_results']; ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr> <td colspan="5"><i>Reasons for unsatisfactory performance</i></td> </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr>
         <td style ="border:solid 1px black;"><b>Date Authorized:</b></td>
