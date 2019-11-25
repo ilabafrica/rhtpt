@@ -202,12 +202,31 @@
     </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr style="text-align:center"><td colspan="5"><b>PT Scheme Summary Performance.</b></td></tr>
-    <tr style="text-align:center"> <td colspan="5"> (Will be available on your final report)</td> </tr>
-    <tr> <td colspan="5"> &nbsp;</td> </tr>
-    <tr> <td colspan="5"> &nbsp;</td> </tr>
-    <tr> <td colspan="5"> &nbsp;</td> </tr>
-    <tr> <td colspan="5"> &nbsp;</td> </tr>
-    <tr> <td colspan="5"> &nbsp;</td> </tr>
+    <tr style="text-align:center">
+        <td colspan="5">
+            <div class="card">
+                <div class="card-block">
+                    <table class="table table-bordered" cellspacing="0" style="font-size:15px" width="100%">
+                        <tr>
+                            <th style ="border:solid 1px black;">Enrollment</th>
+                            <th style ="border:solid 1px black;">Response</th>
+                            <th style ="border:solid 1px black;">Satisfactory</th>
+                            <th style ="border:solid 1px black;">Unsatisfactory</th>
+                        </tr>
+                        <?php 
+                            echo "<tr>";
+                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['enrolment']."</td>";
+                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['response']." (".round($tally['response']/$tally['enrolment']*100,2)."%)</td>";
+                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['satisfactory']." (".round($tally['satisfactory']/$tally['response']*100,2)."%)</td>";
+                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['unsatisfactory']." (".round($tally['unsatisfactory']/$tally['response']*100,2)."%)</td>";
+                            echo "</tr>";
+                        ?>
+                    </table>
+                    <div id="talliesContainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                </div>
+            </div>
+        </td> 
+    </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr>
         <td style ="border:solid 1px black;"><b>Date Authorized:</b></td>

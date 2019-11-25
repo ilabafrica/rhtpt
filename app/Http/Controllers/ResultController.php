@@ -1156,19 +1156,32 @@ class ResultController extends Controller
 
     public function print_result($id){
       $data = $this->evaluated_results($id);
+      $pt = Pt::find($id);
+      $round = $pt->enrolment->round->id;
+      $summaries = DB::select("SELECT r.id, r.description AS 'round', COUNT(DISTINCT e.user_id) AS 'enrolment', COUNT(DISTINCT pt.id) AS 'response', SUM(feedback=0) AS 'satisfactory', SUM(feedback=1) AS 'unsatisfactory' FROM rounds r INNER JOIN enrolments e ON r.id=e.round_id LEFT JOIN pt ON e.id=pt.enrolment_id WHERE ISNULL(r.deleted_at) AND ISNULL(e.deleted_at) AND e.round_id = '$round' GROUP BY r.id");
+
+      \Log::info(json_encode($summaries));
+      $tally = [];
+      foreach ($summaries as $summary) {
+          $tally['enrolment'] = $summary->enrolment;
+          $tally['response'] = $summary->response;
+          $tally['satisfactory'] = $summary->satisfactory;
+          $tally['unsatisfactory'] = $summary->unsatisfactory;
+      }
+      \Log::info(json_encode($tally));
 
       //display final report when the round is over
       if ($data['round_status'] ==0) {      
           if(\request('type') == 0){//satisfactory
 
-              $pdf = PDF::loadView('result/feedbackreports/final/satisfactory', compact('data'));
+              $pdf = PDF::loadView('result/feedbackreports/final/satisfactory', compact('data','tally'));
           }
 
             if(\request('type') == 1){//unsatisfactory
 
                 $pt = Pt::where('id',$id)->first();
 
-                $pdf = PDF::loadView('result/feedbackreports/final/unsatisfactory', compact('data','pt'));
+                $pdf = PDF::loadView('result/feedbackreports/final/unsatisfactory', compact('data','pt', 'tally'));
             }
         }
 
