@@ -34,9 +34,13 @@
                 $amended['incomplete_results'] = $data['incomplete_results'];
                 $amended['dev_from_procedure'] = $data['dev_from_procedure'];
                 $amended['incomplete_other_information'] = $data['incomplete_other_information'];
-        ?>
-            <b>Final Report</b>
-        <?php } 
+
+                if($data['round_published_at']){
+                    echo "<b>Final Report</b>";
+                }else{
+                    echo "<b>Preliminary Report</b>";
+                }
+            } 
         ?>
     </td></tr>
     <tr> <td colspan="5" style="border-top:solid 2px black;"> &nbsp;</td> </tr>
@@ -203,6 +207,9 @@
             <p>8.  The scheme’s final report with summaries with overall performance analysis will be available on (www.rhtpt.or.ke) within one month of closure of the round.</p></td>
     </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
+
+    <!-- Display summaries for published results -->
+    <?php if($data['round_published_at']){ ?>
     <tr style="text-align:center"><td colspan="5"><b>PT Scheme Summary Performance.</b></td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr style="text-align:center">
@@ -302,6 +309,8 @@
         </td>
     </tr>
     <tr> <td colspan="5"><i>Reasons for unsatisfactory performance</i></td> </tr>
+    <?php } ?>
+    <!-- /Display summaries for published results -->
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr>
         <td style ="border:solid 1px black;"><b>Date Authorized:</b></td>

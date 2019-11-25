@@ -797,6 +797,7 @@ class ResultController extends Controller
             //user details
             'round_name'=> $round_name,
             'round_status'=>$round_status, 
+            'round_published_at'=>$round->published_at, 
             'feedback' => $feedback, 
             'remark' => $remark, 
             'panel_status' => $panel_status, 
@@ -1183,7 +1184,6 @@ class ResultController extends Controller
           $reasons['invalid_results'] = $performance->invalid_results;
           $reasons['incomplete_results'] = $performance->incomplete_results;
       }
-      \Log::info(json_encode($reasons));
 
       //display final report when the round is over
       if ($data['round_status'] ==0) {      
@@ -1216,8 +1216,9 @@ class ResultController extends Controller
         }
 
         $pt = Pt::find($id);
-        $user = User::find($pt->enrolment->tester_id)->id;
-        if ($pt->download_status == 0 && Auth::user()->id==$user) {
+        $user = User::find($pt->enrolment->tester_id);
+        \Log::info("PT Report for UID: ".$user->uid." downloaded by User ID: ". Auth::user()->id);
+        if ($pt->download_status == 0 && Auth::user()->id==$user->id) {
             $pt->download_status = Pt::DOWNLOAD_STATUS;
             $pt->save();
         }

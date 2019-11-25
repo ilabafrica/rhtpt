@@ -34,9 +34,13 @@
                 $amended['incomplete_results'] = $data['incomplete_results'];
                 $amended['dev_from_procedure'] = $data['dev_from_procedure'];
                 $amended['incomplete_other_information'] = $data['incomplete_other_information'];
-        ?>
-            <b>Final Report</b>
-        <?php } 
+
+                if($data['round_published_at']){
+                    echo "<b>Final Report</b>";
+                }else{
+                    echo "<b>Preliminary Report</b>";
+                }
+            } 
         ?>
     </td></tr>
     <tr> <td colspan="5" style="border-top:solid 2px black;"> &nbsp;</td> </tr>
@@ -201,6 +205,9 @@
             <p>8.  The scheme’s final report with summaries with overall performance analysis will be available on (www.rhtpt.or.ke) within one month of closure of the round.</p></td>
     </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
+
+    <!-- Display summaries for published results -->
+    <?php if($data['round_published_at']){ ?>
     <tr style="text-align:center"><td colspan="5"><b>PT Scheme Summary Performance.</b></td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr style="text-align:center">
@@ -216,10 +223,10 @@
                         </tr>
                         <tr>
                         <?php 
-                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['enrolment']."</td>";
-                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['response']." (".round($tally['response']/$tally['enrolment']*100,2)."%)</td>";
-                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['satisfactory']." (".round($tally['satisfactory']/$tally['response']*100,2)."%)</td>";
-                            echo "<td style ='border:solid 1px black;text-align:right;'>".$tally['unsatisfactory']." (".round($tally['unsatisfactory']/$tally['response']*100,2)."%)</td>";
+                            echo "<td style ='border:solid 1px black;text-align:center;'>".$tally['enrolment']."</td>";
+                            echo "<td style ='border:solid 1px black;text-align:center;'>".$tally['response']." (".round($tally['response']/$tally['enrolment']*100,2)."%)</td>";
+                            echo "<td style ='border:solid 1px black;text-align:center;'>".$tally['satisfactory']." (".round($tally['satisfactory']/$tally['response']*100,2)."%)</td>";
+                            echo "<td style ='border:solid 1px black;text-align:center;'>".$tally['unsatisfactory']." (".round($tally['unsatisfactory']/$tally['response']*100,2)."%)</td>";
                         ?>
                         </tr>
                     </table>
@@ -300,6 +307,7 @@
         </td>
     </tr>
     <tr> <td colspan="5"><i>Reasons for unsatisfactory performance</i></td> </tr>
+    <?php } ?>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr>
         <td style="border:solid 1px black;"><b>Date Authorized:</b></td>

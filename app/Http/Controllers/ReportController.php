@@ -10,6 +10,7 @@ use App\Facility;
 use DB;
 use Excel;
 use App;
+use Auth;
 
 class ReportController extends Controller
 {
@@ -29,6 +30,10 @@ class ReportController extends Controller
         $whereClause = "";
         $facilityJoin = "";
         $subcountyJoin = "";
+
+        if (!Auth::user()->can(['read-general-report','publish-round'], true)) {
+            $whereClause .= " AND NOT ISNULL(r.published_at)";
+        }
 
         if ($request->has('round_start')) {
             $whereClause .= " AND r.id >= ".$request->get('round_start');

@@ -220,7 +220,7 @@
                     </li>
                     @endpermission
                     @permission('reports-catalog')
-                    <li class="{!! Request::segment(1)==strtolower('report')?strtolower(trans('messages.active')):'' !!}">
+                    <li class="{!! in_array(Request::segment(1), [strtolower('report'), strtolower('participantcounts')])?strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-bar-chart-o"></i> {!! trans('messages.reports') !!}</a>
                         <ul class="list-unstyled">
                             @permission('read-general-report')
@@ -237,7 +237,7 @@
                         </ul>
                     </li>
                     @endpermission
-		            <li class="{!! Request::segment(1)==strtolower('report')?strtolower(trans('messages.active')):'' !!}">
+		            <li class="{!! Request::segment(1)==strtolower('help')?strtolower(trans('messages.active')):'' !!}">
                         <a href="#"><i class="fa fa-question-circle"></i> HELP</a>
                         <ul class="list-unstyled">
                             <li>
