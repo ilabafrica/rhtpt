@@ -104,6 +104,7 @@ new Vue({
 
     methods : {
         getVueRounds: function(page){
+            this.loading = true;
             this.$http.get('/vuerounds?page='+page).then((response) => {
                 if(response.data.data)
                 {
@@ -115,6 +116,7 @@ new Vue({
                 {
                     swal("No data found for PT rounds.", "", "info");
                 }
+                this.loading = false;
             });
         },
 
@@ -295,30 +297,34 @@ new Vue({
         },
 
         loadParticipants: function(roundID) {
+            this.loading = true;
             this.$http.get('/parts').then((response) => {
                 //this.participants = response.data.data.data; 
                 this.roundId = roundID;                             
                 //this.pagination = response.data.pagination;
+                this.loading = false;
             }, (response) => {
-                // 
+                this.loading = false;
             });
         },
 
         Participants: function(roundID) {
-            
+            this.loading = true;
             this.$http.get('/loadparticipants' ).then((response) => {
                 this.testerparticipants = response.data.data.data;
                 console.log(this.testerparticipants); 
                 this.pagination = response.data.pagination;
                 this.roundId = roundID;
                 this.checked = true;
+                this.loading = false;
             }, (response) => {
-                // 
+                this.loading = false;
             });
         },
 
         enrolParticipants: function(){
-		    let myForm = document.getElementById('partFrms');
+            this.loading = true;
+	    let myForm = document.getElementById('partFrms');
             let formData = new FormData(myForm);
             console.log(formData);
             this.$http.post('/enrol', formData).then((response) => {
@@ -326,17 +332,21 @@ new Vue({
                 //$("#enrol-participants").modal('hide');
                 $("#load-participants").modal('hide');
                 toastr.success('Participant(s) Enrolled Successfully.', 'Success Alert', {timeOut: 5000});
+                this.loading = false;
             }, (response) => {
                 this.formErrors = response.data;
+                this.loading = false;
             });
   	    },
 
         loadEnrollments: function(round) {
+            this.loading = true;
             this.$http.get('/enrolled/'+round).then((response) => {
                 this.testers = response.data.data.data;
                 $("#enrolled-participants").modal('show');
+                this.loading = false;
             }, (response) => {
-                //  console.log(response);
+                this.loading = false;
             });
         },
 
