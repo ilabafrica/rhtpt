@@ -274,14 +274,15 @@ class RoundController extends Controller
                     \Log::info($e);
                 }
             }else if(strcmp($request->view, "unenrol") == 0){
-                foreach ($enrolledUser as $user) {
-                    Enrol::find($user['id'])->delete();
-                    \Log::info("Participant (users.id: $userID) unenrolled from round (rounds.id: $roundId) at facility ($facilityID) by (users.id: ".Auth::user()->id.")");
+                foreach ($enrolledUser as $etd) {
+		    Enrol::find($etd['id'])->delete();
+		    \Log::info("Participant (users.id: $userID) unenrolled (Enrolment ID: {$etd['id']} from round (rounds.id: $roundId) by (users.id: ".Auth::user()->id.")");
                 }
             }
         }
 
-        if(count($phone_numbers) > 0){
+	if(count($phone_numbers) > 0){
+            \Log::info(count($phone_numbers)." enrolled users.");
             $recipients = NULL;
             $recipients = implode(",", $phone_numbers);
             //  Send SMS
@@ -291,10 +292,10 @@ class RoundController extends Controller
             $message = str_replace(' [', ' ', $message);
             $message = str_replace('] ', ' ', $message);
 
-            if($recipients) {
+            if($phone_numbers) {
 
                 $sms = new SmsHandler;
-                foreach ($recipients as $recipient) {
+                foreach (array_unique($phone_numbers) as $recipient) {
                     $sms->sendMessage($recipient, $message);
                     \Log::info("Enrolment notification sent to $recipient");
 
@@ -391,7 +392,7 @@ class RoundController extends Controller
 
         $enrolled_users = Enrol::where('round_id', $round)->pluck('user_id')->toArray();
        
-
+         \Log::info("Count of participants (pre-enrolment check): ".count($participants));
         if ($request->has('enrolled')) {
             $participants = $participants->filter(function ($participant) use($enrolled_users){
                 if (in_array($participant->id, $enrolled_users) ) {  
@@ -406,7 +407,9 @@ class RoundController extends Controller
                     return $participant;
                 }
             });
-        }
+	}
+
+	\Log::info("Count of participants (post-enrolment check): ".count($participants));
         
         foreach($participants as $participant)
         {   
