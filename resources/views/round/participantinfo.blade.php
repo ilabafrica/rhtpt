@@ -120,10 +120,11 @@
                         <button v-if="participant.result_status==0" class="mbtn mbtn-raised mbtn-danger mbtn-xs">Not Checked</button>
                         <button v-if="participant.result_status==1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Submitted</button>
                         <button v-if="participant.result_status==2" class="mbtn mbtn-raised mbtn-info mbtn-xs">Evaluated</button>
-                        <button v-if="participant.result_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
-                    </td>                                                
+			<button v-if="participant.result_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
+                        <a class="btn btn-sm btn-success" :href="'/download-form/' + roundId + '/participant/' + participant.id" id="download-form" ><i class="fa fa-list"></i> Form</a>
+                    </td>
                 </tr>
-            </table> 
+            </table>
         </div>
     </div>
 </div>
