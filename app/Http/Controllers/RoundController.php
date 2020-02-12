@@ -756,31 +756,79 @@ class RoundController extends Controller
             }
             else if(Auth::user()->isSuperAdministrator())
             {
-                $counties = County::all();
-                foreach($counties as $county)
+    
+                $query = "SELECT
+                        u.first_name,
+                        u.last_name,
+                        u.middle_name,
+                        u.uid,
+                        u.gender,
+                        u.phone,
+                        u.email,
+                        u.address,
+                        p.name AS 'program',
+                        d.name AS 'designation',
+                        f.name AS 'facility',
+                        f.code AS 'MFL_Code',
+                        f.in_charge,
+                        f.in_charge_phone,
+			f.in_charge_email,
+                        s.name AS sub_county,
+			c.name AS county,
+                        s.county_id
+			FROM users u
+                            INNER JOIN enrolments e ON u.id = e.user_id
+                            INNER JOIN role_user ru ON u.id = ru.user_id AND ru.role_id = $roleId
+			    INNER JOIN facilities f ON e.facility_id = f.id
+                            INNER JOIN sub_counties s ON f.sub_county_id = s.id
+                            INNER JOIN counties c ON s.county_id = c.id
+                            LEFT JOIN programs p ON ru.program_id = p.id
+                            LEFT JOIN designations d ON ru.designation = d.id
+                        WHERE 
+			    e.deleted_at IS NULL AND e.round_id = $rId ORDER BY c.id, s.id, f.id, u.uid ASC;";
+
+		$countyID = 0;
+		$participants = DB::select($query);
+
+		foreach($participants as $participant)
                 {
-                    $fIds = $county->facilities()->pluck('id');
-                    $ids = DB::table('role_user')->where('role_id', $roleId)->whereIn('tier', $fIds)->pluck('user_id');
-                    if($request->status)
-                        $ids = User::whereIn('id', $ids)->whereBetween('date_registered', [$round->start_date, $round->end_date])->pluck('id');
-                    
-                    $testers = Enrol::where('round_id', $round->id)->whereIn('user_id', $ids)->pluck('user_id')->toArray();
 
-                    if(count($testers) > 0)
-                    {
-                        $testers = implode(",", $testers);
-
-                        $sheetTitle = $county->name;
-                        if (count($testers)>0) {
-                            //  create associative array
-                            $summary = $this->getTesterSummary($testers, $query);
-                        }
-
-                        $excel->sheet($sheetTitle, function($sheet) use ($summary) {
-                            $sheet->fromArray($summary);
-                        });
+                    if($countyID != $participant->county_id)
+		    {
+			if($countyID != 0){
+		            $excel->sheet($sheetTitle, function($sheet) use ($summary) {
+		                $sheet->fromArray($summary);
+			    });
+			}
+			$countyID = $participant->county_id;
+			$sheetTitle = $participant->county;
+			$summary = [];
                     }
-                }
+    
+		    $summary[] = [
+
+                        'County' => $participant->county,
+                        'Sub County' => $participant->sub_county,
+                        'Facility' => $participant->facility,
+                        'MFL Code' => $participant->MFL_Code,
+                        'Tester Enrollment ID' => $participant->uid,
+                        'Tester First Name' => $participant->first_name,
+                        'Tester Surname' => $participant->last_name,
+                        'Tester Other Name' => $participant->middle_name,
+                        'Gender' => $participant->gender,
+                        'Tester Mobile Number' => $participant->phone,
+                        'Tester Email' => $participant->email,
+                        'Tester Address' => $participant->address,
+                        'Designation' => $participant->designation,
+                        'Program' => $participant->program,
+                        'In Charge' => $participant->in_charge,
+                        'In Charge Email' => $participant->in_charge_email,
+                        'In Charge Phone' => $participant->in_charge_phone,
+                    ];
+		}
+                $excel->sheet($sheetTitle, function($sheet) use ($summary) {
+                    $sheet->fromArray($summary);
+                });
             }
         })->download('xlsx');
     }
