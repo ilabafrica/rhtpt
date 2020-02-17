@@ -65,9 +65,10 @@ new Vue({
     },
 
     methods : {  
-        getParticipants: function() {  
-        var round_id = _.last( window.location.pathname.split( '/' ) ); 
-            this.$http.get('/loadparticipantsinfo/'+round_id ).then((response) => {
+        getParticipants: function(page) {  
+            var round_id = _.last( window.location.pathname.split( '/' ) ); 
+            this.$http.get('/loadparticipantsinfo/'+round_id+'?page='+page ).then((response) => {
+		console.log(response.data);
                 if(response.data.data){
                     this.participants = response.data.data;
                     this.roundId = round_id;
@@ -103,6 +104,10 @@ new Vue({
                 // 
             });
         },      
+        changePage: function (page) {
+            this.pagination.current_page = page;
+            this.getParticipants(page);
+        },
         search: function() {
             // Clear the error message.
             this.error = '';

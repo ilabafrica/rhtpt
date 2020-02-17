@@ -46,36 +46,6 @@ new Vue({
         isActived: function () {
             return this.pagination.current_page;
         },
-        /*isDeactivated: function(){
-            this.$http.get('/vuerounds?page=').then((response) => {
-                if(response.data.data)
-                {
-                    this.rounds = response.data.data.data;                    
-                    this.rounds.forEach(function(date){
-                        disabled =  false;
-                        console.log(date.end_date);
-
-                        return date.end_date;
-                        var today = new Date();
-                        var dd = today.getDate();
-                        var mm = today.getMonth()+1; 
-                        var yyyy = today.getFullYear();
-
-                       if(dd<10) {
-                              dd = '0'+dd
-                             } 
-
-                        if(mm<10) {
-                          mm = '0'+mm
-                            } 
-
-                           today = yyyy + '-' + mm + '-' + dd;
-                           console.log(today);
-                    });
-                }
-                
-            });
-        },*/
         pagesNumber: function () {
             if (!this.pagination.to) {
                 return [];
@@ -390,7 +360,6 @@ new Vue({
         },
 
         pastEnrolmentDate: function(enrolDate){
-            console.log(enrolDate);
             var now = new Date();
             var enrolledDate = new Date(enrolDate);
             return now.getTime() > enrolledDate.getTime();

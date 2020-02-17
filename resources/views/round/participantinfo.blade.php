@@ -83,15 +83,17 @@
         <div class="col-lg-12 margin-tb">
             <div class="row">
                 <table class="table table-responsive">
-                    <tr>
+		    <tr>
+                        <!--
                         <th>Total Participants</th>
                         <td>@{{total_participants}}</td>
                         <th>Active Participants</th>
-                        <td>@{{active_participants}}</td>
+			<td>@{{active_participants}}</td>
+                        -->
                         <th>Enrolled Participants</th>
                         <td>@{{enrolled_participants}}</td>
                     </tr>
-                </table>
+		</table>
             </div>
         </div>
     </div>
@@ -99,7 +101,8 @@
         <div class="col-md-12">
             <input type="hidden" class="form-control" name="round_id" id="round-id" v-bind:value="roundId"/>
             <table class="table table-bordered table-responsive">
-                <tr>
+		<tr>
+                    <th>#</th>
                     <th>Participant</th>
                     <th>PT Enrollment ID</th>
                     <th>Phone</th>
@@ -107,13 +110,14 @@
                     <th>Sub County</th>
                     <th>County</th>
                     <th>Status</th>
-                </tr>
-                <tr v-for="participant in participants">                                        
+		</tr>
+		<tr v-for="(participant, index, key) in participants">
+                    <td>@{{ (parseInt(pagination.current_page)-1)*(pagination.per_page)+parseInt(key)+1 }}</td>
                     <td>@{{ participant.name }}</td>
                     <td>@{{ participant.uid }}</td>
                     <td>@{{ participant.phone }}</td>
                     <td>@{{ participant.facility_name }}</td>
-                    <td>@{{ participant.sub_county_name}}</td>
+                    <td>@{{ participant.sub_county_name }}</td>
                     <td>@{{ participant.county_name }}</td>                                                
                     <td>
                         <button v-if="participant.result_status=='N/A'" class="mbtn mbtn-raised mbtn-primary mbtn-xs">No Result</button>
@@ -124,6 +128,28 @@
                     </td>                                                
                 </tr>
             </table> 
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination">
+            <li v-if="pagination.current_page > 1" class="page-item">
+                <a class="page-link" href="#" aria-label="Previous"
+                    @click.prevent="changePage(pagination.current_page - 1)">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+            <li v-for="page in pagesNumber" class="page-item"
+                v-bind:class="[ page == isActived ? 'active' : '']">
+                <a class="page-link" href="#"
+                    @click.prevent="changePage(page)">@{{ page }}</a>
+            </li>
+            <li v-if="pagination.current_page < pagination.last_page" class="page-item">
+                <a class="page-link" href="#" aria-label="Next"
+                    @click.prevent="changePage(pagination.current_page + 1)">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
         </div>
     </div>
 </div>

@@ -340,7 +340,9 @@ class RoundController extends Controller
 
     //get the list of users to be enrolled
      public function loadparticipants(Request $request, $round=null)
-    {
+     {
+        $itemsPerPage = 100;
+
         if ($request->has('round')) {
             $round = $request->get('round');
         }
@@ -410,7 +412,7 @@ class RoundController extends Controller
 	}
 
 	\Log::info("Count of participants (post-enrolment check): ".count($participants));
-        
+
         foreach($participants as $participant)
         {   
             if(!empty($participant->ru()->tier))
@@ -454,15 +456,23 @@ class RoundController extends Controller
                 $participant->program = '';
             }
             !empty($participant->ru())?$participant->role = $participant->ru()->role_id:$participant->role = '';
-            !empty($participant->ru())?$participant->rl = Role::find($participant->ru()->role_id)->name:$participant->rl = '';
+	    !empty($participant->ru())?$participant->rl = Role::find($participant->ru()->role_id)->name:$participant->rl = '';
             
         }
        
         $response = [           
-            'data' => $participants,
+            'data' => $participants->paginate($itemsPerPage),
             'role' => Auth::user()->ru()->role_id,
             'tier' => Auth::user()->ru()->tier,
-            'enrol_status' =>$enrol_status
+            'enrol_status' =>$enrol_status,
+            'pagination' => [
+                'total' => $participants->total(),
+                'per_page' => $participants->perPage(),
+                'current_page' => $participants->currentPage(),
+                'last_page' => $participants->lastPage(),
+                'from' => $participants->firstItem(),
+                'to' => $participants->lastItem()
+            ],
         ];
 
         return $participants->count() > 0 ? response()->json($response) : $error;   
@@ -479,10 +489,12 @@ class RoundController extends Controller
 
     //get the list of users to be enrolled
      public function participants_info(Request $request, $round=null)
-    {        
+     {
         $result_status='';
         $participants = '';
-        $items_per_page = 100;
+	$items_per_page = 100;
+	$page = 1;
+	if($request->has('page'))$page = $request->get('page');
         $error = ['error' => 'No results found, please try with different keywords.'];
         
         //Get the enrolled users
@@ -651,13 +663,22 @@ class RoundController extends Controller
         }
        
         $response = [                      
+	//'data' => $participants->sortBy('name')->forPage($page, $items_per_page),
             'data' => $participants->sortBy('name'),
             'role' => Auth::user()->ru()->role_id,
             'tier' => Auth::user()->ru()->tier,
             'total_participants'=>$total_participants,
             'active_participants' => $active_participants,
-            'enrolled_participants' => $enrolled_participants
-        ];
+            'enrolled_participants' => $enrolled_participants,
+            'pagination' => [
+                'total' => $enrolled_participants,
+                'per_page' => $items_per_page,
+                'current_page' => $page,
+                'last_page' => intVal($enrolled_participants/$items_per_page)+1,
+                'from' => ($page-1)*$items_per_page + 1,
+                'to' => min($page*$items_per_page,$enrolled_participants)
+            ]
+         ];
 
         return $participants->count() > 0 ? response()->json($response) : $error;
     }
