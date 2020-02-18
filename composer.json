@@ -12,6 +12,7 @@
         "jenssegers/date": "~3.0",
         "laravel/framework": "5.3.*",
         "maatwebsite/excel": "~2.1.0",
+        "setasign/fpdi-fpdf": "^2.0",
         "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {

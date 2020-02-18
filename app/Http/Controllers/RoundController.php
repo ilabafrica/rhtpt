@@ -1120,5 +1120,88 @@ class RoundController extends Controller
         $round = Round::find($roundID);
         return response()->json($round->lots->all());
     }
+
+    public function getParticipantForm(Request $request, $roundID, $participantID){
+
+	$enrolment = Enrol::where('round_id', $roundID)->where('user_id', $participantID)->first();
+
+	$pdf = new \setasign\Fpdi\Fpdi();
+	$pdf->setSourceFile("img/Participant-Form.pdf");
+	$templatePage1 = $pdf->importPage(1);
+	$size = ['w' => 209.97333686111, 'h' => 296.92599647222];
+	$pdf->AddPage('P', [$size['w'], $size['h']]);
+	$pdf->useTemplate($templatePage1);
+
+	$pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
+	$pdf->SetTextColor(0, 0, 0);
+
+	$participant = $enrolment->user()->get()[0];
+        $pdf->SetXY(35, 20.5);
+	$pdf->Write(0, $participant['first_name']." ".$participant['middle_name']." ".$participant['last_name']);
+
+	$facility = $enrolment->facility()->get()[0];
+	$pdf->SetXY(35, 25.25);
+        $pdf->Write(0, $facility['name']);
+
+        $subCounty = SubCounty::find($facility['sub_county_id']);
+        $pdf->SetXY(35, 31.25);
+        $pdf->Write(0, $subCounty->name);
+
+        $county = County::find($subCounty->county_id);
+        $pdf->SetXY(35, 36.75);
+        $pdf->Write(0, $county->name);
+
+        $pdf->SetXY(35, 42.75);
+        $pdf->Write(0, $participant['phone']);
+
+	$pdf->SetFont('Times', '', 13, '', 'default', true);
+        $round = Round::find($enrolment->round_id);
+        $pdf->SetXY(39, 75);
+        $pdf->Write(0, $round->name);
+
+        $program = Program::find(User::find($participant->id)->ru()->program_id);
+	$pdf->SetXY(95, 75.25);
+        $pdf->Write(0, $program->name);
+
+	$uid = str_pad($participant['uid'], 6, "0");
+	for($i=0;$i<strlen($uid);$i++){
+            $pdf->SetXY(150 + $i * 7, 75.25);
+            $pdf->Write(0, substr($uid, $i, 1));
+	}
+
+        $enrolID = str_pad($enrolment->id, 6, "0");
+        for($i=0;$i<strlen($enrolID);$i++){
+            $pdf->SetXY(151 + $i * 6.5, 276.5);
+            $pdf->Write(0, substr($enrolID, $i, 1));
+        }
+
+	$templatePage2 = $pdf->importPage(2);
+        $pdf->AddPage('P', [$size['w'], $size['h']]);
+        $pdf->useTemplate($templatePage2);
+
+        for($i=0;$i<strlen($uid);$i++){
+            $pdf->SetXY(152 + $i * 7, 25.25);
+            $pdf->Write(0, substr($uid, $i, 1));
+        }
+
+        for($i=0;$i<strlen($enrolID);$i++){
+            $pdf->SetXY(151 + $i * 6.5, 276.5);
+            $pdf->Write(0, substr($enrolID, $i, 1));
+        }
+
+	$pdf->SetFont('Times', 'B', 7.75, '', 'default', true);
+	$yPos = 91.25;
+	for($i=0;$i<6;$i++){
+            $yPos = $yPos + 4;
+            $pdf->SetXY(17.5, $yPos);
+	    $pdf->Write(0, "KNEQAS");
+	    $yPos = $yPos + 4;
+            $pdf->SetXY(15, $yPos);
+	    $pdf->Write(0,"HIVSER-{$round->name}-S".($i+1));
+	    $yPos = $yPos + 5.75;
+	}
+
+	return $pdf->Output();
+    }
 }
 $excel = App::make('excel');
