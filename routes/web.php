@@ -495,6 +495,11 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "RoundController@getParticipantForm"
     ));
 
+    Route::get("/download-forms/{round}", array(
+        "as"   => "participant.forms",
+        "uses" => "RoundController@getParticipantForms"
+    ));
+
     Route::get('enrolparticipants/{id}', 'RoundController@manageEnrolParticipant');
     Route::get("/loadparticipants/{id}", array(
         "as"   => "load.participants",

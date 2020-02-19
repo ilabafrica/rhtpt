@@ -1121,21 +1121,18 @@ class RoundController extends Controller
         return response()->json($round->lots->all());
     }
 
-    public function getParticipantForm(Request $request, $roundID, $participantID){
+    public function addParticipantForm($pdf, $size, $roundID, $participantID){
 
 	$enrolment = Enrol::where('round_id', $roundID)->where('user_id', $participantID)->first();
 
-	$pdf = new \setasign\Fpdi\Fpdi();
-	$pdf->setSourceFile("img/Participant-Form.pdf");
 	$templatePage1 = $pdf->importPage(1);
-	$size = ['w' => 209.97333686111, 'h' => 296.92599647222];
 	$pdf->AddPage('P', [$size['w'], $size['h']]);
 	$pdf->useTemplate($templatePage1);
 
 	$pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
-	$pdf->SetTextColor(0, 0, 0);
+	$pdf->SetTextColor(50, 50, 50);
 
-	$participant = $enrolment->user()->get()[0];
+	$participant = $enrolment->user()->withTrashed()->get()[0];
         $pdf->SetXY(35, 20.5);
 	$pdf->Write(0, $participant['first_name']." ".$participant['middle_name']." ".$participant['last_name']);
 
@@ -1159,9 +1156,11 @@ class RoundController extends Controller
         $pdf->SetXY(39, 75);
         $pdf->Write(0, $round->name);
 
-        $program = Program::find(User::find($participant->id)->ru()->program_id);
-	$pdf->SetXY(95, 75.25);
-        $pdf->Write(0, $program->name);
+	if(User::find($participant->id) !== null){
+            $program = Program::find(User::find($participant->id)->ru()->program_id);
+	    $pdf->SetXY(95, 75.25);
+	    $pdf->Write(0, isset($program)?$program->name:'');
+	}
 
 	$uid = str_pad($participant['uid'], 6, "0");
 	for($i=0;$i<strlen($uid);$i++){
@@ -1201,7 +1200,60 @@ class RoundController extends Controller
 	    $yPos = $yPos + 5.75;
 	}
 
-	return $pdf->Output();
+	return $pdf;
     }
+
+    public function getParticipantForm(Request $request, $roundID, $participantID){
+        $pdf = new \setasign\Fpdi\Fpdi();
+        $pdf->setSourceFile("img/Participant-Form.pdf");
+        $size = ['w' => 209.97333686111, 'h' => 296.92599647222];
+
+        $pdf = $this->addParticipantForm($pdf, $size, $roundID, $participantID);
+        $pdf->Output();
+    }
+
+    public function getParticipantForms(Request $request, $roundID){
+        $pdf = new \setasign\Fpdi\Fpdi();
+        $size = ['w' => 209.97333686111, 'h' => 296.92599647222];
+
+	if($request->has('facility')){
+            $enrolments = Enrol::where('round_id', $roundID)->where('facility_id', $request->get('facility'));
+	}else if($request->has('sub_county')){
+            $facilities = SubCounty::find($request->get('sub_county'))->facilities()->get()->pluck('id');
+	    $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities);
+	    \Log::info("Subcounty: ".$request->get('sub_county'));
+	    \Log::info("Facilities:\n".json_encode($facilities));
+        }else if($request->has('county')){
+            $subCounties = County::find($request->get('county'))->subCounties();
+            $facilities = [];
+            foreach($subCounties as $subCounty){
+                $facilities = array_merge($facilities, $subCounty->facilities()->get()->pluck('id'));
+            }
+	    $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities);
+	    \Log::info("Facilities:\n".json_encode($facilities));
+	}else{
+	    $enrolments = Enrol::where('round_id', $roundID);
+	}
+	\Log::info(json_encode($enrolments->get()));
+
+	if(count($enrolments->get()) > 0){
+            $pdf->setSourceFile("img/Participant-Form.pdf");
+            foreach($enrolments->get() as $enrolment){
+                $pdf = $this->addParticipantForm($pdf, $size, $roundID, $enrolment['user_id']);
+	    }
+	}else{
+	    $pdf->setSourceFile("img/blank.pdf");
+	    $templatePage = $pdf->importPage(1);
+	    $pdf->AddPage('P', [$size['w'], $size['h']]);
+	    $pdf->useTemplate($templatePage);
+	    $pdf->SetFont('Times', 'B', 13, '', 'default', true);
+	    $pdf->SetTextColor(50, 50, 50);
+	    $pdf->SetXY(30, 50);
+	    $pdf->Write(0, "Unfortunately, we've found no data meeting your set criteria!");
+	    \Log::info("Unfortunately, we've found no data meeting your set criteria!");
+	}
+
+	$pdf->Output();
+    }    
 }
 $excel = App::make('excel');
