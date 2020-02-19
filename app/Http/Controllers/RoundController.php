@@ -1214,31 +1214,31 @@ class RoundController extends Controller
 
     public function getParticipantForms(Request $request, $roundID){
         $pdf = new \setasign\Fpdi\Fpdi();
-        $size = ['w' => 209.97333686111, 'h' => 296.92599647222];
+	$size = ['w' => 209.97333686111, 'h' => 296.92599647222];
+	$enrolments = [];
 
-	if($request->has('facility')){
-            $enrolments = Enrol::where('round_id', $roundID)->where('facility_id', $request->get('facility'));
-	}else if($request->has('sub_county')){
-            $facilities = SubCounty::find($request->get('sub_county'))->facilities()->get()->pluck('id');
-	    $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities);
-	    \Log::info("Subcounty: ".$request->get('sub_county'));
-	    \Log::info("Facilities:\n".json_encode($facilities));
-        }else if($request->has('county')){
-            $subCounties = County::find($request->get('county'))->subCounties();
-            $facilities = [];
-            foreach($subCounties as $subCounty){
-                $facilities = array_merge($facilities, $subCounty->facilities()->get()->pluck('id'));
-            }
-	    $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities);
-	    \Log::info("Facilities:\n".json_encode($facilities));
-	}else{
-	    $enrolments = Enrol::where('round_id', $roundID);
+	if (Auth::user()->can(['generate-participant-result-form'], true)){
+	    if($request->has('facility')){
+                $enrolments = Enrol::where('round_id', $roundID)->where('facility_id', $request->get('facility'))->get();
+            }else if($request->has('sub_county')){
+                $facilities = SubCounty::find($request->get('sub_county'))->facilities()->get()->pluck('id');
+	        $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities)->get();
+            }else if($request->has('county')){
+                $subCounties = County::find($request->get('county'))->subCounties()->get()->pluck('id');
+                $facilities = [];
+	        foreach($subCounties as $subCountyID){
+		    $subCountyFacilityIDs = SubCounty::find($subCountyID)->facilities()->get()->pluck('id')->toArray();
+                    $facilities = array_merge($facilities, $subCountyFacilityIDs);
+                }
+	        $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities)->get();
+            }else{
+	        $enrolments = Enrol::where('round_id', $roundID)->get();
+	    }
 	}
-	\Log::info(json_encode($enrolments->get()));
 
-	if(count($enrolments->get()) > 0){
+	if(count($enrolments) > 0){
             $pdf->setSourceFile("img/Participant-Form.pdf");
-            foreach($enrolments->get() as $enrolment){
+            foreach($enrolments as $enrolment){
                 $pdf = $this->addParticipantForm($pdf, $size, $roundID, $enrolment['user_id']);
 	    }
 	}else{
@@ -1249,9 +1249,13 @@ class RoundController extends Controller
 	    $pdf->SetFont('Times', 'B', 13, '', 'default', true);
 	    $pdf->SetTextColor(50, 50, 50);
 	    $pdf->SetXY(30, 50);
-	    $pdf->Write(0, "Unfortunately, we've found no data meeting your set criteria!");
-	    \Log::info("Unfortunately, we've found no data meeting your set criteria!");
+	    if (Auth::user()->can(['generate-participant-result-form'], true)){
+		$pdf->Write(0, "Unfortunately, we've found no data meeting your set criteria!");
+	    }else{
+                $pdf->Write(0, "Permission denied!");
+	    }
 	}
+	\Log::info("Attempt to generate PDF forms for ".count($enrolments)." participants by ". Auth::user()->id);
 
 	$pdf->Output();
     }    

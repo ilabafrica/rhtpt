@@ -19,10 +19,12 @@
             <div class="pull-left col-md-8">
                 <h5><i class="fa fa-book"></i> {!! trans_choice('messages.pt-round', 2) !!}
                     @permission('enrol-participants')                               
-                        <a class="btn btn-sm btn-wet-asphalt" :href="'/download/' + roundId" id="enrolled" ><i class="fa fa-level-down"></i> Download Participants List</a>
-                    @endpermission
+                        <a class="btn btn-sm btn-wet-asphalt" :href="'/download/' + roundId" id="enrolled" ><i class="fa fa-level-down"></i> Participants List</a>
+		    @endpermission
+                    @permission('generate-participant-result-form')
 		    <a class="btn btn-sm btn-wet-asphalt" href="#" @click="downloadForms('/download-forms/' + roundId)">
-                        <i class="fa fa-level-down"></i> Download Participant Forms</a>
+			<i class="fa fa-level-down"></i> Participant Forms</a>
+                    @endpermission
                     <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
                         <i class="fa fa-step-backward"></i>
                         {!! trans('messages.back') !!}
@@ -123,8 +125,10 @@
                         <button v-if="participant.result_status==1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Submitted</button>
                         <button v-if="participant.result_status==2" class="mbtn mbtn-raised mbtn-info mbtn-xs">Evaluated</button>
 			<button v-if="participant.result_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
+                        @permission('generate-participant-result-form')
 			<a class="btn btn-sm btn-success" href="#"
-                           @click="downloadForms('/download-form/' + roundId + '/participant/' + participant.id)" ><i class="fa fa-level-down"></i> Form</a>
+			   @click="downloadForms('/download-form/' + roundId + '/participant/' + participant.id)" ><i class="fa fa-level-down"></i> Form</a>
+                        @endpermission
                     </td>
                 </tr>
             </table>
