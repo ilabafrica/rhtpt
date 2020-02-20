@@ -305,7 +305,7 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "shipment.distribute",
         "uses" => "ShipmentController@distribute"
     ));
-    //  Enrol participanets
+    //  Enrol participants
     Route::post("/enrol", array(
         "as"   => "enrol.participants",
         "uses" => "RoundController@enrol"
@@ -489,6 +489,17 @@ Route::group(['middleware' => 'auth'], function()
         "as"   => "testers.download",
         "uses" => "RoundController@testerSummary"
     ));
+
+    Route::get("/download-form/{round}/participant/{participant}", array(
+        "as"   => "participant.form",
+        "uses" => "RoundController@getParticipantForm"
+    ));
+
+    Route::get("/download-forms/{round}", array(
+        "as"   => "participant.forms",
+        "uses" => "RoundController@getParticipantForms"
+    ));
+
     Route::get('enrolparticipants/{id}', 'RoundController@manageEnrolParticipant');
     Route::get("/loadparticipants/{id}", array(
         "as"   => "load.participants",

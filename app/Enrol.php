@@ -32,13 +32,21 @@ class Enrol extends Model
      {
        return $this->belongsTo('App\User');
      }
-		 /**
-  	 * Relationship with rounds.
-  	 *
-  	 */
+     /**
+      * Relationship with rounds.
+      *
+      */
      public function round()
      {
        return $this->belongsTo('App\Round');
+     }
+     /**
+      * Relationship with facility.
+      *
+      */
+     public function facility()
+     {
+       return $this->belongsTo('App\Facility');
      }
      /**
      * Relationship with pt.

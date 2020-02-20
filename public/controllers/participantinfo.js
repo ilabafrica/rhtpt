@@ -171,8 +171,6 @@ new Vue({
                     }
                     // The request is finished, change the loading to false again.
                     this.loading = false;
-                    // Clear the query.
-                    this.facility = '';
                 });
             }
             
@@ -197,8 +195,6 @@ new Vue({
                     }
                     // The request is finished, change the loading to false again.
                     this.loading = false;
-                    // Clear the query.
-                    this.sub_county = '';
                 });
             }
 
@@ -223,8 +219,6 @@ new Vue({
                     }
                     // The request is finished, change the loading to false again.
                     this.loading = false;
-                    // Clear the query.
-                    this.county = '';
                 });
             }
            
@@ -255,6 +249,18 @@ new Vue({
             }, (response) => {
                 // console.log(response);
             });
-        },          
+        },
+        downloadForms: function(uri){
+            let params = '';
+            if(this.facility){
+                params = '?facility=' + this.facility;
+            }else if(this.sub_county){
+                params = '?sub_county=' + this.sub_county;
+            }else if(this.county){
+                params = '?county=' + this.county;
+            }
+            console.log(uri+params);
+	    window.open(uri+params);
+	},
     }
 });

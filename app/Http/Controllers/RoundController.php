@@ -1189,5 +1189,144 @@ class RoundController extends Controller
         $round = Round::find($roundID);
         return response()->json($round->lots->all());
     }
+
+    public function addParticipantForm($pdf, $size, $roundID, $participantID){
+
+	$enrolment = Enrol::where('round_id', $roundID)->where('user_id', $participantID)->first();
+
+	$templatePage1 = $pdf->importPage(1);
+	$pdf->AddPage('P', [$size['w'], $size['h']]);
+	$pdf->useTemplate($templatePage1);
+
+	$pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
+	$pdf->SetTextColor(50, 50, 50);
+
+	$participant = $enrolment->user()->withTrashed()->get()[0];
+        $pdf->SetXY(35, 20.5);
+	$pdf->Write(0, $participant['first_name']." ".$participant['middle_name']." ".$participant['last_name']);
+
+	$facility = $enrolment->facility()->get()[0];
+	$pdf->SetXY(35, 25.25);
+        $pdf->Write(0, $facility['name']);
+
+        $subCounty = SubCounty::find($facility['sub_county_id']);
+        $pdf->SetXY(35, 31.25);
+        $pdf->Write(0, $subCounty->name);
+
+        $county = County::find($subCounty->county_id);
+        $pdf->SetXY(35, 36.75);
+        $pdf->Write(0, $county->name);
+
+        $pdf->SetXY(35, 42.75);
+        $pdf->Write(0, $participant['phone']);
+
+	$pdf->SetFont('Times', '', 13, '', 'default', true);
+        $round = Round::find($enrolment->round_id);
+        $pdf->SetXY(39, 75);
+        $pdf->Write(0, $round->name);
+
+	if(User::find($participant->id) !== null){
+            $program = Program::find(User::find($participant->id)->ru()->program_id);
+	    $pdf->SetXY(95, 75.25);
+	    $pdf->Write(0, isset($program)?$program->name:'');
+	}
+
+	$uid = str_pad($participant['uid'], 6, "0");
+	for($i=0;$i<strlen($uid);$i++){
+            $pdf->SetXY(150 + $i * 7, 75.25);
+            $pdf->Write(0, substr($uid, $i, 1));
+	}
+
+        $enrolID = str_pad($enrolment->id, 6, "0");
+        for($i=0;$i<strlen($enrolID);$i++){
+            $pdf->SetXY(151 + $i * 6.5, 276.5);
+            $pdf->Write(0, substr($enrolID, $i, 1));
+        }
+
+	$templatePage2 = $pdf->importPage(2);
+        $pdf->AddPage('P', [$size['w'], $size['h']]);
+        $pdf->useTemplate($templatePage2);
+
+        for($i=0;$i<strlen($uid);$i++){
+            $pdf->SetXY(152 + $i * 7, 25.25);
+            $pdf->Write(0, substr($uid, $i, 1));
+        }
+
+        for($i=0;$i<strlen($enrolID);$i++){
+            $pdf->SetXY(151 + $i * 6.5, 276.5);
+            $pdf->Write(0, substr($enrolID, $i, 1));
+        }
+
+	$pdf->SetFont('Times', 'B', 7.75, '', 'default', true);
+	$yPos = 91.25;
+	for($i=0;$i<6;$i++){
+            $yPos = $yPos + 4;
+            $pdf->SetXY(17.5, $yPos);
+	    $pdf->Write(0, "KNEQAS");
+	    $yPos = $yPos + 4;
+            $pdf->SetXY(15, $yPos);
+	    $pdf->Write(0,"HIVSER-{$round->name}-S".($i+1));
+	    $yPos = $yPos + 5.75;
+	}
+
+	return $pdf;
+    }
+
+    public function getParticipantForm(Request $request, $roundID, $participantID){
+        $pdf = new \setasign\Fpdi\Fpdi();
+        $pdf->setSourceFile("img/Participant-Form.pdf");
+        $size = ['w' => 209.97333686111, 'h' => 296.92599647222];
+
+        $pdf = $this->addParticipantForm($pdf, $size, $roundID, $participantID);
+        $pdf->Output();
+    }
+
+    public function getParticipantForms(Request $request, $roundID){
+        $pdf = new \setasign\Fpdi\Fpdi();
+	$size = ['w' => 209.97333686111, 'h' => 296.92599647222];
+	$enrolments = [];
+
+	if (Auth::user()->can(['generate-participant-result-form'], true)){
+	    if($request->has('facility')){
+                $enrolments = Enrol::where('round_id', $roundID)->where('facility_id', $request->get('facility'))->get();
+            }else if($request->has('sub_county')){
+                $facilities = SubCounty::find($request->get('sub_county'))->facilities()->get()->pluck('id');
+	        $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities)->get();
+            }else if($request->has('county')){
+                $subCounties = County::find($request->get('county'))->subCounties()->get()->pluck('id');
+                $facilities = [];
+	        foreach($subCounties as $subCountyID){
+		    $subCountyFacilityIDs = SubCounty::find($subCountyID)->facilities()->get()->pluck('id')->toArray();
+                    $facilities = array_merge($facilities, $subCountyFacilityIDs);
+                }
+	        $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities)->get();
+            }else{
+	        $enrolments = Enrol::where('round_id', $roundID)->get();
+	    }
+	}
+
+	if(count($enrolments) > 0){
+            $pdf->setSourceFile("img/Participant-Form.pdf");
+            foreach($enrolments as $enrolment){
+                $pdf = $this->addParticipantForm($pdf, $size, $roundID, $enrolment['user_id']);
+	    }
+	}else{
+	    $pdf->setSourceFile("img/blank.pdf");
+	    $templatePage = $pdf->importPage(1);
+	    $pdf->AddPage('P', [$size['w'], $size['h']]);
+	    $pdf->useTemplate($templatePage);
+	    $pdf->SetFont('Times', 'B', 13, '', 'default', true);
+	    $pdf->SetTextColor(50, 50, 50);
+	    $pdf->SetXY(30, 50);
+	    if (Auth::user()->can(['generate-participant-result-form'], true)){
+		$pdf->Write(0, "Unfortunately, we've found no data meeting your set criteria!");
+	    }else{
+                $pdf->Write(0, "Permission denied!");
+	    }
+	}
+	\Log::info("Attempt to generate PDF forms for ".count($enrolments)." participants by ". Auth::user()->id);
+
+	$pdf->Output();
+    }    
 }
 $excel = App::make('excel');
