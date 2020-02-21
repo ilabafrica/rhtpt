@@ -1026,23 +1026,19 @@ class ParticipantController extends Controller
         $role = Auth::user()->ru()->role_id;
         $tier = Auth::user()->ru()->tier;
 
-        $round = 1;
-        if(strcmp($request->round, '') != 0) $round = $request->round;
+        $roundID = 1;
+	if(strcmp($request->round, '') != 0) $roundID = $request->round;
+	$round = Round::find($roundID);
         
-        $data = DB::table('users')
-                    ->join('role_user', function($join) use ($PARTICIPANT_ROLE_ID){
-                        $join->on('users.id', '=', 'role_user.user_id')
-                            ->where('role_user.role_id', '=', $PARTICIPANT_ROLE_ID);
-                    })
-                    ->join('facilities', 'role_user.tier', '=', 'facilities.id')
+	$data = DB::table('enrolments')
+		    ->join('users', 'enrolments.user_id', '=', 'users.id')
+		    ->leftJoin('facilities', 'enrolments.facility_id', '=', 'facilities.id')
                     ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
-                    ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
-                    ->leftJoin(
-                        DB::raw('(SELECT enrolments.user_id, enrolments.deleted_at, pt.id AS pt_id FROM enrolments INNER JOIN rounds ON enrolments.round_id = rounds.id LEFT JOIN pt ON enrolments.id = pt.enrolment_id WHERE rounds.id = '.$round.') AS live_round'),
-                        function($join){
-                            $join->on('users.id', '=', 'live_round.user_id')
-                                ->whereNull('live_round.deleted_at');
-                    });
+		    ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
+		    ->leftJoin('pt', 'enrolments.id', '=', 'pt.enrolment_id')
+		    ->join('rounds', 'enrolments.round_id', '=', 'rounds.id')
+		    ->whereNull('enrolments.deleted_at')
+		    ->where('rounds.id', '=', $roundID);
 
         if(strcmp($request->county, '') != 0) $data = $data->where('counties.id', '=', $request->county);
         if(strcmp($request->subcounty, '') != 0) $data = $data->where('sub_counties.id', '=', $request->subcounty);
@@ -1051,14 +1047,25 @@ class ParticipantController extends Controller
         if(Auth::user()->isCountyCoordinator()) $data = $data->where('counties.id', '=', $tier);
         if(Auth::user()->isSubCountyCoordinator()) $data = $data->where('sub_counties.id', '=', $tier);
 
-        $data = $data->selectRaw('counties.name AS county, sub_counties.name AS subcounty, count(DISTINCT users.id) AS total, count(DISTINCT IF(ISNULL(users.deleted_at),users.id,NULL)) AS active, count(DISTINCT IF(ISNULL(users.deleted_at),live_round.user_id,NULL)) AS current_enrolment, count(DISTINCT IF(ISNULL(live_round.pt_id),NULL,users.id)) AS replied')
+        $data = $data->selectRaw('counties.name AS county, sub_counties.name AS subcounty, count(DISTINCT users.id) AS enrolled, count(DISTINCT IF(ISNULL(pt.id),NULL,users.id)) AS replied')
                     ->groupBy('counties.id', 'sub_counties.id')
                     ->orderBy('counties.name')
                     ->orderBy('sub_counties.name');
 
-        $totalUsers = collect($data->pluck('total'))->sum();
-        $activeUsers = collect($data->pluck('active'))->sum();
-        $enrolledUsers = collect($data->pluck('current_enrolment'))->sum();
+	$users = DB::table('users')
+		->leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
+		->where('created_at', '<=', $round->enrollment_date)
+		->selectRaw('count(DISTINCT users.id) AS total, count(DISTINCT IF(ISNULL(role_user.user_id), users.id, NULL)) AS hanging, count(DISTINCT IF(role_user.role_id = 2, users.id, NULL)) participants, count(DISTINCT IF(role_user.role_id = 2 AND role_user.tier = "", users.id, NULL)) hanging_participants');
+	
+        $activeUsers = DB::table('users')
+                ->where('created_at', '<=', $round->enrollment_date)
+                ->where(function($query) use ($round){
+                    $query->whereNull('deleted_at')
+                          ->orWhere('deleted_at', '>=', $round->enrollment_date);
+                })->count();
+
+	$totalUsers = collect($users->pluck('total'))->sum();
+        $enrolledUsers = collect($data->pluck('enrolled'))->sum();
         $repliedUsers = collect($data->pluck('replied'))->sum();
 
         $data = $data->paginate($ITEMS_PER_PAGE);
@@ -1073,13 +1080,15 @@ class ParticipantController extends Controller
                 'to' => $data->lastItem()
             ],
             'role' => $role,
-            'round' => $round,
+            'round' => $roundID,
             'data' => $data,
             'replied_users' => $repliedUsers,
             'active_users' => $activeUsers,
             'enrolled_users' => $enrolledUsers,
-            'total_users' => $totalUsers
-        ];
+	    'total_users' => $totalUsers,
+	    'hanging' => collect($users->pluck('hanging'))->sum(),
+	    'hanging_participants' => collect($users->pluck('hanging_participants'))->sum(),
+	    'participants' => collect($users->pluck('participants'))->sum(),        ];
 
         return response()->json($response);
     }

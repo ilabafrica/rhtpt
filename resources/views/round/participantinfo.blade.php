@@ -130,34 +130,34 @@
                         <button v-if="participant.result_status==2" class="mbtn mbtn-raised mbtn-info mbtn-xs">Evaluated</button>
 			<button v-if="participant.result_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
                         @permission('generate-participant-result-form')
-			<a class="btn btn-sm btn-success" href="#"
-			   @click="downloadForms('/download-form/' + roundId + '/participant/' + participant.id)" ><i class="fa fa-level-down"></i> Form</a>
+			    <a @click="downloadForms('/download-form/' + roundId + '/participant/' + participant.id)" 
+                                class="btn btn-sm btn-success" href="#"><i class="fa fa-level-down"></i> Form</a>
                         @endpermission
                     </td>
                 </tr>
             </table> 
-    <!-- Pagination -->
-    <nav>
-        <ul class="pagination">
-            <li v-if="pagination.current_page > 1" class="page-item">
-                <a class="page-link" href="#" aria-label="Previous"
-                    @click.prevent="changePage(pagination.current_page - 1)">
-                    <span aria-hidden="true">«</span>
-                </a>
-            </li>
-            <li v-for="page in pagesNumber" class="page-item"
-                v-bind:class="[ page == isActived ? 'active' : '']">
-                <a class="page-link" href="#"
-                    @click.prevent="changePage(page)">@{{ page }}</a>
-            </li>
-            <li v-if="pagination.current_page < pagination.last_page" class="page-item">
-                <a class="page-link" href="#" aria-label="Next"
-                    @click.prevent="changePage(pagination.current_page + 1)">
-                    <span aria-hidden="true">»</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+            <!-- Pagination -->
+            <nav>
+                <ul class="pagination">
+                    <li v-if="pagination.current_page > 1" class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous"
+                            @click.prevent="changePage(pagination.current_page - 1)">
+                            <span aria-hidden="true">«</span>
+                        </a>
+                    </li>
+                    <li v-for="page in pagesNumber" class="page-item"
+                        v-bind:class="[ page == isActived ? 'active' : '']">
+                        <a class="page-link" href="#"
+                            @click.prevent="changePage(page)">@{{ page }}</a>
+                    </li>
+                    <li v-if="pagination.current_page < pagination.last_page" class="page-item">
+                        <a class="page-link" href="#" aria-label="Next"
+                            @click.prevent="changePage(pagination.current_page + 1)">
+                            <span aria-hidden="true">»</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

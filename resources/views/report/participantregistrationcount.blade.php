@@ -18,15 +18,32 @@
     </div>
     <br/>
     <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <h6>
-                <span class="col-md-2"><b>SERVICE PROVIDER COUNTS</b></span>
-		<span class="col-md-2"><b>Total</b>: @{{total}}</span>
-		<span class="col-md-2"><b>Active</b>: @{{active}}</span>
-		<span class="col-md-2"><b>Enrolled</b>: @{{enrolled}}</span>
-                <span class="col-md-2"><b>Replies</b>: @{{replies}} (@{{(replies/enrolled*100).toFixed(2)}}%)</span>
-                <span class="col-md-2"><b>Round</b>: @{{getRoundName(round)}}</span>
-            </h6>
+        <div class="col-lg-12">
+	    <table class="table table-condensed">
+                <thead>
+                    <tr>
+		        <th colspan="6"><b>SERVICE PROVIDER COUNTS</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+		    <td><b>Total</b>:</td>
+                    <td>@{{summary.total}}</td>
+		    <td><b>Active</b>:</td>
+		    <td>@{{summary.active}}</td>
+		    <td><b>Enrolled</b>:</td>
+		    <td>@{{summary.enrolled}}</td>
+                </tr>
+                <tr>
+                    <td><b>Replies</b>:</td>
+		    <td>@{{replies}} (@{{(replies/enrolled*100).toFixed(2)}}%)</td>
+		    <td><b>Round</b>:</td>
+		    <td>@{{getRoundName(round)}}</td>
+                    <td><b>Participants</b>:</td>
+                    <td>@{{enrolled}}</td>
+		</tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <br/>
@@ -98,11 +115,9 @@
             <th rowspan="2">#</th>
             <th rowspan="2">County</th>
             <th rowspan="2">Sub-county</th>
-            <th colspan="4">Service Providers</th>
+            <th colspan="2">Service Providers</th>
         </tr>
         <tr>
-            <th>Total</th>
-            <th>Active</th>
             <th>Enrolled</th>
             <th>Replies</th>
         </tr>
@@ -110,9 +125,7 @@
             <td>@{{ key + 1 + ((pagination.current_page - 1) * pagination.per_page) }}</td>
             <td>@{{ subcounty.county }}</td>
             <td>@{{ subcounty.subcounty }}</td>
-            <td>@{{ subcounty.total}}</td>
-            <td>@{{ subcounty.active}}</td>
-            <td>@{{ subcounty.current_enrolment}}</td>
+            <td>@{{ subcounty.enrolled}}</td>
             <td>@{{ subcounty.replied}}</td>
         </tr>
     </table>

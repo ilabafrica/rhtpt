@@ -28,10 +28,14 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        replies: '',
-        enrolled: '',
-        active: '',
-        total: '',
+        summary: {
+	    replies: '',
+            enrolled: '',
+            active: '',
+            total: '',
+	    participants: '',
+	    hanging: ''
+	},
         round: '3',
         facility: '',
         sub_county: '',
@@ -82,10 +86,7 @@ new Vue({
                 {
                     this.usercounts = response.data.data.data;
                     this.role = response.data.role;
-                    this.replies = response.data.replied_users;
-                    this.enrolled = response.data.enrolled_users;
-                    this.active = response.data.active_users;
-                    this.total = response.data.total_users;
+                    this.summary = response.data.summary;
                     this.pagination = response.data.pagination;
                 }
                 this.loading = false;
