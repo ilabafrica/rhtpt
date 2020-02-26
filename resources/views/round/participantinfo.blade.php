@@ -21,6 +21,10 @@
                     @permission('enrol-participants')                               
                         <a class="btn btn-sm btn-wet-asphalt" :href="'/download/' + roundId" id="enrolled" ><i class="fa fa-level-down"></i> Participants List</a>
 		    @endpermission
+                    @permission('generate-pt-receipt-record')
+                    <a class="btn btn-sm btn-wet-asphalt" href="#" @click="downloadForms('/download-receipt-record/' + roundId)">
+                        <i class="fa fa-level-down"></i>Receipt Record</a>
+                    @endpermission
                     @permission('generate-participant-result-form')
 		    <a class="btn btn-sm btn-wet-asphalt" href="#" @click="downloadForms('/download-forms/' + roundId)">
 			<i class="fa fa-level-down"></i> Participant Forms</a>
