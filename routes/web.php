@@ -500,6 +500,11 @@ Route::group(['middleware' => 'auth'], function()
         "uses" => "RoundController@getParticipantForms"
     ));
 
+    Route::get("/download-receipt-record/{round}", array(
+        "as"   => "participant.receipt-record",
+        "uses" => "RoundController@getReceiptRecord"
+    ));
+
     Route::get('enrolparticipants/{id}', 'RoundController@manageEnrolParticipant');
     Route::get("/loadparticipants/{id}", array(
         "as"   => "load.participants",
