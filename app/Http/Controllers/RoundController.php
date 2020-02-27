@@ -1310,7 +1310,7 @@ class RoundController extends Controller
 
     public function getReceiptRecord(Request $request, $roundID){
         $pdf = new \setasign\Fpdi\Fpdi();
-        $size = ['w' => 209.97333686111, 'h' => 296.92599647222];
+        $size = ['h' => 209.97333686111, 'w' => 296.92599647222];
         $enrolments = [];
 
         if (Auth::user()->can(['generate-pt-receipt-record'], true)){
@@ -1338,10 +1338,10 @@ class RoundController extends Controller
     
 	if(count($enrolments) > 0){
 
-            $pdf->AddPage('P', [$size['w'], $size['h']]);
+            $pdf->AddPage('L', [$size['w'], $size['h']]);
             $pdf->useTemplate($templatePage1);
 
-            $pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
+            $pdf->SetFont('Helvetica', 'B', 8.5, '', 'default', true);
             $pdf->SetTextColor(50, 50, 50);
 
 	    $page = 1;
@@ -1349,43 +1349,67 @@ class RoundController extends Controller
 	    $currentY = 68;
 
             $round = Round::find($roundID);
-            $pdf->SetXY(39, 75);
+            $pdf->SetXY(203, 50);
             $pdf->Write(0, $round->name);
-    
-            foreach($enrolments as $enrolment){
-		$participant = $enrolment->user()->withTrashed()->get()[0];
 
-                $pdf->SetXY(140, $currentY);
-                $pdf->Write(0, $participant['first_name']." ".$participant['middle_name']." ".$participant['last_name']);
+	    $this->writeReceiptRecordHeaders($pdf, 64);
+	    $pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
+
+            $pdf->SetXY(140, 1);
+            $pdf->Write(0, $page);
+
+	    $currentFacility = 0;
+
+            foreach($enrolments as $enrolment){
 
                 $facility = $enrolment->facility()->get()[0];
-                $pdf->SetXY(90, $currentY);
-                $pdf->Write(0, $facility['name']);
-
                 $subCounty = SubCounty::find($facility['sub_county_id']);
-                $pdf->SetXY(65, $currentY);
-                $pdf->Write(0, $subCounty->name);
-
                 $county = County::find($subCounty->county_id);
-                $pdf->SetXY(22, $currentY);
+		$participant = $enrolment->user()->withTrashed()->get()[0];
+
+		if($currentFacility != $facility['id']){
+                    if($currentFacility > 0){
+		        $pdf->SetXY(140, $currentY + 4);
+		        $pdf->Write(0, "Received By: _____________________________________________________");
+		        $currentY += 10;
+		    }
+                    $currentFacility = $facility['id'];
+		}
+
+                $pdf->SetXY(20, $currentY);
+                $pdf->Write(0, ($row++).".");
+
+                $pdf->SetXY(26, $currentY);
                 $pdf->Write(0, $county->name);
 
-                $pdf->SetXY(180, $currentY);
+                $pdf->SetXY(62, $currentY);
+                $pdf->Write(0, $subCounty->name);
+
+                $pdf->SetXY(92, $currentY);
+                $pdf->Write(0, $facility['name']);
+
+                $pdf->SetXY(162, $currentY);
+                $pdf->Write(0, $participant['first_name']." ".$participant['middle_name']." ".$participant['last_name']);
+
+                $pdf->SetXY(222, $currentY);
 		$pdf->Write(0, $participant['phone']);
 
-		$pdf->SetXY(20, $currentY);
-		$pdf->Write(0, $row++);
-
-		if($currentY > 272){
-                    $pdf->AddPage('P', [$size['w'], $size['h']]);
+		if($currentY > 175){
+                    $pdf->AddPage('L', [$size['w'], $size['h']]);
 		    $pdf->useTemplate($templatePage2);
-		    $currentY = 30;
+		    $currentY = 27;
+		    $pdf->SetFont('Times', 'B', 13, '', 'default', true);
+                    $pdf->SetXY(220, 15.5);
+                    $pdf->Write(0, $round->name);
+                    $pdf->SetFont('Helvetica', 'B', 8.5, '', 'default', true);
+		    $this->writeReceiptRecordHeaders($pdf, 23);
+                    $pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
 		}else{
                     $currentY += 4;
 		}
             }
         }else{
-            $pdf->AddPage('P', [$size['w'], $size['h']]);
+            $pdf->AddPage('L', [$size['w'], $size['h']]);
             $pdf->useTemplate($templatePage1);
             $pdf->SetFont('Times', 'B', 13, '', 'default', true);
             $pdf->SetTextColor(50, 50, 50);
@@ -1399,6 +1423,27 @@ class RoundController extends Controller
         \Log::info("Attempt to generate PDF forms for ".count($enrolments)." participants by ". Auth::user()->id);
 
         $pdf->Output();
+    }
+
+    public function writeReceiptRecordHeaders($file, $height){
+    
+        $file->SetXY(25, $height);
+        $file->Write(0, "COUNTY");
+
+        $file->SetXY(61, $height);
+        $file->Write(0, "SUB-COUNTY");
+
+        $file->SetXY(91, $height);
+        $file->Write(0, "FACILITY");
+
+        $file->SetXY(161, $height);
+        $file->Write(0, "NAME");
+
+        $file->SetXY(221, $height);
+        $file->Write(0, "PHONE");
+
+        $file->SetXY(236, $height);
+        $file->Write(0, "RECEIVED BY");
     }
 }
 $excel = App::make('excel');
