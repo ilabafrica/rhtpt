@@ -1355,8 +1355,8 @@ class RoundController extends Controller
 	    $this->writeReceiptRecordHeaders($pdf, 64);
 	    $pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
 
-            $pdf->SetXY(140, 1);
-            $pdf->Write(0, $page);
+            $pdf->SetXY(140, 186);
+            $pdf->Write(0, $page++);
 
 	    $currentFacility = 0;
 
@@ -1369,9 +1369,8 @@ class RoundController extends Controller
 
 		if($currentFacility != $facility['id']){
                     if($currentFacility > 0){
-		        $pdf->SetXY(140, $currentY + 4);
-		        $pdf->Write(0, "Received By: _____________________________________________________");
-		        $currentY += 10;
+		        $pdf->SetXY(245, $currentY - 4);
+		        $pdf->Write(0, "_____________________");
 		    }
                     $currentFacility = $facility['id'];
 		}
@@ -1394,7 +1393,7 @@ class RoundController extends Controller
                 $pdf->SetXY(222, $currentY);
 		$pdf->Write(0, $participant['phone']);
 
-		if($currentY > 175){
+		if($currentY > 184){
                     $pdf->AddPage('L', [$size['w'], $size['h']]);
 		    $pdf->useTemplate($templatePage2);
 		    $currentY = 27;
@@ -1404,6 +1403,8 @@ class RoundController extends Controller
                     $pdf->SetFont('Helvetica', 'B', 8.5, '', 'default', true);
 		    $this->writeReceiptRecordHeaders($pdf, 23);
                     $pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
+                    $pdf->SetXY(140, 200);
+                    $pdf->Write(0, $page++);
 		}else{
                     $currentY += 4;
 		}
@@ -1442,7 +1443,7 @@ class RoundController extends Controller
         $file->SetXY(221, $height);
         $file->Write(0, "PHONE");
 
-        $file->SetXY(236, $height);
+        $file->SetXY(245, $height);
         $file->Write(0, "RECEIVED BY");
     }
 }
