@@ -133,9 +133,9 @@ new Vue({
             let myForm = document.getElementById('analysis_results');
             let formData = new FormData(myForm);
 
-            if (formData.get('tester_id') == '') {
+            if (formData.get('tester_id') == '' || formData.get('field_1') == '' || formData.get('field_2') == '' || formData.get('field_3') == '' || formData.get('field_4') == '' || formData.get('field_5') == '' || formData.get('field_6') == '' || formData.get('field_7') == '' || formData.get('field_8') == '' || formData.get('field_9') == '' || (formData.get('field_10') == '' && formData.get('field_13') == '' && formData.get('field_16') == '' && formData.get('field_19') == '' && formData.get('field_22') == '' && formData.get('field_25') == '')) {
                 console.log(formData);
-                toastr.error('Fill in all the mandatory fields.', 'Failure Alert', {timeOut: 5000});
+                toastr.error('Fill-in all the mandatory fields.', 'Failure Alert', {timeOut: 5000});
             }else{
                 this.$http.post('/vueresults', formData).then((response) => {
                     this.changePage(this.pagination.current_page);
@@ -879,7 +879,7 @@ Vue.component('my-date-component', {
     props: {
         date: {
             type: String,
-            default: '2018-08-01'
+            default: '------------'
         },
         tag: String,
     },
