@@ -1316,10 +1316,10 @@ class RoundController extends Controller
 
         if (Auth::user()->can(['generate-pt-receipt-record'], true)){
             if($request->has('facility')){
-                $enrolments = Enrol::where('round_id', $roundID)->where('facility_id', $request->get('facility'))->get();
+                $enrolmentsRecord = Enrol::where('round_id', $roundID)->where('facility_id', $request->get('facility'));
             }else if($request->has('sub_county')){
                 $facilities = SubCounty::find($request->get('sub_county'))->facilities()->get()->pluck('id');
-                $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities)->get();
+                $enrolmentsRecord = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities);
             }else if($request->has('county')){
                 $subCounties = County::find($request->get('county'))->subCounties()->get()->pluck('id');
                 $facilities = [];
@@ -1327,11 +1327,22 @@ class RoundController extends Controller
                     $subCountyFacilityIDs = SubCounty::find($subCountyID)->facilities()->get()->pluck('id')->toArray();
                     $facilities = array_merge($facilities, $subCountyFacilityIDs);
                 }
-                $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities)->get();
+                $enrolmentsRecord = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities);
             }else{
-                $enrolments = Enrol::where('round_id', $roundID)->get();
+                $enrolmentsRecord = Enrol::where('round_id', $roundID);
             }
-        }
+
+	    if(Auth::user()->isCountyCoordinator()){
+                $facilities = County::find(Auth::user()->ru()->tier)->facilities()->pluck('id');
+		$enrolmentsRecord = $enrolmentsRecord->whereIn('facility_id', $facilities);
+	    }
+
+            if(Auth::user()->isSubCountyCoordinator()){
+                $facilities = SubCounty::find(Auth::user()->ru()->tier)->facilities()->pluck('id');
+                $enrolmentsRecord = $enrolmentsRecord->whereIn('facility_id', $facilities);
+	    }
+	    $enrolments = $enrolmentsRecord->join('facilities','enrolments.facility_id', '=', 'facilities.id')->orderBy('facilities.sub_county_id')->orderBy('facilities.name')->get();
+	}
 
         $pdf->setSourceFile("img/PT-Receipt-Record.pdf");
         $templatePage1 = $pdf->importPage(1);
