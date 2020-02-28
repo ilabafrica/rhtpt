@@ -1309,7 +1309,8 @@ class RoundController extends Controller
     }    
 
     public function getReceiptRecord(Request $request, $roundID){
-        $pdf = new \setasign\Fpdi\Fpdi();
+	$pdf = new App\MyPDF;
+	$pdf->AliasNbPages();
         $size = ['h' => 209.97333686111, 'w' => 296.92599647222];
         $enrolments = [];
 
@@ -1344,7 +1345,6 @@ class RoundController extends Controller
             $pdf->SetFont('Helvetica', 'B', 8.5, '', 'default', true);
             $pdf->SetTextColor(50, 50, 50);
 
-	    $page = 1;
 	    $row = 1;
 	    $currentY = 68;
 
@@ -1354,9 +1354,6 @@ class RoundController extends Controller
 
 	    $this->writeReceiptRecordHeaders($pdf, 64);
 	    $pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
-
-            $pdf->SetXY(140, 186);
-            $pdf->Write(0, $page++);
 
 	    $currentFacility = 0;
 
@@ -1369,8 +1366,8 @@ class RoundController extends Controller
 
 		if($currentFacility != $facility['id']){
                     if($currentFacility > 0){
-		        $pdf->SetXY(245, $currentY - 4);
-		        $pdf->Write(0, "_____________________");
+		        $pdf->SetXY(230, $currentY - 4);
+		        $pdf->Write(0, "_______________     ______________");
 		    }
                     $currentFacility = $facility['id'];
 		}
@@ -1381,16 +1378,16 @@ class RoundController extends Controller
                 $pdf->SetXY(26, $currentY);
                 $pdf->Write(0, $county->name);
 
-                $pdf->SetXY(62, $currentY);
+                $pdf->SetXY(56, $currentY);
                 $pdf->Write(0, $subCounty->name);
 
-                $pdf->SetXY(92, $currentY);
+                $pdf->SetXY(86, $currentY);
                 $pdf->Write(0, $facility['name']);
 
-                $pdf->SetXY(162, $currentY);
+                $pdf->SetXY(151, $currentY);
                 $pdf->Write(0, $participant['first_name']." ".$participant['middle_name']." ".$participant['last_name']);
 
-                $pdf->SetXY(222, $currentY);
+                $pdf->SetXY(206, $currentY);
 		$pdf->Write(0, $participant['phone']);
 
 		if($currentY > 184){
@@ -1403,8 +1400,6 @@ class RoundController extends Controller
                     $pdf->SetFont('Helvetica', 'B', 8.5, '', 'default', true);
 		    $this->writeReceiptRecordHeaders($pdf, 23);
                     $pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
-                    $pdf->SetXY(140, 200);
-                    $pdf->Write(0, $page++);
 		}else{
                     $currentY += 4;
 		}
@@ -1431,20 +1426,23 @@ class RoundController extends Controller
         $file->SetXY(25, $height);
         $file->Write(0, "COUNTY");
 
-        $file->SetXY(61, $height);
+        $file->SetXY(56, $height);
         $file->Write(0, "SUB-COUNTY");
 
-        $file->SetXY(91, $height);
+        $file->SetXY(86, $height);
         $file->Write(0, "FACILITY");
 
-        $file->SetXY(161, $height);
+        $file->SetXY(151, $height);
         $file->Write(0, "NAME");
 
-        $file->SetXY(221, $height);
+        $file->SetXY(206, $height);
         $file->Write(0, "PHONE");
 
-        $file->SetXY(245, $height);
+        $file->SetXY(230, $height);
         $file->Write(0, "RECEIVED BY");
+
+        $file->SetXY(255, $height);
+        $file->Write(0, "DATE");
     }
 }
 $excel = App::make('excel');

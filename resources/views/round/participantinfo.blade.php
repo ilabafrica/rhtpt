@@ -17,24 +17,7 @@
         @endif
         <div class="col-lg-12 margin-tb">
             <div class="pull-left col-md-8">
-                <h5><i class="fa fa-book"></i> {!! trans_choice('messages.pt-round', 2) !!}
-                    @permission('enrol-participants')                               
-                        <a class="btn btn-sm btn-wet-asphalt" :href="'/download/' + roundId" id="enrolled" ><i class="fa fa-level-down"></i> Participants List</a>
-		    @endpermission
-                    @permission('generate-pt-receipt-record')
-                    <a class="btn btn-sm btn-wet-asphalt" href="#" @click="downloadForms('/download-receipt-record/' + roundId)">
-                        <i class="fa fa-level-down"></i>Receipt Record</a>
-                    @endpermission
-                    @permission('generate-participant-result-form')
-		    <a class="btn btn-sm btn-wet-asphalt" href="#" @click="downloadForms('/download-forms/' + roundId)">
-			<i class="fa fa-level-down"></i> Participant Forms</a>
-                    @endpermission
-                    <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
-                        <i class="fa fa-step-backward"></i>
-                        {!! trans('messages.back') !!}
-                    </a>  
-                        <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
-                </h5>
+                <h5><i class="fa fa-book"></i> {!! trans_choice('messages.pt-round', 2) !!}</h5>
             </div>
             <div class="col-md-4">
                 <div class="input-group input-group-sm">
@@ -81,7 +64,26 @@
                     <div class="col-sm-3">
                         <button class="btn btn-sm btn-alizarin" type="submit" @click="filter_by_region()" v-if="!loading">Filter </button>
                         <button class="btn btn-sm btn-alizarin" type="button" disabled="disabled" v-if="loading">Searching...</button>
-                    </div>                
+		    </div>
+                </div>
+		<div class="row">
+                    <div class="col-sm-12">
+                    @permission('enrol-participants')                               
+                        <a class="btn btn-sm btn-wet-asphalt" :href="'/download/' + roundId" id="enrolled" ><i class="fa fa-level-down"></i> Participants List</a>
+                    @endpermission
+                    @permission('generate-pt-receipt-record')
+                    <a class="btn btn-sm btn-wet-asphalt" href="#" @click="downloadForms('/download-receipt-record/' + roundId)">
+                        <i class="fa fa-level-down"></i>Receipt Record</a>
+                    @endpermission
+                    @permission('generate-participant-result-form')
+                    <a class="btn btn-sm btn-wet-asphalt" href="#" @click="downloadForms('/download-forms/' + roundId)">
+                        <i class="fa fa-level-down"></i> Participant Forms</a>
+		    @endpermission
+                    <a class="btn btn-sm btn-carrot" href="#" onclick="window.history.back();return false;" alt="{!! trans('messages.back') !!}" title="{!! trans('messages.back') !!}">
+                        <i class="fa fa-step-backward"></i>
+                        {!! trans('messages.back') !!}
+                    </a>  
+		    </div>
                 </div>
             </div>
         <!-- </form> -->
