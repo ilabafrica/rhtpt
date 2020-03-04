@@ -78,12 +78,12 @@ class Algorithm extends Command
         *
         */
         //  Fetch all pending records
-        $counter = Dump::count();
-        if($counter > 0)
-        {
-            $dumps = Dump::all();
-            $this->moveDump($dumps);
-        }
+        // $counter = Dump::count();
+        // if($counter > 0)
+        // {
+        //     $dumps = Dump::all();
+        //     $this->moveDump($dumps);
+        // }
         /**
         * 2. Get all unchecked results and execute the algorithm.
         *
