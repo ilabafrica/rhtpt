@@ -8,19 +8,23 @@
 <table class="table table-bordered" cellspacing="0" style="font-size:15px">
     <tr><td colspan="5"><center><img src="img/coa.png"></center></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>MINISTRY OF HEALTH</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>NATIONAL PUBLIC HEALTH LABORATORY (NPHL)</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>NPHL-CENTRE OF EXCELLENCE FOR QUALITY ASSUARANCE</b></td></tr>
+    <tr style="text-align:center"><td colspan="5"><b>NATIONAL PUBLIC HEALTH LABORATORY</b></td></tr>
+    <tr style="text-align:center"><td colspan="5"><b>KENYA EXTERNAL QUALITY ASSESSMENT SCHEME (KNEQAS)</b></td></tr>
+    <tr style="text-align:center"><td colspan="5"><b>HIV SEROLOGY PROFICIENCY TESTING SCHEME</b></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>P.O Box 20750 - 00202, NAIROBI, nphlpt@nphls.or.ke</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>NATIONAL HIV SEROLOGY PROFICIENCY TESTING SCHEME</b></td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr style="text-align:center">
         <td colspan="5">
             {{$data}}
-            <?php if(count($data['amendments']) > 0){ ?>
-            <b>Amended Report</b>
-            <?php }else{ ?>
-            <b>Preliminary Report</b>
-            <?php } ?>
+            <?php
+                $title = "Preliminary Report";
+                $controlNumber = "MOH/F/NPHL/KNEQAS/SERV/HIV/32";
+		if(count($data['amendments']) > 0){
+		    $title = "Amended Report";
+                    $controlNumber = "MOH/F/NPHL/KNEQAS/SER/HIV/34";
+		}
+            ?>
+	    <b><?php echo $title; ?></b>
     </td></tr>
     <tr> <td colspan="5" style="border-top:solid 2px black;"> &nbsp;</td> </tr>
     <tr>
@@ -124,7 +128,7 @@
     
     
     <tr>
-        <td colspan="3">MOH/NPHL/EQA/COE FORM 09 &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
+	<td colspan="3"><?php echo $controlNumber; ?> &nbsp;&nbsp;&nbsp;&nbsp;Ver. 2</td>
         <td>
             <footer>
                 <div>
@@ -197,7 +201,7 @@
     <tr style="text-align:center"><td colspan="5">End of the report.</td></tr>
 
     <tr>
-        <td colspan="3">MOH/NPHL/EQA/COE FORM 09 &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
+	<td colspan="3"><?php echo $controlNumber; ?> &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
         <td>
             <footer>
                 <div>
