@@ -8,23 +8,25 @@
 <table class="table table-bordered" cellspacing="0" style="font-size:15px">
     <tr><td colspan="5"><center><img src="img/coa.png"></center></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>MINISTRY OF HEALTH</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>NATIONAL PUBLIC HEALTH LABORATORY (NPHL)</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>NPHL-CENTRE OF EXCELLENCE FOR QUALITY ASSUARANCE</b></td></tr>
+    <tr style="text-align:center"><td colspan="5"><b>NATIONAL PUBLIC HEALTH LABORATORY</b></td></tr>
+    <tr style="text-align:center"><td colspan="5"><b>KENYA EXTERNAL QUALITY ASSESSMENT SCHEME (KNEQAS)</b></td></tr>
+    <tr style="text-align:center"><td colspan="5"><b>HIV SEROLOGY PROFICIENCY TESTING SCHEME</b></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>P.O Box 20750 - 00202, NAIROBI, nphlpt@nphls.or.ke</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>NATIONAL HIV SEROLOGY PROFICIENCY TESTING SCHEME</b></td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr style="text-align:center"><td colspan="5">
         <?php
+            $title = "Preliminary Report";
+            $controlNumber = "MOH/F/NPHL/KNEQAS/SERV/HIV/32";
             if(count($data['amendments']) > 0){
+                $title = "Amended Report";
+                $controlNumber = "MOH/F/NPHL/KNEQAS/SER/HIV/34";
+
                 foreach ($data['amendments'] as $amendment) {
                     if($amendment['status'] == 1){//Active
                         $amended = $amendment->toArray();
                         $amended['feedback'] = $amended['feedback'] == 1?'Unsatisfactory':'Satisfactory';
                     }
                 }
-        ?>
-            <b>Amended Report</b>
-        <?php 
             }else{ 
                 $amended['feedback'] = $data['feedback'];
                 $amended['incorrect_results'] = $data['incorrect_results'];
@@ -36,12 +38,12 @@
                 $amended['incomplete_other_information'] = $data['incomplete_other_information'];
 
                 if($data['round_published_at']){
-                    echo "<b>Final Report</b>";
-                }else{
-                    echo "<b>Preliminary Report</b>";
+                    $title = "Final Report";
+                    $controlNumber = "MOH/F/NPHL/KNEQAS/SER/HIV/33";
                 }
             } 
         ?>
+        <b><?php echo $title; ?></b>
     </td></tr>
     <tr> <td colspan="5" style="border-top:solid 2px black;"> &nbsp;</td> </tr>
     <tr>
@@ -180,7 +182,7 @@
         <td colspan="5"><i>Please institute the necessary corrective measures before the next round of PT.</i></td>
     </tr>
    <tr>
-        <td colspan="2">MOH/NPHL/EQA/COE FORM 09 &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
+        <td colspan="2"><?php echo $controlNumber; ?> &nbsp;&nbsp;&nbsp;&nbsp;Ver. 2</td>
         <td>
             <footer>
                 <div>
@@ -340,7 +342,7 @@
     <tr style="text-align:center"><td colspan="5">Thank you for your participation.</td></tr>
     <tr style="text-align:center"><td colspan="5">End of the report.</td></tr>
     <tr>
-        <td colspan="2">MOH/NPHL/EQA/COE FORM 09 &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
+        <td colspan="2"><?php echo $controlNumber; ?> &nbsp;&nbsp;&nbsp;&nbsp;Ver. 2</td>
         <td>
             <footer>
                 <div>

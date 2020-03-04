@@ -19,10 +19,10 @@
             <?php
                 $title = "Preliminary Report";
                 $controlNumber = "MOH/F/NPHL/KNEQAS/SERV/HIV/32";
-		if(count($data['amendments']) > 0){
-		    $title = "Amended Report";
+        		if(count($data['amendments']) > 0){
+        		    $title = "Amended Report";
                     $controlNumber = "MOH/F/NPHL/KNEQAS/SER/HIV/34";
-		}
+        		}
             ?>
 	    <b><?php echo $title; ?></b>
     </td></tr>
@@ -128,7 +128,7 @@
     
     
     <tr>
-	<td colspan="3"><?php echo $controlNumber; ?> &nbsp;&nbsp;&nbsp;&nbsp;Ver. 2</td>
+    	<td colspan="3"><?php echo $controlNumber; ?> &nbsp;&nbsp;&nbsp;&nbsp;Ver. 2</td>
         <td>
             <footer>
                 <div>
@@ -201,7 +201,7 @@
     <tr style="text-align:center"><td colspan="5">End of the report.</td></tr>
 
     <tr>
-	<td colspan="3"><?php echo $controlNumber; ?> &nbsp;&nbsp;&nbsp;&nbsp;Ver. 1</td>
+	<td colspan="3"><?php echo $controlNumber; ?> &nbsp;&nbsp;&nbsp;&nbsp;Ver. 2</td>
         <td>
             <footer>
                 <div>
