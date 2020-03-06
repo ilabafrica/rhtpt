@@ -10,8 +10,8 @@
     <tr style="text-align:center"><td colspan="5"><b>MINISTRY OF HEALTH</b></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>NATIONAL PUBLIC HEALTH LABORATORY</b></td></tr>
     <tr style="text-align:center"><td colspan="5"><b>KENYA EXTERNAL QUALITY ASSESSMENT SCHEME (KNEQAS)</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>HIV SEROLOGY PROFICIENCY TESTING SCHEME</b></td></tr>
-    <tr style="text-align:center"><td colspan="5"><b>P.O Box 20750 - 00202, NAIROBI, nphlpt@nphls.or.ke</b></td></tr>
+    <tr style="text-align:center"><td colspan="5"><b>HIV SEROLOGY PROFICIENCY TESTING</b></td></tr>
+    <tr style="text-align:center"><td colspan="5"><b>P.O Box 20750 - 00202, NAIROBI, nphlpt@nphl.go.ke</b></td></tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
     <tr style="text-align:center"><td colspan="5">
         <?php
@@ -205,7 +205,7 @@
             <p>4.  The panel samples have been tested for stability and are stable.</p>
             <p>5.  Homogeneity was done using systematic random sampling and the results were the same as those of expected results.</p>
             <p>6.  Participant’s performance report is confidential and will ONLY be shared with responsible County Quality officers for purposes of corrective interventions</p>
-            <p>7.  Subcontracted services: PT panel distribution, return of results and feedback reports distribution.</p>
+            <p>7.  Subcontracted services: PT panel distribution, return of results.</p>
             <p>8.  The scheme’s final report with summaries with overall performance analysis will be available on (www.rhtpt.or.ke) within one month of closure of the round.</p></td>
     </tr>
     <tr> <td colspan="5"> &nbsp;</td> </tr>
@@ -330,12 +330,12 @@
         <td colspan="2">Sophie Mwanyumba</td>        
     </tr>
     <tr>
-        <td colspan="3">National HIV Proficiency Testing Scheme,</td>
-        <td colspan="2">Centre of Excellence for Quality Assurance,</td>        
+        <td colspan="3">Kenya External Quality Assessment Scheme,</td>
+        <td colspan="2">Kenya External Quality Assessment Scheme,</td>        
     </tr>
     <tr>
-        <td colspan="3">Coordinator,</td>
-        <td colspan="2">Manager,</td>        
+        <td colspan="3">Manager,</td>
+        <td colspan="2">Quality Manager,</td>        
     </tr>
     <tr>
         <td colspan="3">Tel: 0722934622.</td>
