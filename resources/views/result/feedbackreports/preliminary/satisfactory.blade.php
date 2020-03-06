@@ -18,7 +18,7 @@
             {{$data}}
             <?php
                 $title = "Preliminary Report";
-                $controlNumber = "MOH/F/NPHL/KNEQAS/SERV/HIV/32";
+                $controlNumber = "MOH/F/NPHL/KNEQAS/SER/HIV/32";
         		if(count($data['amendments']) > 0){
         		    $title = "Amended Report";
                     $controlNumber = "MOH/F/NPHL/KNEQAS/SER/HIV/34";
