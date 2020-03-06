@@ -251,12 +251,12 @@
         <td colspan="2">Sophie Mwanyumba</td>        
     </tr>
     <tr>
-        <td colspan="3">Kenya External Quality Assessment Scheme,</td>
-        <td colspan="2">Kenya External Quality Assessment Scheme,</td>        
-    </tr>
-    <tr>
         <td colspan="3">Manager,</td>
         <td colspan="2">Quality Manager,</td>        
+    </tr>
+    <tr>
+        <td colspan="3">Kenya External Quality Assessment Scheme,</td>
+        <td colspan="2">Kenya External Quality Assessment Scheme,</td>        
     </tr>
     <tr>
         <td colspan="4">Tel: 0722934622.</td>
