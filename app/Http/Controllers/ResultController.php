@@ -248,10 +248,10 @@ class ResultController extends Controller
                 return response()->json(['3']);
             }else
             {
-            //  Save pt first then proceed to save form fields
-                $pt = new Pt;
+                //  If Pt entry exists reuse it
+                $pt = Pt::firstOrCreate(['enrolment_id' => $enrolment->id]);
                 $pt->enrolment_id = $enrolment->id;
-                $pt->panel_status = Pt::NOT_CHECKED;
+                if(is_null($pt->panel_status))$pt->panel_status = Pt::NOT_CHECKED;
                 $pt->save();
 
                 $enrolment->tester_id = Auth::user()->id;        
