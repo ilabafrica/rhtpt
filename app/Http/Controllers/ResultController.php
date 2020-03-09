@@ -249,7 +249,8 @@ class ResultController extends Controller
             }else
             {
                 //  If Pt entry exists reuse it
-                $pt = Pt::firstOrCreate(['enrolment_id' => $enrolment->id]);
+                $pt = Pt::where('enrolment_id', '=', $enrolment->id])->first();
+                if(is_null($pt)) $pt = new Pt();
                 $pt->enrolment_id = $enrolment->id;
                 if(is_null($pt->panel_status))$pt->panel_status = Pt::NOT_CHECKED;
                 $pt->save();
