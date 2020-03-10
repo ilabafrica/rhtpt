@@ -51,11 +51,13 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        $arrayPermissionRoleMapping = $request->permissionRoles;
+	\Log::info("Updating permissions - USERID: ".Auth::user()->id);
+	$arrayPermissionRoleMapping = $request->permissionRoles;
         $permissions = Permission::all();
         $roles = Role::all();
         foreach ($permissions as $permission) 
-        {
+	{
+	    \Log::info("Permission: ".$permission->name);
             foreach ($roles as $role) 
             {
                 //If checkbox is clicked attach the permission

@@ -141,7 +141,6 @@
                 <div class="modal-body">
                     <div class="row">
                         <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateSubcounty(fillSubcounty.id, 'update_subcounty')" data-vv-scope="update_subcounty">
-                        <p> vvvv@{{ fillSubcounty.id }}</p>
                             <div class="col-md-12">   
                                  <div class="form-group row">
                                     <label class="col-sm-4 form-control-label" for="title">County:</label>
