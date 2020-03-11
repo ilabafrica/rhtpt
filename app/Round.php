@@ -46,6 +46,16 @@ class Round extends Model
     {
          return $this->hasMany('App\Enrol');
     }
+
+    /**
+    * Shipment relationship
+    *
+    */
+    public function shipments()
+    {
+         return $this->hasMany('App\Shipment');
+    }
+
     /**
     * Lots relationship
     *

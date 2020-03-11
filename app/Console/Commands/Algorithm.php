@@ -22,6 +22,7 @@ use App\Nonperformance;
 use App\Field;
 use App\Option;
 use App\Enrol;
+use App\Shipment;
 use App\SubCounty;
 use App\County;
 
@@ -413,18 +414,22 @@ class Algorithm extends Command
     /**
      * Function to check dates - received, constituted, tested
      *
-     * @param  $date_pt_panel_received, $date_consituted, $date_pt_panel_tested
+     * @param  $date_pt_panel_received, $date_consituted, $date_pt_panel_tested, $date_panels_shipped
      * @return Deviation from procedure.
      */
-     public function check_dates($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested)
+     public function check_dates($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested, $date_panels_shipped)
      {
          // Check Dates
          $dev_from_procedure = 0;
-         $dt_constituted = Carbon::parse($date_pt_panel_constituted);
-         $dt_tested = Carbon::parse($date_pt_panel_tested);
-         if(strtotime($date_pt_panel_tested) == strtotime($date_pt_panel_constituted) || $dt_constituted->diffInDays($dt_tested) > 1)
+
+        $dt_shipped = Carbon::parse($date_panels_shipped);
+        $dt_constituted = Carbon::parse($date_pt_panel_constituted);
+        $dt_tested = Carbon::parse($date_pt_panel_tested);
+        if(strtotime($date_pt_panel_tested) == strtotime($date_pt_panel_constituted) || $dt_constituted->diffInDays($dt_tested) > 1 || $dt_tested->le($dt_shipped)){
             $dev_from_procedure = 1;
-         return $dev_from_procedure;
+        }
+
+        return $dev_from_procedure;
      }
     /**
      * Function to check other info - received, constituted, tested
@@ -646,6 +651,14 @@ class Algorithm extends Command
                 if($pt->enrolment->user->registration)
                     $user = User::where('uid', $user->registration->uid)->first();
 
+                try {
+                    $countyID = $pt->enrolment->facility->subCounty->county_id;
+                    $shipment = Shipment::where('county_id', $countyID)->where('round_id', $round)->first();
+                    $date_panels_shipped = $shipment->date_shipped;
+                } catch (\Exception $e) {
+                    $date_panels_shipped = NULL;
+                }
+
                 $lot = $user->lot($round);
                 $res_1 = $lot->panels()->where('panel', 1)->first();
                 $res_2 = $lot->panels()->where('panel', 2)->first();
@@ -783,7 +796,7 @@ class Algorithm extends Command
                 }
                 //  Fetch expected results
                 
-                $dev_from_procedure = $this->check_dates($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested);
+                $dev_from_procedure = $this->check_dates($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested, $date_panels_shipped);
                 $incomplete_other_info = $this->check_other_info($date_pt_panel_received, $date_pt_panel_constituted, $date_pt_panel_tested);
                 $incomplete_kit_info = $this->check_kit_info($test_1_kit_name, $test_2_kit_name, $test_1_kit_lot_no, $test_2_kit_lot_no, $test_1_expiry_date, $test_2_expiry_date);
                 $use_of_expired_kits = $this->check_expiry($date_pt_panel_tested, $test_1_expiry_date, $test_2_expiry_date, $test_2_expiry_date); //We are only using 2 test kits - $test_3_expiry_date shouldn't be here
