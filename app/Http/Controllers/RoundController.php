@@ -281,7 +281,7 @@ class RoundController extends Controller
             }
         }
 
-	if(count($phone_numbers) > 0){
+	    if(count($phone_numbers) > 0){
             \Log::info(count($phone_numbers)." enrolled users.");
             $recipients = NULL;
             $recipients = implode(",", $phone_numbers);
@@ -1171,21 +1171,21 @@ class RoundController extends Controller
 
     public function addParticipantForm($pdf, $size, $roundID, $participantID){
 
-	$enrolment = Enrol::where('round_id', $roundID)->where('user_id', $participantID)->first();
+    	$enrolment = Enrol::where('round_id', $roundID)->where('user_id', $participantID)->first();
 
-	$templatePage1 = $pdf->importPage(1);
-	$pdf->AddPage('P', [$size['w'], $size['h']]);
-	$pdf->useTemplate($templatePage1);
+    	$templatePage1 = $pdf->importPage(1);
+    	$pdf->AddPage('P', [$size['w'], $size['h']]);
+    	$pdf->useTemplate($templatePage1);
 
-	$pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
-	$pdf->SetTextColor(50, 50, 50);
+    	$pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
+    	$pdf->SetTextColor(50, 50, 50);
 
-	$participant = $enrolment->user()->withTrashed()->get()[0];
+    	$participant = $enrolment->user()->withTrashed()->get()[0];
         $pdf->SetXY(35, 20.5);
-	$pdf->Write(0, $participant['first_name']." ".$participant['middle_name']." ".$participant['last_name']);
+    	$pdf->Write(0, $participant['first_name']." ".$participant['middle_name']." ".$participant['last_name']);
 
-	$facility = $enrolment->facility()->get()[0];
-	$pdf->SetXY(35, 25.25);
+    	$facility = $enrolment->facility()->get()[0];
+    	$pdf->SetXY(35, 25.25);
         $pdf->Write(0, $facility['name']);
 
         $subCounty = SubCounty::find($facility['sub_county_id']);
@@ -1199,22 +1199,22 @@ class RoundController extends Controller
         $pdf->SetXY(35, 42.75);
         $pdf->Write(0, $participant['phone']);
 
-	$pdf->SetFont('Times', '', 13, '', 'default', true);
+    	$pdf->SetFont('Times', '', 13, '', 'default', true);
         $round = Round::find($enrolment->round_id);
         $pdf->SetXY(39, 75);
         $pdf->Write(0, $round->name);
 
-	if(User::find($participant->id) !== null){
+    	if(User::find($participant->id) !== null){
             $program = Program::find(User::find($participant->id)->ru()->program_id);
-	    $pdf->SetXY(95, 75.25);
-	    $pdf->Write(0, isset($program)?$program->name:'');
-	}
+    	    $pdf->SetXY(95, 75.25);
+    	    $pdf->Write(0, isset($program)?$program->name:'');
+    	}
 
-	$uid = str_pad($participant['uid'], 6, "0");
-	for($i=0;$i<strlen($uid);$i++){
+    	$uid = str_pad($participant['uid'], 6, "0");
+    	for($i=0;$i<strlen($uid);$i++){
             $pdf->SetXY(150 + $i * 7, 75.25);
             $pdf->Write(0, substr($uid, $i, 1));
-	}
+    	}
 
         $enrolID = str_pad($enrolment->id, 6, "0");
         for($i=0;$i<strlen($enrolID);$i++){
@@ -1222,7 +1222,7 @@ class RoundController extends Controller
             $pdf->Write(0, substr($enrolID, $i, 1));
         }
 
-	$templatePage2 = $pdf->importPage(2);
+    	$templatePage2 = $pdf->importPage(2);
         $pdf->AddPage('P', [$size['w'], $size['h']]);
         $pdf->useTemplate($templatePage2);
 
@@ -1236,19 +1236,19 @@ class RoundController extends Controller
             $pdf->Write(0, substr($enrolID, $i, 1));
         }
 
-	$pdf->SetFont('Times', 'B', 7.75, '', 'default', true);
-	$yPos = 91.25;
-	for($i=0;$i<6;$i++){
+    	$pdf->SetFont('Times', 'B', 7.75, '', 'default', true);
+    	$yPos = 91.25;
+    	for($i=0;$i<6;$i++){
             $yPos = $yPos + 4;
             $pdf->SetXY(17.5, $yPos);
-	    $pdf->Write(0, "KNEQAS");
-	    $yPos = $yPos + 4;
+    	    $pdf->Write(0, "KNEQAS");
+    	    $yPos = $yPos + 4;
             $pdf->SetXY(15, $yPos);
-	    $pdf->Write(0,"HIVSER-{$round->name}-S".($i+1));
-	    $yPos = $yPos + 5.75;
-	}
+    	    $pdf->Write(0,"HIVSER-{$round->name}-S".($i+1));
+    	    $yPos = $yPos + 5.75;
+    	}
 
-	return $pdf;
+    	return $pdf;
     }
 
     public function getParticipantForm(Request $request, $roundID, $participantID){
@@ -1262,55 +1262,55 @@ class RoundController extends Controller
 
     public function getParticipantForms(Request $request, $roundID){
         $pdf = new \setasign\Fpdi\Fpdi();
-	$size = ['w' => 209.97333686111, 'h' => 296.92599647222];
-	$enrolments = [];
+    	$size = ['w' => 209.97333686111, 'h' => 296.92599647222];
+    	$enrolments = [];
 
-	if (Auth::user()->can(['generate-participant-result-form'], true)){
-	    if($request->has('facility')){
+    	if (Auth::user()->can(['generate-participant-result-form'], true)){
+    	    if($request->has('facility')){
                 $enrolments = Enrol::where('round_id', $roundID)->where('facility_id', $request->get('facility'))->get();
             }else if($request->has('sub_county')){
                 $facilities = SubCounty::find($request->get('sub_county'))->facilities()->get()->pluck('id');
-	        $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities)->get();
+                $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities)->get();
             }else if($request->has('county')){
                 $subCounties = County::find($request->get('county'))->subCounties()->get()->pluck('id');
                 $facilities = [];
-	        foreach($subCounties as $subCountyID){
-		    $subCountyFacilityIDs = SubCounty::find($subCountyID)->facilities()->get()->pluck('id')->toArray();
+                foreach($subCounties as $subCountyID){
+            	    $subCountyFacilityIDs = SubCounty::find($subCountyID)->facilities()->get()->pluck('id')->toArray();
                     $facilities = array_merge($facilities, $subCountyFacilityIDs);
                 }
-	        $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities)->get();
+                $enrolments = Enrol::where('round_id', $roundID)->whereIn('facility_id', $facilities)->get();
             }else{
-	        $enrolments = Enrol::where('round_id', $roundID)->get();
-	    }
-	}
+    	        $enrolments = Enrol::where('round_id', $roundID)->get();
+    	    }
+    	}
 
-	if(count($enrolments) > 0){
+    	if(count($enrolments) > 0){
             $pdf->setSourceFile("img/Participant-Form.pdf");
             foreach($enrolments as $enrolment){
                 $pdf = $this->addParticipantForm($pdf, $size, $roundID, $enrolment['user_id']);
-	    }
-	}else{
-	    $pdf->setSourceFile("img/blank.pdf");
-	    $templatePage = $pdf->importPage(1);
-	    $pdf->AddPage('P', [$size['w'], $size['h']]);
-	    $pdf->useTemplate($templatePage);
-	    $pdf->SetFont('Times', 'B', 13, '', 'default', true);
-	    $pdf->SetTextColor(50, 50, 50);
-	    $pdf->SetXY(30, 50);
-	    if (Auth::user()->can(['generate-participant-result-form'], true)){
-		$pdf->Write(0, "Unfortunately, we've found no data meeting your set criteria!");
-	    }else{
+    	    }
+    	}else{
+    	    $pdf->setSourceFile("img/blank.pdf");
+    	    $templatePage = $pdf->importPage(1);
+    	    $pdf->AddPage('P', [$size['w'], $size['h']]);
+    	    $pdf->useTemplate($templatePage);
+    	    $pdf->SetFont('Times', 'B', 13, '', 'default', true);
+    	    $pdf->SetTextColor(50, 50, 50);
+    	    $pdf->SetXY(30, 50);
+    	    if (Auth::user()->can(['generate-participant-result-form'], true)){
+        		$pdf->Write(0, "Unfortunately, we've found no data meeting your set criteria!");
+    	    }else{
                 $pdf->Write(0, "Permission denied!");
-	    }
-	}
-	\Log::info("Attempt to generate PDF forms for ".count($enrolments)." participants by ". Auth::user()->id);
+    	    }
+    	}
+    	\Log::info("Attempt to generate PDF forms for ".count($enrolments)." participants by ". Auth::user()->id);
 
-	$pdf->Output();
-    }    
+    	$pdf->Output();
+    }
 
     public function getReceiptRecord(Request $request, $roundID){
-	$pdf = new App\MyPDF;
-	$pdf->AliasNbPages();
+    	$pdf = new App\MyPDF;
+    	$pdf->AliasNbPages();
         $size = ['h' => 209.97333686111, 'w' => 296.92599647222];
         $enrolments = [];
 
@@ -1332,23 +1332,29 @@ class RoundController extends Controller
                 $enrolmentsRecord = Enrol::where('round_id', $roundID);
             }
 
-	    if(Auth::user()->isCountyCoordinator()){
+            if(Auth::user()->hasRole('County Coordinator')){
                 $facilities = County::find(Auth::user()->ru()->tier)->facilities()->pluck('id');
-		$enrolmentsRecord = $enrolmentsRecord->whereIn('facility_id', $facilities);
-	    }
+        		$enrolmentsRecord = $enrolmentsRecord->whereIn('facility_id', $facilities);
+    	    }
 
-            if(Auth::user()->isSubCountyCoordinator()){
+            if(Auth::user()->hasRole('Sub-County Coordinator')){
                 $facilities = SubCounty::find(Auth::user()->ru()->tier)->facilities()->pluck('id');
                 $enrolmentsRecord = $enrolmentsRecord->whereIn('facility_id', $facilities);
-	    }
-	    $enrolments = $enrolmentsRecord->join('facilities','enrolments.facility_id', '=', 'facilities.id')->orderBy('facilities.sub_county_id')->orderBy('facilities.name')->get();
-	}
+    	    }
+
+            if(Auth::user()->hasRole('Partner')){
+                $facilities = ImplementingPartner::find(Auth::user()->ru()->tier)->all_facilities()->pluck('id');
+                $enrolmentsRecord = $enrolmentsRecord->whereIn('facility_id', $facilities);
+            }
+    	    $enrolments = $enrolmentsRecord->join('facilities','enrolments.facility_id', '=', 'facilities.id')
+                            ->orderBy('facilities.sub_county_id')->orderBy('facilities.name')->get();
+    	}
 
         $pdf->setSourceFile("img/PT-Receipt-Record.pdf");
         $templatePage1 = $pdf->importPage(1);
         $templatePage2 = $pdf->importPage(2);
     
-	if(count($enrolments) > 0){
+    	if(count($enrolments) > 0){
 
             $pdf->AddPage('L', [$size['w'], $size['h']]);
             $pdf->useTemplate($templatePage1);
@@ -1356,32 +1362,32 @@ class RoundController extends Controller
             $pdf->SetFont('Helvetica', 'B', 8.5, '', 'default', true);
             $pdf->SetTextColor(50, 50, 50);
 
-	    $row = 1;
-	    $currentY = 68;
+    	    $row = 1;
+    	    $currentY = 68;
 
             $round = Round::find($roundID);
             $pdf->SetXY(203, 50);
             $pdf->Write(0, $round->name);
 
-	    $this->writeReceiptRecordHeaders($pdf, 64);
-	    $pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
+    	    $this->writeReceiptRecordHeaders($pdf, 64);
+    	    $pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
 
-	    $currentFacility = 0;
+    	    $currentFacility = 0;
 
             foreach($enrolments as $enrolment){
 
                 $facility = $enrolment->facility()->get()[0];
                 $subCounty = SubCounty::find($facility['sub_county_id']);
                 $county = County::find($subCounty->county_id);
-		$participant = $enrolment->user()->withTrashed()->get()[0];
+        		$participant = $enrolment->user()->withTrashed()->get()[0];
 
-		if($currentFacility != $facility['id']){
+        		if($currentFacility != $facility['id']){
                     if($currentFacility > 0){
-		        $pdf->SetXY(230, $currentY - 4);
-		        $pdf->Write(0, "_______________     ______________");
-		    }
+        		        $pdf->SetXY(230, $currentY - 4);
+        		        $pdf->Write(0, "_______________     ______________");
+        		    }
                     $currentFacility = $facility['id'];
-		}
+        		}
 
                 $pdf->SetXY(20, $currentY);
                 $pdf->Write(0, ($row++).".");
@@ -1399,21 +1405,21 @@ class RoundController extends Controller
                 $pdf->Write(0, $participant['first_name']." ".$participant['middle_name']." ".$participant['last_name']);
 
                 $pdf->SetXY(206, $currentY);
-		$pdf->Write(0, $participant['phone']);
+        		$pdf->Write(0, $participant['phone']);
 
-		if($currentY > 184){
+        		if($currentY > 184){
                     $pdf->AddPage('L', [$size['w'], $size['h']]);
-		    $pdf->useTemplate($templatePage2);
-		    $currentY = 27;
-		    $pdf->SetFont('Times', 'B', 13, '', 'default', true);
+        		    $pdf->useTemplate($templatePage2);
+        		    $currentY = 27;
+        		    $pdf->SetFont('Times', 'B', 13, '', 'default', true);
                     $pdf->SetXY(220, 15.5);
                     $pdf->Write(0, $round->name);
                     $pdf->SetFont('Helvetica', 'B', 8.5, '', 'default', true);
-		    $this->writeReceiptRecordHeaders($pdf, 23);
+        		    $this->writeReceiptRecordHeaders($pdf, 23);
                     $pdf->SetFont('Helvetica', '', 7.5, '', 'default', true);
-		}else{
+        		}else{
                     $currentY += 4;
-		}
+        		}
             }
         }else{
             $pdf->AddPage('L', [$size['w'], $size['h']]);
