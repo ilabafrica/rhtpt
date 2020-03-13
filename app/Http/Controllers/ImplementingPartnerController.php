@@ -37,10 +37,17 @@ class ImplementingPartnerController extends Controller
 		return view('implementingpartner.index');
 	}
 
-	public function index()
+	public function index(Request $request)
 	{
 
 		$implementingPartners = ImplementingPartner::with('agency','counties')->orderBy('id', 'ASC')->paginate(20);
+
+        if($request->has('q')) 
+        {
+            $search = $request->get('q');
+            $implementingPartners = ImplementingPartner::with('agency','counties')->where('name', 'LIKE', "%{$search}%")->latest()->withTrashed()->paginate(20);
+        }
+
         $response = [
             'pagination' => [
                 'total' => $implementingPartners->total(),

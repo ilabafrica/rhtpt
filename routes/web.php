@@ -564,6 +564,7 @@ Route::group(['middleware' => 'auth'], function()
     Route::get('api/search_facility',['as'=>'facility.search', 'uses'=>'FacilityController@index']);
     Route::get('api/search_expected',['as'=>'expected.search', 'uses'=>'ExpectedController@index']);
     Route::get('api/search_participant',['as'=>'participant.search', 'uses'=>'ParticipantController@index']);
+    Route::get('api/search_partner',['as'=>'partner.search', 'uses'=>'ImplementingPartnerController@index']);
     Route::get('api/search_enroled_participant',['as'=>'participant.search', 'uses'=>'RoundController@loadparticipants']);
     Route::get('api/search_participant_info/{round}',['as'=>'participant.search', 'uses'=>'RoundController@participants_info']);
     Route::get('api/search_nonperf',['as'=>'nonperf.search', 'uses'=>'NonperformanceController@index']);
