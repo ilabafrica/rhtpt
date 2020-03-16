@@ -533,7 +533,8 @@ class ResultController extends Controller
     public function evaluated_results($id)
     {
         //get actual results
-        $pt = Pt::find($id);
+    $pt = Pt::find($id);
+    \Log::info("PT: ".json_encode($pt));
         $round_id = $pt->enrolment->round->id;
         $pt_results = $pt->results;
         $option = new Option;
@@ -695,11 +696,13 @@ class ResultController extends Controller
         $sample_5 = "PT-".$round->name."-S5";
         $sample_6 = "PT-".$round->name."-S6";
 
-        $user = $pt->enrolment->user;
-        $performer = $pt->enrolment->performer;
-        \Log::info($performer);
+        \Log::info("Enrolment: ".json_encode($pt->enrolment));
+        $user = $pt->enrolment->user()->withTrashed()->first();
+        $performer = $pt->enrolment->performer()->withTrashed()->first();
+        \Log::info("Tester: ".json_encode($performer));
+        \Log::info("Panel owner: ".json_encode($user));
 
-        $lot = $user->lot($round_id);
+        $lot = User::lot($round_id, $user->uid);
         $expected_results = $lot->panels()->get();
 
         foreach ($expected_results as $ex_rslts) {

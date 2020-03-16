@@ -659,7 +659,7 @@ class Algorithm extends Command
                     $date_panels_shipped = NULL;
                 }
 
-                $lot = $user->lot($round);
+                $lot = User::lot($round, $user->uid);
                 $res_1 = $lot->panels()->where('panel', 1)->first();
                 $res_2 = $lot->panels()->where('panel', 2)->first();
                 $res_3 = $lot->panels()->where('panel', 3)->first();

@@ -89,9 +89,9 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     /**
   	 * Return lot
   	 */
-  	public function lot($round)
+  	public static function lot($round, $tester)
   	{
-        $last = substr($this->uid, -1);
+        $last = substr($tester, -1);
         $lot = Lot::where('round_id', $round)->where('tester_id', 'LIKE', '%'.$last.'%')->first();
         return $lot;
   	}
