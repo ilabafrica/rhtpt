@@ -52,18 +52,18 @@ class ImplementingPartner extends Model
     */
     public function users($role = null)
     {
-        $result = $this->facilities();
 
         if ($role =='User') {
 
+            $facilities = $this->facilities();
             $partner = [$this->id];
             $partner_role = Role::idByName('Partner');
 
-            $county = $result['counties'];
+            $county = $facilities['counties'];
             $county_role = Role::idByName('County Coordinator');
 
             $subcounty_role = Role::idByName('Sub-County Coordinator');
-            $subs = $result['subcounties'];
+            $subs = $facilities['subcounties'];
 
             $users = User::select('users.*')
                         ->join('role_user', 'users.id', '=', 'role_user.user_id')
@@ -74,30 +74,22 @@ class ImplementingPartner extends Model
                         })->orWhere(function($qry) use ($partner_role, $partner){
                             return $qry->where('role_id', $partner_role)->whereIn('tier', $partner);
                         });
-         }else if (is_array($role)){
+        }else if (is_array($role)){
 
             $search = $role['search'];
-            $prole = Role::idByName('Participant');
-            $fls = $result['facilities'];;
             $users = User::select('users.*')
                          ->where(function($query) use ($search){
                             $query->where('users.name', 'LIKE', "%{$search}%");
-                            $query->orWhere('first_name', 'LIKE', "%{$search}%");
-                            $query->orWhere('middle_name', 'LIKE', "%{$search}%");
-                            $query->orWhere('last_name', 'LIKE', "%{$search}%");
-                            $query->orWhere('phone', 'LIKE', "%{$search}%");
-                            $query->orWhere('email', 'LIKE', "%{$search}%");
-                            $query->orWhere('uid', 'LIKE', "%{$search}%");
-                        })
-                        ->join('role_user', 'users.id', '=', 'role_user.user_id')->where('role_id', $prole)
-                        ->whereIn('tier', $fls);
-       }else{
-            $prole = Role::idByName('Participant');
-            $fls = $result['facilities'];
-            $users = User::select('users.*')
-                        ->join('role_user', 'users.id', '=', 'role_user.user_id')
-                        ->where('role_id', $prole)->whereIn('tier', $fls);
-          }
+                            $query->orWhere('users.first_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('users.middle_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('users.last_name', 'LIKE', "%{$search}%");
+                            $query->orWhere('users.phone', 'LIKE', "%{$search}%");
+                            $query->orWhere('users.email', 'LIKE', "%{$search}%");
+                            $query->orWhere('users.uid', 'LIKE', "%{$search}%");
+                        });
+        }else{
+            $users = User::select('users.*');
+        }
         return $users;
     }  
 
@@ -108,17 +100,20 @@ class ImplementingPartner extends Model
     public function results($search = null, $roundID = 0, $countyID = 0, $subCountyID = 0, $facilityID = 0)
     {
         $users = $this->users($search);
+        $facilities = $this->facilities();
 
-        $enrolments = $users->join('enrolments', 'users.id', '=', 'enrolments.tester_id');
+        $enrolments = $users->join('enrolments', 'users.id', '=', 'enrolments.tester_id')
+                            ->join('users AS panels', 'enrolments.user_id', 'panels.id')
+                            ->whereIn('enrolments.facility_id', $facilities['facilities']);
 
         if($roundID > 0) $enrolments = $enrolments->where('round_id', $roundID);
 
         $results = $enrolments->join('pt', 'enrolments.id', '=', 'pt.enrolment_id')
-                        ->join('facilities', 'role_user.tier', '=', 'facilities.id')
+                        ->join('facilities', 'enrolments.facility_id', '=', 'facilities.id')
                         ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
                         ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
                         ->whereNull('pt.deleted_at')
-                        ->select(['users.*', 'enrolments.*', 'pt.*', 'role_user.*']);
+                        ->select(['users.*', 'enrolments.*', 'pt.*', 'panels.uid AS panel_id']);
 
         if($countyID > 0) $results = $results->where('counties.id', $countyID);
         if($subCountyID > 0) $results = $results->where('sub_counties.id', $subCountyID);

@@ -533,8 +533,8 @@ class ResultController extends Controller
     public function evaluated_results($id)
     {
         //get actual results
-    $pt = Pt::find($id);
-    \Log::info("PT: ".json_encode($pt));
+        $pt = Pt::find($id);
+        \Log::info("PT: ".json_encode($pt));
         $round_id = $pt->enrolment->round->id;
         $pt_results = $pt->results;
         $option = new Option;
