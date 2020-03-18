@@ -94,12 +94,8 @@
             <div class="row">
                 <table class="table table-responsive">
                     <tr>
-                        <th>Total Participants</th>
-                        <td>@{{total_participants}}</td>
-                        <th>Active Participants</th>
-                        <td>@{{active_participants}}</td>
                         <th>Enrolled Participants</th>
-                        <td>@{{enrolled_participants}}</td>
+                        <td>@{{pagination.total}}</td>
                     </tr>
                 </table>
             </div>
@@ -110,6 +106,7 @@
             <input type="hidden" class="form-control" name="round_id" id="round-id" v-bind:value="roundId"/>
             <table class="table table-bordered table-responsive">
                 <tr>
+                    <th>#</th>
                     <th>Participant</th>
                     <th>PT Enrollment ID</th>
                     <th>Phone</th>
@@ -118,7 +115,8 @@
                     <th>County</th>
                     <th>Status</th>
                 </tr>
-                <tr v-for="participant in participants">                                        
+                <tr v-for="(participant, key) in participants">                                        
+                    <td>@{{ key + 1 + ((pagination.current_page - 1) * pagination.per_page) }}</td>
                     <td>@{{ participant.name }}</td>
                     <td>@{{ participant.uid }}</td>
                     <td>@{{ participant.phone }}</td>
@@ -126,19 +124,42 @@
                     <td>@{{ participant.sub_county_name}}</td>
                     <td>@{{ participant.county_name }}</td>                                                
                     <td>
-                        <button v-if="participant.result_status=='N/A'" class="mbtn mbtn-raised mbtn-primary mbtn-xs">No Result</button>
+                        <button v-if="!participant.result_status" class="mbtn mbtn-raised mbtn-primary mbtn-xs">No Result</button>
                         <button v-if="participant.result_status==0" class="mbtn mbtn-raised mbtn-danger mbtn-xs">Not Checked</button>
                         <button v-if="participant.result_status==1" class="mbtn mbtn-raised mbtn-warning mbtn-xs">Submitted</button>
                         <button v-if="participant.result_status==2" class="mbtn mbtn-raised mbtn-info mbtn-xs">Evaluated</button>
-			<button v-if="participant.result_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
+            			<button v-if="participant.result_status==3" class="mbtn mbtn-raised mbtn-inverse mbtn-xs">Verified</button>
                         @permission('generate-participant-result-form')
-			<a class="btn btn-sm btn-success" href="#"
-			   @click="downloadForms('/download-form/' + roundId + '/participant/' + participant.id)" ><i class="fa fa-level-down"></i> Form</a>
+            			<a class="btn btn-sm btn-success" href="#"
+            			   @click="downloadForms('/download-form/' + roundId + '/participant/' + participant.id)" ><i class="fa fa-level-down"></i> Form</a>
                         @endpermission
                     </td>
                 </tr>
             </table>
         </div>
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination">
+                <li v-if="pagination.current_page > 1" class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous"
+                        @click.prevent="changePage(pagination.current_page - 1)">
+                        <span aria-hidden="true">«</span>
+                    </a>
+                </li>
+                <li v-for="page in pagesNumber" class="page-item"
+                    v-bind:class="[ page == isActived ? 'active' : '']">
+                    <a class="page-link" href="#"
+                        @click.prevent="changePage(page)">@{{ page }}</a>
+                </li>
+                <li v-if="pagination.current_page < pagination.last_page" class="page-item">
+                    <a class="page-link" href="#" aria-label="Next"
+                        @click.prevent="changePage(pagination.current_page + 1)">
+                        <span aria-hidden="true">»</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
     </div>
 </div>
 @endsection

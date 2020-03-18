@@ -18,6 +18,7 @@ new Vue({
             to: 0,
             current_page: 1
         },        
+        offset: 4,
         loading: false,
         error: false,
         query: '',
@@ -30,9 +31,6 @@ new Vue({
         subs: [],
         facilities: [],        
         roundId:'',
-        total_participants: '',        
-        active_participants: '',        
-        enrolled_participants: '',        
     },
 
     computed: {
@@ -43,15 +41,15 @@ new Vue({
             if (!this.pagination.to) {
                 return [];
             }
-            var from = this.pagination.current_page - this.offset;
+            let from = this.pagination.current_page - this.offset;
             if (from < 1) {
                 from = 1;
             }
-            var to = from + (this.offset * 2);
+            let to = from + (this.offset * 2);
             if (to >= this.pagination.last_page) {
                 to = this.pagination.last_page;
             }
-            var pagesArray = [];
+            let pagesArray = [];
             while (from <= to) {
                 pagesArray.push(from);
                 from++;
@@ -61,23 +59,18 @@ new Vue({
     },
     mounted : function(){
     	this.getParticipants(this.pagination.current_page);
-        this.loadCounties();
+        this.getRole();
     },
 
     methods : {  
-        getParticipants: function() {  
+        getParticipants: function(page) {  
         var round_id = _.last( window.location.pathname.split( '/' ) ); 
-            this.$http.get('/loadparticipantsinfo/'+round_id ).then((response) => {
+            this.$http.get('/loadparticipantsinfo/'+round_id + '?page=' + page).then((response) => {
                 if(response.data.data){
-                    this.participants = response.data.data;
+                    this.participants = response.data.data.data;
                     this.roundId = round_id;
-                    this.role = response.data.role;
-                    this.tier = response.data.tier;
-                    this.total_participants = response.data.total_participants;
-                    this.active_participants = response.data.active_participants;
-                    this.enrolled_participants = response.data.enrolled_participants;
-                    this.pagination = response.data.pagination;
-                    
+                    this.tier = response.data.data.tier;
+                    this.pagination = response.data.data;
                     if (this.role == 4) {
                         let id = this.tier;
                         this.$http.get('/subs/'+id).then((response) => {
@@ -121,8 +114,8 @@ new Vue({
                 }
                 else
                 {
-                    this.participants = response.data.data;
-                    this.pagination = response.data.pagination;
+                    this.participants = response.data.data.data;
+                    this.pagination = response.data.data;
                     toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                 }
                 // The request is finished, change the loading to false again.
@@ -151,17 +144,11 @@ new Vue({
                     {
                         this.error = response.data.error;
                         toastr.error(this.error, 'Search Notification', {timeOut: 5000});
-                        this.total_participants = '';
-                        this.active_participants = '';
-                        this.enrolled_participants = '';
                     }
                     else
                     {
-                        this.participants = response.data.data;
-                        this.pagination = response.data.pagination;
-                        this.total_participants = response.data.total_participants;
-                        this.active_participants = response.data.active_participants;
-                        this.enrolled_participants = response.data.enrolled_participants;
+                        this.participants = response.data.data.data;
+                        this.pagination = response.data.data;
                         toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                     }
                     // The request is finished, change the loading to false again.
@@ -181,11 +168,8 @@ new Vue({
                     }
                     else
                     {
-                        this.participants = response.data.data;
-                        this.pagination = response.data.pagination;
-                        this.total_participants = response.data.total_participants;
-                        this.active_participants = response.data.active_participants;
-                        this.enrolled_participants = response.data.enrolled_participants;
+                        this.participants = response.data.data.data;
+                        this.pagination = response.data.data;
                         toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                     }
                     // The request is finished, change the loading to false again.
@@ -205,11 +189,8 @@ new Vue({
                     }
                     else
                     {
-                        this.participants = response.data.data;
-                        this.pagination = response.data.pagination;
-                        this.total_participants = response.data.total_participants;
-                        this.active_participants = response.data.active_participants;
-                        this.enrolled_participants = response.data.enrolled_participants;
+                        this.participants = response.data.data.data;
+                        this.pagination = response.data.data;
                         toastr.success('The search results below were obtained.', 'Search Notification', {timeOut: 5000});
                     }
                     // The request is finished, change the loading to false again.
@@ -218,13 +199,42 @@ new Vue({
             }
            
         },
+
+        changePage: function (page) {
+            this.pagination.current_page = page;
+            if (this.filters ==1) {
+                this.search(page);
+            }else{
+
+                this.getParticipants(page);
+            }
+        },
+
+        getRole: function(page){
+            this.$http.get('/userrole').then((response) => {
+                if(response.data){
+                    this.role = response.data.role_id;
+                    this.loadCounties();
+                    if (this.role == 4) { //County Role
+                        this.county = response.data.tier;
+                        this.loadSubcounties();
+                    }
+                    if (this.role == 7) {// Subcounty Role
+                        this.sub_county = response.data.tier;
+                        this.loadFacilities();
+                    }
+                }
+            })
+        },
+
         //Populate counties from FacilityController
         loadCounties: function() {
-            this.$http.get('/cnts').then((response) => {
+            var url = '/cnts';
+            if(this.role == 3) url = '/partnercounties'
+            this.$http.get(url).then((response) => {
                 this.counties = response.data;
                 this.jimbo = response.data;
             }, (response) => {
-                // console.log(response);
             });
         },        
         // fetch subcounties in after selecting a county
@@ -256,6 +266,14 @@ new Vue({
             }
             console.log(uri+params);
 	    window.open(uri+params);
-	},
+	   },
+
+        listNumber: function(key, index){
+            if(index === undefined){
+                return Number(key) + 1;
+            }else{
+                return Number(index) + 1;
+            }
+        }
     }
 });
