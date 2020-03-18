@@ -289,16 +289,16 @@ EntrustUserTrait::restore insteadof SoftDeletes;
     {
       $role = Role::idByName('Participant');
       if($roundID > 0){
-        $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
+        $users = User::select('users.*')
                   ->join('enrolments', 'users.id', '=', 'enrolments.user_id')
-                  ->where('role_user.role_id', $role)->where('enrolments.round_id', $roundID)
+                  ->where('enrolments.round_id', $roundID)
                   ->whereNull('enrolments.deleted_at');
       }else{
         $users = User::select('users.*')->join('role_user', 'users.id', '=', 'role_user.user_id')
                   ->where('role_id', $role);
       }
                         
-        return $users->distinct();
+      return $users->distinct();
     } 
      /**
     * Get partners 
@@ -516,7 +516,7 @@ EntrustUserTrait::restore insteadof SoftDeletes;
 
         $results = $enrolments->join('pt', 'enrolments.id', '=', 'pt.enrolment_id')
                         ->join('role_user', 'users.id', '=', 'role_user.user_id')
-                        ->join('facilities', 'role_user.tier', '=', 'facilities.id')
+                        ->join('facilities', 'enrolments.facility_id', '=', 'facilities.id')
                         ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
                         ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
                         ->whereNull('pt.deleted_at')

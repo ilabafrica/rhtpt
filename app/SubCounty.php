@@ -109,7 +109,7 @@ class SubCounty extends Model
         if($roundID > 0) $enrolments = $enrolments->where('enrolments.round_id', $roundID);
 
         $results = $enrolments->join('pt', 'enrolments.id', '=', 'pt.enrolment_id')
-                        ->join('facilities', 'role_user.tier', '=', 'facilities.id')
+                        ->join('facilities', 'enrolments.facility_id', '=', 'facilities.id')
                         ->join('sub_counties', 'facilities.sub_county_id', '=', 'sub_counties.id')
                         ->join('counties', 'sub_counties.county_id', '=', 'counties.id')
                         ->whereNull('pt.deleted_at')
